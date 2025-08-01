@@ -116,16 +116,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsPipedrive::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('pipedriveMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG,
-				],
-			);
-		}
-
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -133,6 +123,18 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		$formId = $formDetails[Config::FD_FORM_ID];
+
+		if (!\apply_filters(SettingsPipedrive::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('pipedriveMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG,
+				],
 			);
 		}
 

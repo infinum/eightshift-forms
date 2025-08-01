@@ -104,12 +104,13 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 	{
 		// Bailout if geolocation setting is off.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [
-				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationSkipCheck'),
-				AbstractBaseRoute::R_DEBUG => [
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('geolocationSkipCheck'),
+				[
+					AbstractBaseRoute::R_DEBUG => $params,
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_FEATURE_DISABLED,
 				],
-			];
+			);
 		}
 
 		$data = EncryptionHelpers::decryptor($params['data'] ?? '');

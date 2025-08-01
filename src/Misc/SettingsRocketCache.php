@@ -26,9 +26,9 @@ class SettingsRocketCache implements SettingGlobalInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_rocket_cache';
 
 	/**
-	 * Filter settings is Valid key.
+	 * Filter settings global is Valid key.
 	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_rocket_cache';
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_rocket_cache';
 
 	/**
 	 * Settings key.
@@ -48,7 +48,7 @@ class SettingsRocketCache implements SettingGlobalInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**

@@ -117,16 +117,6 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsMailchimp::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('mailchimpMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
-				],
-			);
-		}
-
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -134,6 +124,16 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		if (!\apply_filters(SettingsMailchimp::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('mailchimpMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
+				],
 			);
 		}
 

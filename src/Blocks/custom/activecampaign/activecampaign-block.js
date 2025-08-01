@@ -1,21 +1,21 @@
 import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
-import { ActiveCampaignEditor } from './components/activecampaign-editor';
-import { ActiveCampaignOptions } from './components/activecampaign-options';
+import { ActivecampaignEditor } from './components/activecampaign-editor';
+import { ActivecampaignOptions } from './components/activecampaign-options';
 
-export const ActiveCampaign = (props) => {
+export const Activecampaign = (props) => {
 	const itemIdKey = 'activeCampaignIntegrationId';
 
 	return (
 		<>
 			<InspectorControls>
-				<ActiveCampaignOptions
+				<ActivecampaignOptions
 					{...props}
 					clientId={props.clientId}
 					itemIdKey={itemIdKey}
 				/>
 			</InspectorControls>
-			<ActiveCampaignEditor
+			<ActivecampaignEditor
 				{...props}
 				itemIdKey={itemIdKey}
 			/>

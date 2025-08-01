@@ -113,7 +113,7 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 		}
 
 		// Clear WP-Rocket cache if cache is cleared.
-		if (\function_exists('rocket_clean_domain') && \apply_filters(SettingsRocketCache::FILTER_SETTINGS_IS_VALID_NAME, false)) {
+		if (\function_exists('rocket_clean_domain') && \apply_filters(SettingsRocketCache::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			\rocket_clean_domain();
 		}
 

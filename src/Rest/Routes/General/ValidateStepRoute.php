@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\General;
 
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class ValidateStepRoute
@@ -52,7 +54,47 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
-		return true;
+		return false;
+	}
+
+	/**
+	 * Check if the route should check captcha.
+	 *
+	 * @return boolean
+	 */
+	protected function shouldCheckCaptcha(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if the route should check security.
+	 *
+	 * @return boolean
+	 */
+	protected function shouldCheckSecurity(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if the route should check enrichment.
+	 *
+	 * @return boolean
+	 */
+	protected function shouldCheckEnrichment(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if the route should check country.
+	 *
+	 * @return boolean
+	 */
+	protected function shouldCheckCountry(): bool
+	{
+		return false;
 	}
 
 	/**
@@ -80,40 +122,37 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$debug = [
-			'formDetails' => $formDetails,
-		];
-
 		$currentStep = $formDetails[Config::FD_API_STEPS]['current'] ?? '';
+
 		if (!$currentStep) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
-					[],
-					$debug
-				)
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
+				],
 			);
 		}
 
 		$submittedNames = $formDetails[Config::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
-					[],
-					$debug
-				)
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('validationStepsFieldsProblem'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM,
+				],
 			);
 		}
 
 		$steps = $formDetails[Config::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('validationStepsNextStepProblem'),
-					[],
-					$debug
-				)
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('validationStepsNextStepProblem'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
+				],
 			);
 		}
 
@@ -129,12 +168,12 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			$params = $formDetails[Config::FD_PARAMS] ?? [];
 
 			if (!$params) {
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						$this->getLabels()->getLabel('validationStepsParametersProblem'),
-						[],
-						$debug
-					)
+				throw new BadRequestException(
+					$this->getLabels()->getLabel('validationStepsParametersProblem'),
+					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
+						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM,
+					],
 				);
 			}
 
@@ -169,18 +208,19 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			$type = 'multistep';
 		}
 
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				$this->getLabels()->getLabel('validationStepsSuccess'),
-				[
-					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
-					UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,
-					UtilsHelper::getStateResponseOutputKey('stepProgressBarItems') => $progressBarItems,
-					UtilsHelper::getStateResponseOutputKey('stepIsDisableNextButton') => $disableNextButton,
-				],
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationStepsSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('stepType') => $type,
+				UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,
+				UtilsHelper::getStateResponseOutputKey('stepProgressBarItems') => $progressBarItems,
+				UtilsHelper::getStateResponseOutputKey('stepIsDisableNextButton') => $disableNextButton,
+			],
+		];
 	}
 
 	/**

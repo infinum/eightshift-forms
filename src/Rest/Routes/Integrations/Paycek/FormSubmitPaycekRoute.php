@@ -19,6 +19,8 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Exception\ValidationFailedException;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 
@@ -78,7 +80,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
-		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('paycekMissingConfig'),
 				[
@@ -99,13 +101,22 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 			'amount',
 		];
 
-		$missingOrEmpty = \array_intersect_key(\array_flip(\array_filter($reqParams, fn($param) => empty($params[$param] ?? null))), $params);
+		$missingOrEmpty = false;
+
+		foreach ($reqParams as $param) {
+			if (!isset($params[$param]) || empty($params[$param])) {
+				$missingOrEmpty = true;
+				break;
+			}
+		}
 
 		if ($missingOrEmpty) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('paycekMissingReqParams', $formId)
-				)
+			throw new ValidationFailedException(
+				$this->getLabels()->getLabel('paycekMissingReqParams', $formId),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS,
+				],
 			);
 		}
 
@@ -115,47 +126,52 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
-		// Send email.
-		$this->getMailer()->sendEmails(
-			$formDetails,
-			$this->getCommonEmailResponseTags(
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['private']
+		// Send only if explicitly enabled in settings.
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId)) {
+			$this->getMailer()->sendEmails(
+				$formDetails,
+				$this->getCommonEmailResponseTags(
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['private']
+					),
+					$formDetails
 				),
-				$formDetails
-			)
-		);
+			);
+		}
 
 		$params = $this->setRealOrderNumber($params, $successAdditionalData, $formId);
 
-		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				$this->getLabels()->getLabel('paycekSuccess', $formId),
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional'],
-					[
-						UtilsHelper::getStateResponseOutputKey('processExternally') => [
-							'type' => 'GET',
-							'url' => $this->generatePaymentUrl(
-								$params['profileCode'],
-								$params['secretKey'],
-								$params['paymentId'],
-								$params['amount'],
-								$params['email'],
-								$params['description'],
-								$params['language'],
-								$params['urlSuccess'],
-								$params['urlFail'],
-								$params['urlCancel']
-							),
-						],
-					]
-				),
-			)
-		);
+		\dump($params);
+
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional'],
+				[
+					UtilsHelper::getStateResponseOutputKey('processExternally') => [
+						'type' => 'GET',
+						'url' => $this->generatePaymentUrl(
+							$params['profileCode'],
+							$params['secretKey'],
+							$params['paymentId'],
+							$params['amount'],
+							$params['email'],
+							$params['description'],
+							$params['language'],
+							$params['urlSuccess'],
+							$params['urlFail'],
+							$params['urlCancel']
+						),
+					],
+				]
+			),
+		];
 	}
 
 	/**
@@ -180,11 +196,12 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 
 			switch ($key) {
 				case 'amount':
-					$param = \number_format((float)$param, 2, '.', '');
+					$output['amount'] = \number_format((float)$param, 2, '.', '');
+					break;
+				default:
+					$output[$key] = $param;
 					break;
 			}
-
-			$output[$key] = $param;
 		}
 
 		$output['secretKey'] = SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY);

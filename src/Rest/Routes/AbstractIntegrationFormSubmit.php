@@ -148,6 +148,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	public function routeCallback(WP_REST_Request $request)
 	{
 		try {
+			// Prepare all data.
+			// Must be on the top of the try catch block.
+			$formDetails = $this->getFormDetailsApi($request);
+
 			// If route is used for admin only, check if user has permission. (generally used for settings).
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				throw new PermissionDeniedException(
@@ -156,9 +160,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					]
 				);
 			}
-
-			// Prepare all data.
-			$formDetails = $this->getFormDetailsApi($request);
 
 			// Validate submit only when logged in.
 			if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
@@ -222,7 +223,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				$this->getCaptcha()->check(
 					$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
 					$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
-					$formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false'
+					($formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false') === 'true'
 				);
 			}
 
@@ -258,7 +259,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
-			if ($this->shouldLogActivity($output)) {
+			if ($this->shouldLogActivity($return)) {
 				$this->getMailer()->sendTroubleshootingEmail(
 					$formDetails,
 					$return
@@ -461,17 +462,19 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
-		// Send email if it is configured in the backend.
-		$this->getMailer()->sendEmails(
-			$formDetails,
-			$this->getCombinedEmailResponseTags(
+		// Send only if explicitly enabled in the settings.
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId)) {
+			$this->getMailer()->sendEmails(
 				$formDetails,
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['private'],
+				$this->getCombinedEmailResponseTags(
+					$formDetails,
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['private'],
+					)
 				)
-			)
-		);
+			);
+		}
 
 		// Callback functions.
 		$this->callIntegrationResponseSuccessCallback($formDetails, $successAdditionalData);
@@ -831,7 +834,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	{
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 
-		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			return $output;
 		}
 
@@ -857,7 +860,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	{
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 
-		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			return $output;
 		}
 

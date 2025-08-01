@@ -15,6 +15,8 @@ use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 
@@ -84,37 +86,36 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 
 		$formId = $formDetails[Config::FD_FORM_ID];
 
-		$debug = [
-			'formDetails' => $formDetails,
-		];
-
 		// Set validation submit once.
 		$this->getValidator()->setValidationSubmitOnce($formId);
 
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
-		// Send email.
-		$this->getMailer()->sendEmails(
-			$formDetails,
-			$this->getCommonEmailResponseTags(
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['private']
-				),
-				$formDetails
-			)
-		);
+		// Send only if explicitly enabled in the settings.
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId)) {
+			$this->getMailer()->sendEmails(
+				$formDetails,
+				$this->getCommonEmailResponseTags(
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['private']
+					),
+					$formDetails
+				)
+			);
+		}
 
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				$this->getLabels()->getLabel('calculatorSuccess', $formId),
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional']
-				),
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
+		];
 	}
 }

@@ -90,6 +90,10 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	public function routeCallback(WP_REST_Request $request)
 	{
 		try {
+			// Prepare all data.
+			// Must be on the top of the try catch block.
+			$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+
 			// If route is used for admin only, check if user has permission. (generally used for settings).
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				throw new PermissionDeniedException(
@@ -98,9 +102,6 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 					]
 				);
 			}
-
-			// Prepare all data.
-			$params = $this->prepareSimpleApiParams($request, $this->getMethods());
 
 			// Validate mandatory params.
 			if (!$this->getValidator()->validateMandatoryParams($params, $this->getMandatoryParams($params))) {

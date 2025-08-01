@@ -260,6 +260,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'validationStepsCurrentStepProblem' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+			'validationStepsFieldsProblem' => \__('It looks like there is some problem with step fields, please try again.', 'eightshift-forms'),
 			'validationStepsNextStepProblem' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 			'validationStepsParametersProblem' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 			'validationStepsSuccess' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),

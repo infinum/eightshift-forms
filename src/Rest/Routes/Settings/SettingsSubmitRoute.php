@@ -76,6 +76,36 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if security should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckSecurity(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if enrichment should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckEnrichment(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if country should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCountry(): bool
+	{
+		return false;
+	}
+
+	/**
 	 * Get mandatory params.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -138,7 +168,7 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 		return [
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('settingsSuccess'),
-			
+
 		];
 	}
 }

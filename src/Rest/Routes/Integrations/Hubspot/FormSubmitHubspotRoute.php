@@ -128,16 +128,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('hubspotMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG,
-				],
-			);
-		}
-
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -145,6 +135,16 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		if (!\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('hubspotMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG,
+				],
 			);
 		}
 

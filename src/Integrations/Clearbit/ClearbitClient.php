@@ -44,7 +44,7 @@ class ClearbitClient implements ClearbitClientInterface
 		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		// Check if Hubspot is using Clearbit.
-		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
+		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, false, $formId);
 
 		if (!$use) {
 			return false;

@@ -76,7 +76,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * The FilFiltersSettingsBuilderters class, used for defining settings and integrations filter variables.
+ * The FilFiltersSettingsBuilder class, used for defining settings and integrations filter variables.
  */
 class FiltersSettingsBuilder implements ServiceInterface
 {
@@ -615,7 +615,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsFallback::FILTER_SETTINGS_GLOBAL_NAME,
-				'valid' => SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME,
+				'valid' => SettingsFallback::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
 				'labels' => [
@@ -634,7 +634,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsTransfer::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_NAME,
-				'valid' => SettingsTransfer::FILTER_SETTINGS_IS_VALID_NAME,
+				'valid' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsTransfer::SETTINGS_TRANSFER_USE_KEY,
 				'labels' => [
@@ -644,7 +644,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsDebug::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDebug::FILTER_SETTINGS_GLOBAL_NAME,
-				'valid' => SettingsDebug::FILTER_SETTINGS_IS_VALID_NAME,
+				'valid' => SettingsDebug::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsDebug::SETTINGS_DEBUG_USE_KEY,
 				'labels' => [

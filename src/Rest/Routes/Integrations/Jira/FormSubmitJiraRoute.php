@@ -117,15 +117,6 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsJira::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('jiraMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG,
-				],
-			);
-		}
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -133,6 +124,18 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		$formId = $formDetails[Config::FD_FORM_ID];
+
+		if (!\apply_filters(SettingsJira::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('jiraMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG,
+				],
 			);
 		}
 

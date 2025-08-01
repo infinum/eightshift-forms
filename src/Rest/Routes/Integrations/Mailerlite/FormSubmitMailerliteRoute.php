@@ -117,16 +117,6 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsMailerlite::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('mailerliteMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
-				],
-			);
-		}
-
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -134,6 +124,16 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		if (!\apply_filters(SettingsMailerlite::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('mailerliteMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
+				],
 			);
 		}
 

@@ -16,7 +16,9 @@ use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FilesUploadRoute
@@ -55,7 +57,37 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
-		return true;
+		return false;
+	}
+
+	/**
+	 * Check if enrichment should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckEnrichment(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if country should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCountry(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if the route should check captcha.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCaptcha(): bool
+	{
+		return false;
 	}
 
 	/**
@@ -84,17 +116,16 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	protected function submitAction(array $formDetails)
 	{
 		// Validate files.
-		if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-			$validate = $this->getValidator()->validateFiles($formDetails);
-
-			if ($validate) {
+		if ($this->shouldCheckParamsValidation()) {
+			if ($validate = $this->getValidator()->validateFiles($formDetails)) {
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 					[
-						self::RESPONSE_OUTPUT_KEY => [
-							self::RESPONSE_OUTPUT_VALIDATION_KEY => $validate,
-						],
-						self::RESPONSE_INTERNAL_KEY => 'validationFileUploadMissingRequiredParams',
+						AbstractBaseRoute::R_DEBUG => $formDetails,
+						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_FILES,
+					],
+					[
+						UtilsHelper::getStateResponseOutputKey('validation') => $validate,
 					]
 				);
 			}
@@ -107,32 +138,30 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		// Upload files to temp folder.
 		$formDetails[Config::FD_FILES_UPLOAD] = $uploadFile;
 
-		$isUploadError = UploadHelpers::isUploadError($uploadError);
-
-		if ($isUploadError) {
+		if (UploadHelpers::isUploadError($uploadError)) {
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 				[
-					self::RESPONSE_OUTPUT_KEY => [
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR,
+				],
+				[
+					UtilsHelper::getStateResponseOutputKey('validation') => [
 						$uploadFileId => $this->getLabels()->getLabel('validationFileUpload'),
 					],
-					self::RESPONSE_SEND_FALLBACK_KEY => true,
-					self::RESPONSE_INTERNAL_KEY => 'validationFileUploadProcessError',
 				]
 			);
 		}
 
-		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				$this->getLabels()->getLabel('validationFileUploadSuccess'),
-				[
-					UtilsHelper::getStateResponseOutputKey('file') => $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '',
-				],
-				[
-					'formDetails' => $formDetails,
-				]
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationFileUploadSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('file') => $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '',
+			],
+		];
 	}
 }

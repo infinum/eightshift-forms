@@ -28,9 +28,9 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_fallback';
 
 	/**
-	 * Filter settings is Valid key.
+	 * Filter settings global is Valid key.
 	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_fallback';
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_fallback';
 
 	/**
 	 * Filter settings should log activity key.
@@ -87,6 +87,9 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE = 'validationSubmitOnce';
 	public const SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY = 'validationSecurity';
 	public const SETTINGS_FALLBACK_FLAG_VALIDATION_PARAMS = 'validationParams';
+	public const SETTINGS_FALLBACK_FLAG_VALIDATION_FILES = 'validationFiles';
+	public const SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS = 'filesUploadSuccess';
+	public const SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR = 'filesUploadError';
 	public const SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR = 'submitIntegrationError';
 	public const SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS = 'submitIntegrationSuccess';
 
@@ -100,19 +103,38 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FLAG_TALENTLYFT_MISSING_CONFIG = 'talentlyftMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG = 'pipedriveMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG = 'paycekMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS = 'paycekMissingReqParams';
+	public const SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS = 'paycekSuccess';
 	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG = 'nationbuilderMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG = 'momentsMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG = 'mailerliteMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG = 'mailerMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND = 'mailerErrorEmailSend';
+	public const SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS = 'mailerSuccess';
 	public const SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG = 'mailchimpMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG = 'jiraMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG = 'hubspotMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG = 'greenhouseMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG = 'goodbitsMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_CONFIG = 'corvusMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS = 'corvusMissingReqParams';
+	public const SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID = 'corvusMissingStoreId';
+	public const SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS = 'corvusSuccess';
 	public const SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG = 'calculatorMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS = 'calculatorSuccess';
 	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG = 'airtableMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_ACTIVE_CAMPAIGN_MISSING_CONFIG = 'activeCampaignMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION = 'customNoAction';
+	public const SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT = 'customSuccessRedirect';
+	public const SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR = 'customError';
+	public const SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR = 'customWpError';
+	public const SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS = 'customSuccess';
+
+	public const SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM = 'validationStepsCurrentStepProblem';
+	public const SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM = 'validationStepsFieldsProblem';
+	public const SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM = 'validationStepsNextStepProblem';
+	public const SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM = 'validationStepsParametersProblem';
+	public const SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_SUCCESS = 'validationStepsSuccess';
 
 	/**
 	 * Register all the hooks
@@ -122,7 +144,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 		\add_filter(self::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, [$this, 'shouldLogActivity'], 10, 2);
 	}
 
@@ -311,13 +333,25 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	}
 
 	/**
-	 * Get flags output.
+	 * Get flag label.
+	 *
+	 * @param string $key Key to get label for.
+	 *
+	 * @return string
+	 */
+	public function getFlagLabel(string $key): string
+	{
+		return $this->getFlagsList()[$key]['label'] ?? '';
+	}
+
+	/**
+	 * Get flags list.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getFlagsOutput(): array
+	private function getFlagsList(): array
 	{
-		$list = [
+		return [
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED => [
 				'label' => __('Captcha feature is disabled.', 'eightshift-forms'),
 				'isRecommended' => false,
@@ -396,6 +430,18 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => __('Someone tried to submit a form with missing required params.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
+			self::SETTINGS_FALLBACK_FLAG_VALIDATION_FILES => [
+				'label' => __('Someone tried to submit a form with missing required files.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS => [
+				'label' => __('Someone tried to submit a form with files upload success.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR => [
+				'label' => __('Someone tried to submit a form with files upload error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 			self::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR => [
 				'label' => __('Someone tried to submit a form to an integration that returned an error.', 'eightshift-forms'),
 				'isRecommended' => true,
@@ -436,6 +482,14 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => __('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS => [
+				'label' => __('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS => [
+				'label' => __('When Paycek integrations is able to send a request.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
 			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG => [
 				'label' => __('When Nationbuilder integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
@@ -451,6 +505,14 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			self::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG => [
 				'label' => __('When Mailer integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND => [
+				'label' => __('When Mailer integrations is not able to send an email.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS => [
+				'label' => __('When Mailer integrations is able to send an email.', 'eightshift-forms'),
+				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG => [
 				'label' => __('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
@@ -476,9 +538,25 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => __('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS => [
+				'label' => __('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID => [
+				'label' => __('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS => [
+				'label' => __('When Corvus integrations is able to send a request.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
 			self::SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG => [
 				'label' => __('When Calculator integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS => [
+				'label' => __('When Calculator integrations is able to calculate the form.', 'eightshift-forms'),
+				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG => [
 				'label' => __('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
@@ -488,11 +566,61 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => __('When ActiveCampaign integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION => [
+				'label' => __('When custom action is not set.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT => [
+				'label' => __('When custom action is successful and redirect is set.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR => [
+				'label' => __('When custom action returns an error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR => [
+				'label' => __('When custom action returns a WP error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS => [
+				'label' => __('When custom action is successful.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM => [
+				'label' => __('When validation steps current step is not set.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM => [
+				'label' => __('When validation steps fields are not set.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM => [
+				'label' => __('When validation steps next step is not set.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM => [
+				'label' => __('When validation steps parameters are not set.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_SUCCESS => [
+				'label' => __('When validation steps is successful.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
 		];
+	}
+
+	/**
+	 * Get flags output.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getFlagsOutput(): array
+	{
+
 
 		$output = [];
 
-		foreach ($list as $key => $value) {
+		foreach ($this->getFlagsList() as $key => $value) {
 			$label = $value['label'] ?? '';
 			$isRecommended = $value['isRecommended'] ?? false;
 

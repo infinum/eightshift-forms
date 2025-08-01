@@ -46,7 +46,7 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
-		return true;
+		return false;
 	}
 
 	/**
@@ -75,21 +75,15 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
-		if (!\apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('mailerMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG,
-				],
-			);
-		}
+		// NOTE: no need to check if settings are valid, because this check is done in the Mailer class.
 
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
-		$mailerResponse = $this->getMailer()->sendEmails(
+		// If error is thrown, it will be caught by the parent class.
+		// Send is mandatory.
+		$return = $this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCommonEmailResponseTags(
 				\array_merge(
@@ -100,41 +94,9 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 			)
 		);
 
-		$status = $mailerResponse['status'] ?? Config::STATUS_ERROR;
-		$label = $mailerResponse['label'] ?? 'mailerErrorEmailSend';
-		$debug = $mailerResponse['debug'] ?? [];
+		// Set validation submit once.
+		$this->getValidator()->setValidationSubmitOnce($formId);
 
-		if ($status == Config::STATUS_SUCCESS) {
-			// Set validation submit once.
-			$this->getValidator()->setValidationSubmitOnce($formId);
-
-			// return \rest_ensure_response(
-			// 	ApiHelpers::getApiSuccessPublicOutput(
-			// 		$this->getLabels()->getLabel($label, $formId),
-			// 		\array_merge(
-			// 			$successAdditionalData['public'],
-			// 			$successAdditionalData['additional']
-			// 		),
-			// 		$debug
-			// 	)
-			// );
-		}
-
-		throw new ValidationFailedException(
-			$this->getLabels()->getLabel($label, $formId),
-			[
-				self::RESPONSE_SEND_FALLBACK_KEY => true,
-				self::RESPONSE_OUTPUT_KEY => $this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
-				self::RESPONSE_INTERNAL_KEY => 'mailerErrorEmailSend',
-			]
-		);
-
-		return \rest_ensure_response(
-			ApiHelpers::getApiErrorPublicOutput(
-				$this->getLabels()->getLabel($label, $formId),
-				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
-				$debug
-			)
-		);
+		return $return;
 	}
 }

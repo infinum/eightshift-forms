@@ -138,7 +138,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 
 		foreach ($jobs as $type => $job) {
 			foreach ($job as $formId => $emails) {
-				$isValid = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, $type);
+				$isValid = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, false, $formId);
 
 				if (!$isValid) {
 					continue;

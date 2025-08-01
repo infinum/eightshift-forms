@@ -133,18 +133,19 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, [$this, 'isSettingsConfirmationValid']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, [$this, 'isSettingsConfirmationValid'], 10, 2);
 	}
 
 	/**
 	 * Determine if settings are valid.
 	 *
+	 * @param bool $output Output.
 	 * @param string $formId Form ID.
 	 *
 	 * @return boolean
 	 */
-	public function isSettingsValid(string $formId): bool
+	public function isSettingsValid(bool $output, string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
@@ -167,11 +168,12 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	/**
 	 * Determine if confirmation settings are valid.
 	 *
+	 * @param bool $output Output.
 	 * @param string $formId Form ID.
 	 *
 	 * @return boolean
 	 */
-	public function isSettingsConfirmationValid(string $formId): bool
+	public function isSettingsConfirmationValid(bool $output, string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
@@ -273,7 +275,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 										You can use multiple e-mails here by separating them by comma.<br /><br />
 										%s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags)),
 									'inputType' => 'text',
-									'inputPlaceholder' => 'info@infinum.com',
+									'inputPlaceholder' => 'info@domain.com',
 									'inputIsRequired' => true,
 									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId),
 								],
@@ -360,6 +362,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									'inputFieldLabel' => \__('E-mail client sender name', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Most e-mail clients will show this instead of the real address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
 									'inputType' => 'text',
+									'inputPlaceholder' => 'Info',
 									'inputIsRequired' => true,
 									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
 								],
@@ -373,6 +376,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									'inputFieldLabel' => \__('E-mail client from e-mail', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Most e-mail clients will us this as field as the sender e-mail (displayed as <i>From:</i>). It will also be used as a reply-to destination. Example: `info@infinum.com`.', 'eightshift-forms'),
 									'inputType' => 'text',
+									'inputPlaceholder' => 'info@domain.com',
 									'inputIsEmail' => true,
 									'inputIsRequired' => true,
 									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),

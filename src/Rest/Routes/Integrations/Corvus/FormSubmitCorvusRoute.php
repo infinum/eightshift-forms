@@ -16,9 +16,11 @@ use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 
@@ -76,7 +78,9 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+		$formId = $formDetails[Config::FD_FORM_ID];
+
+		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('corvusMissingConfig'),
 				[
@@ -85,7 +89,6 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 				],
 			);
 		}
-		$formId = $formDetails[Config::FD_FORM_ID];
 
 		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsCorvus::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
@@ -101,23 +104,34 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 			'cart',
 		];
 
-		$missingOrEmpty = \array_intersect_key(\array_flip(\array_filter($reqParams, fn($param) => empty($params[$param] ?? null))), $params);
+		$missingOrEmpty = false;
+
+		foreach ($reqParams as $param) {
+			if (!isset($params[$param]) || empty($params[$param])) {
+				$missingOrEmpty = true;
+				break;
+			}
+		}
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('corvusMissingReqParams', $formId)
-				)
+			throw new ValidationFailedException(
+				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS,
+				],
 			);
 		}
 
 		// Bail early if the API key is missing.
 		if (isset($params['store_id']) && empty(Variables::getApiKeyCorvus($params['store_id']))) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('corvusMissingReqParams', $formId)
-				)
+			throw new ValidationFailedException(
+				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID,
+				],
 			);
 		}
 
@@ -127,35 +141,38 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
-		// Send email.
-		$this->getMailer()->sendEmails(
-			$formDetails,
-			$this->getCommonEmailResponseTags(
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['private']
-				),
-				$formDetails
-			)
-		);
+		// Send only if explicitly enabled in the settings.
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId)) {
+			$this->getMailer()->sendEmails(
+				$formDetails,
+				$this->getCommonEmailResponseTags(
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['private']
+					),
+					$formDetails
+				)
+			);
+		}
 
-		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				$this->getLabels()->getLabel('corvusSuccess', $formId),
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional'],
-					[
-						UtilsHelper::getStateResponseOutputKey('processExternally') => [
-							'type' => 'POST',
-							'url' => $this->getUrl($formId),
-							'params' => $this->setRealOrderNumber($params, $successAdditionalData, $formId),
-						],
-					]
-				),
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional'],
+				[
+					UtilsHelper::getStateResponseOutputKey('processExternally') => [
+						'type' => 'POST',
+						'url' => $this->getUrl($formId),
+						'params' => $this->setRealOrderNumber($params, $successAdditionalData, $formId),
+					],
+				]
+			),
+		];
 	}
 
 	/**

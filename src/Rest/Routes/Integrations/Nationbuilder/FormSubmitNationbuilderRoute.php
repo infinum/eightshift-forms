@@ -117,16 +117,6 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('nationbuilderMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG,
-				],
-			);
-		}
-
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -134,6 +124,16 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		if (!\apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('nationbuilderMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG,
+				],
 			);
 		}
 

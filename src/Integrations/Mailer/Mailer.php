@@ -17,10 +17,13 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftForms_Parsedown as Parsedown;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -37,13 +40,33 @@ class Mailer implements MailerInterface
 	protected $security;
 
 	/**
+	 * Instance variable of LabelsInterface data.
+	 *
+	 * @var LabelsInterface
+	 */
+	protected $labels;
+
+	/**
+	 * Instance variable of SettingsFallbackDataInterface data.
+	 *
+	 * @var SettingsFallbackDataInterface
+	 */
+	protected $settingsFallback;
+
+	/**
 	 * Create a new instance that injects classes.
 	 * 
 	 * @param SecurityInterface $security Security interface.
+	 * @param LabelsInterface $labels Labels interface.
 	 */
-	public function __construct(SecurityInterface $security)
-	{
+	public function __construct(
+		SecurityInterface $security,
+		LabelsInterface $labels,
+		SettingsFallbackDataInterface $settingsFallback
+	) {
 		$this->security = $security;
+		$this->labels = $labels;
+		$this->settingsFallback = $settingsFallback;
 	}
 
 	/**
@@ -58,20 +81,15 @@ class Mailer implements MailerInterface
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
-		$debug = [
-			'formDetails' => $formDetails,
-		];
-
-		// Check if Mailer data is set and valid.
-		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-
 		// Bailout if settings are not ok.
-		if (!$isSettingsValid) {
-			return [
-				'status' => Config::STATUS_ERROR,
-				'label' => 'mailerMissingConfig',
-				'debug' => $debug,
-			];
+		if (!\apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			throw new BadRequestException(
+				$this->labels->getLabel('mailerMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG,
+				],
+			);
 		}
 
 		// This data is set here because $formDetails can me modified in the previous filters.
@@ -95,19 +113,23 @@ class Mailer implements MailerInterface
 
 		// If email fails.
 		if (!$response) {
-			return [
-				'status' => Config::STATUS_ERROR,
-				'label' => 'mailerErrorEmailSend',
-				'debug' => $debug,
-			];
+			throw new BadRequestException(
+				$this->labels->getLabel('mailerErrorEmailSend'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND,
+				],
+			);
 		}
 
 		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
 
 		return [
-			'status' => Config::STATUS_SUCCESS,
-			'label' => 'mailerSuccess',
-			'debug' => $debug,
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('mailerSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS,
+			],
 		];
 	}
 
@@ -174,6 +196,7 @@ class Mailer implements MailerInterface
 
 		if ($debugKeyValue) {
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
+			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), \esc_html($this->settingsFallback->getFlagLabel($debugKeyValue))) . '</p>';
 		}
 
 		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Website url: <strong>%s</strong>', 'eightshift-forms')), \esc_html(\get_bloginfo('url'))) . '</p>';
@@ -226,7 +249,7 @@ class Mailer implements MailerInterface
 	private function sendConfirmationEmail(string $formId, array $params, array $files, array $responseTags = []): bool
 	{
 		// Check if Mailer data is set and valid.
-		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
+		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, false, $formId);
 
 		if (!$isConfirmationValid) {
 			return false;

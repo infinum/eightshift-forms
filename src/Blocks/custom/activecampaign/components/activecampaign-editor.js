@@ -3,7 +3,7 @@ import { select } from '@wordpress/data';
 import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsEditor } from '../../../components/integrations/components/integrations-editor';
 
-export const ActiveCampaignEditor = ({
+export const ActivecampaignEditor = ({
 	attributes,
 	setAttributes,
 	itemIdKey,

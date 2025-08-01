@@ -117,16 +117,6 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('greenhouseMissingConfig'),
-				[
-					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG,
-				],
-			);
-		}
-
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -134,6 +124,16 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
+		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('greenhouseMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG,
+				],
 			);
 		}
 

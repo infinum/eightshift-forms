@@ -192,7 +192,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 				$output = [
 					// Translators: %s is the form title.
-					'adminListingPageTitle' => $this->getMultilangTitle(\sprintf(\__('Locations where your "%s" form is used', 'eightshift-forms'), $formTitle)),
+					'adminListingPageTitle' => $this->getMultiLangTitle(\sprintf(\__('Locations where your "%s" form is used', 'eightshift-forms'), $formTitle)),
 					// Translators: %s is the number of locations.
 					'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 form location.', 'eightshift-forms') : \sprintf(\__('Showing %s form locations.', 'eightshift-forms'), $count),
 				];
@@ -209,8 +209,8 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [
 					'adminListingPageTitle' => $formId ?
 						// Translators: %s is the form title.
-						$this->getMultilangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
-						$this->getMultilangTitle(\__('All entries', 'eightshift-forms')),
+						$this->getMultiLangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
+						$this->getMultiLangTitle(\__('All entries', 'eightshift-forms')),
 					'adminListingPageSubTitle' => $formId ?
 						\sprintf(
 							// Translators: %s is the number of forms.
@@ -246,8 +246,8 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [
 					'adminListingPageTitle' => $formId ?
 						// Translators: %s is the form title.
-						$this->getMultilangTitle(\sprintf(\__('Activity logs for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
-						$this->getMultilangTitle(\__('All activity logs', 'eightshift-forms')),
+						$this->getMultiLangTitle(\sprintf(\__('Activity logs for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
+						$this->getMultiLangTitle(\__('All activity logs', 'eightshift-forms')),
 					'adminListingPageSubTitle' => $formId ?
 						\sprintf(
 							// Translators: %s is the number of forms.
@@ -278,7 +278,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
 					$output = [
 						// Translators: %s is the form title.
-						'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted result outputs', 'eightshift-forms')),
+						'adminListingPageTitle' => $this->getMultiLangTitle(\__('Deleted result outputs', 'eightshift-forms')),
 						'adminListingPageSubTitle' => \sprintf(
 							// Translators: %s is the number of forms.
 							\_n(
@@ -292,7 +292,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					];
 				} else {
 					$output = [
-						'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted forms', 'eightshift-forms')),
+						'adminListingPageTitle' => $this->getMultiLangTitle(\__('Deleted forms', 'eightshift-forms')),
 						'adminListingPageSubTitle' => \sprintf(
 							// Translators: %s is the number of forms.
 							\_n(
@@ -311,7 +311,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$count = \count($items);
 
 				$output = [
-					'adminListingPageTitle' => $this->getMultilangTitle(\__('Result outputs', 'eightshift-forms')),
+					'adminListingPageTitle' => $this->getMultiLangTitle(\__('Result outputs', 'eightshift-forms')),
 					'adminListingPageSubTitle' => \sprintf(
 						// Translators: %s is the number of forms.
 						\_n(
@@ -329,7 +329,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$count = \count($items);
 
 				$output = [
-					'adminListingPageTitle' => $this->getMultilangTitle(\__('All Forms', 'eightshift-forms')),
+					'adminListingPageTitle' => $this->getMultiLangTitle(\__('All Forms', 'eightshift-forms')),
 					'adminListingPageSubTitle' => \sprintf(
 						// Translators: %s is the number of forms.
 						\_n(
@@ -356,15 +356,15 @@ class FormAdminMenu extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get multilanguage title depending on the settings flag.
+	 * Get multilinguals title depending on the settings flag.
 	 *
 	 * @param string $title Title to be translated.
 	 *
 	 * @return string
 	 */
-	private function getMultilangTitle(string $title): string
+	private function getMultiLangTitle(string $title): string
 	{
-		$useWpml = \apply_filters(SettingsWpml::FILTER_SETTINGS_IS_VALID_NAME, false);
+		$useWpml = \apply_filters(SettingsWpml::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		if ($useWpml) {
 			$lang = \apply_filters('wpml_current_language', '');
 			if ($lang) {
@@ -933,13 +933,13 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					if (!$itemTitle) {
 						// Translators: %s is the form ID.
-						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
+						$itemTitle = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
 					}
 
 					$isValid = $this->isIntegrationValid($item);
 
 					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $title . ($isDevMode ? " ({$itemId})" : ''),
+						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineIcon' => $cardIcon,
@@ -1105,7 +1105,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							],
 							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 						]),
-						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) ?
+						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 							Helpers::render('submit', [
 								'submitVariant' => 'ghost',
 								'submitButtonAsLink' => true,
@@ -1131,7 +1131,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 					]),
-					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) ?
+					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitButtonAsLink' => true,

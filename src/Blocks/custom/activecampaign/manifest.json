@@ -20,10 +20,10 @@
 		"inserter": false
 	},
 	"attributes": {
-		"activeCampaignIntegrationId": {
+		"activecampaignIntegrationId": {
 			"type": "string"
 		},
-		"activeCampaignIntegrationInnerId": {
+		"activecampaignIntegrationInnerId": {
 			"type": "string"
 		}
 	}

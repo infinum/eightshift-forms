@@ -28,9 +28,9 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_debug';
 
 	/**
-	 * Filter settings is Valid key.
+	 * Filter settings global is Valid key.
 	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_debug';
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_debug';
 
 	/**
 	 * Filter settings is debug active key.
@@ -72,7 +72,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, [$this, 'isDebugActive'], 10, 2);
 	}
 

@@ -113,7 +113,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	}
 
 	/**
-	 * Tooggle geolocation usage based on this flag.
+	 * Toggle geolocation usage based on this flag.
 	 *
 	 * @return boolean
 	 */

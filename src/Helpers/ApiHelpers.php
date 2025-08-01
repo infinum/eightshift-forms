@@ -222,24 +222,32 @@ final class ApiHelpers
 	/**
 	 * Check if the code is a success code.
 	 *
-	 * @param int $code The code to check.
+	 * @param int|string $code The code to check.
 	 *
 	 * @return bool
 	 */
-	public static function isSuccessResponse(int $code): bool
+	public static function isSuccessResponse(int|string $code): bool
 	{
+		if (\is_string($code)) {
+			$code = (int) $code;
+		}
+
 		return $code >= AbstractRoute::API_RESPONSE_CODE_OK && $code <= 299;
 	}
 
 	/**
 	 * Check if the code is a error code.
 	 *
-	 * @param int $code The code to check.
+	 * @param int|string $code The code to check.
 	 *
 	 * @return bool
 	 */
-	public static function isErrorResponse(int $code): bool
+	public static function isErrorResponse(int|string $code): bool
 	{
+		if (\is_string($code)) {
+			$code = (int) $code;
+		}
+
 		return $code < AbstractRoute::API_RESPONSE_CODE_OK && $code > 299;
 	}
 }

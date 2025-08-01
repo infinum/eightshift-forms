@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the ActiveCampaign Block view.
+ * Template for the Activecampaign Block view.
  *
  * @package EightshiftForms
  */

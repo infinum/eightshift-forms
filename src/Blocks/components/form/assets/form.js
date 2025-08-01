@@ -128,6 +128,13 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
+		// Add nonce for frontend and admin.
+		const nonce = this.state.getStateConfigNonce();
+
+		if (nonce) {
+			body.headers['X-WP-Nonce'] = nonce;
+		}
+
 		// Get geolocation data from ajax to detect what we will remove from DOM.
 		fetch(this.state.getRestUrl('geolocation'), body)
 			.then((response) => {
@@ -353,6 +360,13 @@ export class Form {
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
+
+		// Add nonce for frontend and admin.
+		const nonce = this.state.getStateConfigNonce();
+
+		if (nonce) {
+			body.headers['X-WP-Nonce'] = nonce;
+		}
 
 		const url = this.state.getRestUrl('validationStep');
 
@@ -1464,22 +1478,53 @@ export class Form {
 			dropzone.on('error', (file) => {
 				const { response, status } = file.xhr;
 
+				let isFatalError = false;
+
 				let msg = 'serverError';
 
 				if (response.includes('wordfence') || response.includes('Wordfence')) {
 					msg = 'wordfenceFirewall';
+					isFatalError = true;
 				}
 
-				if (response.includes('cloudflare') || response.includes('Cloudflare')) {
+				if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
 					msg = 'cloudflareFirewall';
+					isFatalError = true;
 				}
 
-				file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+				if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
+					msg = 'cloudFrontFirewall';
+					isFatalError = true;
+				}
 
-				button.focus();
-				this.utils.setOnFocus(button);
+				if (isFatalError) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 
-				throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError" with code: "${status}" and message: "${msg}"`);
+					button.focus();
+					this.utils.setOnFocus(button);
+
+					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadErrorFirewall" with code: "${status}" and message: "${msg}"`);
+				}
+
+				try {
+					const response = JSON.parse(file.xhr.response);
+
+					const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+
+					// Output errors if there are any.
+					if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					}
+
+					field?.classList?.add(this.state.getStateSelector('isFilled'));
+
+					button.focus();
+					this.utils.setOnFocus(button);
+				} catch (e) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+
+					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError"`);
+				}
 			});
 
 			// Trigger on wrap click.

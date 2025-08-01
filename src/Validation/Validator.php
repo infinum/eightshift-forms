@@ -221,10 +221,12 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for email params.
 					case 'isEmail':
-						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
+						if (!$this->isEmail($inputValue)) {
+							if (!empty($inputValue)) {
+								$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
+							}
 						} else {
-							if (SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+							if (!empty($inputValue) && SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
 								$tldList = Helpers::getCache()[ManifestCache::TYPE_FORMS][ManifestCache::TLD_KEY];
 
 								if (!$this->isEmailTldValid($inputValue, \array_values($tldList))) {
