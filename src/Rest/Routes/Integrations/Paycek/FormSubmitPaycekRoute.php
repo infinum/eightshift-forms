@@ -142,8 +142,6 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 
 		$params = $this->setRealOrderNumber($params, $successAdditionalData, $formId);
 
-		\dump($params);
-
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
