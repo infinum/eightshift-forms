@@ -614,6 +614,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				],
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [
+				'settings' => SettingsFallback::FILTER_SETTINGS_NAME,
 				'settingsGlobal' => SettingsFallback::FILTER_SETTINGS_GLOBAL_NAME,
 				'valid' => SettingsFallback::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,

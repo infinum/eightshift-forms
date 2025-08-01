@@ -248,6 +248,6 @@ final class ApiHelpers
 			$code = (int) $code;
 		}
 
-		return $code < AbstractRoute::API_RESPONSE_CODE_OK && $code > 299;
+		return $code < AbstractRoute::API_RESPONSE_CODE_OK || $code > 299;
 	}
 }

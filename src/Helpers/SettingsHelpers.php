@@ -78,6 +78,26 @@ final class SettingsHelpers
 	}
 
 	/**
+	 * Get settings value with fallback only
+	 *
+	 * @param string $key Key to find in db settings.
+	 * @param string $fallback Fallback value.
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public static function getSettingValueWithFallbackOnly(string $key, string $fallback, string $formId): string
+	{
+		$value = self::getSettingValue($key, $formId);
+
+		if (!$value) {
+			$value = $fallback;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Get settings value array.
 	 *
 	 * @param string $key Providing string to append to.

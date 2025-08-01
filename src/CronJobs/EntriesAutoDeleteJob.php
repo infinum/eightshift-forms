@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds WP Cron job schedule event for - EntriesAutoDelete.
+ * Class that holds WP Cron job schedule event for - EntriesAutoDeleteJob.
  *
  * @package EightshiftForms\CronJobs
  */
@@ -19,9 +19,9 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * EntriesAutoDelete class.
+ * EntriesAutoDeleteJob class.
  */
-class EntriesAutoDelete implements ServiceInterface, ServiceCliInterface
+class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Job name.
@@ -109,26 +109,27 @@ class EntriesAutoDelete implements ServiceInterface, ServiceCliInterface
 			$formId = (string) $form['id'] ?: '';
 
 			$autoDeleteIsUsed = SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_KEY, SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_KEY, $formId);
-			$retentionInterval = SettingsHelpers::getSettingValue(SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId);
+			$retentionInterval = SettingsHelpers::getSettingValueWithFallbackOnly(SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, (string) SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_DEFAULT_VALUE, $formId);
 
-			if (!$autoDeleteIsUsed || !\is_numeric($retentionInterval) || (int) $retentionInterval < 1) {
+			if (!$autoDeleteIsUsed) {
 				continue;
 			}
 
 			$entries = EntriesHelper::getEntries($formId);
 
 			foreach ($entries as $entry) {
+				$entryId = $entry['id'] ?? '';
 				$entryDate = $entry['createdAt'] ?? '';
 				$entryDate = new DateTime($entryDate);
-				$entryDate->modify('+' . $retentionInterval . ' days');
+				$entryDate->modify("+{$retentionInterval} days");
+
+				if (!$entryId) {
+					continue;
+				}
 
 				// If entry date is older than retention interval, delete entry.
 				if ($entryDate < new DateTime()) {
-					$entryId = $entry['id'] ?? '';
-
-					if ($entryId) {
-						EntriesHelper::deleteEntry($entryId);
-					}
+					EntriesHelper::deleteEntry($entryId);
 				}
 			}
 		}

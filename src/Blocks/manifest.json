@@ -575,6 +575,8 @@
 			"bulkType": "data-bulk-type",
 			"bulkItems": "data-bulk-items",
 
+			"exportType": "data-export-type",
+
 			"stepId": "data-step-id",
 			"submitStepDirection": "data-step-direction",
 			"postId": "data-post-id",

@@ -191,7 +191,7 @@ class Mailer implements MailerInterface
 		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Form ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html($formId)) . '</p>';
 
 		if ($activityLogId) {
-			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Activity Log ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html($activityLogId)) . '</p>';
+			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Activity Log ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html((string) $activityLogId)) . '</p>';
 		}
 
 		if ($debugKeyValue) {

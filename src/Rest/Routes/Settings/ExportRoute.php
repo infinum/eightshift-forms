@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
@@ -50,7 +51,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $params Params passed from the request.
 	 *
 	 * @return array<string, string>
 	 */
@@ -58,6 +59,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 	{
 		return [
 			'ids' => 'string',
+			'type' => 'string',
 		];
 	}
 
@@ -81,7 +83,49 @@ class ExportRoute extends AbstractSimpleFormSubmit
 			);
 		}
 
+		switch ($params['type']) {
+			case 'entry':
+				$output = $this->getEntryOutput($ids);
+				break;
+			case 'activity-log':
+				$output = $this->getActivityLogOutput($ids);
+				break;
+			default:
+				$output = [];
+				break;
+		}
+
+		if (!$output) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('exportDataEmpty'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
+				]
+			);
+		}
+
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('exportSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminExportContent') => \wp_json_encode($output),
+			],
+		];
+	}
+
+	/**
+	 * Get entry output.
+	 *
+	 * @param array<string> $ids Entry Ids.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getEntryOutput(array $ids): array
+	{
 		$output = [];
+
 		foreach ($ids as $id) {
 			$entry = EntriesHelper::getEntry((string) $id);
 
@@ -123,24 +167,30 @@ class ExportRoute extends AbstractSimpleFormSubmit
 			$output[] = $outputInner;
 		}
 
+		return $output;
+	}
 
-		if (!$output) {
-			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportDataEmpty'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
-				]
-			);
+	/**
+	 * Get activity log output.
+	 *
+	 * @param array<string> $ids Activity log Ids.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getActivityLogOutput(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			$activityLog = ActivityLogHelper::getActivityLog((string) $id);
+
+			if (!$activityLog) {
+				continue;
+			}
+
+			$output[] = $activityLog;
 		}
 
-		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('exportSuccess'),
-			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
-			],
-			AbstractBaseRoute::R_DATA => [
-				UtilsHelper::getStateResponseOutputKey('adminExportContent') => \wp_json_encode($output),
-			],
-		];
+		return $output;
 	}
 }

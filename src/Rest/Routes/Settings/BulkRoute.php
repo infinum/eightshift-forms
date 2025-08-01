@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Transfer\TransferInterface;
@@ -21,7 +21,6 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use WP_REST_Request;
 
 /**
  * Class BulkRoute
@@ -93,7 +92,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $params Params passed from the request.
 	 *
 	 * @return array<string, string>
 	 */
@@ -150,6 +149,12 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				break;
 			case 'delete-entry':
 				$output = $this->deleteEntry($ids);
+				break;
+			case 'delete-activity-log':
+				$output = $this->deleteActivityLog($ids);
+				break;
+			case 'duplicate-activity-log':
+				$output = $this->duplicateActivityLog($ids);
 				break;
 		}
 
@@ -389,12 +394,8 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		$output = [];
 
 		foreach ($ids as $id) {
-			$title = \get_the_title($id);
-
-			if (!$title) {
-				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
-			}
+			// translators: %s replaces form id.
+			$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
 
 			$action = EntriesHelper::deleteEntry((string) $id);
 
@@ -406,6 +407,33 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		}
 
 		return $this->output($output, 'delete-entry');
+	}
+
+	/**
+	 * Delete activity log by Ids.
+	 *
+	 * @param array<int> $ids Activity log Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function deleteActivityLog(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			// translators: %s replaces activity log id.
+			$title = \sprintf(\esc_html__('Activity log %s', 'eightshift-forms'), $id);
+
+			$action = ActivityLogHelper::deleteActivityLog((string) $id);
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'delete-activity-log');
 	}
 
 	/**
@@ -488,12 +516,8 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		$output = [];
 
 		foreach ($ids as $id) {
-			$title = \get_the_title($id);
-
-			if (!$title) {
-				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
-			}
+			// translators: %s replaces form id.
+			$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
 
 			$entry = EntriesHelper::getEntry((string) $id);
 
@@ -507,5 +531,34 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		}
 
 		return $this->output($output, 'duplicate-entry');
+	}
+
+	/**
+	 * Duplicate activity log by Ids.
+	 *
+	 * @param array<int> $ids Activity log Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function duplicateActivityLog(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			// translators: %s replaces activity log id.
+			$title = \sprintf(\esc_html__('Activity log %s', 'eightshift-forms'), $id);
+
+			$activityLog = ActivityLogHelper::getActivityLog((string) $id);
+
+			$action  = ActivityLogHelper::setActivityLog($activityLog['ipAddress'] ?? '', $activityLog['statusKey'] ?? '', $activityLog['formId'] ?? '', \json_decode($activityLog['data'] ?? '[]', true));
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'duplicate-activity-log');
 	}
 }

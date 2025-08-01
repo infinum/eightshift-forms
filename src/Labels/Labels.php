@@ -100,7 +100,7 @@ class Labels implements LabelsInterface
 
 			// If there is an override in the DB use that.
 			if (!empty($dbLabel)) {
-				return $dbLabel;
+				return \esc_html($dbLabel);
 			}
 		}
 
@@ -111,7 +111,7 @@ class Labels implements LabelsInterface
 			$labels = \array_merge(...\array_values($this->getLabels()));
 		}
 
-		return $labels[$key] ?? '';
+		return \esc_html($labels[$key] ?? '');
 	}
 
 	/**

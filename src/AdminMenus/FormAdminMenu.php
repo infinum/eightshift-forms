@@ -557,7 +557,6 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
-			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$left = [
 					Helpers::render('checkbox', [
 						'checkboxValue' => 'all',
@@ -599,6 +598,55 @@ class FormAdminMenu extends AbstractAdminMenu
 						'additionalClass' => "{$exportSelector} {$bulkSelector}",
 						'submitAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'fake',
+							UtilsHelper::getStateAttribute('exportType') => 'entry',
+							UtilsHelper::getStateAttribute('formId') => $formId,
+						],
+					]),
+				];
+				break;
+			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
+				$left = [
+					Helpers::render('checkbox', [
+						'checkboxValue' => 'all',
+						'checkboxName' => 'all',
+						'additionalClass' => $selectAllSelector,
+					]),
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(),
+						'submitValue' => \__('Back', 'eightshift-forms'),
+						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
+					]),
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Delete', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'delete-activity-log',
+						],
+					]),
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Duplicate', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'duplicate-activity-log',
+						],
+					]),
+				];
+
+				$right = [
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Export to CSV', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => "{$exportSelector} {$bulkSelector}",
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'fake',
+							UtilsHelper::getStateAttribute('exportType') => 'activity-log',
 							UtilsHelper::getStateAttribute('formId') => $formId,
 						],
 					]),
@@ -901,11 +949,11 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					if (!$itemTitle) {
 						// Translators: %s is the form ID.
-						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
+						$itemTitle = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
 					}
 
 					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $title . ($isDevMode ? " ({$itemId})" : ''),
+						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $item['editLink'] ?? '#',
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),

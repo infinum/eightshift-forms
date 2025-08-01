@@ -57,7 +57,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $params Params passed from the request.
 	 *
 	 * @return array<string, string>
 	 */

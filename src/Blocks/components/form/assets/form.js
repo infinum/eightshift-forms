@@ -1514,6 +1514,8 @@ export class Form {
 					// Output errors if there are any.
 					if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
 						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					} else {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.message;
 					}
 
 					field?.classList?.add(this.state.getStateSelector('isFilled'));

@@ -75,7 +75,16 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	 * Entries settings auto delete key.
 	 */
 	public const SETTINGS_ENTRIES_AUTO_DELETE_KEY = 'entries-auto-delete-use';
+
+	/**
+	 * Entries settings auto delete retention key.
+	 */
 	public const SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY = 'entries-auto-delete-retention';
+
+	/**
+	 * Entries settings auto delete retention default value.
+	 */
+	public const SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_DEFAULT_VALUE = 160;
 
 	/**
 	 * Data data key.
@@ -274,7 +283,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Auto-delete old entries', 'eightshift-forms'),
 											'checkboxHelp' => \__('Entries older than the retention interval will be automatically deleted.', 'eightshift-forms'),
-											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, $formId),
+											'checkboxIsChecked' => $autoDeleteIsUsed,
 											'checkboxValue' => self::SETTINGS_ENTRIES_AUTO_DELETE_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -286,13 +295,13 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 										'component' => 'input',
 										'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY),
 										'inputFieldLabel' => \__('Retention interval', 'eightshift-forms'),
-										'inputFieldHelp' => \__('Duration of time in days an entry should be retained in the CMS.', 'eightshift-forms'),
+										'inputFieldHelp' => \__('Duration of time in days an entry should be retained in the database.', 'eightshift-forms'),
 										'inputType' => 'number',
 										'inputMin' => 1,
 										'inputMax' => 365,
 										'inputStep' => 1,
 										'inputIsNumber' => true,
-										'inputPlaceholder' => 160,
+										'inputPlaceholder' => self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_DEFAULT_VALUE,
 										'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
 										'inputFieldInlineBeforeAfterContent' => true,
 										'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId),

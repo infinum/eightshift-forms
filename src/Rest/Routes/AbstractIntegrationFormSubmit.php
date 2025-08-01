@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Entries\EntriesHelper;
@@ -118,28 +117,9 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
 
 	/**
-	 * Validation errors constants.
-	 *
-	 * @var string
-	 */
-	protected const VALIDATION_ERROR_CODE = 'validationErrorCode';
-	protected const VALIDATION_ERROR_DATA = 'validationErrorData';
-	protected const VALIDATION_ERROR_MSG = 'validationErrorMsg';
-	protected const VALIDATION_ERROR_OUTPUT = 'validationOutput';
-	protected const VALIDATION_ERROR_IS_SPAM = 'validationIsSpam';
-
-	protected const RESPONSE_OUTPUT_KEY = 'responseOutput';
-	protected const RESPONSE_OUTPUT_VALIDATION_KEY = 'responseOutputValidation';
-	protected const RESPONSE_OUTPUT_CAPTCHA_KEY = 'responseOutputCaptcha';
-	protected const RESPONSE_SEND_FALLBACK_KEY = 'responseSendFallback';
-	protected const RESPONSE_INTERNAL_KEY = 'responseInternalKey';
-
-	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @throws UnverifiedRequestException Wrong config error.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -156,6 +136,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				throw new PermissionDeniedException(
 					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
 					]
 				);
@@ -166,6 +147,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new ForbiddenException(
 					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_LOGGED_IN,
 					]
 				);
@@ -176,6 +158,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new ForbiddenException(
 					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE,
 					]
 				);
@@ -186,6 +169,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
 					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
@@ -197,6 +181,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					throw new RequestLimitException(
 						$this->getLabels()->getLabel('validationSecurity'),
 						[
+							AbstractBaseRoute::R_DEBUG => $formDetails,
 							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY,
 						]
 					);
@@ -209,6 +194,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					throw new ValidationFailedException(
 						$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 						[
+							AbstractBaseRoute::R_DEBUG => $formDetails,
 							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_PARAMS,
 						],
 						[
@@ -288,7 +274,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			if ($this->shouldLogActivity($return)) {
 				$this->getMailer()->sendTroubleshootingEmail(
-					$formDetails,
+					$formDetails, // @phpstan-ignore-line
 					$return
 				);
 			}
@@ -402,6 +388,8 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 	/**
 	 * Check if activity should be logged.
+	 *
+	 * @param array<string, mixed> $return Return data.
 	 *
 	 * @return bool
 	 */
@@ -1233,7 +1221,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			return [];
 		}
 
-		// Skip any manipulations if direct param is set.
 		$paramsOutput = \array_map(
 			static function ($item) {
 				// Check if array then output only value that is not empty.

@@ -29,8 +29,10 @@ export class Export {
 
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const formId = field?.getAttribute(this.state.getStateAttribute('formId'));
+		const type = field?.getAttribute(this.state.getStateAttribute('exportType'));
 
 		formData.append('formId', formId);
+		formData.append('type', type);
 		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
 
 		this.utils.showLoader(formId);
