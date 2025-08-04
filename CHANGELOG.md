@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.0.4]
+
+### Fixed
+
+- Wrong frontend style dependency handle.
+
 ## [7.0.3]
 
 ### Fixed
@@ -1325,6 +1331,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[7.0.4]: https://github.com/infinum/eightshift-forms/compare/7.0.3...7.0.4
 [7.0.3]: https://github.com/infinum/eightshift-forms/compare/7.0.2...7.0.3
 [7.0.2]: https://github.com/infinum/eightshift-forms/compare/7.0.1...7.0.2
 [7.0.1]: https://github.com/infinum/eightshift-forms/compare/7.0.0...7.0.1
