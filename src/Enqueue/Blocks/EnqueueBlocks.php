@@ -240,6 +240,18 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
+	 * Get front end style dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getBlockFrontendStyleDependencies(): array
+	{
+		return ["{$this->getAssetsPrefix()}-block-frontend-mandatory-style"];
+	}
+
+	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Frontend.
 	 *
 	 * @return void
