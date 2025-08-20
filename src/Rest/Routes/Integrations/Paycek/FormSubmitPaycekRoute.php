@@ -15,7 +15,6 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Exception\BadRequestException;
@@ -74,6 +73,9 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If integration is missing config.
+	 * @throws ValidationFailedException If required params are missing.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -81,6 +83,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		$formId = $formDetails[Config::FD_FORM_ID];
 
 		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('paycekMissingConfig'),
 				[
@@ -88,6 +91,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsPaycek::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
@@ -111,6 +115,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		}
 
 		if ($missingOrEmpty) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('paycekMissingReqParams', $formId),
 				[
@@ -118,6 +123,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Set validation submit once.

@@ -112,6 +112,9 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If test API fails.
+	 * @throws DisabledIntegrationException If integration is disabled.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -119,16 +122,19 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new DisabledIntegrationException(
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
 			);
+			// phpcs:enable
 		}
 
 		$formId = $formDetails[Config::FD_FORM_ID];
 
 		if (!\apply_filters(SettingsPipedrive::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('pipedriveMissingConfig'),
 				[
@@ -136,6 +142,7 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Send application to Hubspot.

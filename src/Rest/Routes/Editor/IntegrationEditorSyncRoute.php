@@ -106,6 +106,8 @@ class IntegrationEditorSyncRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If form sync fails.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -116,6 +118,7 @@ class IntegrationEditorSyncRoute extends AbstractSimpleFormSubmit
 		$message = $syncForm['message'] ?? '';
 
 		if ($status === Config::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$message,
 				[
@@ -123,6 +126,7 @@ class IntegrationEditorSyncRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'syncFormError',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

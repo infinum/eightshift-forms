@@ -105,6 +105,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If Workable is not configured.
 	 * @throws BadRequestException If integration items are missing.
 	 *
 	 * @return array<string, mixed>
@@ -113,17 +114,20 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 	{
 		// Check if global settings is valid.
 		if (!\apply_filters(SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('globalNotConfigured'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = $this->workableClient->getItems();
 
 		if (!$items) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
 				[
@@ -131,6 +135,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = \array_filter(\array_values(\array_map(

@@ -113,6 +113,9 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If Mailchimp is missing config.
+	 * @throws DisabledIntegrationException If Mailchimp is disabled.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -120,14 +123,17 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new DisabledIntegrationException(
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
 			);
+			// phpcs:enable
 		}
 
 		if (!\apply_filters(SettingsMailchimp::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('mailchimpMissingConfig'),
 				[
@@ -135,6 +141,7 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Send application to Mailchimp.

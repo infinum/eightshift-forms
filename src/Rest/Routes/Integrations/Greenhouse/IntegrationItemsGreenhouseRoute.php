@@ -105,23 +105,28 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If integration items are missing.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
 	{
 		// Check if global settings is valid.
 		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('globalNotConfigured'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = $this->greenhouseClient->getItems();
 
 		if (!$items) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
 				[
@@ -129,6 +134,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = \array_filter(\array_values(\array_map(

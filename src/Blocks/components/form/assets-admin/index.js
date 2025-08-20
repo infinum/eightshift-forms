@@ -176,18 +176,17 @@ domReady(() => {
 	}
 
 	////////////////////////////////////////////////////////////////
-	// Manual import api
+	// Manual submit
 	////////////////////////////////////////////////////////////////
 
-	const selectorManualImportApi = state.getStateSelectorAdmin('manualImportApi', true);
+	const selectorManualSubmitTrigger = state.getStateSelectorAdmin('manualSubmitTrigger', true);
 
-	if (document.querySelector(selectorManualImportApi)) {
-		import('./manual-import-api').then(({ ManualImportApi }) => {
-			new ManualImportApi({
+	if (document.querySelector(selectorManualSubmitTrigger)) {
+		import('./manual-submit').then(({ ManualSubmit }) => {
+			new ManualSubmit({
 				utils: utils,
-				selector: selectorManualImportApi,
-				outputSelector: state.getStateSelectorAdmin('manualImportApiOutput', true),
-				dataSelector: state.getStateSelectorAdmin('manualImportApiData', true),
+				triggerSelector: selectorManualSubmitTrigger,
+				dataSelector: state.getStateSelectorAdmin('manualSubmitData', true),
 				importErrorMsg: esFormsLocalization.importErrorMsg,
 			}).init();
 		});

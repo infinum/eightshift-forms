@@ -69,6 +69,9 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If custom action is not set or empty.
+	 * @throws BadRequestException If custom action request fails.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -80,6 +83,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 
 		// If form action is not set or empty.
 		if (!$action) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('customNoAction'),
 				[
@@ -87,6 +91,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// NOTE: no need to check if settings are valid, because this check is done in the Mailer class.
@@ -133,6 +138,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $customResponse;
 
 		if (\is_wp_error($customResponse)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('customError', $formId),
 				[
@@ -140,12 +146,14 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$customResponseCode = \wp_remote_retrieve_response_code($customResponse);
 
 		// If custom action request fails we'll return the generic error message.
 		if (ApiHelpers::isErrorResponse($customResponseCode)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('customError', $formId),
 				[
@@ -154,6 +162,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 				],
 				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 			);
+			// phpcs:enable
 		}
 
 		// Set validation submit once.

@@ -272,44 +272,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 							],
 						],
 					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Manual import', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introTitle' => \__('Manual import', 'eightshift-forms'),
-								'introSubtitle' => \__('
-								<span>Manual import JSON data that you get from the failed integration.</span>
-								<span>Paste the JSON data from you email in the <strong>Import data field</strong>.</span>', 'eightshift-forms'),
-							],
-							[
-								'component' => 'textarea',
-								'textareaName' => 'log',
-								'textareaFieldLabel' => \__('Import data', 'eightshift-forms'),
-								'textareaSize' => 'big',
-								'textareaLimitHeight' => true,
-								'textareaIsPreventSubmit' => true,
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('manualImportApiData'),
-							],
-							[
-								'component' => 'submit',
-								'submitValue' => \__('Manual import', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('manualImportApi'),
-							],
-							[
-								'component' => 'textarea',
-								'textareaName' => 'log',
-								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
-								'textareaSize' => 'big',
-								'textareaIsPreventSubmit' => true,
-								'textareaLimitHeight' => true,
-								'textareaIsReadOnly' => true,
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('manualImportApiOutput'),
-							],
-						],
-					],
 				],
 			],
 

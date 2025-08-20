@@ -125,6 +125,9 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws DisabledIntegrationException If integration is disabled.
+	 * @throws BadRequestException If integration is missing config.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -132,14 +135,17 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new DisabledIntegrationException(
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
 			);
+			// phpcs:enable
 		}
 
 		if (!\apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('momentsMissingConfig'),
 				[
@@ -147,6 +153,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Send application to Moments.

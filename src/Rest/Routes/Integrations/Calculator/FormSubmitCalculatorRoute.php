@@ -14,7 +14,6 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -70,11 +69,14 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If integration is missing config.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
 	{
 		if (!\apply_filters(SettingsCalculator::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('calculatorMissingConfig'),
 				[
@@ -82,6 +84,7 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$formId = $formDetails[Config::FD_FORM_ID];

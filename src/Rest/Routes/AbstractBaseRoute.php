@@ -43,7 +43,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 	/**
 	 * Create a new instance that injects classes.
-	 * 
+	 *
 	 * @param SecurityInterface $security Security interface.
 	 */
 	public function __construct(SecurityInterface $security)

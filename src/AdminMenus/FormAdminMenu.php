@@ -909,26 +909,44 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$i = 0;
 
+				$manualSubmitTrigger = UtilsHelper::getStateSelectorAdmin('manualSubmitTrigger');
+				$manualSubmitData = UtilsHelper::getStateSelectorAdmin('manualSubmitData');
+
+
 				$tableHead = [];
 				$tableContent = [];
 
 				foreach (\array_reverse($items) as $item) {
 					$itemId = $item['id'] ?? '';
+					$formId = $item['formId'] ?? '';
 
 					$tableHead['bulk'] = \__('Bulk', 'eightshift-forms');
 					$tableContent[$itemId]['bulk'] = Helpers::ensureString($this->getLeftContent($item));
 					$tableHead['id'] = \__('ID', 'eightshift-forms');
 					$tableContent[$itemId]['id'] = $itemId;
 					$tableHead['formId'] = \__('Form ID', 'eightshift-forms');
-					$tableContent[$itemId]['formId'] = $item['formId'] ?? '';
+					$tableContent[$itemId]['formId'] = $formId;
 					$tableHead['statusKey'] = \__('Status', 'eightshift-forms');
 					$tableContent[$itemId]['statusKey'] = $item['statusKey'] ?? '';
 					$tableHead['ipAddress'] = \__('IP', 'eightshift-forms');
 					$tableContent[$itemId]['ipAddress'] = $item['ipAddress'] ?? '';
 					$tableHead['createdAt'] = \__('Created', 'eightshift-forms');
 					$tableContent[$itemId]['createdAt'] = $item['createdAt'] ?? '';
+					$tableHead['submit'] = \__('Submit', 'eightshift-forms');
+					$tableContent[$itemId]['submit'] = Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Submit', 'eightshift-forms'),
+						'additionalClass' => "{$manualSubmitTrigger}",
+						'submitItemAttrs' => [
+							UtilsHelper::getStateAttribute('formId') => $formId,
+							UtilsHelper::getStateAttribute('manualSubmitId') => $itemId,
+							'title' => \__('Manual submit data to external integration.', 'eightshift-forms'),
+						],
+					]);
 					$tableHead['data'] = \__('Data', 'eightshift-forms');
-					$tableContent[$itemId]['data'] = $item['data'] ?? '';
+					$tableContent[$itemId]['data'] = '<span class="' . $manualSubmitData . '" ' . Helpers::getAttrsOutput([
+						UtilsHelper::getStateAttribute('manualSubmitId') => $itemId,
+					]) . '>' . ($item['data'] ?? '') . '</span>';
 
 					$i++;
 				}

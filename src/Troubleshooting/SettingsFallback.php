@@ -448,299 +448,299 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 		return [
 			// Captcha.
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED => [
-				'label' => __('Captcha feature is disabled.', 'eightshift-forms'),
+				'label' => \__('Captcha feature is disabled.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN => [
-				'label' => __('Captcha request is missing token.', 'eightshift-forms'),
+				'label' => \__('Captcha request is missing token.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR => [
-				'label' => __('Captcha request has encountered an WP error.', 'eightshift-forms'),
+				'label' => \__('Captcha request has encountered an WP error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_FREE_OUTPUT_ERROR => [
-				'label' => __('Captcha type free returned an error response.', 'eightshift-forms'),
+				'label' => \__('Captcha type free returned an error response.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR => [
-				'label' => __('Captcha type enterprise returned an error response.', 'eightshift-forms'),
+				'label' => \__('Captcha type enterprise returned an error response.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_WRONG_ACTION => [
-				'label' => __('Captcha action provided and action returned from the response don\'t match.', 'eightshift-forms'),
+				'label' => \__('Captcha action provided and action returned from the response don\'t match.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_SCORE_SPAM => [
-				'label' => __('Captcha score has been detected as spam.', 'eightshift-forms'),
+				'label' => \__('Captcha score has been detected as spam.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS => [
-				'label' => __('Captcha request has been successful.', 'eightshift-forms'),
+				'label' => \__('Captcha request has been successful.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_DEBUG_SKIP_CHECK => [
-				'label' => __('Captcha debug skip check is active.', 'eightshift-forms'),
+				'label' => \__('Captcha debug skip check is active.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Geolocation.
 			self::SETTINGS_FALLBACK_FLAG_GEOLOCATION_FEATURE_DISABLED => [
-				'label' => __('Geolocation feature is disabled.', 'eightshift-forms'),
+				'label' => \__('Geolocation feature is disabled.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA => [
-				'label' => __('Geolocation malformed decrypt data.', 'eightshift-forms'),
+				'label' => \__('Geolocation malformed decrypt data.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_GEOLOCATION_DETECTION_FAILED => [
-				'label' => __('Geolocation detection failed.', 'eightshift-forms'),
+				'label' => \__('Geolocation detection failed.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_GEOLOCATION_SUCCESS => [
-				'label' => __('Geolocation request has been successful.', 'eightshift-forms'),
+				'label' => \__('Geolocation request has been successful.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Validation.
 			self::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED => [
-				'label' => __('Someone tried to access the forms API without the proper permissions.', 'eightshift-forms'),
+				'label' => \__('Someone tried to access the forms API without the proper permissions.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS => [
-				'label' => __('Someone tried to submit a form without the proper mandatory params.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form without the proper mandatory params.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_LOGGED_IN => [
-				'label' => __('Someone tried to submit a form while not logged in.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form while not logged in.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE => [
-				'label' => __('Someone tried to submit a form more than once.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form more than once.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY => [
-				'label' => __('Someone tried to submit a form with too many requests and was blocked.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form with too many requests and was blocked.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_PARAMS => [
-				'label' => __('Someone tried to submit a form with missing required params.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form with missing required params.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_FILES => [
-				'label' => __('Someone tried to submit a form with missing required files.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form with missing required files.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS => [
-				'label' => __('Someone tried to submit a form with files upload success.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form with files upload success.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR => [
-				'label' => __('Someone tried to submit a form with files upload error.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form with files upload error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR => [
-				'label' => __('Someone tried to submit a form to an integration that returned an error.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form to an integration that returned an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS => [
-				'label' => __('Someone tried to submit a form to an integration that returned a success.', 'eightshift-forms'),
+				'label' => \__('Someone tried to submit a form to an integration that returned a success.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Clearbit.
 			self::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR => [
-				'label' => __('When Clearbit cron job is running, it can return an error for unknown entry.', 'eightshift-forms'),
+				'label' => \__('When Clearbit cron job is running, it can return an error for unknown entry.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Moments.
 			self::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG => [
-				'label' => __('When Moments integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Moments integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR => [
-				'label' => __('When Moments events are being sent, it can return an error.', 'eightshift-forms'),
+				'label' => \__('When Moments events are being sent, it can return an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Nationbuilder.
 			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG => [
-				'label' => __('When Nationbuilder integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Nationbuilder integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_LIST_ERROR => [
-				'label' => __('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
+				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_TAGS_ERROR => [
-				'label' => __('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
+				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Workable.
 			self::SETTINGS_FALLBACK_FLAG_WORKABLE_MISSING_CONFIG => [
-				'label' => __('When Workable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Workable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Talentlyft.
 			self::SETTINGS_FALLBACK_FLAG_TALENTLYFT_MISSING_CONFIG => [
-				'label' => __('When Talentlyft integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Talentlyft integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Pipedrive.
 			self::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG => [
-				'label' => __('When Pipedrive integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Pipedrive integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Paycek.
 			self::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG => [
-				'label' => __('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS => [
-				'label' => __('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS => [
-				'label' => __('When Paycek integrations is able to send a request.', 'eightshift-forms'),
+				'label' => \__('When Paycek integrations is able to send a request.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Mailerlite.
 			self::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG => [
-				'label' => __('When Mailerlite integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Mailerlite integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Mailer.
 			self::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG => [
-				'label' => __('When Mailer integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Mailer integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND => [
-				'label' => __('When Mailer integrations is not able to send an email.', 'eightshift-forms'),
+				'label' => \__('When Mailer integrations is not able to send an email.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS => [
-				'label' => __('When Mailer integrations is able to send an email.', 'eightshift-forms'),
+				'label' => \__('When Mailer integrations is able to send an email.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Mailchimp.
 			self::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG => [
-				'label' => __('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Jira.
 			self::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG => [
-				'label' => __('When Jira integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Jira integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Hubspot.
 			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG => [
-				'label' => __('When Hubspot integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Hubspot integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Greenhouse.
 			self::SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG => [
-				'label' => __('When Greenhouse integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Greenhouse integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Goodbits.
 			self::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG => [
-				'label' => __('When Goodbits integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Goodbits integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Corvus.
 			self::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_CONFIG => [
-				'label' => __('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS => [
-				'label' => __('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID => [
-				'label' => __('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS => [
-				'label' => __('When Corvus integrations is able to send a request.', 'eightshift-forms'),
+				'label' => \__('When Corvus integrations is able to send a request.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Calculator.
 			self::SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG => [
-				'label' => __('When Calculator integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Calculator integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS => [
-				'label' => __('When Calculator integrations is able to calculate the form.', 'eightshift-forms'),
+				'label' => \__('When Calculator integrations is able to calculate the form.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Airtable.
 			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG => [
-				'label' => __('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// ActiveCampaign.
 			self::SETTINGS_FALLBACK_FLAG_ACTIVE_CAMPAIGN_MISSING_CONFIG => [
-				'label' => __('When ActiveCampaign integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'label' => \__('When ActiveCampaign integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
 			// Custom.
 			self::SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION => [
-				'label' => __('When custom action is not set.', 'eightshift-forms'),
+				'label' => \__('When custom action is not set.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT => [
-				'label' => __('When custom action is successful and redirect is set.', 'eightshift-forms'),
+				'label' => \__('When custom action is successful and redirect is set.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR => [
-				'label' => __('When custom action returns an error.', 'eightshift-forms'),
+				'label' => \__('When custom action returns an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR => [
-				'label' => __('When custom action returns a WP error.', 'eightshift-forms'),
+				'label' => \__('When custom action returns a WP error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS => [
-				'label' => __('When custom action is successful.', 'eightshift-forms'),
+				'label' => \__('When custom action is successful.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
 			// Steps.
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM => [
-				'label' => __('When validation steps current step is not set.', 'eightshift-forms'),
+				'label' => \__('When validation steps current step is not set.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM => [
-				'label' => __('When validation steps fields are not set.', 'eightshift-forms'),
+				'label' => \__('When validation steps fields are not set.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM => [
-				'label' => __('When validation steps next step is not set.', 'eightshift-forms'),
+				'label' => \__('When validation steps next step is not set.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM => [
-				'label' => __('When validation steps parameters are not set.', 'eightshift-forms'),
+				'label' => \__('When validation steps parameters are not set.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_SUCCESS => [
-				'label' => __('When validation steps is successful.', 'eightshift-forms'),
+				'label' => \__('When validation steps is successful.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 		];
@@ -753,8 +753,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	private function getFlagsOutput(): array
 	{
-
-
 		$output = [];
 
 		foreach ($this->getFlagsList() as $key => $value) {
@@ -764,7 +762,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			$output[] = [
 				'component' => 'checkbox',
 				'checkboxLabel' => $key,
-				'checkboxHelp' => sprintf(__('%s %s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="info-strong">Recommended.</strong>', 'eightshift-forms') : '')),
+				// translators: %1$s will be replaced with the flag label. %2$s will be replaced with the recommended text.
+				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="info-strong">Recommended.</strong>', 'eightshift-forms') : '')),
 				'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($key, self::SETTINGS_FALLBACK_FLAGS_KEY),
 				'checkboxValue' => $key,
 				'checkboxAsToggle' => true,

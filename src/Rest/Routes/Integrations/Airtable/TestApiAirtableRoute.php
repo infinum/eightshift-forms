@@ -12,14 +12,12 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
-use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
@@ -99,6 +97,8 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If Airtable is not configured.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -106,6 +106,7 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 		$output = $this->airtableClient->getTestApi();
 
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('testApiError'),
 				[
@@ -113,6 +114,7 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

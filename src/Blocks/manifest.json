@@ -497,9 +497,8 @@
 			"transferUpload": "js-es-transfer-upload",
 			"transferExisting": "js-es-transfer-existing",
 			"testApi": "js-es-api-test",
-			"manualImportApi": "js-es-manual-import-api",
-			"manualImportApiOutput": "js-es-manual-import-api-output",
-			"manualImportApiData": "js-es-manual-import-api-data",
+			"manualSubmitTrigger": "js-es-manual-submit-trigger",
+			"manualSubmitData": "js-es-manual-submit-data",
 			"tabs": "js-es-tabs",
 			"tabsItem": "js-es-tabs-item",
 			"debugEncryption": "js-es-debug-encryption",
@@ -576,6 +575,8 @@
 			"bulkItems": "data-bulk-items",
 
 			"exportType": "data-export-type",
+
+			"manualSubmitId": "data-manual-submit-id",
 
 			"stepId": "data-step-id",
 			"submitStepDirection": "data-step-direction",

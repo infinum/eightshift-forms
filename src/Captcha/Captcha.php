@@ -48,6 +48,8 @@ class Captcha implements CaptchaInterface
 	 * @param string $action Action to check.
 	 * @param boolean $isEnterprise Type of captcha.
 	 *
+	 * @throws BadRequestException If captcha is not valid.
+	 *
 	 * @return array<mixed>
 	 */
 	public function check(string $token, string $action, bool $isEnterprise): array
@@ -68,6 +70,7 @@ class Captcha implements CaptchaInterface
 		];
 
 		if (!$token) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaBadRequest'),
 				[
@@ -75,6 +78,7 @@ class Captcha implements CaptchaInterface
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
+			// phpcs:enable
 		}
 
 		if ($isEnterprise) {
@@ -85,6 +89,7 @@ class Captcha implements CaptchaInterface
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('submitWpError'),
 				[
@@ -92,6 +97,7 @@ class Captcha implements CaptchaInterface
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
+			// phpcs:enable
 		}
 
 		// Get body from the response.
@@ -165,6 +171,8 @@ class Captcha implements CaptchaInterface
 	 * @param string $action Action name.
 	 * @param array<mixed> $debug Debug data.
 	 *
+	 * @throws BadRequestException If captcha is not valid.
+	 *
 	 * @return mixed
 	 */
 	private function getEnterpriseOutput(array $responseBody, string $action, array $debug)
@@ -179,6 +187,7 @@ class Captcha implements CaptchaInterface
 
 		// If error status returns error.
 		if ($error) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
@@ -186,6 +195,7 @@ class Captcha implements CaptchaInterface
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
+			// phpcs:enable
 		}
 
 		return $this->validate(
@@ -204,6 +214,8 @@ class Captcha implements CaptchaInterface
 	 * @param string $action Action name.
 	 * @param array<mixed> $debug Debug data.
 	 *
+	 * @throws BadRequestException If captcha is not valid.
+	 *
 	 * @return mixed
 	 */
 	private function getFreeOutput(array $responseBody, string $action, array $debug)
@@ -218,6 +230,7 @@ class Captcha implements CaptchaInterface
 
 		// If error status returns error.
 		if (!$success) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
@@ -225,6 +238,7 @@ class Captcha implements CaptchaInterface
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
+			// phpcs:enable
 		}
 
 		return $this->validate(
@@ -245,6 +259,8 @@ class Captcha implements CaptchaInterface
 	 * @param float $score Score value Score value from API.
 	 * @param array<mixed> $debug Debug data.
 	 *
+	 * @throws BadRequestException If captcha is not valid.
+	 *
 	 * @return mixed
 	 */
 	private function validate(
@@ -263,6 +279,7 @@ class Captcha implements CaptchaInterface
 
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
@@ -270,12 +287,14 @@ class Captcha implements CaptchaInterface
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
+			// phpcs:enable
 		}
 
 		$setScore = SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
@@ -287,6 +306,7 @@ class Captcha implements CaptchaInterface
 					UtilsHelper::getStateResponseOutputKey('captchaResponse') => $responseBody,
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

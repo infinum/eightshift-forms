@@ -113,6 +113,9 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If Jira is missing config.
+	 * @throws DisabledIntegrationException If Jira is disabled.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -120,16 +123,19 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new DisabledIntegrationException(
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
 			);
+			// phpcs:enable
 		}
 
 		$formId = $formDetails[Config::FD_FORM_ID];
 
 		if (!\apply_filters(SettingsJira::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('jiraMissingConfig'),
 				[
@@ -137,6 +143,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Send application to Hubspot.

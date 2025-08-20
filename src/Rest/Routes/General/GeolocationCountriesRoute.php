@@ -105,6 +105,8 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If geolocation countries are missing.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -112,12 +114,14 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		$countries = $this->geolocation->getCountriesList();
 
 		if (!$countries) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationCountriesMissing'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesMissing',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

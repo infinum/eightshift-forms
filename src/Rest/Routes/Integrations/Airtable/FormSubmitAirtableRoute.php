@@ -114,11 +114,15 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If Airtable is missing config.
+	 * @throws DisabledIntegrationException If Airtable is disabled.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
 	{
 		if (!\apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('airtableMissingConfig'),
 				[
@@ -126,16 +130,19 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new DisabledIntegrationException(
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
 			);
+			// phpcs:enable
 		}
 
 		// Send application to Airtable.

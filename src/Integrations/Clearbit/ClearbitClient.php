@@ -12,7 +12,6 @@ namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;

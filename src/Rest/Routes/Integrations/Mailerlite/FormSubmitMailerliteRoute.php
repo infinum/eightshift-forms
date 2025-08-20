@@ -113,6 +113,9 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws DisabledIntegrationException If integration is disabled.
+	 * @throws BadRequestException If integration is missing config.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -120,14 +123,17 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new DisabledIntegrationException(
 				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
 				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
 			);
+			// phpcs:enable
 		}
 
 		if (!\apply_filters(SettingsMailerlite::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('mailerliteMissingConfig'),
 				[
@@ -135,6 +141,7 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Send application to Mailerlite.

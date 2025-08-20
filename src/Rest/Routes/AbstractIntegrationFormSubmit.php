@@ -40,7 +40,6 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
-use WP_REST_Response;
 
 /**
  * Class AbstractIntegrationFormSubmit
@@ -121,6 +120,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
+	 * @throws PermissionDeniedException If user is not allowed to access the route.
+	 * @throws ForbiddenException If submit is not allowed.
+	 * @throws ValidationFailedException If mandatory params are missing.
+	 * @throws RequestLimitException If request limit is exceeded.
+	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
@@ -134,16 +138,19 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			// If route is used for admin only, check if user has permission. (generally used for settings).
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new PermissionDeniedException(
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
 					]
 				);
+				// phpcs:enable
 			}
 
 			// Validate submit only when logged in.
 			if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
 					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
@@ -151,10 +158,12 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_LOGGED_IN,
 					]
 				);
+				// phpcs:enable
 			}
 
 			// Validate submit only once.
 			if ($this->getValidator()->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
 					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
@@ -162,10 +171,12 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE,
 					]
 				);
+				// phpcs:enable
 			}
 
 			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
 			if (!$this->getValidator()->validateMandatoryParams($formDetails, $this->getMandatoryParams($formDetails))) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
 					[
@@ -173,11 +184,13 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
+				// phpcs:enable
 			}
 
 			// Validate allowed number of requests.
 			if ($this->shouldCheckSecurity()) {
 				if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE])) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new RequestLimitException(
 						$this->getLabels()->getLabel('validationSecurity'),
 						[
@@ -185,12 +198,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY,
 						]
 					);
+					// phpcs:enable
 				}
 			}
 
 			// Validate params.
 			if ($this->shouldCheckParamsValidation()) {
 				if ($validate = $this->getValidator()->validateParams($formDetails)) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new ValidationFailedException(
 						$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 						[
@@ -201,6 +216,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 							UtilsHelper::getStateResponseOutputKey('validation') => $validate,
 						]
 					);
+					// phpcs:enable
 				}
 			}
 
@@ -403,6 +419,8 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If integration is missing config.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function getIntegrationCommonSubmitAction(array $formDetails): array
@@ -418,19 +436,21 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		}
 
 		if ($status === Config::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR,
 				],
-				array_merge(
+				\array_merge(
 					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 					((isset($response[Config::IARD_VALIDATION])) ? [
 						UtilsHelper::getStateResponseOutputKey('validation') => $response[Config::IARD_VALIDATION],
 					] : [])
 				)
 			);
+			// phpcs:enable
 		}
 
 		return $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -1095,18 +1115,13 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$params = $this->prepareApiParams($request);
 
 		// Get form id from params.
-		$formId = $params['formId'] ?? '';
+		$formId = $params[Config::FD_FORM_ID] ?? '';
 
 		// Get form type from params.
-		$type = $params['type'] ?? '';
-
-		// Get form directImport from params.
-		if (isset($params['directImport'])) {
-			return $this->getFormDetailsApiDirectImport($params);
-		}
+		$type = $params[Config::FD_TYPE] ?? '';
 
 		// Get form settings for admin from params.
-		$formSettingsType = $params['settingsType'] ?? '';
+		$formSettingsType = $params[Config::FD_SETTINGS_TYPE] ?? '';
 
 		// Manual populate output it admin settings our build it from form Id.
 		if (
@@ -1140,65 +1155,37 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		}
 
 		// Populate params.
-		$output[Config::FD_PARAMS] = $params['params'] ?? [];
+		$output[Config::FD_PARAMS] = $params[Config::FD_PARAMS] ?? [];
 
 		// Populate files from uploaded ID.
-		$output[Config::FD_FILES] = $params['files'] ?? [];
+		$output[Config::FD_FILES] = $params[Config::FD_FILES] ?? [];
 
 		// Populate files on upload. Only populated on file upload.
-		$output[Config::FD_FILES_UPLOAD] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
+		$output[Config::FD_FILES_UPLOAD] = $this->prepareFile($request->get_file_params(), $params[Config::FD_PARAMS] ?? []);
 
 		// Populate action.
-		$output[Config::FD_SECURE_DATA] = $params['secureData'] ?? '';
+		$output[Config::FD_SECURE_DATA] = $params[Config::FD_SECURE_DATA] ?? '';
 
 		// Populate action.
-		$output[Config::FD_ACTION] = $params['action'] ?? '';
+		$output[Config::FD_ACTION] = $params[Config::FD_ACTION] ?? '';
 
 		// Populate action external.
-		$output[Config::FD_ACTION_EXTERNAL] = $params['actionExternal'] ?? '';
+		$output[Config::FD_ACTION_EXTERNAL] = $params[Config::FD_ACTION_EXTERNAL] ?? '';
 
 		// Populate step fields.
-		$output[Config::FD_API_STEPS] = $params['apiSteps'] ?? [];
+		$output[Config::FD_API_STEPS] = $params[Config::FD_API_STEPS] ?? [];
 
 		// Get form captcha from params.
-		$output[Config::FD_CAPTCHA] = $params['captcha'] ?? [];
+		$output[Config::FD_CAPTCHA] = $params[Config::FD_CAPTCHA] ?? [];
 
 		// Get form post Id from params.
-		$output[Config::FD_POST_ID] = $params['postId'] ?? '';
+		$output[Config::FD_POST_ID] = $params[Config::FD_POST_ID] ?? '';
 
 		// Get form storage from params.
-		$output[Config::FD_STORAGE] = \json_decode($params['storage'] ?? '', true) ?? [];
+		$output[Config::FD_STORAGE] = \is_array($params[Config::FD_STORAGE] ?? '') ? $params[Config::FD_STORAGE] : \json_decode($params[Config::FD_STORAGE] ?? '', true) ?? [];
 
 		// Set debug original params.
-		$output[Config::FD_PARAMS_ORIGINAL] = \sanitize_text_field(\wp_json_encode($this->getRequestParams($request)));
-
-		return $output;
-	}
-
-	/**
-	 * Prepare form details api data for direct import.
-	 *
-	 * @param array<string, mixed> $params Params to use.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getFormDetailsApiDirectImport(array $params): array
-	{
-		// Get form id from params.
-		$formId = $params['formId'] ?? '';
-
-		// Get form type from params.
-		$type = $params['type'] ?? '';
-
-		// Get form directImport from params.
-		$output[Config::FD_DIRECT_IMPORT] = true;
-		$output[Config::FD_TYPE] = $type;
-		$output[Config::FD_FORM_ID] = $formId;
-		$output[Config::FD_ITEM_ID] = $params['itemId'] ?? '';
-		$output[Config::FD_INNER_ID] = $params['innerId'] ?? '';
-		$output[Config::FD_POST_ID] = $params['postId'] ?? '';
-		$output[Config::FD_PARAMS] = $params['params'] ?? [];
-		$output[Config::FD_FILES] = $params['files'] ?? [];
+		$output[Config::FD_PARAMS_ORIGINAL] = $params[Config::FD_PARAMS_ORIGINAL] ?? [];
 
 		return $output;
 	}
@@ -1221,7 +1208,144 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			return [];
 		}
 
-		$paramsOutput = \array_map(
+		$paramsOutput = $this->secureApiParams($params);
+
+		$output = [];
+
+		// These are the required keys for each field.
+		$reqKeys = [
+			'name' => '',
+			'value' => '',
+			'type' => '',
+			'custom' => '',
+			'typeCustom' => '',
+		];
+
+		$paramsBroken = false;
+
+		// If this route is for public form prepare all params.
+		foreach ($paramsOutput as $key => $value) {
+			// Check if all required keys are present and bail out if not.
+			if (!\is_array($value) || \array_diff_key($reqKeys, $value)) {
+				$paramsBroken = true;
+				break;
+			}
+
+			switch ($key) {
+				case UtilsHelper::getStateParam('formId'):
+					$output[Config::FD_FORM_ID] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('postId'):
+					$output[Config::FD_POST_ID] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('type'):
+					$output[Config::FD_TYPE] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('secureData'):
+					$output[Config::FD_SECURE_DATA] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('action'):
+					$output[Config::FD_ACTION] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('captcha'):
+					$output[Config::FD_CAPTCHA] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('actionExternal'):
+					$output[Config::FD_ACTION_EXTERNAL] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('settingsType'):
+					$output[Config::FD_SETTINGS_TYPE] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('storage'):
+					$output[Config::FD_STORAGE] = $value['value'];
+					$value['value'] = \is_array($value['value']) ? $value['value'] : \json_decode($value['value'], true);
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('steps'):
+					$output[Config::FD_API_STEPS] = [
+						'fields' => $value['value'],
+						'current' => $value['custom'],
+					];
+					break;
+				default:
+					// All other "normal" fields.
+					$fieldType = $value['type'] ?? '';
+					$fieldValue = $value['value'] ?? '';
+					$fieldName = $value['name'] ?? '';
+
+					if (!$fieldName) {
+						break;
+					}
+
+					// File.
+					if ($fieldType === 'file') {
+						$output[Config::FD_FILES][$key] = $value;
+
+						if (!$fieldValue) {
+							$output[Config::FD_FILES][$key]['value'] = [];
+						} else {
+							if (!\is_array($fieldValue)) {
+								$fieldValue = [$fieldValue];
+							}
+
+							$output[Config::FD_FILES][$key]['value'] = \array_map(
+								static function (string $file) {
+									return UploadHelpers::getFilePath($file);
+								},
+								$fieldValue
+							);
+						}
+						break;
+					}
+
+					// Rating.
+					if ($fieldType === 'rating' && $fieldValue === '0') {
+						$value['value'] = '';
+					}
+
+					// Checkbox.
+					if ($fieldType === 'checkbox') {
+						if (!$fieldValue) {
+							$value['value'] = [];
+						} else {
+							$value['value'] = \is_string($fieldValue) ? [$fieldValue] : $fieldValue;
+						}
+					}
+
+					$output[Config::FD_PARAMS][$key] = $value;
+
+					break;
+			}
+		}
+
+		// Bail out if we have a broken param.
+		if ($paramsBroken) {
+			return [];
+		}
+
+		$output[Config::FD_PARAMS_ORIGINAL] = $paramsOutput;
+
+		return $output;
+	}
+
+	/**
+	 * Secure API params.
+	 *
+	 * @param array<string, mixed> $params Params to secure.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function secureApiParams(array $params): array
+	{
+		return \array_map(
 			static function ($item) {
 				// Check if array then output only value that is not empty.
 				if (\is_array($item)) {
@@ -1293,140 +1417,5 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			},
 			$params
 		);
-
-		$output = [];
-
-		// These are the required keys for each field.
-		$reqKeys = [
-			'name' => '',
-			'value' => '',
-			'type' => '',
-			'custom' => '',
-			'typeCustom' => '',
-		];
-
-		$paramsBroken = false;
-
-		// If this route is for public form prepare all params.
-		foreach ($paramsOutput as $key => $value) {
-			// Check if all required keys are present and bail out if not.
-			if (!\is_array($value) || \array_diff_key($reqKeys, $value)) {
-				$paramsBroken = true;
-				break;
-			}
-
-			switch ($key) {
-				// Used for direct import from settings.
-				case UtilsHelper::getStateParam('direct'):
-					$output['directImport'] = (bool) $value['value'];
-					break;
-				// Used for direct import from settings.
-				case UtilsHelper::getStateParam('itemId'):
-					$output['itemId'] = $value['value'];
-					break;
-				// Used for direct import from settings.
-				case UtilsHelper::getStateParam('innerId'):
-					$output['innerId'] = $value['value'];
-					break;
-				case UtilsHelper::getStateParam('formId'):
-					$output['formId'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('postId'):
-					$output['postId'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('type'):
-					$output['type'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('secureData'):
-					$output['secureData'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('action'):
-					$output['action'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('captcha'):
-					$output['captcha'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('actionExternal'):
-					$output['actionExternal'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('settingsType'):
-					$output['settingsType'] = $value['value'];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('storage'):
-					$output['storage'] = $value['value'];
-					$value['value'] = (!empty($value['value'])) ? \json_decode($value['value'], true) : [];
-					$output['params'][$key] = $value;
-					break;
-				case UtilsHelper::getStateParam('steps'):
-					$output['apiSteps'] = [
-						'fields' => $value['value'],
-						'current' => $value['custom'],
-					];
-					break;
-				default:
-					// All other "normal" fields.
-					$fieldType = $value['type'] ?? '';
-					$fieldValue = $value['value'] ?? '';
-					$fieldName = $value['name'] ?? '';
-
-					if (!$fieldName) {
-						break;
-					}
-
-					// File.
-					if ($fieldType === 'file') {
-						$output['files'][$key] = $value;
-
-						if (!$fieldValue) {
-							$output['files'][$key]['value'] = [];
-						} else {
-							if (!\is_array($fieldValue)) {
-								$fieldValue = [$fieldValue];
-							}
-
-							$output['files'][$key]['value'] = \array_map(
-								static function (string $file) {
-									return UploadHelpers::getFilePath($file);
-								},
-								$fieldValue
-							);
-						}
-						break;
-					}
-
-					// Rating.
-					if ($fieldType === 'rating' && $fieldValue === '0') {
-						$value['value'] = '';
-					}
-
-					// Checkbox.
-					if ($fieldType === 'checkbox') {
-						if (!$fieldValue) {
-							$value['value'] = [];
-						} else {
-							$value['value'] = \is_string($fieldValue) ? [$fieldValue] : $fieldValue;
-						}
-					}
-
-					$output['params'][$key] = $value;
-
-					break;
-			}
-		}
-
-		// Bail out if we have a broken param.
-		if ($paramsBroken) {
-			return [];
-		}
-
-		return $output;
 	}
 }

@@ -12,8 +12,6 @@ namespace EightshiftForms\CronJobs;
 
 use DateTime;
 use EightshiftForms\ActivityLog\ActivityLogHelper;
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;

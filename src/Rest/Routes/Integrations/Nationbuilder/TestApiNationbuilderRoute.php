@@ -97,6 +97,8 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If Nationbuilder is not configured.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -104,6 +106,7 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 		$output = $this->nationbuilderClient->getTestApi();
 
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('testApiError'),
 				[
@@ -111,6 +114,7 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

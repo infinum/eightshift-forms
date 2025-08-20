@@ -24,7 +24,6 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
-use WP_REST_Response;
 
 /**
  * Class AbstractSimpleFormSubmit
@@ -80,12 +79,11 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @throws ValidationFailedException Validation failed.
-	 * @throws RequestLimitException Request limit exceeded.
-	 * @throws ForbiddenException Forbidden.
-	 * @throws BadRequestException Bad request.
 	 * @throws PermissionDeniedException Permission denied.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 *                                is already an instance, WP_HTTP_Response, otherwise
+	 *                                returns a new WP_REST_Response instance.
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{

@@ -10,10 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\General;
 
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\ValidationFailedException;
-use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -110,6 +108,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws ValidationFailedException If files are not valid.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -117,6 +117,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		// Validate files.
 		if ($this->shouldCheckParamsValidation()) {
 			if ($validate = $this->getValidator()->validateFiles($formDetails)) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 					[
@@ -127,6 +128,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 						UtilsHelper::getStateResponseOutputKey('validation') => $validate,
 					]
 				);
+				// phpcs:enable
 			}
 		}
 
@@ -138,6 +140,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		$formDetails[Config::FD_FILES_UPLOAD] = $uploadFile;
 
 		if (UploadHelpers::isUploadError($uploadError)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 				[
@@ -150,6 +153,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 					],
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

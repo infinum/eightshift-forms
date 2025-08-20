@@ -66,6 +66,8 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If encrypt or decrypt fails.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -81,6 +83,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 		}
 
 		if (!$output) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$type === 'encrypt' ? $this->getLabels()->getLabel('encryptFailed') : $this->getLabels()->getLabel('decryptFailed'),
 				[
@@ -88,6 +91,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'encryptFailed',
 				]
 			);
+			// phpcs:enable
 		}
 
 		// Finish.

@@ -41,7 +41,6 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use WP_Query;
-use WP_REST_Request;
 
 /**
  * Class MigrationRoute
@@ -124,6 +123,8 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If migration type is not found.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -140,12 +141,14 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			case SettingsMigration::VERSION_CLEARBIT:
 				return $this->getMigrationClearbit();
 			default:
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
 					$this->getLabels()->getLabel('migrationTypeNotFound'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
 					]
 				);
+				// phpcs:enable
 		}
 	}
 

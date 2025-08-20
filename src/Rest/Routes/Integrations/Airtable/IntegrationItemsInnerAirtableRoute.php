@@ -107,23 +107,28 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If Airtable is not configured.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
 	{
 		// Check if global settings is valid.
 		if (!\apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('globalNotConfigured'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = $this->airtableClient->getItem($params['id'] ?? '');
 
 		if (!$items) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
 				[
@@ -131,6 +136,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = \array_filter(\array_values(\array_map(

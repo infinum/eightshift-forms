@@ -10,14 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
-use EightshiftForms\Exception\BadRequestException;
-use EightshiftForms\Helpers\ApiHelpers;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitMailerRoute

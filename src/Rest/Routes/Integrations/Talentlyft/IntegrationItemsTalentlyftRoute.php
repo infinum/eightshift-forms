@@ -113,17 +113,20 @@ class IntegrationItemsTalentlyftRoute extends AbstractSimpleFormSubmit
 	{
 		// Check if global settings is valid.
 		if (!\apply_filters(SettingsTalentlyft::FILTER_SETTINGS_GLOBAL_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('globalNotConfigured'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = $this->talentlyftClient->getItems();
 
 		if (!$items) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
 				[
@@ -131,6 +134,7 @@ class IntegrationItemsTalentlyftRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$items = \array_filter(\array_values(\array_map(

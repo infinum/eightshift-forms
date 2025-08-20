@@ -108,6 +108,8 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If form creation fails.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -126,6 +128,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 		unset($syncForm['status']);
 
 		if ($status === Config::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$message,
 				[
@@ -133,6 +136,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'createFormError',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

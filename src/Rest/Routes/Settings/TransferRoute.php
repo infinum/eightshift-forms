@@ -98,6 +98,8 @@ class TransferRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If transfer type is not found.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -119,12 +121,14 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				$items = $params['items'] ?? [];
 
 				if (!$items) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
 						$this->getLabels()->getLabel('transferExportMissingForms'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingForms',
 						]
 					);
+					// phpcs:enable
 				}
 
 				$items = \explode(',', $items);
@@ -136,12 +140,14 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				$items = $params['items'] ?? [];
 
 				if (!$items) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
 						$this->getLabels()->getLabel('transferExportMissingResultOutputs'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingResultOutputs',
 						]
 					);
+					// phpcs:enable
 				}
 
 				$items = \explode(',', $items);
@@ -159,12 +165,14 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				$upload = $params['upload'] ?? '';
 
 				if (!$upload) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
 						$this->getLabels()->getLabel('transferUploadMissingFile'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingFile',
 						]
 					);
+					// phpcs:enable
 				}
 
 				$uploadStatus = $this->transfer->getImport(
@@ -173,30 +181,35 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				);
 
 				if (!$uploadStatus) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
 						$this->getLabels()->getLabel('transferUploadError'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadError',
 						]
 					);
+					// phpcs:enable
 				}
 
 				$internalType = 'import';
 				break;
 			default:
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
 					$this->getLabels()->getLabel('transferUploadMissingType'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingType',
 					]
 				);
+				// phpcs:enable
 		}
 
 		$date = \current_datetime()->format('Y-m-d-H-i-s-u');
 
 
 		return [
-			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), \ucfirst($internalType), $this->getLabels()->getLabel('transferSuccess')),
+			// translators: %1$s will be replaced with the transfer type. %2$s will be replaced with the transfer success text.
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), \ucfirst($internalType), $this->getLabels()->getLabel('transferSuccess')),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'transferSuccess',
 			],

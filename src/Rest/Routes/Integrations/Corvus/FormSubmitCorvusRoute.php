@@ -17,7 +17,6 @@ use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\ValidationFailedException;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -74,6 +73,9 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If Corvus is missing config.
+	 * @throws ValidationFailedException If Corvus is missing required params.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -81,6 +83,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		$formId = $formDetails[Config::FD_FORM_ID];
 
 		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('corvusMissingConfig'),
 				[
@@ -88,6 +91,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsCorvus::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
@@ -115,6 +119,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
 				[
@@ -122,10 +127,12 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Bail early if the API key is missing.
 		if (isset($params['store_id']) && empty(Variables::getApiKeyCorvus($params['store_id']))) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
 				[
@@ -133,6 +140,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// Set validation submit once.

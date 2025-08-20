@@ -108,6 +108,8 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If form fields are missing.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -117,6 +119,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		$fieldsOnly = $formDetails[Config::FD_FIELDS_ONLY] ?? [];
 
 		if (!$fieldsOnly) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('formFieldsMissing'),
 				[
@@ -124,6 +127,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsMissing',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$fieldsOutput = $this->getItems($fieldsOnly);

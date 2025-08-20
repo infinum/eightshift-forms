@@ -109,6 +109,8 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If bulk items are missing.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -116,12 +118,14 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
 
 		if (!$ids) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('bulkMissingItems'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
 				]
 			);
+			// phpcs:enable
 		}
 
 		$type = $params['type'] ?? '';
@@ -167,19 +171,23 @@ class BulkRoute extends AbstractSimpleFormSubmit
 					],
 				];
 			case 'warning':
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
 					$output['msg'] ?? $this->getLabels()->getLabel('genericWarning'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst($type),
 					]
 				);
+				// phpcs:enable
 			default:
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
 					$output['msg'] ?? $this->getLabels()->getLabel('genericError'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst($type),
 					]
 				);
+				// phpcs:enable
 		}
 	}
 

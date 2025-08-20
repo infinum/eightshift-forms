@@ -55,9 +55,10 @@ class Mailer implements MailerInterface
 
 	/**
 	 * Create a new instance that injects classes.
-	 * 
+	 *
 	 * @param SecurityInterface $security Security interface.
 	 * @param LabelsInterface $labels Labels interface.
+	 * @param SettingsFallbackDataInterface $settingsFallback Settings fallback data interface.
 	 */
 	public function __construct(
 		SecurityInterface $security,
@@ -75,6 +76,8 @@ class Mailer implements MailerInterface
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $responseTags Response tags.
 	 *
+	 * @throws BadRequestException If mailer is missing config.
+	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
 	public function sendEmails(array $formDetails, array $responseTags = []): array
@@ -83,6 +86,7 @@ class Mailer implements MailerInterface
 
 		// Bailout if settings are not ok.
 		if (!\apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('mailerMissingConfig'),
 				[
@@ -90,6 +94,7 @@ class Mailer implements MailerInterface
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG,
 				],
 			);
+			// phpcs:enable
 		}
 
 		// This data is set here because $formDetails can me modified in the previous filters.
@@ -113,6 +118,7 @@ class Mailer implements MailerInterface
 
 		// If email fails.
 		if (!$response) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('mailerErrorEmailSend'),
 				[
@@ -120,6 +126,7 @@ class Mailer implements MailerInterface
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
@@ -182,25 +189,32 @@ class Mailer implements MailerInterface
 
 		$data = $debugKey ? $data : $this->getDebugOutputLevel($data);
 
-		$subject = \sprintf(\__('Troubleshooting form: %s (%s)(%s)', 'eightshift-forms'), \get_the_title($formId), \esc_html($formId), \esc_html($debugKeyValue));
+		// translators: %1$s replaces the form title, %2$s replaces the form id, %3$s replaces the debug key.
+		$subject = \sprintf(\__('Troubleshooting form: %1$s (%2$s)(%3$s)', 'eightshift-forms'), \get_the_title($formId), \esc_html($formId), \esc_html($debugKeyValue));
 
 		$body = '<p style="font-family: monospace;">' . \esc_html__('It seems like there was an issue with form on your website. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
 
-		// translators: %s replaces the form name.
+		// translators: %s replaces the form title.
 		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
+		// translators: %s replaces the form id.
 		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Form ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html($formId)) . '</p>';
 
 		if ($activityLogId) {
+			// translators: %s replaces the activity log id.
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Activity Log ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html((string) $activityLogId)) . '</p>';
 		}
 
 		if ($debugKeyValue) {
+			// translators: %s replaces the debug key.
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
+			// translators: %s replaces the debug key description.
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), \esc_html($this->settingsFallback->getFlagLabel($debugKeyValue))) . '</p>';
 		}
 
+		// translators: %s replaces the website url.
 		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Website url: <strong>%s</strong>', 'eightshift-forms')), \esc_html(\get_bloginfo('url'))) . '</p>';
 
+		// translators: %s replaces the debug data.
 		$body .= '<p style="font-family: monospace;">' . \esc_html__('Debug data:', 'eightshift-forms') . '</p>';
 
 		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';

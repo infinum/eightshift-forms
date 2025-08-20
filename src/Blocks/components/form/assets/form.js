@@ -934,15 +934,15 @@ export class Form {
 			},
 			{
 				name: this.state.getStateParam('action'),
-				value: this.state.getStateFormAction(formId),
+				value: this.state.getStateFormAction(formId) ?? '',
 			},
 			{
 				name: this.state.getStateParam('actionExternal'),
-				value: this.state.getStateFormActionExternal(formId),
+				value: this.state.getStateFormActionExternal(formId) ?? '',
 			},
 			{
 				name: this.state.getStateParam('secureData'),
-				value: this.state.getStateFormSecureData(formId),
+				value: this.state.getStateFormSecureData(formId) ?? '',
 			},
 		]);
 	}
@@ -1003,15 +1003,15 @@ export class Form {
 					...output,
 					{
 						name: this.state.getStateParam('hubspotCookie'),
-						value: cookies.getCookie('hubspotutk'),
+						value: cookies?.getCookie('hubspotutk') ?? '',
 					},
 					{
 						name: this.state.getStateParam('hubspotPageName'),
-						value: document.title,
+						value: document?.title ?? '',
 					},
 					{
 						name: this.state.getStateParam('hubspotPageUrl'),
-						value: window.location.href,
+						value: window?.location?.href ?? '',
 					},
 				];
 				break;

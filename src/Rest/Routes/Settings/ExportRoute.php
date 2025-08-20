@@ -68,6 +68,8 @@ class ExportRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If export is missing items.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -75,12 +77,14 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
 
 		if (!$ids) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('exportMissingItems'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportMissingItems',
 				]
 			);
+			// phpcs:enable
 		}
 
 		switch ($params['type']) {
@@ -96,12 +100,14 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		}
 
 		if (!$output) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('exportDataEmpty'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

@@ -98,12 +98,15 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If geolocation is malformed or not valid.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
 	{
 		// Bailout if geolocation setting is off.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationSkipCheck'),
 				[
@@ -111,6 +114,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_FEATURE_DISABLED,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$data = EncryptionHelpers::decryptor($params['data'] ?? '');
@@ -118,12 +122,14 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 		$dataOutput = \json_decode($data, true);
 
 		if (!\is_array($dataOutput) && !$dataOutput) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA,
 				]
 			);
+			// phpcs:enable
 		}
 
 		$formId = $dataOutput['id'] ?? '';
@@ -133,6 +139,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 		$geolocation = $this->geolocation->isUserGeolocated($formId, $geo, $alt);
 
 		if (!$geolocation) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
@@ -140,6 +147,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_DETECTION_FAILED,
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

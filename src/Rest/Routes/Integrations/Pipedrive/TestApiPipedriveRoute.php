@@ -106,6 +106,7 @@ class TestApiPipedriveRoute extends AbstractSimpleFormSubmit
 		$output = $this->pipedriveClient->getTestApi();
 
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('testApiError'),
 				[
@@ -113,6 +114,7 @@ class TestApiPipedriveRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
 				]
 			);
+			// phpcs:enable
 		}
 
 		return [

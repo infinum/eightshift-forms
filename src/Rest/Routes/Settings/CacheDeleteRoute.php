@@ -66,6 +66,8 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param array<string, mixed> $params Prepared params.
 	 *
+	 * @throws BadRequestException If cache type is not found.
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $params): array
@@ -98,12 +100,15 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 				$outputTitle = \ucfirst($type);
 
 				if (!$cacheTypes) {
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
-						\sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheTypeNotFound')),
+						// translators: %1$s will be replaced with the cache type. %2$s will be replaced with the cache type not found text.
+						\sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheTypeNotFound')),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'cacheTypeNotFound',
 						]
 					);
+					// phpcs:enable
 				}
 
 				foreach ($cacheTypes as $item) {
@@ -119,7 +124,8 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 
 		// Finish.
 		return [
-			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheDeletedSuccess')),
+			// translators: %1$s will be replaced with the cache type. %2$s will be replaced with the cache deleted success text.
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheDeletedSuccess')),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'cacheDeletedSuccess',
 			],

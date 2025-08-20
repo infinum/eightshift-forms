@@ -118,6 +118,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If validation steps are missing.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
@@ -125,6 +127,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		$currentStep = $formDetails[Config::FD_API_STEPS]['current'] ?? '';
 
 		if (!$currentStep) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
 				[
@@ -132,10 +135,12 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$submittedNames = $formDetails[Config::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('validationStepsFieldsProblem'),
 				[
@@ -143,10 +148,12 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$steps = $formDetails[Config::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('validationStepsNextStepProblem'),
 				[
@@ -154,6 +161,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
 				],
 			);
+			// phpcs:enable
 		}
 
 		$multiflow = $formDetails[Config::FD_STEPS_SETUP]['multiflow'] ?? [];
@@ -168,6 +176,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			$params = $formDetails[Config::FD_PARAMS] ?? [];
 
 			if (!$params) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
 					$this->getLabels()->getLabel('validationStepsParametersProblem'),
 					[
@@ -175,6 +184,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM,
 					],
 				);
+				// phpcs:enable
 			}
 
 			foreach ($multiflow as $flow) {
