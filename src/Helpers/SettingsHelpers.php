@@ -91,7 +91,7 @@ final class SettingsHelpers
 		$value = self::getSettingValue($key, $formId);
 
 		if (!$value) {
-			$value = $fallback;
+			return $fallback;
 		}
 
 		return $value;
