@@ -28,6 +28,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - All API endpoint are now returning the correct response headers based on the request type and status code.
 - Fallback emails are now connected to the activity logs and differently outputted.
 
+## [7.0.4]
+
+### Fixed
+
+- Wrong frontend style dependency handle.
+
 ## [7.0.3]
 
 ### Fixed
@@ -1349,7 +1355,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[8.0.0]: https://github.com/infinum/eightshift-forms/compare/7.0.3...8.0.0
+[8.0.0]: https://github.com/infinum/eightshift-forms/compare/7.0.4...8.0.0
+[7.0.4]: https://github.com/infinum/eightshift-forms/compare/7.0.3...7.0.4
 [7.0.3]: https://github.com/infinum/eightshift-forms/compare/7.0.2...7.0.3
 [7.0.2]: https://github.com/infinum/eightshift-forms/compare/7.0.1...7.0.2
 [7.0.1]: https://github.com/infinum/eightshift-forms/compare/7.0.0...7.0.1
