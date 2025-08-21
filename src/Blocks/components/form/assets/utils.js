@@ -1714,6 +1714,31 @@ export class Utils {
 		return data?.value;
 	}
 
+	/**
+	 * Build helper for form data object.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} dataSet Object to build.
+	 *
+	 * @returns {void}
+	 */
+	buildFormDataItems(data, dataSet) {
+		data.forEach((item) => {
+			const { name, value, type = 'hidden', typeCustom = 'hidden', custom = '' } = item;
+
+			dataSet.append(
+				name,
+				JSON.stringify({
+					name,
+					value,
+					type,
+					typeCustom,
+					custom,
+				}),
+			);
+		});
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -1910,6 +1935,9 @@ export class Utils {
 			},
 			getPhoneCombinedValue: (formId, name) => {
 				return this.getPhoneCombinedValue(formId, name);
+			},
+			buildFormDataItems: (data, dataSet) => {
+				this.buildFormDataItems(data, dataSet);
 			},
 			onFormShowEvent: (e) => {
 				this.onFormShowEvent(e);

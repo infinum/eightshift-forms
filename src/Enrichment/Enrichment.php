@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Enrichment;
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Hooks\FiltersOutputMock;
+use EightshiftForms\Helpers\UtilsHelper;
 
 /**
  * Enrichment class.
@@ -65,7 +65,7 @@ class Enrichment implements EnrichmentInterface
 		}
 
 		$tags = [];
-		$tagsAdditional = UtilsSettingsHelper::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
+		$tagsAdditional = SettingsHelpers::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
 
 		if ($tagsAdditional) {
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
@@ -81,8 +81,8 @@ class Enrichment implements EnrichmentInterface
 			$tags = $tagsAdditional;
 		}
 
-		$expiration = UtilsSettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
-		$expirationPrefill = UtilsSettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
+		$expiration = SettingsHelpers::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
+		$expirationPrefill = SettingsHelpers::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
 
 		$fullAllowed = [
 			...$tags,
@@ -91,7 +91,7 @@ class Enrichment implements EnrichmentInterface
 
 		$map = [];
 		foreach ($fullAllowed as $value) {
-			$itemValue = UtilsSettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
+			$itemValue = SettingsHelpers::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
 
 			if ($itemValue) {
 				$itemValue = \str_replace(' ', '', $itemValue);
@@ -119,7 +119,7 @@ class Enrichment implements EnrichmentInterface
 	public function mapEnrichmentFields(array $params): array
 	{
 		// Get enrichment map.
-		$enrichment = FiltersOuputMock::getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
+		$enrichment = FiltersOutputMock::getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
 
 		if (!$enrichment) {
 			return $params;

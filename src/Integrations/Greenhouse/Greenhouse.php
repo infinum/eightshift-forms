@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -177,7 +177,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						}
 						break;
 					case 'input_file':
-						$maxFileSize = UtilsSettingsHelper::getOptionValueWithFallback(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT);
+						$maxFileSize = SettingsHelpers::getOptionValueWithFallback(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT);
 
 						$output[] = [
 							'component' => 'file',
@@ -198,8 +198,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						];
 						break;
 					case 'textarea':
-						$disableResume = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
-						$disableCoverLetter = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+						$disableResume = SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+						$disableCoverLetter = SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
 
 						if ($disableResume || $disableCoverLetter) {
 							break;
@@ -312,8 +312,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data']);
+		// Change the final output if necessary.
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

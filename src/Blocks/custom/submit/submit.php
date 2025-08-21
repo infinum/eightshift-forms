@@ -7,13 +7,13 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $button = '';
 
 // With this filter you can override default submit component and provide your own.
-$filterNameComponent = UtilsHooksHelper::getFilterName(['block', 'submit', 'component']);
+$filterNameComponent = HooksHelpers::getFilterName(['block', 'submit', 'component']);
 if (has_filter($filterNameComponent)) {
 	$button = apply_filters($filterNameComponent, [
 		'value' => $attributes['submitSubmitValue'] ?? '',

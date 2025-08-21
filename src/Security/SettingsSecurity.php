@@ -10,16 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Security;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsSecurity class.
  */
-class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -27,9 +27,9 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_security';
 
 	/**
-	 * Filter settings is Valid key.
+	 * Filter settings global is Valid key.
 	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_security';
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_security';
 
 	/**
 	 * Settings key.
@@ -74,7 +74,7 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
@@ -84,9 +84,7 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY);
-
-		if (!$isUsed) {
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
 			return false;
 		}
 
@@ -100,12 +98,12 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!$this->isSettingsGlobalValid()) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -122,7 +120,7 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 								'inputFieldLabel' => \__('Number of default requests', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period for all forms excluding specifics listed below.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -132,11 +130,11 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
 								'inputFieldLabel' => \__('Number of requests for calculator', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period for calculator forms with single submit.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -146,11 +144,11 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 								'inputFieldLabel' => \__('Limit window', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define a time period in which the rate limit will be checked.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -160,16 +158,16 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 								'inputPlaceholder' => Security::RATE_LIMIT_WINDOW,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_IP_IGNORE_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_SECURITY_IP_IGNORE_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Ignore IPs', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+								'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 									If you need to ignore specific IPs, you can add them here. <br />
 									Enter one IP per line, in the following format:<br />
 									Example:
@@ -177,7 +175,7 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 									<li>192.168.1.100</li>
 									<li>192.168.1.101</li>
 									</ul>", 'eightshift-forms')),
-								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_SECURITY_IP_IGNORE_KEY, 1),
+								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_SECURITY_IP_IGNORE_KEY, 1),
 							],
 						],
 					],

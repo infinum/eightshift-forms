@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Calculator
+ * The class register route for public form submitting endpoint - Calculator
  *
  * @package EightshiftForms\Rest\Route\Integrations\Calculator
  */
@@ -11,14 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Calculator;
 
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitCalculatorRoute
  */
-class FormSubmitCalculatorRoute extends AbstractFormSubmit
+class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.
@@ -32,7 +36,32 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
 	}
 
 	/**
@@ -40,43 +69,56 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If integration is missing config.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		if (!\apply_filters(SettingsCalculator::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('calculatorMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG,
+				],
+			);
+			// phpcs:enable
+		}
 
-		$debug = [
-			'formDetails' => $formDetails,
-		];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Set validation submit once.
-		$this->validator->setValidationSubmitOnce($formId);
+		$this->getValidator()->setValidationSubmitOnce($formId);
 
-		// Located before the sendEmail mentod so we can utilize common email response tags.
+		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
-		// Send email.
-		$this->getFormSubmitMailer()->sendEmails(
-			$formDetails,
-			$this->getCommonEmailResponseTags(
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['private']
-				),
-				$formDetails
-			)
-		);
+		// Send only if explicitly enabled in the settings.
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, SettingsMailer::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId)) {
+			$this->getMailer()->sendEmails(
+				$formDetails,
+				$this->getCommonEmailResponseTags(
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['private']
+					),
+					$formDetails
+				)
+			);
+		}
 
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				$this->labels->getLabel('calculatorSuccess', $formId),
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional']
-				),
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
+		];
 	}
 }

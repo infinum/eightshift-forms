@@ -7,8 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -35,7 +35,7 @@ $loaderOverlayClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'loader', 'overlay', "{$componentClass}__overlay"),
 ]);
 
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('loader', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('loader', $attributes);
 
 ?>
 

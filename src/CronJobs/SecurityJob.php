@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\CronJobs;
 
 use EightshiftForms\Security\SettingsSecurity;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -34,6 +34,10 @@ class SecurityJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function register(): void
 	{
+		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return;
+		}
+
 		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
 		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
@@ -79,6 +83,6 @@ class SecurityJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function getJobCallback()
 	{
-		\delete_option(UtilsSettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
+		\delete_option(SettingsHelpers::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
 	}
 }

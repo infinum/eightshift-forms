@@ -15,10 +15,10 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $tableContent = Helpers::checkAttr('tableContent', $attributes, $manifest);
 $tableHead = Helpers::checkAttr('tableHead', $attributes, $manifest);
 
-$tableWrapClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($selectorClass, $selectorClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+$tableWrapClass = Helpers::clsx([
+	$componentClass,
+	Helpers::bem($selectorClass, $componentClass),
+	$additionalClass,
 ]);
 
 $tableClass = Helpers::selector($componentClass, $componentClass, 'table');

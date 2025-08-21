@@ -7,8 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -31,7 +31,7 @@ $headings = [
 	'error' => '',
 ];
 
-$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'globalMsgHeadings']);
+$filterName = HooksHelpers::getFilterName(['block', 'form', 'globalMsgHeadings']);
 
 if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);

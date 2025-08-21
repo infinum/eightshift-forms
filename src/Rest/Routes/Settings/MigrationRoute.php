@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
@@ -26,34 +26,31 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Migration\MigrationHelper;
 use EightshiftForms\Migration\SettingsMigration;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Settings\SettingsSettings;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use WP_Query;
-use WP_REST_Request;
 
 /**
  * Class MigrationRoute
  */
-class MigrationRoute extends AbstractUtilsBaseRoute
+class MigrationRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Use Migration helper trait.
 	 */
 	use MigrationHelper;
-
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
 
 	/**
 	 * Instance variable for HubSpot form data.
@@ -65,14 +62,20 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
+		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
@@ -92,27 +95,40 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @throws BadRequestException If migration type is not found.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$type = $params['type'] ?? '';
 
 		switch ($type) {
@@ -125,11 +141,14 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			case SettingsMigration::VERSION_CLEARBIT:
 				return $this->getMigrationClearbit();
 			default:
-				return UtilsApiHelper::getApiErrorPublicOutput(
-					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
-					[],
-					$debug
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+				throw new BadRequestException(
+					$this->getLabels()->getLabel('migrationTypeNotFound'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
+					]
 				);
+				// phpcs:enable
 		}
 	}
 
@@ -149,26 +168,26 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 		];
 
 		// Migrate global fallback.
-		$globalFallback = UtilsSettingsHelper::getOptionValue($config['options']['old']);
+		$globalFallback = SettingsHelpers::getOptionValue($config['options']['old']);
 
 		if ($globalFallback) {
-			\update_option(UtilsSettingsHelper::getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
-			\update_option(UtilsSettingsHelper::getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
-			\delete_option(UtilsSettingsHelper::getOptionName($config['options']['old']));
+			\update_option(SettingsHelpers::getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
+			\update_option(SettingsHelpers::getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
+			\delete_option(SettingsHelpers::getOptionName($config['options']['old']));
 		}
 
 		// Migrate each integration fallback.
-		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $key => $value) {
+		foreach (\apply_filters(Config::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';
-			if ($type !== UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
+			if ($type !== Config::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
 			}
 
-			$globalIntegrationFallback = UtilsSettingsHelper::getOptionValue($config['options']['old'] . '-' . $key);
+			$globalIntegrationFallback = SettingsHelpers::getOptionValue($config['options']['old'] . '-' . $key);
 
 			if ($globalIntegrationFallback) {
-				\update_option(UtilsSettingsHelper::getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
-				\delete_option(UtilsSettingsHelper::getOptionName($config['options']['old'] . '-' . $key));
+				\update_option(SettingsHelpers::getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
+				\delete_option(SettingsHelpers::getOptionName($config['options']['old'] . '-' . $key));
 			}
 		}
 
@@ -182,20 +201,25 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 		];
 
 		foreach ($configDelimiter as $key) {
-			$option = UtilsSettingsHelper::getOptionValue($key);
+			$option = SettingsHelpers::getOptionValue($key);
 			if ($option) {
 				$option = \explode(', ', $option);
-				$option = \implode(UtilsConfig::DELIMITER, $option);
-				\update_option(UtilsSettingsHelper::getOptionName($key), \maybe_unserialize($option));
+				$option = \implode(Config::DELIMITER, $option);
+				\update_option(SettingsHelpers::getOptionName($key), \maybe_unserialize($option));
 			}
 		}
 
-		$actionName = UtilsHooksHelper::getActionName(['migration', 'twoToThreeGeneral']);
+		$actionName = HooksHelpers::getActionName(['migration', 'twoToThreeGeneral']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
+			],
+		];
 	}
 
 	/**
@@ -219,7 +243,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 
 		if (!$theQuery->have_posts()) {
 			\wp_reset_postdata();
-			return UtilsApiHelper::getApiErrorPublicOutput(\__('We could not find any forms in your project so there is nothing to migrate.', 'eightshift-forms'));
+			return ApiHelpers::getApiErrorPublicOutput(\__('We could not find any forms in your project so there is nothing to migrate.', 'eightshift-forms'));
 		}
 
 		while ($theQuery->have_posts()) {
@@ -237,7 +261,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 				$title = $id;
 			}
 
-			$type = UtilsGeneralHelper::getFormTypeById($id);
+			$type = GeneralHelpers::getFormTypeById($id);
 
 			// If there is nothing in the content, skip this form.
 			if (!$type) {
@@ -245,10 +269,10 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			}
 
 			// Bailout integrations that are disabled.
-			$use = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
+			$use = \apply_filters(Config::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
 
 			// Skip deactivated integrations.
-			if (UtilsSettingsHelper::isOptionCheckboxChecked($use, $use)) {
+			if (SettingsHelpers::isOptionCheckboxChecked($use, $use)) {
 				switch ($type) {
 					case SettingsHubspot::SETTINGS_TYPE_KEY:
 						$preCheck = $this->updateFormIntegration2To3Forms($type, 'item-id', '', $id, $content);
@@ -321,8 +345,8 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 						break;
 				}
 
-				\delete_option(UtilsSettingsHelper::getOptionName("{$type}-clearbit-email-field"));
-				\delete_option(UtilsSettingsHelper::getOptionName("{$type}-integration-fields"));
+				\delete_option(SettingsHelpers::getOptionName("{$type}-clearbit-email-field"));
+				\delete_option(SettingsHelpers::getOptionName("{$type}-integration-fields"));
 			}
 		}
 
@@ -365,27 +389,32 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			\wp_update_post([
 				'ID' => (int) $key,
 				'post_content' => \wp_slash($blockGrammar),
-			 ]);
+			]);
 		}
 
 		$outputFinal['fatal'] = $outputFatal;
 
-		$actionName = UtilsHooksHelper::getActionName(['migration', 'twoToThreeForms']);
+		$actionName = HooksHelpers::getActionName(['migration', 'twoToThreeForms']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_FORMS);
 		}
 
 		if (!$outputFinal['items']) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				\__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'),
+			return ApiHelpers::getApiErrorPublicOutput(
+				\__('All forms returned and error. It looks like you already migrated everything.', 'eightshift-forms'),
 				$outputFinal,
 			);
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			\__('Migration version 2 to 3 forms finished with success.', 'eightshift-forms'),
-			$outputFinal
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminMigration') => $outputFinal,
+			],
+		];
 	}
 
 	/**
@@ -486,15 +515,20 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			}
 		}
 
-		$actionName = UtilsHooksHelper::getActionName(['migration', 'twoToThreeLocale']);
+		$actionName = HooksHelpers::getActionName(['migration', 'twoToThreeLocale']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			\__('Migration version 2 to 3 locale finished with success.', 'eightshift-forms'),
-			$output
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
+			],
+		];
 	}
 
 	/**
@@ -572,14 +606,19 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			}
 		}
 
-		$actionName = UtilsHooksHelper::getActionName(['migration', 'clearbit']);
+		$actionName = HooksHelpers::getActionName(['migration', 'clearbit']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_CLEARBIT);
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			\__('Migration version 5.5.1 to 5.6 Clearbit finished with success.', 'eightshift-forms'),
-			$output
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
+			],
+		];
 	}
 }

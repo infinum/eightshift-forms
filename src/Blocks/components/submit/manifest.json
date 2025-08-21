@@ -41,6 +41,9 @@
 		"submitAttrs": {
 			"type": "object"
 		},
+		"submitItemAttrs": {
+			"type": "object"
+		},
 		"submitMeta": {
 			"type": "string"
 		},

@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Captcha;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -51,7 +51,7 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 			return [];
 		}
 
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'captcha']);
+		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'captcha']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -78,9 +78,9 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 
 		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
 
-		$siteKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
 
-		$isEnterprise = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
 		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
 
@@ -118,7 +118,7 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
+		return Config::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**

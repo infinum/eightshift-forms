@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Mailer
+ * The class register route for public form submitting endpoint - Mailer
  *
  * @package EightshiftForms\Rest\Route\Integrations\Mailer
  */
@@ -11,14 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
+use EightshiftForms\Config\Config;
 
 /**
  * Class FormSubmitMailerRoute
  */
-class FormSubmitMailerRoute extends AbstractFormSubmit
+class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.
@@ -32,7 +31,32 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
 	}
 
 	/**
@@ -44,13 +68,17 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$formId = $formDetails[Config::FD_FORM_ID];
+
+		// NOTE: no need to check if settings are valid, because this check is done in the Mailer class.
 
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
-		$mailerResponse = $this->getFormSubmitMailer()->sendEmails(
+		// If error is thrown, it will be caught by the parent class.
+		// Send is mandatory.
+		$return = $this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCommonEmailResponseTags(
 				\array_merge(
@@ -61,32 +89,9 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			)
 		);
 
-		$status = $mailerResponse['status'] ?? UtilsConfig::STATUS_ERROR;
-		$label = $mailerResponse['label'] ?? 'mailerErrorEmailSend';
-		$debug = $mailerResponse['debug'] ?? [];
+		// Set validation submit once.
+		$this->getValidator()->setValidationSubmitOnce($formId);
 
-		if ($status === UtilsConfig::STATUS_SUCCESS) {
-			// Set validation submit once.
-			$this->validator->setValidationSubmitOnce($formId);
-
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
-					$this->labels->getLabel($label, $formId),
-					\array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional']
-					),
-					$debug
-				)
-			);
-		}
-
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel($label, $formId),
-				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
-				$debug
-			)
-		);
+		return $return;
 	}
 }

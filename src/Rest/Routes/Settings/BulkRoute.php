@@ -10,19 +10,22 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Transfer\TransferInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class BulkRoute
  */
-class BulkRoute extends AbstractUtilsBaseRoute
+class BulkRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -46,13 +49,22 @@ class BulkRoute extends AbstractUtilsBaseRoute
 	/**
 	 * Create a new instance.
 	 *
+	 * @param SecurityInterface $security Inject security methods.
+	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff,
 		TransferInterface $transfer
 	) {
+		$this->security = $security;
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 		$this->transfer = $transfer;
 	}
@@ -68,49 +80,55 @@ class BulkRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'ids' => 'string',
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @throws BadRequestException If bulk items are missing.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
 
 		if (!$ids) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\__('There are no selected forms.', 'eightshift-forms'),
-					[],
-					$debug
-				)
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('bulkMissingItems'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
+				]
 			);
+			// phpcs:enable
 		}
 
 		$type = $params['type'] ?? '';
-		if (!$type) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\__('Action type is missing.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
 
 		$output = [];
 
@@ -124,8 +142,8 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			case 'restore':
 				$output = $this->restore($ids);
 				break;
-			case 'delete-perminentely':
-				$output = $this->deletePerminently($ids);
+			case 'delete-permanently':
+				$output = $this->deletePermanently($ids);
 				break;
 			case 'duplicate':
 				$output = $this->duplicate($ids);
@@ -136,33 +154,40 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			case 'delete-entry':
 				$output = $this->deleteEntry($ids);
 				break;
+			case 'delete-activity-log':
+				$output = $this->deleteActivityLog($ids);
+				break;
+			case 'duplicate-activity-log':
+				$output = $this->duplicateActivityLog($ids);
+				break;
 		}
 
 		switch ($output['status']) {
 			case 'success':
-				return \rest_ensure_response(
-					UtilsApiHelper::getApiSuccessPublicOutput(
-						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
-						$output['data'] ?? [],
-						$debug
-					)
-				);
+				return [
+					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel('genericSuccess'),
+					AbstractBaseRoute::R_DEBUG => [
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst($type),
+					],
+				];
 			case 'warning':
-				return \rest_ensure_response(
-					UtilsApiHelper::getApiWarningPublicOutput(
-						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
-						$output['data'] ?? [],
-						$debug
-					)
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+				throw new BadRequestException(
+					$output['msg'] ?? $this->getLabels()->getLabel('genericWarning'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst($type),
+					]
 				);
+				// phpcs:enable
 			default:
-				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
-						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
-						$output['data'] ?? [],
-						$debug
-					)
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+				throw new BadRequestException(
+					$output['msg'] ?? $this->getLabels()->getLabel('genericError'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst($type),
+					]
 				);
+				// phpcs:enable
 		}
 	}
 
@@ -181,36 +206,36 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		$skip = $details['skip'] ?? [];
 
 		$msg = '';
-		$intrernaType = 'forms';
+		$internalType = 'forms';
 
 		switch ($type) {
 			case 'sync':
 				$msg = \esc_html__('synced', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'delete':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'restore':
 				$msg = \esc_html__('restored', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
-			case 'delete-perminentely':
-				$msg = \esc_html__('deleted perminently', 'eightshift-forms');
-				$intrernaType = 'forms';
+			case 'delete-permanently':
+				$msg = \esc_html__('deleted permanently', 'eightshift-forms');
+				$internalType = 'forms';
 				break;
 			case 'duplicate':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'delete-entry':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
-				$intrernaType = 'entries';
+				$internalType = 'entries';
 				break;
 			case 'duplicate-entry':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
-				$intrernaType = 'entries';
+				$internalType = 'entries';
 				break;
 		}
 
@@ -218,14 +243,14 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			return [
 				'status' => 'error',
 				// translators: %s replaces form msg type.
-				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $intrernaType, $msg),
+				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $internalType, $msg),
 			];
 		}
 
 		if (\count($details) > 1) {
 			$msgOutput = [
 				// translators: %s replaces type.
-				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType),
+				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $internalType),
 			];
 
 			if ($error) {
@@ -289,8 +314,8 @@ class BulkRoute extends AbstractUtilsBaseRoute
 				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
 			}
 
-			// Prevent non syncahble forms from syncing like mailer.
-			if (!UtilsGeneralHelper::canIntegrationUseSync(UtilsGeneralHelper::getFormTypeById((string) $id))) {
+			// Prevent non sync forms from syncing like mailer.
+			if (!GeneralHelpers::canIntegrationUseSync(GeneralHelpers::getFormTypeById((string) $id))) {
 				$output['skip'][] = $title;
 				continue;
 			}
@@ -335,13 +360,13 @@ class BulkRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Delete perminently forms by Ids.
+	 * Delete permanently forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
 	 *
 	 * @return array<int>
 	 */
-	private function deletePerminently(array $ids): array
+	private function deletePermanently(array $ids): array
 	{
 		$output = [];
 
@@ -362,7 +387,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			}
 		}
 
-		return $this->output($output, 'delete-perminentely');
+		return $this->output($output, 'delete-permanently');
 	}
 
 	/**
@@ -377,12 +402,8 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		$output = [];
 
 		foreach ($ids as $id) {
-			$title = \get_the_title($id);
-
-			if (!$title) {
-				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
-			}
+			// translators: %s replaces form id.
+			$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
 
 			$action = EntriesHelper::deleteEntry((string) $id);
 
@@ -394,6 +415,33 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		}
 
 		return $this->output($output, 'delete-entry');
+	}
+
+	/**
+	 * Delete activity log by Ids.
+	 *
+	 * @param array<int> $ids Activity log Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function deleteActivityLog(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			// translators: %s replaces activity log id.
+			$title = \sprintf(\esc_html__('Activity log %s', 'eightshift-forms'), $id);
+
+			$action = ActivityLogHelper::deleteActivityLog((string) $id);
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'delete-activity-log');
 	}
 
 	/**
@@ -476,12 +524,8 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		$output = [];
 
 		foreach ($ids as $id) {
-			$title = \get_the_title($id);
-
-			if (!$title) {
-				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
-			}
+			// translators: %s replaces form id.
+			$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
 
 			$entry = EntriesHelper::getEntry((string) $id);
 
@@ -495,5 +539,34 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		}
 
 		return $this->output($output, 'duplicate-entry');
+	}
+
+	/**
+	 * Duplicate activity log by Ids.
+	 *
+	 * @param array<int> $ids Activity log Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function duplicateActivityLog(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			// translators: %s replaces activity log id.
+			$title = \sprintf(\esc_html__('Activity log %s', 'eightshift-forms'), $id);
+
+			$activityLog = ActivityLogHelper::getActivityLog((string) $id);
+
+			$action  = ActivityLogHelper::setActivityLog($activityLog['ipAddress'] ?? '', $activityLog['statusKey'] ?? '', $activityLog['formId'] ?? '', \json_decode($activityLog['data'] ?? '[]', true));
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'duplicate-activity-log');
 	}
 }

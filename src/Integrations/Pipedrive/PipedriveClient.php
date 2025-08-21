@@ -12,15 +12,16 @@ namespace EightshiftForms\Integrations\Pipedrive;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * PipedriveClient integration class.
@@ -52,7 +53,7 @@ class PipedriveClient implements PipedriveClientInterface
 	/**
 	 * Return person fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -62,7 +63,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = \get_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -123,7 +124,7 @@ class PipedriveClient implements PipedriveClientInterface
 	/**
 	 * Return leads fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -133,7 +134,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = \get_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -180,12 +181,12 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	public function postApplication(array $formDetails): array
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$files = $formDetails[UtilsConfig::FD_FILES];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsPipedrive::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsPipedrive::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $params, $files, $formId) ?? [];
 
@@ -197,27 +198,27 @@ class PipedriveClient implements PipedriveClientInterface
 		$organization = [];
 		$lead = [];
 		$person = [];
-		$code = UtilsConfig::API_RESPONSE_CODE_ERROR_MISSING;
+		$code = AbstractRoute::API_RESPONSE_CODE_NOT_FOUND;
 		$body = [];
 
-		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId)) {
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId)) {
 			$organization = $this->postApplicationSingle(
 				'organizations',
 				$this->prepareParamsOrganization($params, $formId),
 				$formId
 			);
 
-			$code = $organization[UtilsConfig::IARD_CODE];
-			$body = $organization[UtilsConfig::IARD_BODY];
+			$code = $organization[Config::IARD_CODE];
+			$body = $organization[Config::IARD_BODY];
 
-			if ($code < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-				$organization[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+			if (ApiHelpers::isErrorResponse($code)) {
+				$organization[Config::IARD_MSG] = $this->getErrorMsg($body);
 
-				return UtilsApiHelper::getIntegrationErrorInternalOutput($organization);
+				return ApiHelpers::getIntegrationErrorInternalOutput($organization);
 			}
 		}
 
-		$organizationId = $organization[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
+		$organizationId = $organization[Config::IARD_BODY]['data']['id'] ?? '';
 
 		$person = $this->postApplicationSingle(
 			'persons',
@@ -231,18 +232,18 @@ class PipedriveClient implements PipedriveClientInterface
 			$formId
 		);
 
-		$code = $person[UtilsConfig::IARD_CODE];
-		$body = $person[UtilsConfig::IARD_BODY];
+		$code = $person[Config::IARD_CODE];
+		$body = $person[Config::IARD_BODY];
 
-		if ($code < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			$person[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		if (ApiHelpers::isErrorResponse($code)) {
+			$person[Config::IARD_MSG] = $this->getErrorMsg($body);
 
-			return UtilsApiHelper::getIntegrationErrorInternalOutput($person);
+			return ApiHelpers::getIntegrationErrorInternalOutput($person);
 		}
 
-		$personId = $person[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
+		$personId = $person[Config::IARD_BODY]['data']['id'] ?? '';
 
-		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, $formId)) {
+		if (SettingsHelpers::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, $formId)) {
 			$lead = $this->postApplicationSingle(
 				'leads',
 				$this->prepareParamsLead(
@@ -256,17 +257,17 @@ class PipedriveClient implements PipedriveClientInterface
 				$formId
 			);
 
-			$code = $lead[UtilsConfig::IARD_CODE];
-			$body = $lead[UtilsConfig::IARD_BODY];
+			$code = $lead[Config::IARD_CODE];
+			$body = $lead[Config::IARD_BODY];
 
-			if ($code < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-				$lead[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+			if (ApiHelpers::isErrorResponse($code)) {
+				$lead[Config::IARD_MSG] = $this->getErrorMsg($body);
 
-				return UtilsApiHelper::getIntegrationErrorInternalOutput($lead);
+				return ApiHelpers::getIntegrationErrorInternalOutput($lead);
 			}
 		}
 
-		$leadId = $lead[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
+		$leadId = $lead[Config::IARD_BODY]['data']['id'] ?? '';
 
 		if ($files) {
 			$this->postFileMedia(
@@ -280,7 +281,7 @@ class PipedriveClient implements PipedriveClientInterface
 		}
 
 		// On success return output.
-		return UtilsApiHelper::getIntegrationSuccessInternalOutput($person);
+		return ApiHelpers::getIntegrationSuccessInternalOutput($person);
 	}
 
 	/**
@@ -299,7 +300,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -326,7 +327,7 @@ class PipedriveClient implements PipedriveClientInterface
 			foreach ($fileItems as $item) {
 				$postData = \array_merge(
 					[
-					'file' => new CURLFile($item, 'multipart/form-data'),
+						'file' => new CURLFile($item, 'multipart/form-data'),
 					],
 					$additionalParams
 				);
@@ -373,15 +374,14 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 			$body,
 			[],
 			'',
-			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 	}
 
@@ -401,17 +401,17 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['data'] ?? [];
 		}
 
@@ -434,17 +434,17 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['data'] ?? [];
 		}
 
@@ -464,17 +464,17 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$personName = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
+		$personName = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
 		if (!$personName) {
 			return $output;
 		}
 
 		$output['name'] = FormsHelper::getParamValue($personName, $params);
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -497,7 +497,7 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$output['add_time'] = \gmdate("Y-m-d H:i:s");
 
-		$label = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
+		$label = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
 		if ($label) {
 			$output['label'] = $label;
 		}
@@ -523,7 +523,7 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$leadTitle = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId);
+		$leadTitle = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId);
 		if (!$leadTitle) {
 			return $output;
 		}
@@ -531,12 +531,12 @@ class PipedriveClient implements PipedriveClientInterface
 		$output['title'] = $leadTitle;
 
 
-		$label = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
+		$label = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
 		if ($label) {
 			$output['label_ids'] = [$label];
 		}
 
-		$leadValue = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
+		$leadValue = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
 		if ($leadValue) {
 			$value = FormsHelper::getParamValue($leadValue, $params);
 
@@ -546,7 +546,7 @@ class PipedriveClient implements PipedriveClientInterface
 
 			$output['value'] = [
 				'amount' => \intval($value, 10),
-				'currency' => UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
+				'currency' => SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
 			];
 		}
 
@@ -570,7 +570,7 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$organization = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
+		$organization = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
 		if (!$organization) {
 			return $output;
 		}
@@ -656,6 +656,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY);
 	}
 }

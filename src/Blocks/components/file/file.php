@@ -7,9 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -49,15 +49,15 @@ $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
 $customFile = '';
 
-$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
-$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
+$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eightshift-forms');
+$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eightshift-forms');
 
 $infoTextContent = '';
 if ($fileCustomInfoTextUse) {
 	$infoTextContent .= '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
-$filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
+$filter = HooksHelpers::getFilterName(['block', 'file', 'infoAdditionalContent']);
 if (has_filter($filter)) {
 	$infoTextContent .= apply_filters($filter, '', $attributes);
 }
@@ -79,7 +79,7 @@ $customFile = '
 ';
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('file', $attributes);
 
 if ($fileIsRequired) {
 	$fileAttrs['aria-required'] = 'true';

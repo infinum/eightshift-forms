@@ -26,7 +26,7 @@ use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
-use EightshiftForms\Settings\Settings\SettingsSettings;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -43,7 +43,7 @@ use EightshiftForms\Misc\SettingsCloudFront;
 use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * The Filters class for all public filters/actions.
@@ -58,9 +58,9 @@ final class Filters
 	public static function getHooksData(): array
 	{
 		return [
-			UtilsConfig::PUBLIC_FILTERS_NAME => self::getPublicFilters(),
-			UtilsConfig::PUBLIC_ACTIONS_NAME => self::getPublicActions(),
-			UtilsConfig::PUBLIC_NONE_TRANSLATABLE_NAMES_NAME => self::getSettingsNoneTranslatableNames(),
+			Config::PUBLIC_FILTERS_NAME => self::getPublicFilters(),
+			Config::PUBLIC_ACTIONS_NAME => self::getPublicActions(),
+			Config::PUBLIC_NONE_TRANSLATABLE_NAMES_NAME => self::getSettingsNoneTranslatableNames(),
 		];
 	}
 

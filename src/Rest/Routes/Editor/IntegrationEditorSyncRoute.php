@@ -11,15 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class IntegrationEditorSyncRoute
  */
-class IntegrationEditorSyncRoute extends AbstractUtilsBaseRoute
+class IntegrationEditorSyncRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -36,10 +40,20 @@ class IntegrationEditorSyncRoute extends AbstractUtilsBaseRoute
 	/**
 	 * Create a new instance.
 	 *
+	 * @param SecurityInterface $security Inject security methods.
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
-	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
-	{
+	public function __construct(
+		SecurityInterface $security,
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		IntegrationSyncInterface $integrationSyncDiff
+	) {
+		$this->security = $security;
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
@@ -50,7 +64,7 @@ class IntegrationEditorSyncRoute extends AbstractUtilsBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -64,54 +78,66 @@ class IntegrationEditorSyncRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'id' => 'string',
+		];
+	}
 
-		$formId = $params['id'] ?? '';
-
-		$syncForm = $this->integrationSyncDiff->syncFormEditor($formId, true);
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @throws BadRequestException If form sync fails.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
+		$syncForm = $this->integrationSyncDiff->syncFormEditor($params['id'] ?? '', true);
 
 		$status = $syncForm['status'] ?? '';
 		$message = $syncForm['message'] ?? '';
 
-		unset($syncForm['message']);
-		unset($syncForm['status']);
-
-		$debug = [
-			'request' => $request,
-			'syncForm' => $syncForm,
-		];
-
-		if ($status === UtilsConfig::STATUS_ERROR) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					$message,
-					$syncForm,
-					$debug
-				)
+		if ($status === Config::STATUS_ERROR) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$message,
+				[
+					AbstractBaseRoute::R_DEBUG => $syncForm,
+					AbstractBaseRoute::R_DEBUG_KEY => 'syncFormError',
+				]
 			);
+			// phpcs:enable
 		}
 
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				$message,
-				$syncForm,
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $message,
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $syncForm,
+				AbstractBaseRoute::R_DEBUG_KEY => 'syncFormSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('editorSyncForm') => $syncForm,
+			],
+		];
 	}
 }

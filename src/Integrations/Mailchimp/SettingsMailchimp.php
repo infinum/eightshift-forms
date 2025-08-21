@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailchimp;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -21,12 +21,17 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsMailchimp class.
  */
-class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsMailchimp extends AbstractSettingsIntegrations implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_mailchimp';
+
+	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_mailchimp';
 
 	/**
 	 * Settings key.
@@ -78,6 +83,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
@@ -87,8 +93,8 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMailchimp(), self::SETTINGS_MAILCHIMP_API_KEY_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMailchimp(), self::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -105,14 +111,14 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -123,12 +129,12 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -139,7 +145,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -148,7 +154,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyMailchimp(),
 									self::SETTINGS_MAILCHIMP_API_KEY_KEY,
 									'ES_API_KEY_MAILCHIMP',
@@ -158,7 +164,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -178,12 +184,12 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 								'component' => 'steps',
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
-										\__('Log in to your Mailchimp Account.', 'eightshift-forms'),
-										\__('Navigate to your user profile image (bottom left corner).', 'eightshift-forms'),
-										\__('Click on <strong>Account</strong>.', 'eightshift-forms'),
-										\__('Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.', 'eightshift-forms'),
-										\__('Click on the <strong>Create a Key</strong> button.', 'eightshift-forms'),
-										\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+									\__('Log in to your Mailchimp Account.', 'eightshift-forms'),
+									\__('Navigate to your user profile image (bottom left corner).', 'eightshift-forms'),
+									\__('Click on <strong>Account</strong>.', 'eightshift-forms'),
+									\__('Click on <strong>Extras</strong> and <strong>API Keys</strong> in the tabs section.', 'eightshift-forms'),
+									\__('Click on the <strong>Create a Key</strong> button.', 'eightshift-forms'),
+									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
 						],

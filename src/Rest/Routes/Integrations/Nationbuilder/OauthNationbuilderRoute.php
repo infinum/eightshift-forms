@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - OAuth Callback for Nationbuilder.
+ * The class register route for public form submitting endpoint - OAuth Callback for Nationbuilder.
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Nationbuilder
  */
@@ -69,6 +69,28 @@ class OauthNationbuilderRoute extends AbstractOauth
 	protected function getOauthAllowKey(): string
 	{
 		return SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [];
 	}
 
 	/**

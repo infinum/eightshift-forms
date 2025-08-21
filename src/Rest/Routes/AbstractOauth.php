@@ -11,15 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use WP_REST_Request;
 
 /**
  * Class AbstractOauth
  */
-abstract class AbstractOauth extends AbstractUtilsBaseRoute
+abstract class AbstractOauth extends AbstractBaseRoute
 {
 	/**
 	 * Dynamic name route prefix for oauth.
@@ -32,8 +31,6 @@ abstract class AbstractOauth extends AbstractUtilsBaseRoute
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @throws UnverifiedRequestException Wrong config error.
 	 *
 	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
@@ -120,7 +117,7 @@ abstract class AbstractOauth extends AbstractUtilsBaseRoute
 				[
 					'oauthMsg' => \esc_html($message),
 				],
-				UtilsGeneralHelper::getSettingsGlobalPageUrl($this->getOauthType())
+				GeneralHelpers::getSettingsGlobalPageUrl($this->getOauthType())
 			)
 		);
 		exit;
@@ -133,6 +130,6 @@ abstract class AbstractOauth extends AbstractUtilsBaseRoute
 	 */
 	protected function checkEnabledConnectionPermission(): bool
 	{
-		return UtilsSettingsHelper::isOptionCheckboxChecked($this->getOauthAllowKey(), $this->getOauthAllowKey());
+		return SettingsHelpers::isOptionCheckboxChecked($this->getOauthAllowKey(), $this->getOauthAllowKey());
 	}
 }

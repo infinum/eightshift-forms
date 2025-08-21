@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -431,8 +431,8 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'data']);
+		// Change the final output if necessary.
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

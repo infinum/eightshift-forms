@@ -12,8 +12,8 @@ namespace EightshiftForms\Editor;
 
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -49,10 +49,10 @@ class Editor implements ServiceInterface
 		foreach ($types as $type) {
 			$links = $this->getListOfLinks($type);
 
-			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
+			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : Config::SLUG_ADMIN_LISTING_RESULTS;
 
 			if (isset($links[$actualUrl])) {
-				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+				echo '<script>window.location.replace("' . GeneralHelpers::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			}
 		}
 	}

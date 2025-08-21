@@ -128,6 +128,13 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
+		// Add nonce for frontend and admin.
+		const nonce = this.state.getStateConfigNonce();
+
+		if (nonce) {
+			body.headers['X-WP-Nonce'] = nonce;
+		}
+
 		// Get geolocation data from ajax to detect what we will remove from DOM.
 		fetch(this.state.getRestUrl('geolocation'), body)
 			.then((response) => {
@@ -303,7 +310,7 @@ export class Form {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
 
-		fetch(url, body)
+		const output = fetch(url, body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
 
@@ -324,9 +331,13 @@ export class Form {
 				this.formSubmitAfter(formId, response);
 
 				this.state.setStateFormIsProcessing(false, formId);
+
+				return response;
 			});
 
 		this.FORM_DATA = new FormData();
+
+		return output;
 	}
 
 	/**
@@ -353,6 +364,13 @@ export class Form {
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
+
+		// Add nonce for frontend and admin.
+		const nonce = this.state.getStateConfigNonce();
+
+		if (nonce) {
+			body.headers['X-WP-Nonce'] = nonce;
+		}
 
 		const url = this.state.getRestUrl('validationStep');
 
@@ -545,38 +563,76 @@ export class Form {
 		const siteKey = this.state.getStateCaptchaSiteKey();
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
-			grecaptcha?.enterprise?.ready(async () => {
-				try {
-					const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
-
-					this.setFormDataCaptcha({
-						token,
-						isEnterprise: true,
-						action: actionName,
-					});
-
-					this.formSubmit(formId, filter);
-				} catch (error) {
-					this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
-				}
-			});
+			this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
 		} else {
-			grecaptcha?.ready(async () => {
-				try {
-					const token = await grecaptcha?.execute(siteKey, { action: actionName });
-
-					this.setFormDataCaptcha({
-						token,
-						isEnterprise: false,
-						action: actionName,
-					});
-
-					this.formSubmit(formId, filter);
-				} catch (error) {
-					this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
-				}
-			});
+			this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
 		}
+	}
+
+	/**
+	 * Execute enterprise captcha.
+	 *
+	 * @param {string} actionName Action name.
+	 * @param {string} siteKey Site key.
+	 * @param {string} formId Form id.
+	 * @param {boolean} retry Retry.
+	 * @param {object} filter Filter.
+	 *
+	 * @returns {void}
+	 */
+	executeEnterpriseCaptcha(actionName, siteKey, formId, retry, filter = {}) {
+		grecaptcha?.enterprise?.ready(async () => {
+			try {
+				const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
+
+				this.setFormDataCaptcha({
+					token,
+					isEnterprise: true,
+					action: actionName,
+				});
+
+				const response = await this.formSubmit(formId, filter);
+
+				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
+					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
+				}
+			} catch (error) {
+				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			}
+		});
+	}
+
+	/**
+	 * Execute free captcha.
+	 *
+	 * @param {string} actionName Action name.
+	 * @param {string} siteKey Site key.
+	 * @param {string} formId Form id.
+	 * @param {boolean} retry Retry.
+	 * @param {object} filter Filter.
+	 *
+	 * @returns {void}
+	 */
+	executeFreeCaptcha(actionName, siteKey, formId, retry, filter = {}) {
+		grecaptcha?.ready(async () => {
+			try {
+				const token = await grecaptcha?.execute(siteKey, { action: actionName });
+
+				this.setFormDataCaptcha({
+					token,
+					isEnterprise: false,
+					action: actionName,
+				});
+
+				const response = await this.formSubmit(formId, filter);
+
+				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
+					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
+				}
+			} catch (error) {
+				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			}
+		});
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -888,13 +944,13 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataStep(formId) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('steps'),
 				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
 				custom: this.state.getStateFormStepsCurrent(formId),
 			},
-		]);
+		], this.FORM_DATA);
 	}
 
 	/**
@@ -905,7 +961,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCommon(formId) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('formId'),
 				value: this.state.getStateFormFid(formId),
@@ -920,17 +976,17 @@ export class Form {
 			},
 			{
 				name: this.state.getStateParam('action'),
-				value: this.state.getStateFormAction(formId),
+				value: this.state.getStateFormAction(formId) ?? '',
 			},
 			{
 				name: this.state.getStateParam('actionExternal'),
-				value: this.state.getStateFormActionExternal(formId),
+				value: this.state.getStateFormActionExternal(formId) ?? '',
 			},
 			{
 				name: this.state.getStateParam('secureData'),
-				value: this.state.getStateFormSecureData(formId),
+				value: this.state.getStateFormSecureData(formId) ?? '',
 			},
-		]);
+		], this.FORM_DATA);
 	}
 
 	/**
@@ -948,12 +1004,12 @@ export class Form {
 		const data = this.enrichment.getLocalStorage(this.state.getStateEnrichmentStorageName());
 
 		if (data) {
-			this.buildFormDataItems([
+			this.utils.buildFormDataItems([
 				{
 					name: this.state.getStateParam('storage'),
 					value: data,
 				},
-			]);
+			], this.FORM_DATA);
 		}
 	}
 
@@ -965,12 +1021,12 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataAdmin(formId) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('settingsType'),
 				value: this.state.getStateFormTypeSettings(formId),
 			},
-		]);
+		], this.FORM_DATA);
 	}
 
 	/**
@@ -989,21 +1045,21 @@ export class Form {
 					...output,
 					{
 						name: this.state.getStateParam('hubspotCookie'),
-						value: cookies.getCookie('hubspotutk'),
+						value: cookies?.getCookie('hubspotutk') ?? '',
 					},
 					{
 						name: this.state.getStateParam('hubspotPageName'),
-						value: document.title,
+						value: document?.title ?? '',
 					},
 					{
 						name: this.state.getStateParam('hubspotPageUrl'),
-						value: window.location.href,
+						value: window?.location?.href ?? '',
 					},
 				];
 				break;
 		}
 
-		this.buildFormDataItems(output);
+		this.utils.buildFormDataItems(output, this.FORM_DATA);
 	}
 
 	/**
@@ -1014,37 +1070,12 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCaptcha(data) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('captcha'),
 				value: data,
 			},
-		]);
-	}
-
-	/**
-	 * Build helper for form data object.
-	 *
-	 * @param {string} formId Form Id.
-	 * @param {object} dataSet Object to build.
-	 *
-	 * @returns {void}
-	 */
-	buildFormDataItems(data, dataSet = this.FORM_DATA) {
-		data.forEach((item) => {
-			const { name, value, type = 'hidden', typeCustom = 'hidden', custom = '' } = item;
-
-			dataSet.append(
-				name,
-				JSON.stringify({
-					name,
-					value,
-					type,
-					typeCustom,
-					custom,
-				}),
-			);
-		});
+		], this.FORM_DATA);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1409,7 +1440,7 @@ export class Form {
 			// Add data formData to the api call for the file upload.
 			dropzone.on('sending', (file, xhr, formData) => {
 				// Add common items like formID and type.
-				this.buildFormDataItems(
+				this.utils.buildFormDataItems(
 					[
 						{
 							name: this.state.getStateParam('formId'),
@@ -1438,7 +1469,7 @@ export class Form {
 				);
 			});
 
-			// Once data is outputed from uplaod.
+			// Once data is outputted from upload.
 			dropzone.on('success', (file) => {
 				try {
 					const response = JSON.parse(file.xhr.response);
@@ -1464,22 +1495,55 @@ export class Form {
 			dropzone.on('error', (file) => {
 				const { response, status } = file.xhr;
 
+				let isFatalError = false;
+
 				let msg = 'serverError';
 
 				if (response.includes('wordfence') || response.includes('Wordfence')) {
 					msg = 'wordfenceFirewall';
+					isFatalError = true;
 				}
 
-				if (response.includes('cloudflare') || response.includes('Cloudflare')) {
+				if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
 					msg = 'cloudflareFirewall';
+					isFatalError = true;
 				}
 
-				file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+				if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
+					msg = 'cloudFrontFirewall';
+					isFatalError = true;
+				}
 
-				button.focus();
-				this.utils.setOnFocus(button);
+				if (isFatalError) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 
-				throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError" with code: "${status}" and message: "${msg}"`);
+					button.focus();
+					this.utils.setOnFocus(button);
+
+					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadErrorFirewall" with code: "${status}" and message: "${msg}"`);
+				}
+
+				try {
+					const response = JSON.parse(file.xhr.response);
+
+					const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+
+					// Output errors if there are any.
+					if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					} else {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.message;
+					}
+
+					field?.classList?.add(this.state.getStateSelector('isFilled'));
+
+					button.focus();
+					this.utils.setOnFocus(button);
+				} catch (e) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+
+					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError"`);
+				}
 			});
 
 			// Trigger on wrap click.
@@ -1659,7 +1723,7 @@ export class Form {
 			// Steps flow.
 			let direction = field.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
-			// If button is hidden prevent submiting the form.
+			// If button is hidden prevent submitting the form.
 			if (field?.classList?.contains(this.state.getStateSelector('isHidden'))) {
 				return;
 			}
@@ -2015,6 +2079,12 @@ export class Form {
 			runFormCaptcha: (formId, filter = {}) => {
 				this.runFormCaptcha(formId, filter);
 			},
+			executeEnterpriseCaptcha: (actionName, siteKey, formId, retry, filter = {}) => {
+				this.executeEnterpriseCaptcha(actionName, siteKey, formId, retry, filter);
+			},
+			executeFreeCaptcha: (actionName, siteKey, formId, retry, filter = {}) => {
+				this.executeFreeCaptcha(actionName, siteKey, formId, retry, filter);
+			},
 			setFormData: (formId, filter = {}) => {
 				this.setFormData(formId, filter);
 			},
@@ -2041,9 +2111,6 @@ export class Form {
 			},
 			setFormDataCaptcha: (data) => {
 				this.setFormDataCaptcha(data);
-			},
-			buildFormDataItems: (data, dataSet = this.FORM_DATA) => {
-				this.buildFormDataItems(data, dataSet);
 			},
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);

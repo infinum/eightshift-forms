@@ -12,15 +12,19 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class IntegrationItemsInnerAirtableRoute
  */
-class IntegrationItemsInnerAirtableRoute extends AbstractUtilsBaseRoute
+class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Instance variable for Airtable data.
@@ -41,16 +45,26 @@ class IntegrationItemsInnerAirtableRoute extends AbstractUtilsBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param AirtableClientInterface $airtableClient Inject HubSpot which holds HubSpot connect data.
+	 * @param SecurityInterface $security Inject security methods.
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
-	public function __construct(AirtableClientInterface $airtableClient)
-	{
+	public function __construct(
+		SecurityInterface $security,
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		AirtableClientInterface $airtableClient
+	) {
+		$this->security = $security;
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->airtableClient = $airtableClient;
 	}
 
@@ -65,60 +79,64 @@ class IntegrationItemsInnerAirtableRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'id' => 'string',
 		];
+	}
 
-		// Check if Airtable global settings is valid.
-		$isGlobalSettingsValid = \apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME, false);
-
-		if (!$isGlobalSettingsValid) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Global not configured', 'eightshift-forms'),
-					[],
-					$debug
-				)
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @throws BadRequestException If Airtable is not configured.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
+		// Check if global settings is valid.
+		if (!\apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('globalNotConfigured'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
+				]
 			);
+			// phpcs:enable
 		}
 
-		$itemId = $request->get_params()['id'] ?? '';
-
-		if (!$itemId) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Missing item ID.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
-
-		$items = $this->airtableClient->getItem($itemId);
+		$items = $this->airtableClient->getItem($params['id'] ?? '');
 
 		if (!$items) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Items missing', 'eightshift-forms'),
-					[],
-					$debug
-				)
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('integrationItemsMissing'),
+				[
+					AbstractBaseRoute::R_DEBUG => $items,
+					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
+				]
 			);
+			// phpcs:enable
 		}
 
 		$items = \array_filter(\array_values(\array_map(
@@ -135,13 +153,15 @@ class IntegrationItemsInnerAirtableRoute extends AbstractUtilsBaseRoute
 			$items
 		)));
 
-		// Finish.
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				\esc_html__('Success', 'eightshift-forms'),
-				$items,
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $items,
+				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('editorIntegrationItems') => $items,
+			],
+		];
 	}
 }

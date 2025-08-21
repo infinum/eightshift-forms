@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * Class SettingsSubmitRoute
  */
-class SettingsSubmitRoute extends AbstractFormSubmit
+class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.
@@ -56,6 +56,76 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Check if filter params should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckFilterParams(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if captcha should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCaptcha(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if security should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckSecurity(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if enrichment should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckEnrichment(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if country should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCountry(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		switch ($params[Config::FD_TYPE]) {
+			case Config::SETTINGS_GLOBAL_TYPE_NAME:
+				// case Config::FILE_UPLOAD_ADMIN_TYPE_NAME: // TODO: Add file upload admin.
+				return [];
+			default:
+				return [
+					Config::FD_FORM_ID => 'string',
+				];
+		}
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -64,14 +134,11 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$debug = [
-			'formDetails' => $formDetails,
-		];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
@@ -80,7 +147,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 			$fieldType = $value['type'] ?? '';
 
 			if ($fieldType === 'checkbox' || $fieldType === 'select' || $fieldType === 'country') {
-				$fieldValue = \implode(UtilsConfig::DELIMITER, $fieldValue);
+				$fieldValue = \implode(Config::DELIMITER, $fieldValue);
 			}
 
 			// Check if key needs updating or deleting.
@@ -99,13 +166,9 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 			}
 		}
 
-		// Finish.
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				\esc_html__('Changes saved!', 'eightshift-forms'),
-				[],
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('settingsSuccess'),
+
+		];
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Moments
+ * The class register route for public form submitting endpoint - Moments
  *
- * @package EightshiftForms\Rest\Rout\Integrations\Momentses
+ * @package EightshiftForms\Rest\Routes\Integrations\Moments
  */
 
 declare(strict_types=1);
@@ -16,17 +16,22 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\MomentsEventsInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Exception\DisabledIntegrationException;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitMomentsRoute
  */
-class FormSubmitMomentsRoute extends AbstractFormSubmit
+class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.
@@ -50,26 +55,31 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ClientInterface $momentsClient Inject momentsClient methods.
 	 * @param MomentsEventsInterface $momentsEvents Inject momentsEvents methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		SecurityInterface $security,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ClientInterface $momentsClient,
 		MomentsEventsInterface $momentsEvents
 	) {
-		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
+		$this->security = $security;
+		$this->validator = $validator;
+		$this->labels = $labels;
+		$this->captcha = $captcha;
+		$this->mailer = $mailer;
+		$this->enrichment = $enrichment;
 		$this->momentsClient = $momentsClient;
 		$this->momentsEvents = $momentsEvents;
 	}
@@ -81,7 +91,33 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+			Config::FD_ITEM_ID => 'string',
+		];
 	}
 
 	/**
@@ -89,19 +125,44 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws DisabledIntegrationException If integration is disabled.
+	 * @throws BadRequestException If integration is missing config.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)) {
+			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
+
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new DisabledIntegrationException(
+				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+			// phpcs:enable
+		}
+
+		if (!\apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('momentsMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
+				],
+			);
+			// phpcs:enable
+		}
+
 		// Send application to Moments.
 		$response = $this->momentsClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
-		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction($formDetails)
-		);
+		return $this->getIntegrationCommonSubmitAction($formDetails);
 	}
 
 	/**
@@ -126,18 +187,18 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	private function sendEvent(array $formDetails): void
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
 
 		if (!$isUsed) {
 			return;
 		}
 
-		$emailKey = UtilsSettingsHelper::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
-		$eventName = UtilsSettingsHelper::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
-		$map = UtilsSettingsHelper::getSettingValueGroup(SettingsMoments::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
+		$emailKey = SettingsHelpers::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
+		$eventName = SettingsHelpers::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
+		$map = SettingsHelpers::getSettingValueGroup(SettingsMoments::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
 
 		if (!$emailKey || !$eventName) {
 			return;
@@ -145,25 +206,29 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 
 		// Post event if needed.
 		$response = $this->momentsEvents->postEvent(
-			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[Config::FD_PARAMS],
 			$emailKey,
 			$eventName,
 			$map,
 			$formId
 		);
 
-		if ($response[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $response[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($response[Config::IARD_CODE])) {
 			return;
 		}
 
-		$this->getFormSubmitMailer()->sendFallbackIntegrationEmail(
-			$formDetails,
-			// translators: %1$s is the type of the event, %2$s is the form id.
-			\sprintf(\__('Failed %1$s event submit on form: %2$s', 'eightshift-forms'), $type, $formId),
-			\__('The Moments integration data was sent but there was an error with the custom event. Here is all the data for debugging purposes.', 'eightshift-forms'),
-			[
-				'eventResponse' => $response
-			]
-		);
+		if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR)) {
+			$this->getMailer()->sendTroubleshootingEmail(
+				[
+					Config::FD_FORM_ID => (string) $formId,
+					Config::FD_TYPE => $type,
+				],
+				[
+					'response' => $response[Config::IARD_RESPONSE] ?? [],
+					'body' => $response[Config::IARD_BODY] ?? [],
+				],
+				SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR
+			);
+		}
 	}
 }

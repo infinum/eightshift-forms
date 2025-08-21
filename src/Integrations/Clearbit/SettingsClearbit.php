@@ -10,19 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsClearbit class.
  */
-class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface, UtilsSettingInterface
+class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, SettingInterface
 {
 	/**
 	 * Filter settings key.
@@ -53,11 +53,6 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	 * Clearbit Use key.
 	 */
 	public const SETTINGS_CLEARBIT_USE_KEY = 'clearbit-use';
-
-	/**
-	 * Clearbit Use jobs queue key.
-	 */
-	public const SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY = 'clearbit-use-jobs-queue';
 
 	/**
 	 * API Key.
@@ -121,24 +116,25 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
 	 * Determine if settings are valid.
 	 *
+	 * @param bool $output Output.
 	 * @param string $formId Form ID.
 	 *
 	 * @return boolean
 	 */
-	public function isSettingsValid(string $formId): bool
+	public function isSettingsValid(bool $output, string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
 
-		$use = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
+		$use = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
 
 		if (!$use) {
 			return false;
@@ -154,8 +150,8 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -175,11 +171,11 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	{
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
+			return SettingsOutputHelpers::getNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -190,14 +186,14 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY),
 								'checkboxesIsRequired' => false,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use Clearbit integration', 'eightshift-forms'),
 										'checkboxHelp' => \__('Use Clearbit integration to enrich your data on this form.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -220,12 +216,12 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -233,34 +229,12 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
-							UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 								Variables::getApiKeyClearbit(),
 								self::SETTINGS_CLEARBIT_API_KEY_KEY,
 								'ES_API_KEY_CLEARBIT',
 								\__('API key', 'eightshift-forms'),
 							),
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY),
-								'checkboxesIsRequired' => false,
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use jobs queue', 'eightshift-forms'),
-										'checkboxHelp' => \__('Turn on your jobs queue to process Clearbit data using CRON.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY),
-										'checkboxValue' => self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
-									],
-								]
-							],
 						],
 					],
 					...($this->isSettingsGlobalValid() ? [
@@ -271,14 +245,14 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldHideLabel' => true,
-									'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+									'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 									'checkboxesIsRequired' => true,
 									'checkboxesContent' => \array_map(
 										function ($item) {
 											return [
 												'component' => 'checkbox',
 												'checkboxLabel' => $item,
-												'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+												'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 												'checkboxValue' => $item,
 											];
 										},
@@ -298,7 +272,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 									'textareaIsReadOnly' => true,
 									'textareaIsPreventSubmit' => true,
 									'textareaName' => 'queue',
-									'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+									'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
 									'textareaSize' => 'huge',
 									'textareaLimitHeight' => true,
 								],
@@ -322,8 +296,8 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 								),
 							],
 						] : []),
-					 ] : []),
-					 [
+					] : []),
+					[
 						'component' => 'tab',
 						'tabLabel' => \__('Help', 'eightshift-forms'),
 						'tabContent' => [
@@ -332,7 +306,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Clearbit Account.', 'eightshift-forms'),
-									// translators: %s will be replaced with the api externa link.
+									// translators: %s will be replaced with the api external link.
 									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong> in the sidebar.', 'eightshift-forms'), 'https://dashboard.clearbit.com/api'),
 									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
@@ -360,9 +334,9 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 			return [];
 		}
 
-		$clearbitAvailableKeys = UtilsSettingsHelper::getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
+		$clearbitAvailableKeys = SettingsHelpers::getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
 
-		$clearbitMapValue = UtilsSettingsHelper::getOptionValueGroup($key);
+		$clearbitMapValue = SettingsHelpers::getOptionValueGroup($key);
 
 		if (!$clearbitAvailableKeys) {
 			return [];
@@ -370,7 +344,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 
 		return [
 			'component' => 'group',
-			'groupName' => UtilsSettingsHelper::getOptionName($key),
+			'groupName' => SettingsHelpers::getOptionName($key),
 			'groupSaveOneField' => true,
 			'groupStyle' => 'default-listing',
 			'groupContent' => [

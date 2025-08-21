@@ -11,18 +11,16 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\CustomPostType\Result;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use WP_REST_Request;
 
 /**
  * Class LocationsRoute
  */
-class LocationsRoute extends AbstractUtilsBaseRoute
+class LocationsRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -40,63 +38,75 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'id' => 'string',
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$id = $params['id'] ?? '';
 		$usageType = $params['type'] ?? '';
 
 		switch ($usageType) {
 			case Result::POST_TYPE_SLUG:
-				$errorMsg = \esc_html__('Your result output is not used in any location!', 'eightshift-forms');
+				$errorMsg = $this->getLabels()->getLabel('locationsResultOutputError');
 				break;
 			default:
-				$errorMsg = \esc_html__('Your form is not used in any location!', 'eightshift-forms');
+				$errorMsg = $this->getLabels()->getLabel('locationsFormError');
 				break;
 		}
 
-		$type = UtilsGeneralHelper::getFormTypeById($id);
+		$type = GeneralHelpers::getFormTypeById($id);
 
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				\esc_html__('Success', 'eightshift-forms'),
-				[
-					'output' => Helpers::render(
-						'item-details',
-						[
-							'items' => UtilsGeneralHelper::getBlockLocations($id, $usageType),
-							'type' => $type,
-							'sectionClass' => Helpers::getComponent('admin-listing')['componentClass'],
-							'emptyContent' => $errorMsg,
-							'additionalAttributes' => [
-								UtilsHelper::getStateAttribute('adminIntegrationType') => $type,
-							],
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('locationsSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'locationsSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminLocations') => Helpers::render(
+					'item-details',
+					[
+						'items' => GeneralHelpers::getBlockLocations($id, $usageType),
+						'type' => $type,
+						'sectionClass' => Helpers::getComponent('admin-listing')['componentClass'],
+						'emptyContent' => $errorMsg,
+						'additionalAttributes' => [
+							UtilsHelper::getStateAttribute('adminIntegrationType') => $type,
 						],
-						'components',
-						false,
-						'admin-listing/partials'
-					),
-				],
-				$debug
-			)
-		);
+					],
+					'components',
+					false,
+					'admin-listing/partials'
+				),
+			],
+		];
 	}
 }

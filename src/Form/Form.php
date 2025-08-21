@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Settings\Settings\SettingsSettings;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Validation\SettingsValidation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -73,14 +73,14 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Custom form name.
-		$customFormName = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
+		$customFormName = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
 			$attributes["{$prefix}ParentSettings"]['customName'] = $customFormName;
 		}
 
 		// Use single submit.
-		$attributes["{$prefix}UseSingleSubmit"] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId);
-		$attributes["{$prefix}PhoneDisablePicker"] = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+		$attributes["{$prefix}UseSingleSubmit"] = SettingsHelpers::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId);
+		$attributes["{$prefix}PhoneDisablePicker"] = SettingsHelpers::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		// Output secure data.
 		$outputSecureData = $this->getSecureFormData($prefix, $attributes);
@@ -117,7 +117,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
 
-		$checkStyleEnqueue = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
+		$checkStyleEnqueue = SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 		// Iterate blocks an children by passing them form ID.
 		foreach ($blocks as $block) {
@@ -143,7 +143,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$hasSteps = $hasSteps !== false;
 
 				// Get block name details.
-				$blockName = UtilsGeneralHelper::getBlockNameDetails($innerBlock['blockName'])['name'];
+				$blockName = GeneralHelpers::getBlockNameDetails($innerBlock['blockName'])['name'];
 
 				// Populate forms blocks attributes to the form component later in the chain.
 				$innerBlock['attrs']["{$blockName}FormParentSettings"] = [
@@ -186,7 +186,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
 					// Get fields components details.
-					$nameDetails = UtilsGeneralHelper::getBlockNameDetails($inBlock['blockName']);
+					$nameDetails = GeneralHelpers::getBlockNameDetails($inBlock['blockName']);
 					$name = $nameDetails['name'];
 					$namespace = $nameDetails['namespace'];
 
@@ -206,7 +206,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					// Add custom field block around none forms block to be able to use positioning.
 					if ($namespace !== $formsNamespace) {
-						// Find all forms attribtues added to a custom block.
+						// Find all forms attributes added to a custom block.
 						$customUsedAttrsDiff = \array_intersect_key(
 							$inBlock['attrs'] ?? [],
 							\array_merge(
@@ -248,7 +248,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					if ($hasSteps) {
 						// If block is step we need to just create block output and exit this loop.
 						if ($name === 'step') {
-							// Output key is insite the step key and this changes everytime we have step in the loop.
+							// Output key is inside the step key and this changes every time we have step in the loop.
 							$stepKey = $inKey;
 
 							$innerBlock['attrs']["{$blockName}FormProgressBarSteps"][] = [
@@ -306,7 +306,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				}
 
 				// Populate custom hidden fields from filter.
-				$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'additionalHiddenFields']);
+				$filterName = HooksHelpers::getFilterName(['block', 'form', 'additionalHiddenFields']);
 				if (\has_filter($filterName)) {
 					$customHiddenFields = \apply_filters($filterName, [], $formsFormPostId);
 
@@ -349,7 +349,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	{
 		$formId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 
-		$loggedInOnlyForm = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId);
+		$loggedInOnlyForm = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId);
 
 		if ($loggedInOnlyForm && !\is_user_logged_in()) {
 			return false;
@@ -367,7 +367,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 */
 	private function getShowAsOutput(array $block): array
 	{
-		$nameDetails = UtilsGeneralHelper::getBlockNameDetails($block['blockName']);
+		$nameDetails = GeneralHelpers::getBlockNameDetails($block['blockName']);
 		$name = $nameDetails['name'];
 		$namespace = $nameDetails['namespace'];
 		$attrs = $block['attrs'] ?? [];
@@ -573,7 +573,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Output custom result output.
-		$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+		$formsUseCustomResultOutputFeatureFilterName = HooksHelpers::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
 		if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
 			// Output title.
 			if (isset($parentSettings['variationData']['title'])) {
@@ -608,6 +608,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			return '';
 		}
 
-		return UtilsEncryption::encryptor(\wp_json_encode(\array_filter($output)));
+		return EncryptionHelpers::encryptor(\wp_json_encode(\array_filter($output)));
 	}
 }

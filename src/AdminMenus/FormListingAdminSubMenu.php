@@ -12,8 +12,8 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Listing\FormListingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -181,13 +181,13 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
 			\esc_html__('Add new form', 'eightshift-forms'),
 			FormAdminMenu::ADMIN_MENU_CAPABILITY,
-			UtilsGeneralHelper::getNewFormPageUrl(Forms::URL_SLUG)
+			GeneralHelpers::getNewFormPageUrl(Forms::URL_SLUG)
 		];
 
 		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
 			\esc_html__('Result outputs', 'eightshift-forms'),
-			UtilsConfig::CAP_RESULTS,
-			UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS)
+			Config::CAP_RESULTS,
+			GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS)
 		];
 		// phpcs:enable
 	}

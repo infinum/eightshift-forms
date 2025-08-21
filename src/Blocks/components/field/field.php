@@ -7,9 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $fieldUse = Helpers::checkAttr('fieldUse', $attributes, $manifest);
@@ -60,7 +60,7 @@ $fieldIsNoneFormBlock = Helpers::checkAttr('fieldIsNoneFormBlock', $attributes, 
 $fieldTwSelectorsData = Helpers::checkAttr('fieldTwSelectorsData', $attributes, $manifest);
 
 $fieldStyleOutput = [];
-$filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
+$filterName = HooksHelpers::getFilterName(['block', 'field', 'styleClasses']);
 
 if (has_filter($filterName)) {
 	$fieldStyleOutputFilter = apply_filters($filterName, $attributes) ?? [];
@@ -176,7 +176,7 @@ if ($fieldTracking) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('field', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
 
 <<?php echo esc_attr($fieldTag); ?>

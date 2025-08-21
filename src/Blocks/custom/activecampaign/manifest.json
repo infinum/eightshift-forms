@@ -1,0 +1,30 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "activecampaign",
+	"title": "ActiveCampaign form",
+	"description" : "ActiveCampaign subscription form",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-activecampaign"
+	},
+	"keywords": [
+		"active",
+		"campaign"
+	],
+	"components": {
+		"form": "form",
+		"step": "step"
+	},
+	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
+	"attributes": {
+		"activecampaignIntegrationId": {
+			"type": "string"
+		},
+		"activecampaignIntegrationInnerId": {
+			"type": "string"
+		}
+	}
+}

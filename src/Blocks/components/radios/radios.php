@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $radiosName = Helpers::checkAttr('radiosName', $attributes, $manifest);
@@ -44,7 +44,7 @@ $radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$i
 }, $radiosContent);
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('radios', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('radios', $attributes);
 
 
 $placeholderLabel = '';

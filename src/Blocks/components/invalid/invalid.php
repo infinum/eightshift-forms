@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 
 $componentClass = $manifest['componentClass'] ?? '';
 $heading = $attributes['heading'] ?? '';

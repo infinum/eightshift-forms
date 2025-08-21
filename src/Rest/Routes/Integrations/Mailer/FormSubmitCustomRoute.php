@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - custom
+ * The class register route for public form submitting endpoint - custom
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Mailer
  */
@@ -10,16 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitCustomRoute
  */
-class FormSubmitCustomRoute extends AbstractFormSubmit
+class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.
@@ -33,7 +36,32 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
 	}
 
 	/**
@@ -41,55 +69,60 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If custom action is not set or empty.
+	 * @throws BadRequestException If custom action request fails.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$action = $formDetails[UtilsConfig::FD_ACTION];
-		$actionExternal = $formDetails[UtilsConfig::FD_ACTION_EXTERNAL];
-
-		$debug = [
-			'formDetails' => $formDetails,
-		];
+		$action = $formDetails[Config::FD_ACTION];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$actionExternal = $formDetails[Config::FD_ACTION_EXTERNAL];
 
 		// If form action is not set or empty.
 		if (!$action) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					$this->labels->getLabel('customNoAction', $formId),
-					[],
-					$debug
-				)
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('customNoAction'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION,
+				],
 			);
+			// phpcs:enable
 		}
 
+		// NOTE: no need to check if settings are valid, because this check is done in the Mailer class.
+
+		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		if ($actionExternal) {
 			// Set validation submit once.
-			$this->validator->setValidationSubmitOnce($formId);
+			$this->getValidator()->setValidationSubmitOnce($formId);
 
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
-					$this->labels->getLabel('customSuccessRedirect', $formId),
-					\array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional'],
-						[
-							UtilsHelper::getStateResponseOutputKey('processExternally') => [
-								'type' => 'SUBMIT',
-							],
-						]
-					),
-					$debug
-				)
-			);
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccessRedirect', $formId),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT,
+				],
+				AbstractBaseRoute::R_DATA => \array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['additional'],
+					[
+						UtilsHelper::getStateResponseOutputKey('processExternally') => [
+							'type' => 'SUBMIT',
+						],
+					]
+				),
+			];
 		}
 
 		// Prepare params for output.
-		$params = UtilsGeneralHelper::prepareGenericParamsOutput($params);
+		$params = GeneralHelpers::prepareGenericParamsOutput($params);
 
 		// Create a custom form action request.
 		$customResponse = \wp_remote_post(
@@ -102,32 +135,49 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			]
 		);
 
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $customResponse;
+
+		if (\is_wp_error($customResponse)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('customError', $formId),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR,
+				],
+			);
+			// phpcs:enable
+		}
+
 		$customResponseCode = \wp_remote_retrieve_response_code($customResponse);
 
 		// If custom action request fails we'll return the generic error message.
-		if (!$customResponseCode || $customResponseCode > 399) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					$this->labels->getLabel('customError', $formId),
-					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
-					$debug
-				)
+		if (ApiHelpers::isErrorResponse($customResponseCode)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('customError', $formId),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR,
+				],
+				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 			);
+			// phpcs:enable
 		}
 
 		// Set validation submit once.
-		$this->validator->setValidationSubmitOnce($formId);
+		$this->getValidator()->setValidationSubmitOnce($formId);
 
-		// Finish.
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				$this->labels->getLabel('customSuccess', $formId),
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional']
-				),
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
+		];
 	}
 }

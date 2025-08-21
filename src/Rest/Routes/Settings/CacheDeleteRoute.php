@@ -11,35 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Misc\SettingsRocketCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use WP_REST_Request;
 
 /**
  * Class CacheDeleteRoute
  */
-class CacheDeleteRoute extends AbstractUtilsBaseRoute
+class CacheDeleteRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 */
-	public function __construct(ValidatorInterface $validator)
-	{
-		$this->validator = $validator;
-	}
-
 	/**
 	 * Route slug.
 	 */
@@ -56,39 +38,43 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request);
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @throws BadRequestException If cache type is not found.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$type = $params['type'] ?? '';
-		if (!$type) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Type key was not provided.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
 
-		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		switch ($type) {
 			case 'allOperational':
@@ -109,43 +95,40 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 
 				$outputTitle = \esc_html__('All operational', 'eightshift-forms');
 				break;
-			case 'allInteral':
-				$outputTitle = \esc_html__('All internal', 'eightshift-forms');
-				Helpers::clearAllCache();
-				break;
 			default:
 				$cacheTypes = $data[$type]['cache'] ?? [];
+				$outputTitle = \ucfirst($type);
+
 				if (!$cacheTypes) {
-					return \rest_ensure_response(
-						UtilsApiHelper::getApiErrorPublicOutput(
-							\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
-							[],
-							$debug
-						)
+					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+					throw new BadRequestException(
+						// translators: %1$s will be replaced with the cache type. %2$s will be replaced with the cache type not found text.
+						\sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheTypeNotFound')),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'cacheTypeNotFound',
+						]
 					);
+					// phpcs:enable
 				}
 
 				foreach ($cacheTypes as $item) {
 					\delete_transient($item);
 				}
-
-				$outputTitle = \ucfirst($type);
 				break;
 		}
 
 		// Clear WP-Rocket cache if cache is cleared.
-		if (\function_exists('rocket_clean_domain') && \apply_filters(SettingsRocketCache::FILTER_SETTINGS_IS_VALID_NAME, false)) {
+		if (\function_exists('rocket_clean_domain') && \apply_filters(SettingsRocketCache::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			\rocket_clean_domain();
 		}
 
 		// Finish.
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				// translators: %s will be replaced with the form type.
-				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), $outputTitle),
-				[],
-				$debug
-			)
-		);
+		return [
+			// translators: %1$s will be replaced with the cache type. %2$s will be replaced with the cache deleted success text.
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheDeletedSuccess')),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'cacheDeletedSuccess',
+			],
+		];
 	}
 }

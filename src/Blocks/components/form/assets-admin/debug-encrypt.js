@@ -59,8 +59,10 @@ export class DebugEncrypt {
 				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
 
-				if (data?.output) {
-					document.querySelector(this.outputSelector).value = data?.output;
+				const encryptValue = data?.[this.state.getStateResponseOutputKey('adminEncrypt')];
+
+				if (encryptValue) {
+					document.querySelector(this.outputSelector).value = encryptValue;
 				}
 
 				setTimeout(() => {

@@ -10,36 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
 /**
  * Class DebugEncryptRoute
  */
-class DebugEncryptRoute extends AbstractUtilsBaseRoute
+class DebugEncryptRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 */
-	public function __construct(
-		ValidatorInterface $validator
-	) {
-		$this->validator = $validator;
-	}
-
 	/**
 	 * Route slug.
 	 */
@@ -56,76 +37,73 @@ class DebugEncryptRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			'type' => 'string',
+			'data' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request);
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @throws BadRequestException If encrypt or decrypt fails.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$type = $params['type'] ?? '';
-		if (!$type) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Type key was not provided.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
-
 		$data = $params['data'] ?? '';
-		if (!$data) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Data key was not provided.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
+
 
 		if ($type === 'encrypt') {
-			$output = UtilsEncryption::encryptor($data);
+			$output = EncryptionHelpers::encryptor($data);
 		} else {
-			$output = UtilsEncryption::decryptor($data);
+			$output = EncryptionHelpers::decryptor($data);
 		}
 
 		if (!$output) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
-					// translators: %s will be replaced with the action type.
-					\sprintf(\esc_html__('%s failed!', 'eightshift-forms'), \ucfirst($type)),
-					[],
-					$debug
-				)
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$type === 'encrypt' ? $this->getLabels()->getLabel('encryptFailed') : $this->getLabels()->getLabel('decryptFailed'),
+				[
+					AbstractBaseRoute::R_DEBUG => $output,
+					AbstractBaseRoute::R_DEBUG_KEY => 'encryptFailed',
+				]
 			);
+			// phpcs:enable
 		}
 
 		// Finish.
-		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
-				// translators: %s will be replaced with the action type.
-				\sprintf(\esc_html__('%s finished successfully!', 'eightshift-forms'), \ucfirst($type)),
-				[
-					'output' => $output,
-				],
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $type === 'encrypt' ? $this->getLabels()->getLabel('encryptSuccess') : $this->getLabels()->getLabel('decryptSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $output,
+				AbstractBaseRoute::R_DEBUG_KEY => $type === 'encrypt' ? 'encryptSuccess' : 'decryptSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminEncrypt') => $output,
+			],
+		];
 	}
 }

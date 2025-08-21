@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - HubSpot
+ * The class register route for public form submitting endpoint - HubSpot
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Hubspot
  */
@@ -16,16 +16,21 @@ use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Exception\DisabledIntegrationException;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitHubspotRoute
  */
-class FormSubmitHubspotRoute extends AbstractFormSubmit
+class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.
@@ -49,26 +54,31 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param HubspotClientInterface $hubspotClient Inject hubspotClient methods.
 	 * @param ClearbitClientInterface $clearbitClient Inject clearbitClient methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		SecurityInterface $security,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient
 	) {
-		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
+		$this->security = $security;
+		$this->validator = $validator;
+		$this->labels = $labels;
+		$this->captcha = $captcha;
+		$this->mailer = $mailer;
+		$this->enrichment = $enrichment;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
 	}
@@ -80,7 +90,33 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params passed from the request.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+			Config::FD_ITEM_ID => 'string',
+		];
 	}
 
 	/**
@@ -88,21 +124,44 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
+	 * @throws BadRequestException If Hubspot is missing config.
+	 * @throws DisabledIntegrationException If Hubspot is disabled.
+	 *
 	 * @return mixed
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)) {
+			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
+
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new DisabledIntegrationException(
+				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+			// phpcs:enable
+		}
+
+		if (!\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('hubspotMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG,
+				],
+			);
+			// phpcs:enable
+		}
 
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
-		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction($formDetails)
-		);
+		return $this->getIntegrationCommonSubmitAction($formDetails);
 	}
 
 	/**

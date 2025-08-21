@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Documentation;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsDocumentation class.
  */
-class SettingsDocumentation implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -47,7 +47,7 @@ class SettingsDocumentation implements UtilsSettingGlobalInterface, ServiceInter
 	public function getSettingsGlobalData(): array
 	{
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-card',

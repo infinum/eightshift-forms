@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.0.0]
+
+### Added
+
+- Activity logs for all forms are now stored in the database.
+- Activity logs are now auto-deleted after 30 days by default.
+- Activity logs are can have multiple log levels and all responses can be stored and checked.
+- All Cron jobs are not disabled if the feature is not enabled.
+- Captcha is will retry if the response is is browser-error.
+
+### Removed
+
+- Manual import feature, this feature is now moved to activity logs listing.
+- Forms-utils library is now removed from the project.
+
+### Fixed
+
+- Additional security checks for the form data.
+
+### Changed
+
+- All API endpoint are now returning the correct response headers based on the request type and status code.
+- Fallback emails are now connected to the activity logs and differently outputted.
+
 ## [7.0.4]
 
 ### Fixed
@@ -1331,6 +1355,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.0.0]: https://github.com/infinum/eightshift-forms/compare/7.0.4...8.0.0
 [7.0.4]: https://github.com/infinum/eightshift-forms/compare/7.0.3...7.0.4
 [7.0.3]: https://github.com/infinum/eightshift-forms/compare/7.0.2...7.0.3
 [7.0.2]: https://github.com/infinum/eightshift-forms/compare/7.0.1...7.0.2
