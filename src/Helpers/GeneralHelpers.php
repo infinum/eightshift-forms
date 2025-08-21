@@ -139,18 +139,6 @@ final class GeneralHelpers
 	}
 
 	/**
-	 * Check if current page is part of the settings page
-	 *
-	 * @return boolean
-	 */
-	public static function isSettingsPage(): bool
-	{
-		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-
-		return !empty($plugin_page); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-	}
-
-	/**
 	 * Minify string
 	 *
 	 * @param string $string String to check.
@@ -162,53 +150,6 @@ final class GeneralHelpers
 		$string = \str_replace(\PHP_EOL, ' ', $string);
 		$string = \preg_replace('/[\r\n]+/', "\n", $string);
 		return (string) \preg_replace('/[ \t]+/', ' ', (string) $string);
-	}
-
-
-	/**
-	 * Convert inner blocks to array
-	 *
-	 * @param string $string String to convert.
-	 * @param string $type Type of content.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public static function convertInnerBlocksToArray(string $string, string $type): array
-	{
-		$output = [];
-
-		switch ($type) {
-			case 'select':
-				$re = '/<option[^>]*value="(.*?)"[^>]*>([^<]*)<\s*\/\s*option\s*>/m';
-				break;
-			default:
-				$re = '';
-				break;
-		}
-
-		if (!$re) {
-			return $output;
-		}
-
-		\preg_match_all($re, $string, $matches, \PREG_SET_ORDER, 0);
-
-		if (!$matches) {
-			return $output;
-		}
-
-		foreach ($matches as $match) {
-			$original = $match[0] ?: '';
-			$label = $match[2] ?: '';
-			$value = $match[1] ?: '';
-
-			$output[] = [
-				'label' => self::minifyString($label),
-				'value' => self::minifyString($value),
-				'original' => $original,
-			];
-		}
-
-		return $output;
 	}
 
 	/**
@@ -238,36 +179,6 @@ final class GeneralHelpers
 	 * @return string
 	 */
 	public static function getFormTypeById(string $formId): string
-	{
-		$content = \get_post_field('post_content', (int) $formId);
-
-		if (!$content) {
-			return '';
-		}
-
-		$blocks = \parse_blocks($content);
-
-		if (!$blocks) {
-			return '';
-		}
-
-		$blockName = $blocks[0]['innerBlocks'][0]['blockName'] ?? '';
-
-		if (!$blockName) {
-			return '';
-		}
-
-		return self::getBlockNameDetails($blockName)['name'];
-	}
-
-	/**
-	 * Output the form type used by checking the post_content and extracting the block used for the integration.
-	 *
-	 * @param string $formId Form ID to check.
-	 *
-	 * @return string
-	 */
-	public static function isFormValid(string $formId): string
 	{
 		$content = \get_post_field('post_content', (int) $formId);
 
@@ -502,7 +413,7 @@ final class GeneralHelpers
 
 		$field = \array_filter(
 			$params,
-			fn ($item) => isset($allowed[$item['name'] ?? ''])
+			fn($item) => isset($allowed[$item['name'] ?? ''])
 		);
 
 		return \reset($field)['value'] ?? '';
