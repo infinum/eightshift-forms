@@ -502,11 +502,7 @@ final class GeneralHelpers
 
 		$field = \array_filter(
 			$params,
-			static function ($item) use ($allowed) {
-				if (isset($allowed[$item['name'] ?? ''])) {
-					return true;
-				}
-			}
+			fn ($item) => isset($allowed[$item['name'] ?? ''])
 		);
 
 		return \reset($field)['value'] ?? '';
