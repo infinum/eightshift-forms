@@ -389,9 +389,7 @@ final class SettingsHelpers
 
 			$value = \array_filter(
 				$value,
-				static function ($item) use ($useNumber) {
-					return $item <= $useNumber - 1;
-				},
+				fn ($item) => $item <= $useNumber - 1,
 				\ARRAY_FILTER_USE_KEY
 			);
 
