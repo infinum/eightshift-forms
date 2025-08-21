@@ -382,10 +382,10 @@ final class GeneralHelpers
 				break;
 		}
 
-		$ignoreBlocks = \array_flip([
-			'step',
-			'submit',
-		]);
+		$ignoreBlocks = [
+			'step' => 0,
+			'submit' => 1,
+		];
 
 		foreach ($output[Config::FD_FIELDS_ONLY] as $item) {
 			$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
