@@ -71,7 +71,7 @@ final class SettingsHelpers
 		}
 
 		if (!$value) {
-			$value = $fallback;
+			return $fallback;
 		}
 
 		return $value;
