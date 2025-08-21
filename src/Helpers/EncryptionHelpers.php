@@ -31,7 +31,7 @@ class EncryptionHelpers
 		$filterNameSecretIv = HooksHelpers::getFilterName(['encryption', 'secretIvKey']);
 		$secretIv = \apply_filters($filterNameSecretIv, \wp_salt('SECURE_AUTH_KEY')); // user define secret key.
 
-		$encryptMethod = "AES-256-CBC";
+		$encryptMethod = 'AES-256-CBC';
 		$key = \hash('sha256', $secretKey);
 		$iv = \substr(\hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
 
