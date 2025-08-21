@@ -628,9 +628,7 @@ class Mailer implements MailerInterface
 			AbstractBaseRoute::R_DATA => $data[AbstractBaseRoute::R_DATA] ?? [],
 		];
 
-		if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG])) {
-			unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG]);
-		}
+		unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG]);
 
 		switch ($logLevel) {
 			case 'minimal':
@@ -664,40 +662,18 @@ class Mailer implements MailerInterface
 				if (isset($debugData[AbstractBaseRoute::R_DEBUG])) {
 					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG] = $debugData[AbstractBaseRoute::R_DEBUG];
 
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ICON])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ICON]);
-					}
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ICON]);
 
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS_ONLY])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS_ONLY]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES_FULL])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES_FULL]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_STEPS_SETUP])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_STEPS_SETUP]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES_UPLOAD])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES_UPLOAD]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_API_STEPS])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_API_STEPS]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION]);
-					}
-					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION_EXTERNAL])) {
-						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION_EXTERNAL]);
-					}
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS_ONLY]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES_FULL]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_STEPS_SETUP]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES_UPLOAD]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_API_STEPS]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION]);
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION_EXTERNAL]);
 				}
 				if (isset($debugData[AbstractBaseRoute::R_DEBUG_USER])) {
 					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_USER] = $debugData[AbstractBaseRoute::R_DEBUG_USER];

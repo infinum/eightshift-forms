@@ -944,13 +944,13 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataStep(formId) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('steps'),
 				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
 				custom: this.state.getStateFormStepsCurrent(formId),
 			},
-		]);
+		], this.FORM_DATA);
 	}
 
 	/**
@@ -961,7 +961,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCommon(formId) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('formId'),
 				value: this.state.getStateFormFid(formId),
@@ -986,7 +986,7 @@ export class Form {
 				name: this.state.getStateParam('secureData'),
 				value: this.state.getStateFormSecureData(formId) ?? '',
 			},
-		]);
+		], this.FORM_DATA);
 	}
 
 	/**
@@ -1004,12 +1004,12 @@ export class Form {
 		const data = this.enrichment.getLocalStorage(this.state.getStateEnrichmentStorageName());
 
 		if (data) {
-			this.buildFormDataItems([
+			this.utils.buildFormDataItems([
 				{
 					name: this.state.getStateParam('storage'),
 					value: data,
 				},
-			]);
+			], this.FORM_DATA);
 		}
 	}
 
@@ -1021,12 +1021,12 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataAdmin(formId) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('settingsType'),
 				value: this.state.getStateFormTypeSettings(formId),
 			},
-		]);
+		], this.FORM_DATA);
 	}
 
 	/**
@@ -1059,7 +1059,7 @@ export class Form {
 				break;
 		}
 
-		this.buildFormDataItems(output);
+		this.utils.buildFormDataItems(output, this.FORM_DATA);
 	}
 
 	/**
@@ -1070,37 +1070,12 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCaptcha(data) {
-		this.buildFormDataItems([
+		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('captcha'),
 				value: data,
 			},
-		]);
-	}
-
-	/**
-	 * Build helper for form data object.
-	 *
-	 * @param {string} formId Form Id.
-	 * @param {object} dataSet Object to build.
-	 *
-	 * @returns {void}
-	 */
-	buildFormDataItems(data, dataSet = this.FORM_DATA) {
-		data.forEach((item) => {
-			const { name, value, type = 'hidden', typeCustom = 'hidden', custom = '' } = item;
-
-			dataSet.append(
-				name,
-				JSON.stringify({
-					name,
-					value,
-					type,
-					typeCustom,
-					custom,
-				}),
-			);
-		});
+		], this.FORM_DATA);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1465,7 +1440,7 @@ export class Form {
 			// Add data formData to the api call for the file upload.
 			dropzone.on('sending', (file, xhr, formData) => {
 				// Add common items like formID and type.
-				this.buildFormDataItems(
+				this.utils.buildFormDataItems(
 					[
 						{
 							name: this.state.getStateParam('formId'),
@@ -2136,9 +2111,6 @@ export class Form {
 			},
 			setFormDataCaptcha: (data) => {
 				this.setFormDataCaptcha(data);
-			},
-			buildFormDataItems: (data, dataSet = this.FORM_DATA) => {
-				this.buildFormDataItems(data, dataSet);
 			},
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);
