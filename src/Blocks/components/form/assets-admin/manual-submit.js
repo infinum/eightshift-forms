@@ -11,7 +11,7 @@ export class ManualSubmit {
 		this.triggerSelector = options.triggerSelector;
 		this.dataSelector = options.dataSelector;
 
-		this.formType = '';
+		this.FORM_TYPE = '';
 		this.importErrorMsg = options.importErrorMsg;
 	}
 
@@ -51,14 +51,14 @@ export class ManualSubmit {
 			referrer: 'no-referrer',
 		};
 
-		if (!this.formType) {
+		if (!this.FORM_TYPE) {
 			this.utils.hideLoader(this.FORM_ID);
 			this.utils.setGlobalMsg(this.FORM_ID, this.importErrorMsg, 'error');
 
 			return;
 		}
 
-		fetch(this.state.getRestUrlByType('prefixSubmit', this.formType), body)
+		fetch(this.state.getRestUrlByType('prefixSubmit', this.FORM_TYPE), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'manualSubmit', formId);
 
@@ -81,6 +81,13 @@ export class ManualSubmit {
 			});
 	};
 
+	/**
+	 * Get integration data.
+	 *
+	 * @param {string} data Data to use.
+	 *
+	 * @returns {FormData}
+	 */
 	getIntegrationData(data) {
 		const output = [];
 
@@ -103,7 +110,7 @@ export class ManualSubmit {
 			formData.append(name, JSON.stringify(value));
 
 			if (name === this.state.getStateParam('type')) {
-				this.formType = value?.value;
+				this.FORM_TYPE = value?.value;
 			}
 		}
 
