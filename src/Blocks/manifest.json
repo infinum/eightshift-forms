@@ -670,6 +670,7 @@
 			"geoId": "geoId",
 			"incrementId": "incrementId",
 			"captchaIsSpam": "captchaIsSpam",
+			"captchaRetry": "captchaRetry",
 			"captchaResponse": "captchaResponse",
 			"geolocationCountries": "countries",
 			

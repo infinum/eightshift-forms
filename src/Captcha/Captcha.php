@@ -183,16 +183,27 @@ class Captcha implements CaptchaInterface
 		]);
 
 		// Check the status.
-		$error = $responseBody['error'] ?? [];
+		$output = $responseBody['success'] ?? false;
 
-		// If error status returns error.
-		if ($error) {
+		// If response is error.
+		if (!$output) {
+			$errorCode = isset($responseBody['error-codes']) ? \array_flip($responseBody['error-codes']) : [];
+
+			$retry = false;
+
+			if (isset($errorCode['browser-error'])) {
+				$retry = true;
+			}
+
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $debug,
+				],
+				[
+					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
 				]
 			);
 			// phpcs:enable
@@ -226,16 +237,27 @@ class Captcha implements CaptchaInterface
 		]);
 
 		// Check the status.
-		$success = $responseBody['success'] ?? false;
+		$output = $responseBody['success'] ?? false;
 
-		// If error status returns error.
-		if (!$success) {
+		// If response is error.
+		if (!$output) {
+			$errorCode = isset($responseBody['error-codes']) ? \array_flip($responseBody['error-codes']) : [];
+
+			$retry = false;
+
+			if (isset($errorCode['browser-error'])) {
+				$retry = true;
+			}
+
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FREE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $debug,
+				],
+				[
+					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
 				]
 			);
 			// phpcs:enable

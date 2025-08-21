@@ -310,7 +310,7 @@ export class Form {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
 
-		fetch(url, body)
+		const output = fetch(url, body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
 
@@ -331,9 +331,13 @@ export class Form {
 				this.formSubmitAfter(formId, response);
 
 				this.state.setStateFormIsProcessing(false, formId);
+
+				return response;
 			});
 
 		this.FORM_DATA = new FormData();
+
+		return output;
 	}
 
 	/**
@@ -559,38 +563,76 @@ export class Form {
 		const siteKey = this.state.getStateCaptchaSiteKey();
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
-			grecaptcha?.enterprise?.ready(async () => {
-				try {
-					const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
-
-					this.setFormDataCaptcha({
-						token,
-						isEnterprise: true,
-						action: actionName,
-					});
-
-					this.formSubmit(formId, filter);
-				} catch (error) {
-					this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
-				}
-			});
+			this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
 		} else {
-			grecaptcha?.ready(async () => {
-				try {
-					const token = await grecaptcha?.execute(siteKey, { action: actionName });
-
-					this.setFormDataCaptcha({
-						token,
-						isEnterprise: false,
-						action: actionName,
-					});
-
-					this.formSubmit(formId, filter);
-				} catch (error) {
-					this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
-				}
-			});
+			this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
 		}
+	}
+
+	/**
+	 * Execute enterprise captcha.
+	 *
+	 * @param {string} actionName Action name.
+	 * @param {string} siteKey Site key.
+	 * @param {string} formId Form id.
+	 * @param {boolean} retry Retry.
+	 * @param {object} filter Filter.
+	 *
+	 * @returns {void}
+	 */
+	executeEnterpriseCaptcha(actionName, siteKey, formId, retry, filter = {}) {
+		grecaptcha?.enterprise?.ready(async () => {
+			try {
+				const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
+
+				this.setFormDataCaptcha({
+					token,
+					isEnterprise: true,
+					action: actionName,
+				});
+
+				const response = await this.formSubmit(formId, filter);
+
+				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
+					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
+				}
+			} catch (error) {
+				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			}
+		});
+	}
+
+	/**
+	 * Execute free captcha.
+	 *
+	 * @param {string} actionName Action name.
+	 * @param {string} siteKey Site key.
+	 * @param {string} formId Form id.
+	 * @param {boolean} retry Retry.
+	 * @param {object} filter Filter.
+	 *
+	 * @returns {void}
+	 */
+	executeFreeCaptcha(actionName, siteKey, formId, retry, filter = {}) {
+		grecaptcha?.ready(async () => {
+			try {
+				const token = await grecaptcha?.execute(siteKey, { action: actionName });
+
+				this.setFormDataCaptcha({
+					token,
+					isEnterprise: false,
+					action: actionName,
+				});
+
+				const response = await this.formSubmit(formId, filter);
+
+				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
+					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
+				}
+			} catch (error) {
+				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			}
+		});
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -2061,6 +2103,12 @@ export class Form {
 			},
 			runFormCaptcha: (formId, filter = {}) => {
 				this.runFormCaptcha(formId, filter);
+			},
+			executeEnterpriseCaptcha: (actionName, siteKey, formId, retry, filter = {}) => {
+				this.executeEnterpriseCaptcha(actionName, siteKey, formId, retry, filter);
+			},
+			executeFreeCaptcha: (actionName, siteKey, formId, retry, filter = {}) => {
+				this.executeFreeCaptcha(actionName, siteKey, formId, retry, filter);
 			},
 			setFormData: (formId, filter = {}) => {
 				this.setFormData(formId, filter);
