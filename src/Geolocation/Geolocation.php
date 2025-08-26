@@ -96,7 +96,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 					$this->getGeolocationCookieName(),
 					$cookieValue,
 					$this->getGeolocationExpiration(),
-					'/'
+					'/',
+					'',
+					true
 				);
 				\ob_end_flush();
 			}

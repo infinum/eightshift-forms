@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.0.1]
+
+### Fixed
+
+- Geolocation cookie is now set with secure flag.
+
 ## [8.0.0]
 
 ### Added
@@ -1355,6 +1361,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.0.1]: https://github.com/infinum/eightshift-forms/compare/8.0.0...8.0.1
 [8.0.0]: https://github.com/infinum/eightshift-forms/compare/7.0.4...8.0.0
 [7.0.4]: https://github.com/infinum/eightshift-forms/compare/7.0.3...7.0.4
 [7.0.3]: https://github.com/infinum/eightshift-forms/compare/7.0.2...7.0.3
