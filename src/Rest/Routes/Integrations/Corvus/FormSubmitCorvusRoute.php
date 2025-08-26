@@ -50,7 +50,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
-		return true;
+		return false;
 	}
 
 	/**
