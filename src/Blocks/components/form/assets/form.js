@@ -129,7 +129,6 @@ export class Form {
 			body: formData,
 			redirect: 'follow',
 			referrer: 'no-referrer',
-			signal: this.controller.signal,
 		};
 
 		// Add nonce for frontend and admin.
@@ -137,11 +136,6 @@ export class Form {
 
 		if (nonce) {
 			body.headers['X-WP-Nonce'] = nonce;
-		}
-
-		// Abort previous requests.
-		if (this.controller) {
-			this.controller?.abort();
 		}
 
 		// Get geolocation data from ajax to detect what we will remove from DOM.
@@ -326,8 +320,6 @@ export class Form {
 		if (nonce) {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
-
-		let output;
 
 		try {
 			const response = await fetch(url, body);
