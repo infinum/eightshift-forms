@@ -5,6 +5,7 @@
 div.es-select.choices {
 	.choices__list--dropdown {
 		.choices__placeholder,
+		[data-option-is-hidden='1'],
 		[data-option-is-hidden='true'] {
 			display: none !important;
 			user-select: none !important;

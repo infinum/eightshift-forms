@@ -141,7 +141,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 				AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsSuccess',
 			],
 			AbstractBaseRoute::R_DATA => [
-				UtilsHelper::getStateResponseOutputKey('editorFormFields') => $fieldsOutput,
+				UtilsHelper::getStateResponseOutputKey('editorFormFields') => \array_values($fieldsOutput),
 				UtilsHelper::getStateResponseOutputKey('editorFormFieldsSteps') => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], false)) : [],
 				UtilsHelper::getStateResponseOutputKey('editorFormFieldsStepsFull') => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], true)) : [],
 				UtilsHelper::getStateResponseOutputKey('editorFormFieldsNames') => $formDetails[Config::FD_FIELD_NAMES_FULL],
