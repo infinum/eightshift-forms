@@ -48,6 +48,9 @@ export class Form {
 
 		// Init enrichment.
 		this.enrichment.init();
+
+		// Init AbortSignal.
+		this.controller;
 	}
 
 	/**
@@ -273,7 +276,7 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	formSubmit(formId, filter = {}) {
+	async formSubmit(formId, filter = {}) {
 		this.state.setStateFormIsProcessing(true, formId);
 
 		// Dispatch event.
@@ -282,6 +285,13 @@ export class Form {
 		this.setFormData(formId, filter);
 
 		const formType = this.state.getStateFormType(formId);
+
+		// Abort previous requests.
+		if (this.controller) {
+			this.controller?.abort();
+		}
+
+		this.controller = new AbortController();
 
 		// Populate body data.
 		const body = {
@@ -293,6 +303,7 @@ export class Form {
 			body: this.FORM_DATA,
 			redirect: 'follow',
 			referrer: 'no-referrer',
+			signal: this?.controller?.signal,
 		};
 
 		// Url for frontend forms.
@@ -310,34 +321,37 @@ export class Form {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
 
-		const output = fetch(url, body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
+		try {
+			const response = await fetch(url, body);
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'formSubmit', formId);
+			this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
 
-				this.formSubmitBefore(formId, response);
+			const responseData = await response.text();
+			const parsedResponse = this.utils.formSubmitIsJsonString(responseData, 'formSubmit', formId);
 
-				// On success state.
-				if (response.status === 'success') {
-					this.formSubmitSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
-				} else {
-					this.formSubmitError(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
-				}
+			this.formSubmitBefore(formId, parsedResponse);
 
-				this.formSubmitAfter(formId, response);
+			// On success state.
+			if (parsedResponse.status === 'success') {
+				this.formSubmitSuccess(formId, parsedResponse, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
+			} else {
+				this.formSubmitError(formId, parsedResponse, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
+			}
 
-				this.state.setStateFormIsProcessing(false, formId);
+			this.formSubmitAfter(formId, parsedResponse);
 
-				return response;
-			});
+			this.FORM_DATA = new FormData();
 
-		this.FORM_DATA = new FormData();
+			this.controller = null;
 
-		return output;
+			return parsedResponse;
+		} catch (error) {
+			if (error.name !== 'AbortError') {
+				console.error('Error during form submission:', error);
+			}
+		} finally {
+			this.state.setStateFormIsProcessing(false, formId);
+		}
 	}
 
 	/**
@@ -1886,7 +1900,8 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(this.formSubmit(formId), 100);
+			// debounce(this.formSubmit(formId), 100);
+			this.formSubmit(formId);
 		}
 	};
 
@@ -1927,7 +1942,7 @@ export class Form {
 
 		switch (type) {
 			case 'checkbox':
-				this.utils.setManualCheckboxValue(formId, name, {[value]: checked ? value : ''});
+				this.utils.setManualCheckboxValue(formId, name, { [value]: checked ? value : '' });
 				break;
 			case 'radio':
 				this.utils.setManualRadioValue(formId, name, value);
@@ -1962,7 +1977,8 @@ export class Form {
 			this.state.getStateFormConfigUseSingleSubmit(formId) &&
 			(type === 'range' || type === 'number' || type === 'checkbox' || type === 'radio')
 		) {
-			debounce(this.formSubmit(formId), 100);
+			// debounce(this.formSubmit(formId), 100);
+			this.formSubmit(formId);
 		}
 	};
 
@@ -2004,7 +2020,8 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(this.formSubmit(formId), 100);
+			// debounce(this.formSubmit(formId), 100);
+			this.formSubmit(formId);
 		}
 	};
 

@@ -6,11 +6,17 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [8.0.3]
 
+<<<<<<< HEAD
 ### Fixed
 
 - Wrong data output from public API on mailer integration.
 - Hidden select options are now properly handled.
 - Broken API response on conditional tags form fields.
+=======
+### Added
+
+- `AbortSingal` support to Form submit, to prevent race conditions for continuos submit scenarios
+>>>>>>> origin/release/8.0.3
 
 ## [8.0.2]
 
