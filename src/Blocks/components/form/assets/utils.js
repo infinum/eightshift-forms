@@ -177,7 +177,7 @@ export class Utils {
 		const type = this.state.getStateElementTypeField(name, formId);
 
 		if (field) {
-			field.scrollIntoView({ block: 'start', behavior: 'smooth' });
+			this.scrollAction(field);
 
 			switch (type) {
 				case 'file':
@@ -208,14 +208,21 @@ export class Utils {
 	}
 
 	/**
-	 * Scroll to global msg.
+	 * Scroll to element action.
 	 *
-	 * @param {string} formId Form Id.
+	 * @param {Element} element Element to scroll to.
+	 * @param {object} options Scroll options.
 	 *
 	 * @returns {void}
 	 */
-	scrollToGlobalMsg(formId) {
-		this.state.getStateFormGlobalMsgElement(formId).scrollIntoView({ block: 'start', behavior: 'smooth' });
+	scrollAction(
+		element,
+		options = {
+			behavior: 'smooth',
+			block: 'start',
+		}
+	) {
+		element?.scrollIntoView(options);
 	}
 
 	/**
@@ -362,7 +369,7 @@ export class Utils {
 			messageContainer.dataset.status = status;
 
 			if (!this.state.getStateSettingsDisableScrollToGlobalMsgOnSuccess(formId)) {
-				this.scrollToGlobalMsg(formId);
+				this.scrollAction(this.state.getStateFormGlobalMsgElement(formId));
 			}
 
 			const headingSuccess = this.state.getStateFormGlobalMsgHeadingSuccess(formId);
@@ -859,7 +866,29 @@ export class Utils {
 				);
 			}
 
-			throw new Error(`API response returned JSON but it was malformed for this request. Function used: "${type}"`);
+			let isFirewallError = false;
+			let msg = 'serverError';
+
+			if (response.includes('wordfence') || response.includes('Wordfence')) {
+				msg = 'wordfenceFirewall';
+				isFirewallError = true;
+			}
+
+			if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
+				msg = 'cloudflareFirewall';
+				isFirewallError = true;
+			}
+
+			if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
+				msg = 'cloudFrontFirewall';
+				isFirewallError = true;
+			}
+
+			if (isFirewallError) {
+				throw new Error(`API response returned JSON but it was malformed for this request. Function used: "${type}Firewall" with message: "${msg}"`);
+			}
+
+			throw new Error(`API response returned JSON but it was malformed for this request. Function used: "${type}" with message: "${msg}"`);
 		}
 	}
 
@@ -1804,8 +1833,8 @@ export class Utils {
 			scrollToElement: (formId, name) => {
 				this.scrollToElement(formId, name);
 			},
-			scrollToGlobalMsg: (formId) => {
-				this.scrollToGlobalMsg(formId);
+			scrollAction: (element) => {
+				this.scrollAction(element);
 			},
 			showLoader: (formId) => {
 				this.showLoader(formId);

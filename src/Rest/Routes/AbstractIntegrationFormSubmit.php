@@ -222,11 +222,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			// Validate captcha.
 			if ($this->shouldCheckCaptcha()) {
-				$this->getCaptcha()->check(
-					$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
-					$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
-					($formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false') === 'true'
-				);
+				// $this->getCaptcha()->check(
+				// 	$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
+				// 	$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
+				// 	($formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false') === 'true'
+				// );
 			}
 
 			// Map enrichment data.

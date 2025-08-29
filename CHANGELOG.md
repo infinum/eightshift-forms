@@ -4,19 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.1.0]
+
+### Added
+
+- `AbortSignal` support to Form submit, to prevent race conditions for continuos submit scenarios
+- JS scroll to fields, steps and global messages now uses additional offset css variable that developer can use for adjusting the offset.
+
 ## [8.0.3]
 
-<<<<<<< HEAD
 ### Fixed
 
 - Wrong data output from public API on mailer integration.
 - Hidden select options are now properly handled.
 - Broken API response on conditional tags form fields.
-=======
-### Added
-
-- `AbortSingal` support to Form submit, to prevent race conditions for continuos submit scenarios
->>>>>>> origin/release/8.0.3
 
 ## [8.0.2]
 
@@ -1381,6 +1382,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.1.0]: https://github.com/infinum/eightshift-forms/compare/8.0.3...8.1.0
 [8.0.3]: https://github.com/infinum/eightshift-forms/compare/8.0.2...8.0.3
 [8.0.2]: https://github.com/infinum/eightshift-forms/compare/8.0.1...8.0.2
 [8.0.1]: https://github.com/infinum/eightshift-forms/compare/8.0.0...8.0.1

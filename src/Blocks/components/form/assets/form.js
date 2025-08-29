@@ -24,6 +24,8 @@ export class Form {
 
 		this.FORM_DATA = new FormData();
 
+		this.CONTROLLER = null;
+
 		this.FILTER_IS_STEPS_FINAL_SUBMIT = 'isStepsFinalSubmit';
 		this.FILTER_SKIP_FIELDS = 'skipFields';
 		this.FILTER_USE_ONLY_FIELDS = 'useOnlyFields';
@@ -48,9 +50,6 @@ export class Form {
 
 		// Init enrichment.
 		this.enrichment.init();
-
-		// Init AbortSignal.
-		this.controller;
 	}
 
 	/**
@@ -287,11 +286,11 @@ export class Form {
 		const formType = this.state.getStateFormType(formId);
 
 		// Abort previous requests.
-		if (this.controller) {
-			this.controller?.abort();
+		if (this.CONTROLLER) {
+			this.CONTROLLER?.abort();
 		}
 
-		this.controller = new AbortController();
+		this.CONTROLLER = new AbortController();
 
 		// Populate body data.
 		const body = {
@@ -303,7 +302,7 @@ export class Form {
 			body: this.FORM_DATA,
 			redirect: 'follow',
 			referrer: 'no-referrer',
-			signal: this?.controller?.signal,
+			signal: this?.CONTROLLER?.signal,
 		};
 
 		// Url for frontend forms.
@@ -323,11 +322,7 @@ export class Form {
 
 		try {
 			const response = await fetch(url, body);
-
-			this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
-
-			const responseData = await response.text();
-			const parsedResponse = this.utils.formSubmitIsJsonString(responseData, 'formSubmit', formId);
+			const parsedResponse = this.utils.formSubmitIsJsonString(await response.text(), 'formSubmit', formId);
 
 			this.formSubmitBefore(formId, parsedResponse);
 
@@ -342,10 +337,12 @@ export class Form {
 
 			this.FORM_DATA = new FormData();
 
-			this.controller = null;
+			this.CONTROLLER = null;
 
 			return parsedResponse;
 		} catch (error) {
+			console.log(error.name);
+			
 			if (error.name !== 'AbortError') {
 				console.error('Error during form submission:', error);
 			}
@@ -1225,6 +1222,7 @@ export class Form {
 		const utils = this.utils;
 
 		const input = state.getStateElementInput(name, formId);
+		const field = state.getStateElementField(name, formId);
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
@@ -1247,9 +1245,9 @@ export class Form {
 
 					utils.setFieldFilledState(formId, name);
 				},
-				onOpen: function (selectedDates, dateStr, instance) {
+				onOpen: function () {
 					utils.setActiveState(formId, name);
-					instance?.altInput?.scrollIntoView({ behavior: 'smooth' });
+					utils.scrollAction(field);
 				},
 				onClose: function () {
 					utils.unsetActiveState(formId, name);
@@ -1349,7 +1347,9 @@ export class Form {
 
 			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
 			choices?.containerOuter?.element.addEventListener('focus', this.onSelectFocusEvent);
+			choices?.input?.element.addEventListener('focus', this.onSelectFocusEvent);
 			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
+			choices?.input?.element.addEventListener('blur', this.onBlurEvent);
 		});
 	}
 
@@ -1507,36 +1507,6 @@ export class Form {
 			});
 
 			dropzone.on('error', (file) => {
-				const { response, status } = file.xhr;
-
-				let isFatalError = false;
-
-				let msg = 'serverError';
-
-				if (response.includes('wordfence') || response.includes('Wordfence')) {
-					msg = 'wordfenceFirewall';
-					isFatalError = true;
-				}
-
-				if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
-					msg = 'cloudflareFirewall';
-					isFatalError = true;
-				}
-
-				if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
-					msg = 'cloudFrontFirewall';
-					isFatalError = true;
-				}
-
-				if (isFatalError) {
-					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
-
-					button.focus();
-					this.utils.setOnFocus(button);
-
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadErrorFirewall" with code: "${status}" and message: "${msg}"`);
-				}
-
 				try {
 					const response = JSON.parse(file.xhr.response);
 
@@ -1554,7 +1524,34 @@ export class Form {
 					button.focus();
 					this.utils.setOnFocus(button);
 				} catch (e) {
+					const { response, status } = file.xhr;
+
+					let isFirewallError = false;
+
+					let msg = 'serverError';
+
+					if (response.includes('wordfence') || response.includes('Wordfence')) {
+						msg = 'wordfenceFirewall';
+						isFirewallError = true;
+					}
+
+					if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
+						msg = 'cloudflareFirewall';
+						isFirewallError = true;
+					}
+
+					if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
+						msg = 'cloudFrontFirewall';
+						isFirewallError = true;
+					}
+
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+					button.focus();
+					this.utils.setOnFocus(button);
+
+					if (isFirewallError) {
+						throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadErrorFirewall" with code: "${status}" and message: "${msg}"`);
+					}
 
 					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError"`);
 				}
@@ -1594,7 +1591,9 @@ export class Form {
 
 				choices?.passedElement?.element?.removeEventListener('change', this.onSelectChangeEvent);
 				choices?.containerOuter?.element.removeEventListener('focus', this.onFocusEvent);
+				choices?.input?.element.removeEventListener('focus', this.onSelectFocusEvent);
 				choices?.containerOuter?.element.removeEventListener('blur', this.onBlurEvent);
+				choices?.input?.element.removeEventListener('blur', this.onBlurEvent);
 				choices?.destroy();
 			});
 
@@ -1900,7 +1899,6 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			// debounce(this.formSubmit(formId), 100);
 			this.formSubmit(formId);
 		}
 	};
@@ -1920,7 +1918,8 @@ export class Form {
 		const custom = this.state.getStateElementCustom(name, formId);
 
 		custom?.showDropdown();
-		custom?.containerOuter?.element?.scrollIntoView({ behavior: 'smooth' });
+
+		this.utils.scrollAction(field);
 
 		this.utils.setOnFocus(event.target);
 	};
@@ -1977,7 +1976,6 @@ export class Form {
 			this.state.getStateFormConfigUseSingleSubmit(formId) &&
 			(type === 'range' || type === 'number' || type === 'checkbox' || type === 'radio')
 		) {
-			// debounce(this.formSubmit(formId), 100);
 			this.formSubmit(formId);
 		}
 	};
@@ -2020,7 +2018,6 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			// debounce(this.formSubmit(formId), 100);
 			this.formSubmit(formId);
 		}
 	};
