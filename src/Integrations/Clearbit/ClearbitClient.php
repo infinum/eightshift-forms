@@ -16,6 +16,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * ClearbitClient integration class.
@@ -295,11 +296,11 @@ class ClearbitClient implements ClearbitClientInterface
 
 		switch ($msg) {
 			case 'auth_required':
-				return 'clearbitAuthRequired';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR;
 			case 'email_invalid':
-				return 'clearbitInvalidEmail';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

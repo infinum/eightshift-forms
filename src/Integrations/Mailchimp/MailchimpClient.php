@@ -20,6 +20,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * MailchimpClient integration class.
@@ -241,11 +242,11 @@ class MailchimpClient implements MailchimpClientInterface
 
 		switch ($msg) {
 			case 'Bad Request':
-				return 'mailchimpBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR;
 			case 'Your request did not include an API key.':
-				return 'mailchimpMissingConfig';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

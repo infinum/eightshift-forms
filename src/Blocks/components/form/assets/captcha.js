@@ -82,7 +82,7 @@ export class Captcha {
 	 *
 	 * @returns {void}
 	 */
-	formSubmitCaptchaInvisible(token, isEnterprise, action) {
+	async formSubmitCaptchaInvisible(token, isEnterprise, action) {
 		const formData = new FormData();
 
 		formData.append('token', token);
@@ -101,21 +101,24 @@ export class Captcha {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('captcha'), body)
-		.then((response) => {
-			this.utils.formSubmitErrorContentType(response, 'invisibleCaptcha', null);
+		try {
+			const response = await fetch(this.state.getRestUrl('captcha'), body);
+			const parsedResponse = await response.json();
 
-			return response.text();
-		})
-		.then((responseData) => {
-			const response = this.utils.formSubmitIsJsonString(responseData, 'invisibleCaptcha', null);
+			const parsedResponseData = parsedResponse?.data;
 
-			if (response?.status === 'error' && !response?.data?.[this.state.getStateResponseOutputKey('captchaIsSpam')]) {
-				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response.message} Action: ${action}`);
+			if (parsedResponse?.status === 'error' && !parsedResponseData?.[this.state.getStateResponseOutputKey('captchaIsSpam')]) {
+				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response?.message} Action: ${action}`);
 			}
 
 			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), response);
-		});
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(null, 'invisibleCaptcha', name, message));
+		}
 	}
 
 	/**

@@ -16,12 +16,14 @@ export class Locations {
 		});
 	}
 
-	// Handle form submit and all logic.
 	onClick = (event) => {
 		event.preventDefault();
 
-		const item = event.target;
-		const field = this.state.getFormFieldElementByChild(item);
+		this.submit(event.target);
+	};
+
+	async submit(target) {
+		const field = this.state.getFormFieldElementByChild(target);
 
 		const formData = new FormData();
 
@@ -42,22 +44,28 @@ export class Locations {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('locations'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'location', this.FORM_ID);
+		try {
+			const response = await fetch(this.state.getRestUrl('locations'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'location', this.FORM_ID);
+			const {
+				status,
+				data,
+			} = parsedResponse;
 
-				this.utils.hideLoader(this.FORM_ID);
+			this.utils.hideLoader(this.FORM_ID);
 
-				if (response.status === 'success') {
-					item.classList.add(this.state.getStateSelector('isHidden'));
-					item.closest(this.itemSelector).insertAdjacentHTML('afterend', response.data[this.state.getStateResponseOutputKey('adminLocations')]);
-					item.remove();
-				}
-			});
+			if (status === 'success') {
+				target.classList.add(this.state.getStateSelector('isHidden'));
+				target.closest(this.itemSelector).insertAdjacentHTML('afterend', data[this.state.getStateResponseOutputKey('adminLocations')]);
+				target.remove();
+			}
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(this.FORM_ID, 'adminLocations', name, message));
+		}
 	};
 }

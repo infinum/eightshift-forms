@@ -23,7 +23,9 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Exception;
 
 /**
  * HubspotClient integration class.
@@ -280,7 +282,6 @@ class HubspotClient implements HubspotClientInterface
 			$itemId,
 			$formId
 		);
-
 		$code = $details[Config::IARD_CODE];
 		$body = $details[Config::IARD_BODY];
 
@@ -444,55 +445,55 @@ class HubspotClient implements HubspotClientInterface
 		switch ($msg) {
 			// Internal.
 			case 'Bad Request':
-				return 'hubspotBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_BAD_REQUEST_ERROR;
 			case 'The request is not valid':
-				return 'hubspotInvalidRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_REQUEST_ERROR;
 
 				// Hubspot.
 			case 'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED':
-				return 'hubspotMaxNumberOfSubmittedValuesExceededError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR;
 			case 'INVALID_EMAIL':
-				return 'hubspotInvalidEmailError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_EMAIL_ERROR;
 			case 'BLOCKED_EMAIL':
-				return 'hubspotBlockedEmailError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_BLOCKED_EMAIL_ERROR;
 			case 'INVALID_NUMBER':
-				return 'hubspotInvalidNumberError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_NUMBER_ERROR;
 			case 'INPUT_TOO_LARGE':
-				return 'hubspotInputTooLargeError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INPUT_TOO_LARGE_ERROR;
 			case 'FIELD_NOT_IN_FORM_DEFINITION':
-				return 'hubspotFieldNotInFormDefinitionError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR;
 			case 'NUMBER_OUT_OF_RANGE':
-				return 'hubspotNumberOutOfRangeError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR;
 			case 'VALUE_NOT_IN_FIELD_DEFINITION':
-				return 'hubspotValueNotInFieldDefinitionError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR;
 			case 'INVALID_METADATA':
-				return 'hubspotInvalidMetadataError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_METADATA_ERROR;
 			case 'INVALID_GOTOWEBINAR_WEBINAR_KEY':
-				return 'hubspotInvalidGotoWebinarKeyError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR;
 			case 'INVALID_HUTK':
-				return 'hubspotInvalidHutkError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_HUTK_ERROR;
 			case 'INVALID_IP_ADDRESS':
-				return 'hubspotInvalidIpAddressError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_IP_ADDRESS_ERROR;
 			case 'INVALID_PAGE_URI':
-				return 'hubspotInvalidPageUriError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_PAGE_URI_ERROR;
 			case 'INVALID_LEGAL_OPTION_FORMAT':
-				return 'hubspotInvalidLegalOptionFormatError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR;
 			case 'MISSING_PROCESSING_CONSENT':
-				return 'hubspotMissingProcessingConsentError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR;
 			case 'MISSING_PROCESSING_CONSENT_TEXT':
-				return 'hubspotMissingProcessingConsentTextError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR;
 			case 'MISSING_COMMUNICATION_CONSENT_TEXT':
-				return 'hubspotMissingCommunicationConsentTextError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR;
 			case 'MISSING_LEGITIMATE_INTEREST_TEXT':
-				return 'hubspotMissingLegitimateInterestTextError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR;
 			case 'DUPLICATE_SUBSCRIPTION_TYPE_ID':
-				return 'hubspotDuplicateSubscriptionTypeIdError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR;
 			case 'FORM_HAS_RECAPTCHA_ENABLED':
-				return 'hubspotHasRecaptchaEnabledError';
-			case 'ERROR 429	':
-				return 'hubspotError429Error';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR;
+			case 'ERROR 429':
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_ERROR_429_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 
@@ -521,7 +522,7 @@ class HubspotClient implements HubspotClientInterface
 				\preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
 
 				if ($matchesReq) {
-					$match = $matchesReq[0][2] ?? '';
+					$match = $matchesReq[0][2] ?: '';
 					if ($match) {
 						$output[$match] = 'validationRequired';
 					}
@@ -655,17 +656,12 @@ class HubspotClient implements HubspotClientInterface
 
 		$consentData = $consentData[0] ?? '';
 
-		// Validate if json.
-		if (!Helpers::isJson($consentData)) {
+		try {
+			$consentData = \json_decode($consentData, true);
+		} catch (Exception $e) { // @phpstan-ignore-line
 			return [];
 		}
 
-		// Check for consent data.
-		if (!$consentData) {
-			return [];
-		}
-
-		$consentData = \json_decode($consentData, true);
 		if (!$consentData) {
 			return [];
 		}

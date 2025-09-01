@@ -19,6 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * JiraClient integration class.
@@ -727,28 +728,28 @@ class JiraClient implements JiraClientInterface
 		$msg = $body['errors'] ?? [];
 
 		if (isset($body['errors']['project'])) {
-			return 'jiraMissingProject';
+			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_PROJECT;
 		}
 
 		if (isset($body['errors']['issuetype'])) {
-			return 'jiraMissingIssueType';
+			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_ISSUE_TYPE;
 		}
 
 		if (isset($body['errors']['summary'])) {
-			return 'jiraMissingSummary';
+			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_SUMMARY;
 		}
 
 		if (isset($body['errors']['customfield_10011'])) {
-			return 'jiraMissingEpicName';
+			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_EPIC_NAME;
 		}
 
 		switch ($msg) {
 			case 'auth_required':
-				return 'jiraAuthRequired';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR;
 			case 'email_invalid':
-				return 'jiraInvalidEmail';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

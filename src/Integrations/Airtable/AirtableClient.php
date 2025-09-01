@@ -19,6 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * AirtableClient integration class.
@@ -241,17 +242,17 @@ class AirtableClient implements AirtableClientInterface
 
 		switch ($msg) {
 			case 'NOT_FOUND':
-				return 'airtableNotFoundError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_NOT_FOUND_ERROR;
 			case 'INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND':
-				return 'airtableInvalidPermissionsOrModelNotFoundError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR;
 			case 'INVALID_PERMISSIONS':
-				return 'airtableInvalidPermissionsError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_ERROR;
 			case 'INVALID_REQUEST_UNKNOWN':
-				return 'airtableInvalidRequestUnknownError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR;
 			case 'INVALID_VALUE_FOR_COLUMN':
-				return 'airtableInvalidValueForColumnError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

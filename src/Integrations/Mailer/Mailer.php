@@ -207,6 +207,7 @@ class Mailer implements MailerInterface
 		if ($debugKeyValue) {
 			// translators: %s replaces the debug key.
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
+
 			// translators: %s replaces the debug key description.
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), \esc_html($this->settingsFallback->getFlagLabel($debugKeyValue))) . '</p>';
 		}

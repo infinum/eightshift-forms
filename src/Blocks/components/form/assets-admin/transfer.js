@@ -22,12 +22,19 @@ export class Transfer {
 		});
 	}
 
-	// Handle form submit and all logic.
 	onClick = (event) => {
 		event.preventDefault();
 
-		const formId = this.state.getFormIdByElement(event.target);
-		const field = this.state.getFormFieldElementByChild(event.target);
+		if(!confirm(this.confirmMsg)) {
+			return;
+		}
+
+		this.submit(event.target);
+	};
+
+	async submit(target) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
 		const type = field.getAttribute(this.state.getStateAttribute('migrationType'));
 
 		const formData = new FormData();
@@ -64,38 +71,39 @@ export class Transfer {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('transfer'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'transfer', formId);
+		try {
+			const response = await fetch(this.state.getRestUrl('transfer'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'transfer', formId);
+			const {
+				message,
+				status,
+				data,
+			} = parsedResponse;
 
-				const {
-					message,
-					status,
-					data,
-				} = response;
+			this.utils.hideLoader(formId);
+			this.utils.setGlobalMsg(formId, message, status);
 
-				this.utils.hideLoader(formId);
-				this.utils.setGlobalMsg(formId, message, status);
-
-				if (status === 'success') {
-					if (type === 'import') {
-						setTimeout(() => {
-							location.reload();
-						}, 1000);
-					} else {
-						this.createFile(data?.[this.state.getStateResponseOutputKey('adminTransferContent')], data?.[this.state.getStateResponseOutputKey('adminTransferName')]);
-					}
+			if (status === 'success') {
+				if (type === 'import') {
+					setTimeout(() => {
+						location.reload();
+					}, 1000);
+				} else {
+					this.createFile(data?.[this.state.getStateResponseOutputKey('adminTransferContent')], data?.[this.state.getStateResponseOutputKey('adminTransferName')]);
 				}
+			}
 
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(formId);
-				}, 6000);
-			});
+			setTimeout(() => {
+				this.utils.unsetGlobalMsg(formId);
+			}, 6000);
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'adminTransfer', name, message));
+		}
 	};
 
 	onClickItem = (event) => {

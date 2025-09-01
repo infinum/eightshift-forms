@@ -15,12 +15,15 @@ export class Migration {
 		});
 	}
 
-	// Handle form submit and all logic.
 	onClick = (event) => {
 		event.preventDefault();
 
-		const formId = this.state.getFormIdByElement(event.target);
-		const field = this.state.getFormFieldElementByChild(event.target);
+		this.submit(event.target);
+	};
+
+	async submit(target) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
 
 		const formData = new FormData();
 
@@ -42,28 +45,30 @@ export class Migration {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('migration'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'migration', formId);
+		try {
+			const response = await fetch(this.state.getRestUrl('migration'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'migration', formId);
+			const {
+				message,
+				status,
+			} = parsedResponse;
 
-				const {
-					message,
-					status,
-				} = response;
+			this.utils.hideLoader(formId);
+			this.utils.setGlobalMsg(formId, message, status);
 
-				this.utils.hideLoader(formId);
-				this.utils.setGlobalMsg(formId, message, status);
+			document.querySelector(this.outputSelector).value = JSON.stringify(parsedResponse, null, 4);
 
-				document.querySelector(this.outputSelector).value = JSON.stringify(response, null, 4);
+			setTimeout(() => {
+				this.utils.unsetGlobalMsg(formId);
+			}, 6000);
 
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(formId);
-				}, 6000);
-			});
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'adminMigration', name, message));
+		}
 	};
 }

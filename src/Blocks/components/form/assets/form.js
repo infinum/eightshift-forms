@@ -97,7 +97,7 @@ export class Form {
 	 * Init only geolocation forms by ajax.
 	 * @param {object} formsElement Forms element.
 	 */
-	initGeolocationForm(formsElement) {
+	async initGeolocationForm(formsElement) {
 		// If you have geolocation configured on the form but global setting is turned off. Return first form.
 		if (!this.state.getStateGeolocationIsUsed()) {
 			const formId = formsElement?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
@@ -137,33 +137,36 @@ export class Form {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
 
-		// Get geolocation data from ajax to detect what we will remove from DOM.
-		fetch(this.state.getRestUrl('geolocation'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'geolocation', null);
+		try {
+			const response = await fetch(this.state.getRestUrl('geolocation'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null)?.data;
+			const parsedResponseData = parsedResponse?.data;
 
-				// Loop all form elements and remove all except the one we need.
-				[...forms].forEach((form) => {
-					if (form.getAttribute(this.state.getStateAttribute('formFid')) !== response?.[this.state.getStateResponseOutputKey('geoId')]) {
-						// Remove all forms except the one we got from ajax.
-						form.remove();
-					} else {
-						// Init form id that we got from ajax.
-						this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
+			// Loop all form elements and remove all except the one we need.
+			[...forms].forEach((form) => {
+				if (form.getAttribute(this.state.getStateAttribute('formFid')) !== parsedResponseData?.[this.state.getStateResponseOutputKey('geoId')]) {
+					// Remove all forms except the one we got from ajax.
+					form.remove();
+				} else {
+					// Init form id that we got from ajax.
+					this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
 
-						// Remove geolocation data attribute from forms element.
-						formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
-					}
-				});
-
-				// Remove loading class from forms element.
-				formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
+					// Remove geolocation data attribute from forms element.
+					formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
+				}
 			});
+
+			// Remove loading class from forms element.
+			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
+
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(null, 'geolocation', name, message));
+		}
 	}
 
 	/**
@@ -322,7 +325,7 @@ export class Form {
 
 		try {
 			const response = await fetch(url, body);
-			const parsedResponse = this.utils.formSubmitIsJsonString(await response.text(), 'formSubmit', formId);
+			const parsedResponse = await response.json();
 
 			this.formSubmitBefore(formId, parsedResponse);
 
@@ -340,12 +343,12 @@ export class Form {
 			this.CONTROLLER = null;
 
 			return parsedResponse;
-		} catch (error) {
-			console.log(error.name);
-			
-			if (error.name !== 'AbortError') {
-				console.error('Error during form submission:', error);
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
 			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmit', name, message));
 		} finally {
 			this.state.setStateFormIsProcessing(false, formId);
 		}
@@ -359,7 +362,7 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	formSubmitStep(formId, filter = {}) {
+	async formSubmitStep(formId, filter = {}) {
 		this.state.setStateFormIsProcessing(true, formId);
 		this.setFormData(formId, filter);
 		this.setFormDataStep(formId);
@@ -385,20 +388,22 @@ export class Form {
 
 		const url = this.state.getRestUrl('validationStep');
 
-		fetch(url, body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'formSubmitStep', formId);
+		try {
+			const response = await fetch(url, body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'formSubmitStep', formId);
+			this.formSubmitBefore(formId, parsedResponse);
 
-				this.formSubmitBefore(formId, response);
-				this.steps.formStepSubmit(formId, response);
-				this.steps.formStepSubmitAfter(formId, response);
-				this.state.setStateFormIsProcessing(false, formId);
-			});
+			this.steps.formStepSubmit(formId, parsedResponse);
+			this.steps.formStepSubmitAfter(formId, parsedResponse);
+			this.state.setStateFormIsProcessing(false, formId);
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmitStep', name, message));
+		}
 
 		this.FORM_DATA = new FormData();
 	}
@@ -607,8 +612,12 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch (error) {
-				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			} catch ({name, message}) {
+				if (name === 'AbortError') {
+					return;
+				}
+
+				throw new Error(this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message));
 			}
 		});
 	}
@@ -640,8 +649,12 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch (error) {
-				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			} catch ({name, message}) {
+				if (name === 'AbortError') {
+					return;
+				}
+
+				throw new Error(this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message));
 			}
 		});
 	}
@@ -1749,7 +1762,7 @@ export class Form {
 						[this.FILTER_SKIP_FIELDS]: [...this.conditionalTags.getIgnoreFields(formId)],
 					};
 
-					debounce(this.formSubmitStep(formId, filterNext), 100);
+					this.formSubmitStep(formId, filterNext);
 					break;
 				case this.steps.STEP_DIRECTION_PREV:
 					this.steps.goToPrevStep(formId);
@@ -1765,7 +1778,7 @@ export class Form {
 					if (this.state.getStateCaptchaIsUsed()) {
 						this.runFormCaptcha(formId, filterFinal);
 					} else {
-						debounce(this.formSubmit(formId, filterFinal), 100);
+						this.formSubmit(formId, filterFinal);
 					}
 					break;
 			}
@@ -1780,7 +1793,7 @@ export class Form {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId, filterNormal);
 			} else {
-				debounce(this.formSubmit(formId, filterNormal), 100);
+				this.formSubmit(formId, filterNormal);
 			}
 		}
 	};
@@ -1889,17 +1902,18 @@ export class Form {
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
-			debounce(
-				this.formSubmit(formId, {
-					[this.FILTER_USE_ONLY_FIELDS]: [name],
-				}),
-				100,
-			);
+			this.formSubmit(formId, {
+				[this.FILTER_USE_ONLY_FIELDS]: [name],
+			});
 		}
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			this.formSubmit(formId);
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 
@@ -1962,12 +1976,9 @@ export class Form {
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
-			debounce(
-				this.formSubmit(formId, {
-					[this.FILTER_USE_ONLY_FIELDS]: [name],
-				}),
-				100,
-			);
+			this.formSubmit(formId, {
+				[this.FILTER_USE_ONLY_FIELDS]: [name],
+			});
 		}
 
 		// Used only on frontend for single submit.
@@ -1976,7 +1987,11 @@ export class Form {
 			this.state.getStateFormConfigUseSingleSubmit(formId) &&
 			(type === 'range' || type === 'number' || type === 'checkbox' || type === 'radio')
 		) {
-			this.formSubmit(formId);
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 
@@ -2018,7 +2033,11 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			this.formSubmit(formId);
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 

@@ -21,6 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * GreenhouseClient integration class.
@@ -228,9 +229,9 @@ class GreenhouseClient implements ClientInterface
 
 		switch ($msg) {
 			case 'Bad Request':
-				return 'greenhouseBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 
@@ -251,7 +252,7 @@ class GreenhouseClient implements ClientInterface
 		\preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
 		if ($matchesReq) {
-			$key = $matchesReq[0][2] ?? '';
+			$key = $matchesReq[0][2] ?: '';
 			if ($key) {
 				$keys = \explode(',', $key);
 

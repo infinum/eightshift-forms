@@ -131,11 +131,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		try {
-			// Prepare all data.
-			// Must be on the top of the try catch block.
-			$formDetails = $this->getFormDetailsApi($request);
+		// Prepare all data.
+		// Must be on the top of the try catch block.
+		$formDetails = $this->getFormDetailsApi($request);
 
+		try {
 			// If route is used for admin only, check if user has permission. (generally used for settings).
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
@@ -222,11 +222,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			// Validate captcha.
 			if ($this->shouldCheckCaptcha()) {
-				// $this->getCaptcha()->check(
-				// 	$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
-				// 	$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
-				// 	($formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false') === 'true'
-				// );
+				$this->getCaptcha()->check(
+					$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
+					$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
+					($formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false') === 'true'
+				);
 			}
 
 			// Map enrichment data.
@@ -290,7 +290,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			if ($this->shouldLogActivity($return)) {
 				$this->getMailer()->sendTroubleshootingEmail(
-					$formDetails, // @phpstan-ignore-line
+					$formDetails,
 					$return
 				);
 			}
@@ -411,7 +411,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	protected function shouldLogActivity(array $return): bool
 	{
-		return \apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, $this->getMailer()->getDebugKey($return));
+		return \apply_filters(
+			SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME,
+			false,
+			$this->getMailer()->getDebugKey($return)
+		);
 	}
 
 	/**
@@ -441,7 +445,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => $response[Config::IARD_MSG],
 				],
 				\array_merge(
 					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),

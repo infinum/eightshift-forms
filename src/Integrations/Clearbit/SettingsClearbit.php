@@ -324,7 +324,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	 * @param array<string, string> $properties Array of properties from integration.
 	 * @param string $key Key for saving the settings.
 	 *
-	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, array<int|string, array<string, bool|string>>|string>>|bool|string>>|string>>|string>
+	 * @return array<mixed>
 	 */
 	public function getSettingsGlobalMap(array $properties, string $key): array
 	{

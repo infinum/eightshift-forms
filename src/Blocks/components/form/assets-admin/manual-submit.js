@@ -21,12 +21,15 @@ export class ManualSubmit {
 		});
 	}
 
-	// Handle form submit and all logic.
 	onClick = (event) => {
 		event.preventDefault();
 
-		const id = event.target.getAttribute(this.state.getStateAttribute('manualSubmitId'));
-		const formId = event.target.getAttribute(this.state.getStateAttribute('formId'));
+		this.submit(event.target);
+	};
+
+	async submit(target) {
+		const id = target.getAttribute(this.state.getStateAttribute('manualSubmitId'));
+		const formId = target.getAttribute(this.state.getStateAttribute('formId'));
 		const data = document.querySelector(`${this.dataSelector}[${this.state.getStateAttribute('manualSubmitId')}="${id}"]`)?.innerHTML;
 
 		this.utils.showLoader(this.FORM_ID);
@@ -58,27 +61,28 @@ export class ManualSubmit {
 			return;
 		}
 
-		fetch(this.state.getRestUrlByType('prefixSubmit', this.FORM_TYPE), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'manualSubmit', formId);
+		try {
+			const response = await fetch(this.state.getRestUrlByType('prefixSubmit', this.FORM_TYPE), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'manualSubmit', formId);
+			const {
+				message,
+				status,
+			} = parsedResponse;
 
-				const {
-					message,
-					status,
-				} = response;
+			this.utils.hideLoader(this.FORM_ID);
+			this.utils.setGlobalMsg(this.FORM_ID, message, status);
 
-				this.utils.hideLoader(this.FORM_ID);
-				this.utils.setGlobalMsg(this.FORM_ID, message, status);
+			setTimeout(() => {
+				this.utils.unsetGlobalMsg(this.FORM_ID);
+			}, 6000);
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
 
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(this.FORM_ID);
-				}, 6000);
-			});
+			throw new Error(this.utils.formSubmitResponseError(formId, 'adminManualSubmit', name, message));
+		}
 	};
 
 	/**

@@ -17,7 +17,6 @@ export class Export {
 		});
 	}
 
-	// Handle form submit and all logic.
 	onClick = (event) => {
 		event.preventDefault();
 
@@ -25,9 +24,13 @@ export class Export {
 			return;
 		}
 
+		this.submit(event.target);
+	};
+
+	async submit(target) {
 		const formData = new FormData();
 
-		const field = this.state.getFormFieldElementByChild(event.target);
+		const field = this.state.getFormFieldElementByChild(target);
 		const formId = field?.getAttribute(this.state.getStateAttribute('formId'));
 		const type = field?.getAttribute(this.state.getStateAttribute('exportType'));
 
@@ -50,35 +53,36 @@ export class Export {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('export'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'bulk', null);
+		try {
+			const response = await fetch(this.state.getRestUrl('export'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'bulk', null);
+			const {
+				message,
+				status,
+				data,
+			} = parsedResponse;
 
-				const {
-					message,
-					status,
-					data,
-				} = response;
+			const exportContent = data?.[this.state.getStateResponseOutputKey('adminExportContent')];
 
-				const exportContent = data?.[this.state.getStateResponseOutputKey('adminExportContent')];
+			if (exportContent) {
+				const csv = this.downloadCSVFromJson(JSON.parse(exportContent));
+				this.createDownloadLink('export.csv', csv);
+			}
 
-				if (exportContent) {
-					const csv = this.downloadCSVFromJson(JSON.parse(exportContent));
-					this.createDownloadLink('export.csv', csv);
-				}
+			this.utils.hideLoader(this.FORM_ID);
+			this.utils.setGlobalMsg(this.FORM_ID, message, status);
 
-				this.utils.hideLoader(this.FORM_ID);
-				this.utils.setGlobalMsg(this.FORM_ID, message, status);
+			setTimeout(() => {
+				this.utils.unsetGlobalMsg(this.FORM_ID);
+			}, 6000);
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
 
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(this.FORM_ID);
-				}, 6000);
-			});
+			throw new Error(this.utils.formSubmitResponseError(formId, 'adminExport', name, message));
+		}
 	};
 
 	isDisableButton(element) {

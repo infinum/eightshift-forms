@@ -111,40 +111,111 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FLAG_VALIDATION_FILES = 'validationFiles';
 	public const SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS = 'filesUploadSuccess';
 	public const SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR = 'filesUploadError';
-	public const SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR = 'submitIntegrationError';
 	public const SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS = 'submitIntegrationSuccess';
+	public const SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP = 'submitWpError';
 
 	public const SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR = 'clearbitCronError';
-	public const SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR = 'momentsEventsError';
+	public const SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR = 'clearbitAuthRequiredError';
+	public const SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR = 'clearbitInvalidEmailError';
 
 	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_LIST_ERROR = 'nationbuilderListError';
 	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_TAGS_ERROR = 'nationbuilderTagsError';
 
 	public const SETTINGS_FALLBACK_FLAG_WORKABLE_MISSING_CONFIG = 'workableMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR = 'workableBadRequestError';
+	public const SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR = 'workableArchivedJobError';
+	public const SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR = 'workableTooLongFileNameError';
+
 	public const SETTINGS_FALLBACK_FLAG_TALENTLYFT_MISSING_CONFIG = 'talentlyftMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR = 'talentlyftBadRequestError';
+	public const SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR = 'talentlyftValidationError';
+
 	public const SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG = 'pipedriveMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME = 'pipedriveMissingName';
+	public const SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION = 'pipedriveMissingOrganization';
+	public const SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID = 'pipedriveWrongOrganizationId';
+	public const SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET = 'pipedriveWrongDataset';
+
 	public const SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG = 'paycekMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS = 'paycekMissingReqParams';
 	public const SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS = 'paycekSuccess';
+
 	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG = 'nationbuilderMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR = 'nationbuilderBadRequestError';
+	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING = 'nationbuilderErrorSettingsMissing';
+	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR = 'nationbuilderServerError';
+
+	public const SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR = 'momentsEventsError';
+
+	public const SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR = 'momentsBadRequestError';
 	public const SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG = 'momentsMissingConfig';
+
 	public const SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG = 'mailerliteMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR = 'mailerliteBadRequestError';
+
 	public const SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG = 'mailerMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND = 'mailerErrorEmailSend';
 	public const SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS = 'mailerSuccess';
+
 	public const SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG = 'mailchimpMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR = 'mailchimpBadRequestError';
+
 	public const SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG = 'jiraMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_JIRA_MISSING_PROJECT = 'jiraMissingProject';
+	public const SETTINGS_FALLBACK_FLAG_JIRA_MISSING_ISSUE_TYPE = 'jiraMissingIssueType';
+	public const SETTINGS_FALLBACK_FLAG_JIRA_MISSING_SUMMARY = 'jiraMissingSummary';
+	public const SETTINGS_FALLBACK_FLAG_JIRA_MISSING_EPIC_NAME = 'jiraMissingEpicName';
+	public const SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR = 'jiraAuthRequiredError';
+	public const SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR = 'jiraInvalidEmailError';
+
 	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG = 'hubspotMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_BAD_REQUEST_ERROR = 'hubspotBadRequestError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_REQUEST_ERROR = 'hubspotInvalidRequestError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR = 'hubspotMaxNumberOfSubmittedValuesExceededError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_EMAIL_ERROR = 'hubspotInvalidEmailError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_BLOCKED_EMAIL_ERROR = 'hubspotBlockedEmailError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_NUMBER_ERROR = 'hubspotInvalidNumberError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INPUT_TOO_LARGE_ERROR = 'hubspotInputTooLargeError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR = 'hubspotFieldNotInFormDefinitionError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR = 'hubspotNumberOutOfRangeError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR = 'hubspotValueNotInFieldDefinitionError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_METADATA_ERROR = 'hubspotInvalidMetadataError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR = 'hubspotInvalidGotoWebinarKeyError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_HUTK_ERROR = 'hubspotInvalidHutkError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_IP_ADDRESS_ERROR = 'hubspotInvalidIpAddressError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_PAGE_URI_ERROR = 'hubspotInvalidPageUriError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR = 'hubspotInvalidLegalOptionFormatError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR = 'hubspotMissingProcessingConsentError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR = 'hubspotMissingProcessingConsentTextError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR = 'hubspotMissingCommunicationConsentTextError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR = 'hubspotMissingLegitimateInterestTextError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR = 'hubspotDuplicateSubscriptionTypeIdError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR = 'hubspotHasRecaptchaEnabledError';
+	public const SETTINGS_FALLBACK_FLAG_HUBSPOT_ERROR_429_ERROR = 'hubspotError429Error';
+
 	public const SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG = 'greenhouseMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR = 'greenhouseBadRequestError';
+
 	public const SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG = 'goodbitsMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR = 'goodbitsBadRequestError';
+
 	public const SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_CONFIG = 'corvusMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS = 'corvusMissingReqParams';
 	public const SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID = 'corvusMissingStoreId';
 	public const SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS = 'corvusSuccess';
+
 	public const SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG = 'calculatorMissingConfig';
 	public const SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS = 'calculatorSuccess';
+
 	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG = 'airtableMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_NOT_FOUND_ERROR = 'airtableNotFoundError';
+	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR = 'airtableInvalidPermissionsOrModelNotFoundError';
+	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_ERROR = 'airtableInvalidPermissionsError';
+	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR = 'airtableInvalidRequestUnknownError';
+	public const SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR = 'airtableInvalidValueForColumnError';
+
 	public const SETTINGS_FALLBACK_FLAG_ACTIVE_CAMPAIGN_MISSING_CONFIG = 'activeCampaignMissingConfig';
+
 	public const SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION = 'customNoAction';
 	public const SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT = 'customSuccessRedirect';
 	public const SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR = 'customError';
@@ -539,13 +610,13 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('Someone tried to submit a form with files upload error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR => [
-				'label' => \__('Someone tried to submit a form to an integration that returned an error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
 			self::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS => [
 				'label' => \__('Someone tried to submit a form to an integration that returned a success.', 'eightshift-forms'),
 				'isRecommended' => false,
+			],
+			self::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP => [
+				'label' => \__('Someone tried to submit a form to an integration that returned an error that is not handled by the integration.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
 
 			// Clearbit.
@@ -553,8 +624,20 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('When Clearbit cron job is running, it can return an error for unknown entry.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR => [
+				'label' => \__('When Clearbit integrations returns a auth required error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR => [
+				'label' => \__('When Clearbit integrations returns a invalid email error.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
 
 			// Moments.
+			self::SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR => [
+				'label' => \__('When Moments integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 			self::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG => [
 				'label' => \__('When Moments integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
@@ -577,10 +660,34 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR => [
+				'label' => \__('When Nationbuilder integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING => [
+				'label' => \__('When Nationbuilder integrations returns a error settings missing error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR => [
+				'label' => \__('When Nationbuilder integrations returns a server error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 
 			// Workable.
 			self::SETTINGS_FALLBACK_FLAG_WORKABLE_MISSING_CONFIG => [
 				'label' => \__('When Workable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR => [
+				'label' => \__('When Workable integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR => [
+				'label' => \__('When Workable integrations returns a archived job error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR => [
+				'label' => \__('When Workable integrations returns a too long file name error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
@@ -589,10 +696,34 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('When Talentlyft integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR => [
+				'label' => \__('When Talentlyft integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR => [
+				'label' => \__('When Talentlyft integrations returns a validation error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 
 			// Pipedrive.
 			self::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_CONFIG => [
 				'label' => \__('When Pipedrive integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME => [
+				'label' => \__('When Pipedrive integrations returns a missing name error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION => [
+				'label' => \__('When Pipedrive integrations returns a missing organization error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID => [
+				'label' => \__('When Pipedrive integrations returns a wrong organization id error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET => [
+				'label' => \__('When Pipedrive integrations returns a wrong dataset error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
@@ -615,6 +746,10 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('When Mailerlite integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR => [
+				'label' => \__('When Mailerlite integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 
 			// Mailer.
 			self::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG => [
@@ -635,16 +770,136 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR => [
+				'label' => \__('When Mailchimp integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 
 			// Jira.
 			self::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG => [
 				'label' => \__('When Jira integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_PROJECT => [
+				'label' => \__('When Jira integrations returns a missing project error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_ISSUE_TYPE => [
+				'label' => \__('When Jira integrations returns a missing issue type error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_SUMMARY => [
+				'label' => \__('When Jira integrations returns a missing summary error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_EPIC_NAME => [
+				'label' => \__('When Jira integrations returns a missing epic name error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR => [
+				'label' => \__('When Jira integrations returns a auth required error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR => [
+				'label' => \__('When Jira integrations returns a invalid email error.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
 
 			// Hubspot.
 			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG => [
 				'label' => \__('When Hubspot integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_BAD_REQUEST_ERROR => [
+				'label' => \__('When Hubspot integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_REQUEST_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR => [
+				'label' => \__('When Hubspot integrations returns a max number of submitted values exceeded error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_EMAIL_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid email error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_BLOCKED_EMAIL_ERROR => [
+				'label' => \__('When Hubspot integrations returns a blocked email error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_NUMBER_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid number error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INPUT_TOO_LARGE_ERROR => [
+				'label' => \__('When Hubspot integrations returns a input too large error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR => [
+				'label' => \__('When Hubspot integrations returns a field not in form definition error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR => [
+				'label' => \__('When Hubspot integrations returns a number out of range error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR => [
+				'label' => \__('When Hubspot integrations returns a value not in field definition error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_METADATA_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid metadata error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid gotowebinar webinar key error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_HUTK_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid hutk error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_IP_ADDRESS_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid ip address error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_PAGE_URI_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid page uri error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR => [
+				'label' => \__('When Hubspot integrations returns a invalid legal option format error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR => [
+				'label' => \__('When Hubspot integrations returns a missing processing consent error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR => [
+				'label' => \__('When Hubspot integrations returns a missing processing consent text error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR => [
+				'label' => \__('When Hubspot integrations returns a missing communication consent text error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR => [
+				'label' => \__('When Hubspot integrations returns a missing legitimate interest text error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR => [
+				'label' => \__('When Hubspot integrations returns a duplicate subscription type id error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR => [
+				'label' => \__('When Hubspot integrations returns a form has recaptcha enabled error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_HUBSPOT_ERROR_429_ERROR => [
+				'label' => \__('When Hubspot integrations returns a error 429 error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
@@ -653,10 +908,18 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'label' => \__('When Greenhouse integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
+			self::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR => [
+				'label' => \__('When Greenhouse integrations returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
 
 			// Goodbits.
 			self::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG => [
 				'label' => \__('When Goodbits integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR => [
+				'label' => \__('When Goodbits integrations returns a bad request error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
@@ -691,6 +954,26 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			// Airtable.
 			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG => [
 				'label' => \__('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_NOT_FOUND_ERROR => [
+				'label' => \__('When Airtable integrations returns a not found error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR => [
+				'label' => \__('When Airtable integrations returns a invalid permissions or model not found error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_ERROR => [
+				'label' => \__('When Airtable integrations returns a invalid permissions error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR => [
+				'label' => \__('When Airtable integrations returns a invalid request unknown error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR => [
+				'label' => \__('When Airtable integrations returns a invalid value for column error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 
