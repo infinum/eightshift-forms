@@ -10,6 +10,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - `AbortSignal` support to Form submit, to prevent race conditions for continuos submit scenarios
 - JS scroll to fields, steps and global messages now uses additional offset css variable that developer can use for adjusting the offset.
+- Added all external integrations response codes to fallback settings.
+- Better handling of data in the exceptions in JS.
 
 ## [8.0.3]
 
