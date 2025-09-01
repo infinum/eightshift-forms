@@ -1512,10 +1512,12 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch (e) {
+				} catch ({name, message}) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+					button.focus();
+					this.utils.setOnFocus(button);
 
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadSuccess"`);
+					throw new Error(`API response returned an error. Function used: "fileUploadSuccess" with error: "${name}" and a message: "${message}" for form id: "${formId}"`);
 				}
 			});
 
@@ -1536,37 +1538,12 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch (e) {
-					const { response, status } = file.xhr;
-
-					let isFirewallError = false;
-
-					let msg = 'serverError';
-
-					if (response.includes('wordfence') || response.includes('Wordfence')) {
-						msg = 'wordfenceFirewall';
-						isFirewallError = true;
-					}
-
-					if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
-						msg = 'cloudflareFirewall';
-						isFirewallError = true;
-					}
-
-					if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
-						msg = 'cloudFrontFirewall';
-						isFirewallError = true;
-					}
-
+				} catch ({name, message}) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);
 
-					if (isFirewallError) {
-						throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadErrorFirewall" with code: "${status}" and message: "${msg}"`);
-					}
-
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError"`);
+					throw new Error(`API response returned an error. Function used: "fileUploadError" with error: "${name}" and a message: "${message}" for form id: "${formId}"`);
 				}
 			});
 
