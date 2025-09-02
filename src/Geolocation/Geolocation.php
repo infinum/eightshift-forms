@@ -319,7 +319,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 		// Use CloudFront header if that feature is used.
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
-			$outputCloudFront = isset($_SERVER['CloudFront-Viewer-Country']) ? $this->cleanCookieValue($_SERVER['CloudFront-Viewer-Country']) : ''; // phpcs:ignore
+			$outputCloudFront = isset($_SERVER['HTTP_CLOUDFRONT_VIEWER_COUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CLOUDFRONT_VIEWER_COUNTRY']) : ''; // phpcs:ignore
 
 			if ($outputCloudFront) {
 				return $outputCloudFront;

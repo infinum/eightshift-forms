@@ -128,7 +128,7 @@ class Security implements SecurityInterface
 		}
 
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
-			$ipCloudFront = isset($_SERVER['CloudFront-Viewer-Address']) ? \sanitize_text_field(\wp_unslash($_SERVER['CloudFront-Viewer-Address'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$ipCloudFront = isset($_SERVER['HTTP_CLOUDFRONT_VIEWER_ADDRESS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CLOUDFRONT_VIEWER_ADDRESS'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ($ipCloudFront) {
 				$ip = \explode(':', $ipCloudFront)[0] ?? '';

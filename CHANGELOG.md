@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.1.2]
+
+### Fixed
+
+- CloudFront header is now used for security feature.
+
 ## [8.1.1]
 
 ### Fixed
@@ -1391,6 +1397,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.1.2]: https://github.com/infinum/eightshift-forms/compare/8.1.1...8.1.2
 [8.1.1]: https://github.com/infinum/eightshift-forms/compare/8.1.0...8.1.1
 [8.1.0]: https://github.com/infinum/eightshift-forms/compare/8.0.3...8.1.0
 [8.0.3]: https://github.com/infinum/eightshift-forms/compare/8.0.2...8.0.3
