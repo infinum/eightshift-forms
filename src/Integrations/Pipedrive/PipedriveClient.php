@@ -21,6 +21,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
@@ -595,15 +596,15 @@ class PipedriveClient implements PipedriveClientInterface
 
 		switch ($msg) {
 			case 'Name must be given.':
-				return 'pipedriveMissingName';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME;
 			case 'Organization name must be given.':
-				return 'pipedriveMissingOrganization';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION;
 			case 'Invalid organization ID provided':
-				return 'pipedriveWrongOrganizationId';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID;
 			case 'provided dataset is not valid':
-				return 'pipedriveWrongDataset';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

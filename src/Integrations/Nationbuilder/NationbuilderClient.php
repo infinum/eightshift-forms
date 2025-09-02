@@ -19,6 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * NationbuilderClient integration class.
@@ -429,13 +430,13 @@ class NationbuilderClient implements NationbuilderClientInterface
 
 		switch ($msg) {
 			case 'bad_request':
-				return 'mailerliteBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR;
 			case 'unauthorized':
-				return 'nationbuilderErrorSettingsMissing';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING;
 			case 'server_error':
-				return 'nationbuilderServerError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

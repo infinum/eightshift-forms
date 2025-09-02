@@ -20,6 +20,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * MailerliteClient integration class.
@@ -200,11 +201,11 @@ class MailerliteClient implements ClientInterface
 
 		switch ($msg) {
 			case 'Bad Request':
-				return 'mailerliteBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR;
 			case 'Unauthorized':
-				return 'mailerliteMissingConfig';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

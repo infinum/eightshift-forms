@@ -24,6 +24,8 @@ export class Form {
 
 		this.FORM_DATA = new FormData();
 
+		this.CONTROLLER = null;
+
 		this.FILTER_IS_STEPS_FINAL_SUBMIT = 'isStepsFinalSubmit';
 		this.FILTER_SKIP_FIELDS = 'skipFields';
 		this.FILTER_USE_ONLY_FIELDS = 'useOnlyFields';
@@ -95,7 +97,7 @@ export class Form {
 	 * Init only geolocation forms by ajax.
 	 * @param {object} formsElement Forms element.
 	 */
-	initGeolocationForm(formsElement) {
+	async initGeolocationForm(formsElement) {
 		// If you have geolocation configured on the form but global setting is turned off. Return first form.
 		if (!this.state.getStateGeolocationIsUsed()) {
 			const formId = formsElement?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
@@ -135,33 +137,36 @@ export class Form {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
 
-		// Get geolocation data from ajax to detect what we will remove from DOM.
-		fetch(this.state.getRestUrl('geolocation'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'geolocation', null);
+		try {
+			const response = await fetch(this.state.getRestUrl('geolocation'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null)?.data;
+			const parsedResponseData = parsedResponse?.data;
 
-				// Loop all form elements and remove all except the one we need.
-				[...forms].forEach((form) => {
-					if (form.getAttribute(this.state.getStateAttribute('formFid')) !== response?.[this.state.getStateResponseOutputKey('geoId')]) {
-						// Remove all forms except the one we got from ajax.
-						form.remove();
-					} else {
-						// Init form id that we got from ajax.
-						this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
+			// Loop all form elements and remove all except the one we need.
+			[...forms].forEach((form) => {
+				if (form.getAttribute(this.state.getStateAttribute('formFid')) !== parsedResponseData?.[this.state.getStateResponseOutputKey('geoId')]) {
+					// Remove all forms except the one we got from ajax.
+					form.remove();
+				} else {
+					// Init form id that we got from ajax.
+					this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
 
-						// Remove geolocation data attribute from forms element.
-						formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
-					}
-				});
-
-				// Remove loading class from forms element.
-				formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
+					// Remove geolocation data attribute from forms element.
+					formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
+				}
 			});
+
+			// Remove loading class from forms element.
+			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
+
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(null, 'geolocation', name, message));
+		}
 	}
 
 	/**
@@ -273,7 +278,7 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	formSubmit(formId, filter = {}) {
+	async formSubmit(formId, filter = {}) {
 		this.state.setStateFormIsProcessing(true, formId);
 
 		// Dispatch event.
@@ -282,6 +287,13 @@ export class Form {
 		this.setFormData(formId, filter);
 
 		const formType = this.state.getStateFormType(formId);
+
+		// Abort previous requests.
+		if (this.CONTROLLER) {
+			this.CONTROLLER?.abort();
+		}
+
+		this.CONTROLLER = new AbortController();
 
 		// Populate body data.
 		const body = {
@@ -293,6 +305,7 @@ export class Form {
 			body: this.FORM_DATA,
 			redirect: 'follow',
 			referrer: 'no-referrer',
+			signal: this?.CONTROLLER?.signal,
 		};
 
 		// Url for frontend forms.
@@ -310,34 +323,35 @@ export class Form {
 			body.headers['X-WP-Nonce'] = nonce;
 		}
 
-		const output = fetch(url, body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
+		try {
+			const response = await fetch(url, body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'formSubmit', formId);
+			this.formSubmitBefore(formId, parsedResponse);
 
-				this.formSubmitBefore(formId, response);
+			// On success state.
+			if (parsedResponse.status === 'success') {
+				this.formSubmitSuccess(formId, parsedResponse, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
+			} else {
+				this.formSubmitError(formId, parsedResponse, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
+			}
 
-				// On success state.
-				if (response.status === 'success') {
-					this.formSubmitSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
-				} else {
-					this.formSubmitError(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
-				}
+			this.formSubmitAfter(formId, parsedResponse);
 
-				this.formSubmitAfter(formId, response);
+			this.FORM_DATA = new FormData();
 
-				this.state.setStateFormIsProcessing(false, formId);
+			this.CONTROLLER = null;
 
-				return response;
-			});
+			return parsedResponse;
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
 
-		this.FORM_DATA = new FormData();
-
-		return output;
+			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmit', name, message));
+		} finally {
+			this.state.setStateFormIsProcessing(false, formId);
+		}
 	}
 
 	/**
@@ -348,7 +362,7 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	formSubmitStep(formId, filter = {}) {
+	async formSubmitStep(formId, filter = {}) {
 		this.state.setStateFormIsProcessing(true, formId);
 		this.setFormData(formId, filter);
 		this.setFormDataStep(formId);
@@ -374,20 +388,22 @@ export class Form {
 
 		const url = this.state.getRestUrl('validationStep');
 
-		fetch(url, body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'formSubmitStep', formId);
+		try {
+			const response = await fetch(url, body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'formSubmitStep', formId);
+			this.formSubmitBefore(formId, parsedResponse);
 
-				this.formSubmitBefore(formId, response);
-				this.steps.formStepSubmit(formId, response);
-				this.steps.formStepSubmitAfter(formId, response);
-				this.state.setStateFormIsProcessing(false, formId);
-			});
+			this.steps.formStepSubmit(formId, parsedResponse);
+			this.steps.formStepSubmitAfter(formId, parsedResponse);
+			this.state.setStateFormIsProcessing(false, formId);
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmitStep', name, message));
+		}
 
 		this.FORM_DATA = new FormData();
 	}
@@ -596,8 +612,12 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch (error) {
-				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			} catch ({name, message}) {
+				if (name === 'AbortError') {
+					return;
+				}
+
+				throw new Error(this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message));
 			}
 		});
 	}
@@ -629,8 +649,12 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch (error) {
-				this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
+			} catch ({name, message}) {
+				if (name === 'AbortError') {
+					return;
+				}
+
+				throw new Error(this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message));
 			}
 		});
 	}
@@ -1211,6 +1235,7 @@ export class Form {
 		const utils = this.utils;
 
 		const input = state.getStateElementInput(name, formId);
+		const field = state.getStateElementField(name, formId);
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
@@ -1233,9 +1258,9 @@ export class Form {
 
 					utils.setFieldFilledState(formId, name);
 				},
-				onOpen: function (selectedDates, dateStr, instance) {
+				onOpen: function () {
 					utils.setActiveState(formId, name);
-					instance?.altInput?.scrollIntoView({ behavior: 'smooth' });
+					utils.scrollAction(field);
 				},
 				onClose: function () {
 					utils.unsetActiveState(formId, name);
@@ -1335,7 +1360,9 @@ export class Form {
 
 			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
 			choices?.containerOuter?.element.addEventListener('focus', this.onSelectFocusEvent);
+			choices?.input?.element.addEventListener('focus', this.onSelectFocusEvent);
 			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
+			choices?.input?.element.addEventListener('blur', this.onBlurEvent);
 		});
 	}
 
@@ -1485,44 +1512,16 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch (e) {
+				} catch ({name, message}) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+					button.focus();
+					this.utils.setOnFocus(button);
 
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadSuccess"`);
+					throw new Error(`API response returned an error. Function used: "fileUploadSuccess" with error: "${name}" and a message: "${message}" for form id: "${formId}"`);
 				}
 			});
 
 			dropzone.on('error', (file) => {
-				const { response, status } = file.xhr;
-
-				let isFatalError = false;
-
-				let msg = 'serverError';
-
-				if (response.includes('wordfence') || response.includes('Wordfence')) {
-					msg = 'wordfenceFirewall';
-					isFatalError = true;
-				}
-
-				if (response.includes('cloudflare') || response.includes('Cloudflare') || response.includes('CloudFlare')) {
-					msg = 'cloudflareFirewall';
-					isFatalError = true;
-				}
-
-				if (response.includes('cloudfront') || response.includes('Cloudfront') || response.includes('CloudFront')) {
-					msg = 'cloudFrontFirewall';
-					isFatalError = true;
-				}
-
-				if (isFatalError) {
-					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
-
-					button.focus();
-					this.utils.setOnFocus(button);
-
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadErrorFirewall" with code: "${status}" and message: "${msg}"`);
-				}
-
 				try {
 					const response = JSON.parse(file.xhr.response);
 
@@ -1539,10 +1538,12 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch (e) {
+				} catch ({name, message}) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+					button.focus();
+					this.utils.setOnFocus(button);
 
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError"`);
+					throw new Error(`API response returned an error. Function used: "fileUploadError" with error: "${name}" and a message: "${message}" for form id: "${formId}"`);
 				}
 			});
 
@@ -1580,7 +1581,9 @@ export class Form {
 
 				choices?.passedElement?.element?.removeEventListener('change', this.onSelectChangeEvent);
 				choices?.containerOuter?.element.removeEventListener('focus', this.onFocusEvent);
+				choices?.input?.element.removeEventListener('focus', this.onSelectFocusEvent);
 				choices?.containerOuter?.element.removeEventListener('blur', this.onBlurEvent);
+				choices?.input?.element.removeEventListener('blur', this.onBlurEvent);
 				choices?.destroy();
 			});
 
@@ -1736,7 +1739,7 @@ export class Form {
 						[this.FILTER_SKIP_FIELDS]: [...this.conditionalTags.getIgnoreFields(formId)],
 					};
 
-					debounce(this.formSubmitStep(formId, filterNext), 100);
+					this.formSubmitStep(formId, filterNext);
 					break;
 				case this.steps.STEP_DIRECTION_PREV:
 					this.steps.goToPrevStep(formId);
@@ -1752,7 +1755,7 @@ export class Form {
 					if (this.state.getStateCaptchaIsUsed()) {
 						this.runFormCaptcha(formId, filterFinal);
 					} else {
-						debounce(this.formSubmit(formId, filterFinal), 100);
+						this.formSubmit(formId, filterFinal);
 					}
 					break;
 			}
@@ -1767,7 +1770,7 @@ export class Form {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId, filterNormal);
 			} else {
-				debounce(this.formSubmit(formId, filterNormal), 100);
+				this.formSubmit(formId, filterNormal);
 			}
 		}
 	};
@@ -1876,17 +1879,18 @@ export class Form {
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
-			debounce(
-				this.formSubmit(formId, {
-					[this.FILTER_USE_ONLY_FIELDS]: [name],
-				}),
-				100,
-			);
+			this.formSubmit(formId, {
+				[this.FILTER_USE_ONLY_FIELDS]: [name],
+			});
 		}
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(this.formSubmit(formId), 100);
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 
@@ -1905,7 +1909,8 @@ export class Form {
 		const custom = this.state.getStateElementCustom(name, formId);
 
 		custom?.showDropdown();
-		custom?.containerOuter?.element?.scrollIntoView({ behavior: 'smooth' });
+
+		this.utils.scrollAction(field);
 
 		this.utils.setOnFocus(event.target);
 	};
@@ -1927,7 +1932,7 @@ export class Form {
 
 		switch (type) {
 			case 'checkbox':
-				this.utils.setManualCheckboxValue(formId, name, {[value]: checked ? value : ''});
+				this.utils.setManualCheckboxValue(formId, name, { [value]: checked ? value : '' });
 				break;
 			case 'radio':
 				this.utils.setManualRadioValue(formId, name, value);
@@ -1948,12 +1953,9 @@ export class Form {
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
-			debounce(
-				this.formSubmit(formId, {
-					[this.FILTER_USE_ONLY_FIELDS]: [name],
-				}),
-				100,
-			);
+			this.formSubmit(formId, {
+				[this.FILTER_USE_ONLY_FIELDS]: [name],
+			});
 		}
 
 		// Used only on frontend for single submit.
@@ -1962,7 +1964,11 @@ export class Form {
 			this.state.getStateFormConfigUseSingleSubmit(formId) &&
 			(type === 'range' || type === 'number' || type === 'checkbox' || type === 'radio')
 		) {
-			debounce(this.formSubmit(formId), 100);
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 
@@ -2004,7 +2010,11 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(this.formSubmit(formId), 100);
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 

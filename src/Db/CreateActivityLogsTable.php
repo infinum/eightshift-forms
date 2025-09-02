@@ -24,7 +24,7 @@ class CreateActivityLogsTable
 	 */
 	public static function createTable(): void
 	{
-		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php');
+		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php'); // @phpstan-ignore-line
 
 		global $wpdb;
 

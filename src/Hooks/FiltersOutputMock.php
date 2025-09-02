@@ -222,7 +222,7 @@ final class FiltersOutputMock
 	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
 	 *
-	 * @return array<string, array<mixed>>
+	 * @return array<mixed>
 	 */
 	public static function getTrackingAdditionalDataFilterValue(string $type, string $formId): array
 	{

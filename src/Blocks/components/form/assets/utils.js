@@ -177,7 +177,7 @@ export class Utils {
 		const type = this.state.getStateElementTypeField(name, formId);
 
 		if (field) {
-			field.scrollIntoView({ block: 'start', behavior: 'smooth' });
+			this.scrollAction(field);
 
 			switch (type) {
 				case 'file':
@@ -208,14 +208,21 @@ export class Utils {
 	}
 
 	/**
-	 * Scroll to global msg.
+	 * Scroll to element action.
 	 *
-	 * @param {string} formId Form Id.
+	 * @param {Element} element Element to scroll to.
+	 * @param {object} options Scroll options.
 	 *
 	 * @returns {void}
 	 */
-	scrollToGlobalMsg(formId) {
-		this.state.getStateFormGlobalMsgElement(formId).scrollIntoView({ block: 'start', behavior: 'smooth' });
+	scrollAction(
+		element,
+		options = {
+			behavior: 'smooth',
+			block: 'start',
+		}
+	) {
+		element?.scrollIntoView(options);
 	}
 
 	/**
@@ -362,7 +369,7 @@ export class Utils {
 			messageContainer.dataset.status = status;
 
 			if (!this.state.getStateSettingsDisableScrollToGlobalMsgOnSuccess(formId)) {
-				this.scrollToGlobalMsg(formId);
+				this.scrollAction(this.state.getStateFormGlobalMsgElement(formId));
 			}
 
 			const headingSuccess = this.state.getStateFormGlobalMsgHeadingSuccess(formId);
@@ -766,139 +773,41 @@ export class Utils {
 	}
 
 	/**
-	 * Actions to run if api response returns wrong content type.
+	 * Actions to run if api response returns an error.
 	 *
-	 * This can happen if the API returns HTML or something else that we don't expect.
-	 * Cloudflare security can return HTML.
-	 *
-	 * @param {mixed} response Api response.
-	 * @param {string} type Function used.
 	 * @param {string} formId Form Id.
+	 * @param {string} actionName Action name.
+	 * @param {string} errorName Error name.
+	 * @param {string} errorMessage Error message.
 	 *
-	 * @throws Error.
-	 *
-	 * @returns {void}
+	 * @returns {string}
 	 */
-	formSubmitErrorContentType(response, type, formId) {
-		const contentType = response?.headers?.get('content-type');
-		const status = response?.status;
+	formSubmitResponseError(formId, actionName, errorName, errorMessage) {
+		if (formId !== null) {
+			// Clear all errors.
+			this.resetErrors(formId);
 
-		// This can happen if the API returns HTML or something else that we don't expect.
-		if ((contentType && contentType.indexOf('application/json') === -1) || (status >= 500 && status <= 599)) {
-			if (formId !== null) {
-				// Clear all errors.
-				this.resetErrors(formId);
+			// Remove loader.
+			this.hideLoader(formId);
 
-				// Remove loader.
-				this.hideLoader(formId);
+			// Set global msg.
+			this.setGlobalMsg(formId, this.state.getStateSettingsFormServerErrorMsg(), 'error');
 
-				// Set global msg.
-				this.setGlobalMsg(formId, this.state.getStateSettingsFormServerErrorMsg(), 'error');
-
-				// Reset timeout for after each submit.
-				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
-					clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
-				}
-
-				// Hide global msg in any case after some time.
-				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
-					() => {
-						this.unsetGlobalMsg(formId);
-					},
-					parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
-				);
+			// Reset timeout for after each submit.
+			if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
+				clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 			}
 
-			// Throw error.
-			if (status >= 500 && status <= 599) {
-				throw new Error(`API response returned the server error for this request. Function used: "${type}" with status "${status}"`);
-			} else {
-				throw new Error(`API response returned the wrong content type for this request. Function used: "${type} with status "${status}"`);
-			}
-		}
-	}
-
-	/**
-	 * Actions to run if api response returns JSON but not formatted correctly.
-	 *
-	 * This can happen if the API returns JSON but it was malformed for this request like containing debug log or PHP warnings.
-	 *
-	 * @param {mixed} response Api response.
-	 * @param {string} type Function used.
-	 * @param {string} formId Form Id.
-	 *
-	 * @throws Error.
-	 *
-	 * @returns {void}
-	 */
-	formSubmitIsJsonString(response, type, formId) {
-		try {
-			return JSON.parse(response);
-		} catch (e) {
-			if (formId !== null) {
-				// Clear all errors.
-				this.resetErrors(formId);
-
-				// Remove loader.
-				this.hideLoader(formId);
-
-				// Set global msg.
-				this.setGlobalMsg(formId, this.state.getStateSettingsFormServerErrorMsg(), 'error');
-
-				// Reset timeout after each submit.
-				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
-					clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
-				}
-
-				// Hide global msg in any case after some time.
-				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
-					() => {
-						this.unsetGlobalMsg(formId);
-					},
-					parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
-				);
-			}
-
-			throw new Error(`API response returned JSON but it was malformed for this request. Function used: "${type}"`);
-		}
-	}
-
-	/**
-	 * Actions to run under try/catch block for any fatal issues.
-	 *
-	 * @param {string} msg Error msg text.
-	 * @param {string} type Function used.
-	 * @param {string} error Error object.
-	 * @param {string} formId Form Id.
-	 *
-	 * @throws Error.
-	 *
-	 * @returns {void}
-	 */
-	formSubmitErrorFatal(msg, type, error, formId) {
-		// Clear all errors.
-		this.resetErrors(formId);
-
-		// Remove loader.
-		this.hideLoader(formId);
-
-		// Set global msg.
-		this.setGlobalMsg(formId, msg ?? this.state.getStateSettingsFormServerErrorMsg(), 'error');
-
-		// Reset timeout for after each submit.
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
-			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+			// Hide global msg in any case after some time.
+			this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
+				() => {
+					this.unsetGlobalMsg(formId);
+				},
+				parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
+			);
 		}
 
-		// Hide global msg in any case after some time.
-		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
-			() => {
-				this.unsetGlobalMsg(formId);
-			},
-			parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
-		);
-
-		throw new Error(`API response returned fatal error. Function used: "${type}. ${error}"`);
+		return (`API response returned an error. Function used: "${actionName}" with error: "${errorName}" and a message: "${errorMessage}" for form id: "${formId}"`);
 	}
 
 	/**
@@ -1804,8 +1713,8 @@ export class Utils {
 			scrollToElement: (formId, name) => {
 				this.scrollToElement(formId, name);
 			},
-			scrollToGlobalMsg: (formId) => {
-				this.scrollToGlobalMsg(formId);
+			scrollAction: (element) => {
+				this.scrollAction(element);
 			},
 			showLoader: (formId) => {
 				this.showLoader(formId);
@@ -1867,14 +1776,8 @@ export class Utils {
 			getFileNameFromFileObject: (file) => {
 				this.getFileNameFromFileObject(file);
 			},
-			formSubmitErrorContentType: (response, type, formId) => {
-				this.formSubmitErrorContentType(response, type, formId);
-			},
-			formSubmitIsJsonString: (response, type, formId) => {
-				this.formSubmitIsJsonString(response, type, formId);
-			},
-			formSubmitErrorFatal: (msg, type, error, formId) => {
-				this.formSubmitErrorFatal(msg, type, error, formId);
+			formSubmitResponseError: (formId, actionName, errorName, errorMessage) => {
+				this.formSubmitResponseError(formId, actionName, errorName, errorMessage);
 			},
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();

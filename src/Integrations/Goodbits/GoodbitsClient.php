@@ -17,7 +17,8 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
+use Exception;
 
 /**
  * GoodbitsClient integration class.
@@ -42,10 +43,10 @@ class GoodbitsClient implements ClientInterface
 	{
 		$key = $this->getApiKey();
 
-		if (\is_string($key) && Helpers::isJson($key)) {
-			$key = \json_decode($key);
-
+		try {
 			$output = [];
+
+			$key = \json_decode($key);
 
 			foreach ($key as $itemKey => $itemValue) {
 				$output[(string) $itemValue] = [
@@ -55,14 +56,14 @@ class GoodbitsClient implements ClientInterface
 			}
 
 			return $output;
+		} catch (Exception $e) {
+			return [
+				'Goodbits' => [
+					'title' => \__('Goodbits', 'eightshift-forms'),
+					'id' => $key,
+				],
+			];
 		}
-
-		return [
-			'Goodbits' => [
-				'title' => \__('Goodbits', 'eightshift-forms'),
-				'id' => $key,
-			],
-		];
 	}
 
 	/**
@@ -187,11 +188,11 @@ class GoodbitsClient implements ClientInterface
 
 		switch ($msg) {
 			case 'Bad Request':
-				return 'goodbitsBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR;
 			case 'Invalid API Key has been submitted, please refer to your API key under your settings':
-				return 'goodbitsMissingConfig';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

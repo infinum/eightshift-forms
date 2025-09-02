@@ -21,6 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * WorkableClient integration class.
@@ -205,13 +206,13 @@ class WorkableClient implements ClientInterface
 
 		switch ($msg) {
 			case 'Bad Request':
-				return 'workableBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR;
 			case 'position is draft or archived':
-				return 'workableArchivedJobError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR;
 			case 'Filename should contain less characters':
-				return 'workableTooLongFileNameError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

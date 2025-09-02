@@ -20,6 +20,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * TalentlyftClient integration class.
@@ -196,11 +197,11 @@ class TalentlyftClient implements ClientInterface
 
 		switch ($msg) {
 			case 'An error has occurred':
-				return 'talentlyftBadRequestError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR;
 			case 'Validation Failed':
-				return 'talentlyftValidationError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR;
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 
@@ -228,7 +229,7 @@ class TalentlyftClient implements ClientInterface
 			\preg_match_all("/(The )(\w*)( field is required.)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
 
 			if ($matchesReq) {
-				$key = $matchesReq[0][2] ?? '';
+				$key = $matchesReq[0][2] ?: '';
 				if ($key) {
 					$output["q_{$key}"] = 'validationRequired';
 				}

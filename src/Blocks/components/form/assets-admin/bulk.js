@@ -54,9 +54,13 @@ export class Bulk {
 			return;
 		}
 
+		this.submit(event.target);
+	};
+
+	async submit(target) {
 		const formData = new FormData();
 
-		const field = this.state.getFormFieldElementByChild(event.target);
+		const field = this.state.getFormFieldElementByChild(target);
 		const type = field?.getAttribute(this.state.getStateAttribute('bulkType'));
 
 		// Can be fake to prevent submit and use button toggles for other things like export.
@@ -82,32 +86,33 @@ export class Bulk {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('bulk'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'bulk', null);
+		try {
+			const response = await fetch(this.state.getRestUrl('bulk'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'bulk', null);
+			const {
+				message,
+				status,
+			} = parsedResponse;
 
-				const {
-					message,
-					status,
-				} = response;
+			this.utils.hideLoader(this.FORM_ID);
+			this.utils.setGlobalMsg(this.FORM_ID, message, status);
 
-				this.utils.hideLoader(this.FORM_ID);
-				this.utils.setGlobalMsg(this.FORM_ID, message, status);
+			if (status === 'success') {
+				setTimeout(() => {
+					location.reload();
+				}, 1000);
+			}
 
-				if (response.status === 'success') {
-					setTimeout(() => {
-						location.reload();
-					}, 1000);
-				}
+			this.hideGlobalMsg();
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
 
-				this.hideGlobalMsg();
-			});
-	};
+			throw new Error(this.utils.formSubmitResponseError(this.FORM_ID, 'adminBulk', name, message));
+		}
+	}
 
 	toggleAllOtherButtons() {
 		const items = document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems'));

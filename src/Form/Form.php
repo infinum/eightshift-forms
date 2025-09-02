@@ -57,9 +57,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	/**
 	 * Modify form component original attributes before final output in form.
 	 *
-	 * @param array<string, mixed> $attributes Attributes to update.
+	 * @param array<mixed> $attributes Attributes to update.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<mixed>
 	 */
 	public function updateFormComponentAttributesOutput(array $attributes): array
 	{
@@ -333,7 +333,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			];
 		}
 
-		return \array_values($output);
+		return \array_values($output); // @phpstan-ignore-line
 	}
 
 	/**

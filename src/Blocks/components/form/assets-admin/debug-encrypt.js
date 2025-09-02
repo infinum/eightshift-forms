@@ -19,7 +19,11 @@ export class DebugEncrypt {
 	onClick = (event) => {
 		event.preventDefault();
 
-		const formId = this.state.getFormIdByElement(event.target);
+		this.submit(event.target);
+	};
+
+	async submit(target) {
+		const formId = this.state.getFormIdByElement(target);
 
 		const formData = new FormData();
 
@@ -41,33 +45,35 @@ export class DebugEncrypt {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl('debugEncrypt'), body)
-			.then((response) => {
-				this.utils.formSubmitErrorContentType(response, 'debugEncrypt', formId);
+		try {
+			const response = await fetch(this.state.getRestUrl('debugEncrypt'), body);
+			const parsedResponse = await response.json();
 
-				return response.text();
-			})
-			.then((responseData) => {
-				const response = this.utils.formSubmitIsJsonString(responseData, 'debugEncrypt', formId);
+			const {
+				message,
+				data,
+				status,
+			} = parsedResponse;
 
-				const {
-					message,
-					data,
-					status,
-				} = response;
+			this.utils.hideLoader(formId);
+			this.utils.setGlobalMsg(formId, message, status);
 
-				this.utils.hideLoader(formId);
-				this.utils.setGlobalMsg(formId, message, status);
+			const encryptValue = data?.[this.state.getStateResponseOutputKey('adminEncrypt')];
 
-				const encryptValue = data?.[this.state.getStateResponseOutputKey('adminEncrypt')];
+			if (encryptValue) {
+				document.querySelector(this.outputSelector).value = encryptValue;
+			}
 
-				if (encryptValue) {
-					document.querySelector(this.outputSelector).value = encryptValue;
-				}
+			setTimeout(() => {
+				this.utils.unsetGlobalMsg(formId);
+			}, 6000);
 
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(formId);
-				}, 6000);
-		});
+		} catch ({name, message}) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'adminDebugEncrypt', name, message));
+		}
 	};
 }

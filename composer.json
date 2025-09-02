@@ -29,19 +29,19 @@
 	"require-dev": {
 		"brain/faker": "dev-master",
 		"brain/monkey": "^2.6.2",
-		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "1.1.2",
 		"infinum/eightshift-coding-standards": "3.0.0",
 		"php-parallel-lint/php-parallel-lint": "v1.4.0",
-		"pestphp/pest": "^v1.23.1",
-		"php-stubs/wordpress-stubs": "v6.6.2",
-		"phpunit/phpunit": "^9.6.23",
-		"szepeviktor/phpstan-wordpress": "^v1.3.5",
-		"wp-cli/wp-cli": "^v2.11.0"
+		"pestphp/pest": "4.0.4",
+		"php-stubs/wordpress-stubs": "6.8.2",
+		"phpunit/phpunit": "^12.3.7",
+		"szepeviktor/phpstan-wordpress": "2.0.2",
+		"wp-cli/wp-cli": "2.12.0"
 	},
 	"require": {
 		"php": ">=8.3",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-libs": "^10.12.0"
+		"infinum/eightshift-libs": "^10.12.1"
 	},
 	"autoload": {
 		"psr-4": {

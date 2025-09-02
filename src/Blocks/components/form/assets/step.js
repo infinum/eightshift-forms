@@ -219,7 +219,7 @@ export class Steps {
 		nextStepElement?.setAttribute('aria-hidden', 'false');
 
 		// Scroll to the next step.
-		nextStepElement?.scrollIntoView({ behavior: 'smooth' });
+		this.utils.scrollAction(nextStepElement);
 
 		// Reset filled steps.
 		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
