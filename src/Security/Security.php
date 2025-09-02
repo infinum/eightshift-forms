@@ -120,14 +120,18 @@ class Security implements SecurityInterface
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
-			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$ipCloudflare = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+			if ($ipCloudflare) {
+				$ip = $ipCloudflare;
+			}
 		}
 
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
-			$ip = isset($_SERVER['CloudFront-Viewer-Address']) ? \sanitize_text_field(\wp_unslash($_SERVER['CloudFront-Viewer-Address'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$ipCloudFront = isset($_SERVER['CloudFront-Viewer-Address']) ? \sanitize_text_field(\wp_unslash($_SERVER['CloudFront-Viewer-Address'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-			if ($ip) {
-				$ip = \explode(':', $ip)[0] ?? '';
+			if ($ipCloudFront) {
+				$ip = \explode(':', $ipCloudFront)[0] ?? '';
 			}
 		}
 
