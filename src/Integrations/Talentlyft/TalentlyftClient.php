@@ -390,7 +390,7 @@ class TalentlyftClient implements ClientInterface
 					if (\in_array($type, ['radio', 'select', 'checkbox'], true)) {
 						$outputCustom[] = [
 							'Id' => (int) $name,
-							'Choices' => $value
+							'Choices' => \is_array($value) ? $value : [$value],
 						];
 					} else {
 						$outputCustom[] = [
@@ -398,6 +398,7 @@ class TalentlyftClient implements ClientInterface
 							'Body' => $value,
 						];
 					}
+
 					break;
 				case 'address':
 					$output[$name] = [
