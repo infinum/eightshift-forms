@@ -664,6 +664,7 @@
 			"trackingAdditionalData": "trackingAdditionalData",
 			"hideGlobalMsgOnSuccess": "hideGlobalMsgOnSuccess",
 			"hideFormOnSuccess": "hideFormOnSuccess",
+			"skipResetFormOnSuccess": "skipResetFormOnSuccess",
 			"variation": "variation",
 			"entry": "entry",
 			"formId": "formId",

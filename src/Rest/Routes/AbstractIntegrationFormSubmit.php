@@ -938,6 +938,12 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			$output['public'][UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
 		}
 
+		// Skip reset form on success.
+		$skipResetFormOnSuccess = SettingsHelpers::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, $formId);
+		if ($skipResetFormOnSuccess) {
+			$output['public'][UtilsHelper::getStateResponseOutputKey('skipResetFormOnSuccess')] = $skipResetFormOnSuccess;
+		}
+
 		return $output;
 	}
 
