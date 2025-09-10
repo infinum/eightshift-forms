@@ -88,6 +88,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public const SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
 
 	/**
+	 * Skip reset form on success key.
+	 */
+	public const SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY = 'skip-reset-form-on-success';
+
+	/**
 	 * Increment meta key.
 	 *
 	 * @var string
@@ -212,7 +217,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
-										'checkboxHelp' => \__('Usually used in combination with single submit for calculators.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Hide global message after successful submission.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
 										'checkboxSingleSubmit' => true,
@@ -228,8 +233,25 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Hide form after successful submission.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Skip reset form on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Skip form reset too original state after successful submission.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									],
@@ -357,6 +379,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'introSubtitle' => \__('This option may create a large number of request to your server.<br /> Use with caution!', 'eightshift-forms'),
 								'introIsHighlighted' => true,
 								'introIsHighlightedImportant' => true,
+							],
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('Once submitted the form will not be reset to the original state.', 'eightshift-forms'),
+								'introIsHighlighted' => true,
 							],
 							[
 								'component' => 'intro',

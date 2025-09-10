@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.1.4]
+
+### Added
+
+- Option to skip form reset on success.
+
+### Fixed
+
+- Single submit logic for the forms on rating and input number field.
+
 ## [8.1.3]
 
 ### Fixed
@@ -1403,6 +1413,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.1.4]: https://github.com/infinum/eightshift-forms/compare/8.1.3...8.1.4
 [8.1.3]: https://github.com/infinum/eightshift-forms/compare/8.1.2...8.1.3
 [8.1.2]: https://github.com/infinum/eightshift-forms/compare/8.1.1...8.1.2
 [8.1.1]: https://github.com/infinum/eightshift-forms/compare/8.1.0...8.1.1

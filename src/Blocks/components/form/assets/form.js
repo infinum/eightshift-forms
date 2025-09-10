@@ -461,8 +461,11 @@ export class Form {
 				// Redirect to url and update url params from from data.
 				this.utils.redirectToUrlByReference(formId, data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]);
 			} else {
-				// Clear form values.
-				this.utils.resetForm(formId);
+				// Hide form on success.
+				if (!data?.[this.state.getStateResponseOutputKey('skipResetFormOnSuccess')]) {
+					// Clear form values.
+					this.utils.resetForm(formId);
+				}
 
 				// Set global msg.
 				this.utils.setGlobalMsg(formId, message, status, data);
@@ -1927,6 +1930,7 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const type = this.state.getStateElementTypeField(name, formId);
+		const typeCustom = this.state.getStateElementTypeCustom(name, formId);
 
 		const { value, checked } = event?.target;
 
@@ -1962,7 +1966,7 @@ export class Form {
 		if (
 			!this.state.getStateConfigIsAdmin() &&
 			this.state.getStateFormConfigUseSingleSubmit(formId) &&
-			(type === 'range' || type === 'number' || type === 'checkbox' || type === 'radio')
+			(typeCustom === 'range' || typeCustom === 'number' || typeCustom === 'checkbox' || typeCustom === 'radio' || typeCustom === 'rating')
 		) {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);
