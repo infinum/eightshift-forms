@@ -155,6 +155,7 @@ final class Filters
 			'blocks' => [
 				'allowedBlocks',
 				'additionalBlocks',
+				'additionalAddonBlocks',
 				'mediaBreakpoints',
 				'tailwindSelectors',
 			],
