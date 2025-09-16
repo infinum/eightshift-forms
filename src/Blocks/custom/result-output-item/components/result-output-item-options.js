@@ -24,7 +24,7 @@ export const ResultOutputItemOptions = ({
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const resultOutputItemName = checkAttr('resultOutputItemName', attributes, manifest);
-	const resultOutputItemValue = checkAttr('resultOutputItemValue', attributes, manifest);
+	const resultOutputItemValueStart = checkAttr('resultOutputItemValue', attributes, manifest);
 	const resultOutputItemValueEnd = checkAttr('resultOutputItemValueEnd', attributes, manifest);
 	const resultOutputItemOperator = checkAttr('resultOutputItemOperator', attributes, manifest);
 
@@ -69,7 +69,7 @@ export const ResultOutputItemOptions = ({
 					/>
 				}
 				help={showEndValue && __('Start value must be number.', 'eightshift-forms')}
-				value={resultOutputItemValue}
+				value={resultOutputItemValueStart}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
 			/>
 

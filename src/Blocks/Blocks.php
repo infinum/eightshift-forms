@@ -68,6 +68,7 @@ class Blocks extends AbstractBlocks
 			return \array_values(\array_unique(\array_merge(
 				$allowedBlockTypes,
 				$settings['other'],
+				\apply_filters(HooksHelpers::getFilterName(['blocks', 'additionalAddonBlocks']), [])
 			)));
 		}
 

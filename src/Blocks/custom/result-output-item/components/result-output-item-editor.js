@@ -13,15 +13,15 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 	} = attributes;
 
 	const resultOutputItemName = checkAttr('resultOutputItemName', attributes, manifest);
-	const resultOutputItemValue = checkAttr('resultOutputItemValue', attributes, manifest);
+	const resultOutputItemValueStart = checkAttr('resultOutputItemValue', attributes, manifest);
 	const resultOutputItemValueEnd = checkAttr('resultOutputItemValueEnd', attributes, manifest);
 	const resultOutputItemOperator = checkAttr('resultOutputItemOperator', attributes, manifest);
 
-	const [isValidConfiguration, setIsValidConfiguration] = useState(resultOutputItemName && resultOutputItemValue);
+	const [isValidConfiguration, setIsValidConfiguration] = useState(resultOutputItemName && resultOutputItemValueStart);
 
 	useEffect(() => {
-		setIsValidConfiguration(resultOutputItemName && resultOutputItemValue);
-	}, [resultOutputItemName, resultOutputItemValue]);
+		setIsValidConfiguration(resultOutputItemName && resultOutputItemValueStart);
+	}, [resultOutputItemName, resultOutputItemValueStart]);
 
 	const operatorLabel = {
 		...CONDITIONAL_TAGS_OPERATORS_LABELS,
@@ -34,21 +34,21 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 		resultOutputItemOperator === globalManifest.comparator.GT ||
 		resultOutputItemOperator === globalManifest.comparator.LT
 	) {
-		outputName = `is ${operatorLabel} ${resultOutputItemValue}`;
+		outputName = `is ${operatorLabel} ${resultOutputItemValueStart}`;
 	} else if (
 		resultOutputItemOperator === globalManifest.comparator.GTE ||
 		resultOutputItemOperator === globalManifest.comparator.LTE
 	) {
-		outputName = `is ${operatorLabel} to ${resultOutputItemValue}`;
+		outputName = `is ${operatorLabel} to ${resultOutputItemValueStart}`;
 	} else if (
 		resultOutputItemOperator === globalManifest.comparatorExtended.B ||
 		resultOutputItemOperator === globalManifest.comparatorExtended.BS ||
 		resultOutputItemOperator === globalManifest.comparatorExtended.BN ||
 		resultOutputItemOperator === globalManifest.comparatorExtended.BNS
 	) {
-		outputName = `is ${operatorLabel} between ${resultOutputItemValue} and ${resultOutputItemValueEnd}`;
+		outputName = `is ${operatorLabel} between ${resultOutputItemValueStart} and ${resultOutputItemValueEnd}`;
 	} else {
-		outputName = `${operatorLabel} ${resultOutputItemValue}`;
+		outputName = `${operatorLabel} ${resultOutputItemValueStart}`;
 	}
 
 	return (

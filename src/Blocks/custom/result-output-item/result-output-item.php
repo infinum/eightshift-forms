@@ -13,17 +13,17 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 $blockClass = $attributes['blockClass'] ?? '';
 
 $resultOutputItemName = Helpers::checkAttr('resultOutputItemName', $attributes, $manifest);
-$resultOutputItemValue = Helpers::checkAttr('resultOutputItemValue', $attributes, $manifest);
+$resultOutputItemValueStart = Helpers::checkAttr('resultOutputItemValue', $attributes, $manifest);
 $resultOutputItemValueEnd = Helpers::checkAttr('resultOutputItemValueEnd', $attributes, $manifest);
 $resultOutputItemOperator = Helpers::checkAttr('resultOutputItemOperator', $attributes, $manifest);
 
-if (!$resultOutputItemName || $resultOutputItemValue === '') {
+if (!$resultOutputItemName || $resultOutputItemValueStart === '') {
 	return;
 }
 
 $resultAttrs = [
 	UtilsHelper::getStateAttribute('resultOutputItemKey') => esc_attr($resultOutputItemName),
-	UtilsHelper::getStateAttribute('resultOutputItemValue') => esc_attr($resultOutputItemValue),
+	UtilsHelper::getStateAttribute('resultOutputItemValueStart') => esc_attr($resultOutputItemValueStart),
 	UtilsHelper::getStateAttribute('resultOutputItemValueEnd') => esc_attr($resultOutputItemValueEnd),
 	UtilsHelper::getStateAttribute('resultOutputItemOperator') => esc_attr($resultOutputItemOperator),
 ];
@@ -33,7 +33,7 @@ $resultClass = [
 	UtilsHelper::getStateSelector('resultOutputItem'),
 ];
 
-$resultOutputData = FormsHelper::checkResultOutputSuccess($resultOutputItemName, $resultOutputItemOperator, $resultOutputItemValue, $resultOutputItemValue, $resultOutputItemValueEnd);
+$resultOutputData = FormsHelper::checkResultOutputSuccess($resultOutputItemName, $resultOutputItemOperator, $resultOutputItemValueStart, $resultOutputItemValueEnd);
 
 if ($resultOutputData['isRedirectPage']) {
 	if (!$resultOutputData['showOutput']) {

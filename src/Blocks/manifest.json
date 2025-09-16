@@ -638,7 +638,7 @@
 			"hubspotTypeId": "data-hubspot-type-id",
 
 			"resultOutputItemKey": "data-result-output-item-key",
-			"resultOutputItemValue": "data-result-output-item-value",
+			"resultOutputItemValueStart": "data-result-output-item-value-start",
 			"resultOutputItemValueEnd": "data-result-output-item-value-end",
 			"resultOutputItemOperator": "data-result-output-item-operator",
 			"resultOutputPart": "data-result-output-part",
