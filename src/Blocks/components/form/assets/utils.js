@@ -1484,10 +1484,10 @@ export class Utils {
 
 				itemElements.forEach((item) => {
 					const operator = item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || globalManifest.comparator.IS;
-					const startValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValue'));
+					const startValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValueStart'));
 					const endValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValueEnd'));
 
-					if (this.getComparator()[operator](String(value), String(startValue), String(endValue))) {
+					if (this.getComparator()[operator](String(startValue), String(value), String(endValue))) {
 						item.classList.remove(this.state.getStateSelector('isHidden'));
 					}
 				});
@@ -1585,19 +1585,22 @@ export class Utils {
 		return {
 			[globalManifest.comparator.IS]: (start, value) => value === start,
 			[globalManifest.comparator.ISN]: (start, value) => value !== start,
-			[globalManifest.comparator.GT]: (start, value) => parseFloat(String(start)) < parseFloat(String(value)),
-			[globalManifest.comparator.GTE]: (start, value) => parseFloat(String(start)) <= parseFloat(String(value)),
-			[globalManifest.comparator.LT]: (start, value) => parseFloat(String(start)) > parseFloat(String(value)),
-			[globalManifest.comparator.LTE]: (start, value) => parseFloat(String(start)) >= parseFloat(String(value)),
-			[globalManifest.comparator.C]: (start, value) => start.includes(value),
-			[globalManifest.comparator.CN]: (start, value) => !start.includes(value),
-			[globalManifest.comparator.SW]: (start, value) => start.startsWith(value),
-			[globalManifest.comparator.EW]: (start, value) => start.endsWith(value),
-			[globalManifest.comparatorExtended.B]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) && parseFloat(String(value)) < parseFloat(String(end)), // eslint-disable-line max-len
-			[globalManifest.comparatorExtended.BS]: (start, value, end) => parseFloat(String(start)) <= parseFloat(String(value)) && parseFloat(String(value)) <= parseFloat(String(end)), // eslint-disable-line max-len
-			[globalManifest.comparatorExtended.BN]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(value)) > parseFloat(String(end)), // eslint-disable-line max-len
+			[globalManifest.comparator.GT]: (start, value) => parseFloat(String(value)) > parseFloat(String(start)),
+			[globalManifest.comparator.GTE]: (start, value) => parseFloat(String(value)) >= parseFloat(String(start)),
+			[globalManifest.comparator.LT]: (start, value) => parseFloat(String(value)) < parseFloat(String(start)),
+			[globalManifest.comparator.LTE]: (start, value) => parseFloat(String(value)) <= parseFloat(String(start)),
+			[globalManifest.comparator.C]: (start, value) => String(value).includes(String(start)),
+			[globalManifest.comparator.CN]: (start, value) => !String(value).includes(String(start)),
+			[globalManifest.comparator.SW]: (start, value) => String(value).startsWith(String(start)),
+			[globalManifest.comparator.EW]: (start, value) => String(value).endsWith(String(start)),
+			[globalManifest.comparatorExtended.B]: (start, value, end) =>
+				parseFloat(String(value)) > parseFloat(String(start)) && parseFloat(String(value)) < parseFloat(String(end)),
+			[globalManifest.comparatorExtended.BS]: (start, value, end) =>
+				parseFloat(String(value)) >= parseFloat(String(start)) && parseFloat(String(value)) <= parseFloat(String(end)),
+			[globalManifest.comparatorExtended.BN]: (start, value, end) =>
+				parseFloat(String(value)) < parseFloat(String(start)) || parseFloat(String(value)) > parseFloat(String(end)),
 			[globalManifest.comparatorExtended.BNS]: (start, value, end) =>
-				parseFloat(String(start)) <= parseFloat(String(value)) || parseFloat(String(value)) >= parseFloat(String(end)),
+				parseFloat(String(value)) <= parseFloat(String(start)) || parseFloat(String(value)) >= parseFloat(String(end)),
 		};
 	}
 

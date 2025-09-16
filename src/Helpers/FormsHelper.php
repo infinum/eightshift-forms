@@ -67,27 +67,29 @@ final class FormsHelper
 			case $operator['ISN']:
 				return $value !== $start;
 			case $operator['GT']:
-				return \floatval($start) < \floatval($value);
+				return \floatval($value) > \floatval($start);
 			case $operator['GTE']:
-				return \floatval($start) <= \floatval($value);
+				return \floatval($value) >= \floatval($start);
 			case $operator['LT']:
-				return \floatval($start) > \floatval($value);
+				return \floatval($value) < \floatval($start);
 			case $operator['LTE']:
-				return \floatval($start) >= \floatval($value);
+				return \floatval($value) <= \floatval($start);
 			case $operator['C']:
-				return \strpos($start, $value) !== false;
+				return \strpos($value, $start) !== false;
+			case $operator['CN']:
+				return \strpos($value, $start) === false;
 			case $operator['SW']:
-				return \strpos($start, $value) === 0;
+				return \strpos($value, $start) === 0;
 			case $operator['EW']:
-				return \substr($start, -\strlen($value)) === $value;
+				return \substr($value, -\strlen($start)) === $start;
 			case $operatorExtended['B']:
-				return \floatval($start) < \floatval($value) && \floatval($value) < \floatval($end);
+				return \floatval($value) > \floatval($start) && \floatval($value) < \floatval($end);
 			case $operatorExtended['BS']:
-				return \floatval($start) <= \floatval($value) && \floatval($value) <= \floatval($end);
+				return \floatval($value) >= \floatval($start) && \floatval($value) <= \floatval($end);
 			case $operatorExtended['BN']:
-				return \floatval($start) < \floatval($value) || \floatval($value) > \floatval($end);
+				return \floatval($value) < \floatval($start) || \floatval($value) > \floatval($end);
 			case $operatorExtended['BNS']:
-				return \floatval($start) <= \floatval($value) || \floatval($value) >= \floatval($end);
+				return \floatval($value) <= \floatval($start) || \floatval($value) >= \floatval($end);
 			default:
 				return false;
 		}
@@ -99,12 +101,11 @@ final class FormsHelper
 	 * @param string $name     Name of the item.
 	 * @param string $operator Operator to use.
 	 * @param string $start    Start value.
-	 * @param string $value    Value to compare.
 	 * @param string $end      End value.
 	 *
 	 * @return array<string, bool>
 	 */
-	public static function checkResultOutputSuccess(string $name, string $operator, string $start, string $value, string $end): array
+	public static function checkResultOutputSuccess(string $name, string $operator, string $start, string $end): array
 	{
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))) ?: '', true) : [];

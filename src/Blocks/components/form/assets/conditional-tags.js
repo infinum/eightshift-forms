@@ -21,9 +21,6 @@ export class ConditionalTags {
 		this.C = globalManifest.comparator.C;
 		this.CN = globalManifest.comparator.CN;
 
-		// Map all conditional logic as a object.
-		this.OPERATORS = this.utils.getComparator();
-
 		// Set all public methods.
 		this.publicMethods();
 	}
@@ -670,7 +667,7 @@ export class ConditionalTags {
 				}
 
 				// Do the check based on the operator and set reference data with the correct state.
-				output[parent][index] = this.OPERATORS[innerCondition](value, innerValue);
+				output[parent][index] = this.utils.getComparator()[innerCondition](innerValue, value);
 			});
 		});
 	}
@@ -754,7 +751,7 @@ export class ConditionalTags {
 				}
 
 				// Do the check based on the operator and set reference data with the correct state.
-				output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
+				output[parent][index] = this.utils.getComparator()[inner[1]](inner[2], value);
 			});
 		});
 	}
@@ -1007,7 +1004,6 @@ export class ConditionalTags {
 			HIDE: this.HIDE,
 			OR: this.OR,
 			AND: this.AND,
-			OPERATORS: this.OPERATORS,
 
 			initOne: (formId) => {
 				this.initOne(formId);
