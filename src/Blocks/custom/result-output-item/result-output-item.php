@@ -35,8 +35,6 @@ $resultClass = [
 
 $resultOutputData = FormsHelper::checkResultOutputSuccess($resultOutputItemName, $resultOutputItemOperator, $resultOutputItemValueStart, $resultOutputItemValueEnd);
 
-dump($resultOutputData);
-
 if ($resultOutputData['isRedirectPage']) {
 	if (!$resultOutputData['showOutput']) {
 		return;

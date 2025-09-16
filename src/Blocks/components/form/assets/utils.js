@@ -3,7 +3,7 @@ import { ConditionalTags } from './conditional-tags';
 import { Enrichment } from './enrichment';
 import { Geolocation } from './geolocation';
 import { State } from './state';
-import { StateEnum, prefix, setStateWindow, setStateValues } from './state-init';
+import { StateEnum, prefix, setStateWindow, setStateValues, getState } from './state-init';
 import { Steps } from './step';
 import globalManifest from './../../../manifest.json';
 
