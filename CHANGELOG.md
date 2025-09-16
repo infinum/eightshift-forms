@@ -11,6 +11,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Conditional tags logic for the forms.
 - Result output item logic for the forms.
 
+### Added
+
+- New filter for adding additional addon blocks.
+
 ## [8.1.4]
 
 ### Added
