@@ -387,60 +387,6 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * TODO : Remove this function.
-	 * Validate all mandatory fields that are passed from the `getFormDetailsApi` function.
-	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return boolean
-	 */
-	public function validateMandatoryIntegrationParams(array $formDetails): bool
-	{
-		$type = $formDetails[Config::FD_TYPE] ?? '';
-		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
-		$postId = $formDetails[Config::FD_POST_ID] ?? '';
-		$itemId = $formDetails[Config::FD_ITEM_ID] ?? '';
-		$innerId = $formDetails[Config::FD_INNER_ID] ?? '';
-
-		if (!$type) {
-			return false;
-		}
-
-		switch ($type) {
-			case Config::SETTINGS_GLOBAL_TYPE_NAME:
-			case Config::FILE_UPLOAD_ADMIN_TYPE_NAME:
-				return true;
-			case Config::SETTINGS_TYPE_NAME:
-				if (!$formId) {
-					return false;
-				}
-				return true;
-			case SettingsMailer::SETTINGS_TYPE_KEY:
-			case SettingsJira::SETTINGS_TYPE_KEY:
-			case SettingsPipedrive::SETTINGS_TYPE_KEY:
-			case SettingsCorvus::SETTINGS_TYPE_KEY:
-			case SettingsPaycek::SETTINGS_TYPE_KEY:
-			case SettingsCalculator::SETTINGS_TYPE_KEY:
-			case SettingsNationbuilder::SETTINGS_TYPE_KEY:
-				if (!$formId || !$postId) {
-					return false;
-				}
-				return true;
-			case SettingsAirtable::SETTINGS_TYPE_KEY:
-				if (!$formId || !$postId || !$itemId || !$innerId) {
-					return false;
-				}
-				return true;
-			default:
-				if (!$formId || !$postId || !$itemId) {
-					return false;
-				}
-				return true;
-		}
-	}
-
-	/**
 	 * Validate mandatory params or FormDetails.
 	 *
 	 * @param array<string, mixed> $params Params to validate or FormDetails.

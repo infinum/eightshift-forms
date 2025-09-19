@@ -34,16 +34,6 @@ interface ValidatorInterface
 	public function validateFiles(array $formDetails): array;
 
 	/**
-	 * Validate all mandatory fields that are passed from the `getFormDetailsApi` function.
-	 * If these fields are missing it can be that the form is not configured correctly or it could be a unauthorized request.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return boolean
-	 */
-	public function validateMandatoryIntegrationParams(array $formDetails): bool;
-
-	/**
 	 * Validate mandatory params or FormDetails.
 	 *
 	 * @param array<string, mixed> $params Params to validate or FormDetails.
