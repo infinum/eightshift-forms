@@ -1263,7 +1263,10 @@ export class Form {
 				},
 				onOpen: function () {
 					utils.setActiveState(formId, name);
-					utils.scrollAction(field);
+
+					if (!state.getStateSettingsDisableScrollToFieldOnFocus()) {	
+						utils.scrollAction(field);
+					}
 				},
 				onClose: function () {
 					utils.unsetActiveState(formId, name);
@@ -1913,7 +1916,9 @@ export class Form {
 
 		custom?.showDropdown();
 
-		this.utils.scrollAction(field);
+		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {	
+			this.utils.scrollAction(field);
+		}
 
 		this.utils.setOnFocus(event.target);
 	};

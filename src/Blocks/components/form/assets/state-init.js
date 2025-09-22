@@ -85,6 +85,7 @@ export const StateEnum = {
 	SETTINGS_LABELS: 'labels',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
 	SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR: 'disableScrollToFieldOnError',
+	SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_FOCUS: 'disableScrollToFieldOnFocus',
 	SETTINGS_FORM_RESET_ON_SUCCESS: 'formResetOnSuccess',
 	SETTINGS_REDIRECTION_TIMEOUT: 'redirectionTimeout',
 	SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT: 'hideGlobalMessageTimeout',
@@ -240,6 +241,7 @@ export function setStateInitial() {
 	// Global settings.
 	setState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS], Boolean(esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR], Boolean(esFormsLocalization.formDisableScrollToFieldOnError), StateEnum.SETTINGS);
+	setState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_FOCUS], Boolean(esFormsLocalization.formDisableScrollToFieldOnFocus), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], Boolean(esFormsLocalization.formResetOnSuccess), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, StateEnum.SETTINGS);
