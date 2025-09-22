@@ -13,6 +13,7 @@ namespace EightshiftForms;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Db\CreateActivityLogsTable;
 use EightshiftForms\Db\CreateEntriesTable;
+use EightshiftForms\Db\CreateRateLimitingTable;
 use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
 use WP_Role;
@@ -43,6 +44,9 @@ class Activate implements HasActivationInterface
 
 		// Create DB table.
 		CreateActivityLogsTable::createTable();
+
+		// Create DB table.
+		CreateRateLimitingTable::createTable();
 
 		// Do a cleanup.
 		\flush_rewrite_rules();
