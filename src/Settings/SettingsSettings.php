@@ -158,8 +158,8 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable scroll to field', 'eightshift-forms'),
-										'checkboxHelp' => \__('Disable scroll to field on focus. Affected fields are: select, country, phone, date, dateTime.', 'eightshift-forms'),
+										'checkboxLabel' => \__('Disable scroll to field on focus', 'eightshift-forms'),
+										'checkboxHelp' => \__('Affected fields are: select, country, phone, date, dateTime.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY, self::SETTINGS_GENERAL_A11Y_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY,
 										'checkboxAsToggle' => true,
