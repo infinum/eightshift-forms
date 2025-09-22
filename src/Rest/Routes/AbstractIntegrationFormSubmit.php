@@ -189,7 +189,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			// Validate allowed number of requests.
 			if ($this->shouldCheckSecurity()) {
-				if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE])) {
+				if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE], $formDetails[Config::FD_FORM_ID])) {
 					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new RequestLimitException(
 						$this->getLabels()->getLabel('validationSecurity'),

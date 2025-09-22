@@ -26,23 +26,29 @@ class Security implements SecurityInterface
 	 *
 	 * @var int
 	 */
-	public const RATE_LIMIT = 20;
+	public const int RATE_LIMIT = 20;
 
 	/**
 	 * Time window in seconds
 	 *
 	 * @var int
 	 */
-	public const RATE_LIMIT_WINDOW = 60;
+	public const int RATE_LIMIT_WINDOW = 60;
+
+	/**
+	 * A settings key for granular rate limiting on different forms.
+	 */
+	public const string RATE_LIMIT_SETTING_NAME = 'granular-rate-limit';
 
 	/**
 	 * Detect if the request is valid using rate limiting.
 	 *
 	 * @param string $formType Form type.
+	 * @param int $formId Form ID.
 	 *
 	 * @return boolean
 	 */
-	public function isRequestValid(string $formType): bool
+	public function isRequestValid(string $formType, int $formId): bool
 	{
 		// Bailout if this feature is not enabled.
 		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
@@ -60,51 +66,59 @@ class Security implements SecurityInterface
 			return true;
 		}
 
-		$ip = $this->getIpAddress('hash');
+		$userToken = $this->getIpAddress('hash');
+		$activityType = "submit-$formType";
 
-		// If this is the first iteration of this user just add it to the list.
-		if (!isset($data[$ip])) {
-			$data[$ip] = [
-				'count' => 1,
-				'time' => $time,
-			];
 
-			\update_option($keyName, $data); // No need for unserialize because we are storing array.
-			return true;
-		}
+		$rateLimitingEntry = new RateLimitingLogEntry(
+			userToken: $userToken,
+			activityType: $activityType,
+			formId: $formId,
+			createdAt: $time,
+		);
 
-		// Extract user's data.
-		$user = $data[$ip];
-		$timestamp = $user['time'] ?? '';
-		$count = $user['count'] ?? 0;
+		$rateLimitingEntry->write();
 
-		// Reset the count if the time window has passed.
-		if (($time - $timestamp) > \intval(SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
-			unset($data[$ip]);
-			\update_option($keyName, $data);
-			return true;
-		}
+		$window = \intval(SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW));
+
 
 		// Check if the request count exceeds the rate limit.
-		$rateLimitGeneral = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
+		$rateLimit = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
 		$rateLimitCalculator = SettingsHelpers::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
 
-		// Different rate limit for calculator.
-		if ($rateLimitCalculator && $formType === SettingsCalculator::SETTINGS_TYPE_KEY) {
-			$rateLimitGeneral = $rateLimitCalculator;
+		$calculatorTypeKey = SettingsCalculator::SETTINGS_TYPE_KEY;
+
+		$rateLimitForActivityType = match ($activityType) {
+			"submit-{$calculatorTypeKey}" => $rateLimitCalculator,
+			default => $rateLimit,
+		};
+
+		$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
+
+		$sum = 0;
+		foreach ($aggregatedActivityByType as $aggregate) {
+			$sum += $aggregate['count'];
+
+			if ($aggregate['activity_type'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
+					return false;
+			}
 		}
 
-		if ($count >= \intval($rateLimitGeneral)) {
+		if ($sum > $rateLimit) {
 			return false;
 		}
 
-		// Finally update the count and time.
-		$data[$ip] = [
-			'count' => $count + 1,
-			'time' => $time,
-		];
+		$granularRateLimit = \intval(SettingsHelpers::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, (string)$formId));
 
-		\update_option($keyName, $data);
+		if ($granularRateLimit <= 0) {
+			return true;
+		}
+
+		$activityCountByFormId = RateLimitingLogEntry::countByFormId($userToken, $formId, $window);
+
+		if ($activityCountByFormId > $granularRateLimit) {
+			return false;
+		}
 		return true;
 	}
 
