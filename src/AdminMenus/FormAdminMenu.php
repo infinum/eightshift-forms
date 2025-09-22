@@ -892,7 +892,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						$tableContent[$itemId][$entryKey] = $entryValue;
 					}
 
-					\ksort($tableHead);
+					\uksort($tableHead, 'strcasecmp');
 
 					$i++;
 				}

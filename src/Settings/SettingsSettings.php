@@ -46,6 +46,12 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS = 'disable-scroll-to-global-message-on-success';
 
 	/**
+	 * Accessibility settings key.
+	 */
+	public const SETTINGS_GENERAL_A11Y_KEY = 'general-a11y';
+	public const SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY = 'disable-scroll-to-field-key';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -134,6 +140,28 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxLabel' => \__('Don\'t scroll to the top of the form (to reveal the success message)', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+									],
+								],
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Accessibility', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldHideLabel' => true,
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_GENERAL_A11Y_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable scroll to field', 'eightshift-forms'),
+										'checkboxHelp' => \__('Disable scroll to field on focus. Affected fields are: select, country, phone, date, dateTime.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY, self::SETTINGS_GENERAL_A11Y_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 									],

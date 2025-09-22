@@ -234,6 +234,9 @@ export class State {
 	getStateSettingsDisableScrollToFieldOnError = () => {
 		return getState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR], StateEnum.SETTINGS);
 	};
+	getStateSettingsDisableScrollToFieldOnFocus = () => {
+		return getState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_FOCUS], StateEnum.SETTINGS);
+	};
 	getStateSettingsResetOnSuccess = () => {
 		return getState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], StateEnum.SETTINGS);
 	};
