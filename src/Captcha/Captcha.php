@@ -101,7 +101,7 @@ class Captcha implements CaptchaInterface
 		}
 
 		// Get body from the response.
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 
 		if ($isEnterprise) {
 			return $this->getEnterpriseOutput($responseBody, $action, $debug);

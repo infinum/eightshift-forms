@@ -4,12 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.4.1]
+
+### Fixed
+
+- Small bugs fixes.
+
 ## [8.4.0]
 
 ### Added
 
 - Option to exclude files from confirmation email.
-- Additional checks for files uploaded and files sent to the backend becaouse of async uploads.
+- Additional checks for files uploaded and files sent to the backend because of async uploads.
 
 ### Changed
 
@@ -1329,10 +1335,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - filter for setting http request from `httpRequestArgs ` to `httpRequestTimeout` because it is used only to set timeout.
 - Greenhouse integration from `wp_remote_post ` to regular `Curl` because of the issues while sending the attachments. You are now only limited on the amount of memory your server can send.
 - form will now throw an error if form-ID or type is missing in the request.
-- all remote requests are now outputed via helper for easier and more predictable output.
+- all remote requests are now outputted via helper for easier and more predictable output.
 - converting from internal geolocation logic to libs abstract class logic.
 - updating libs.
-- `ES_GEOLOCAITON` global constant to `ES_GEOLOCAITON_IP`.
+- `ES_GEOLOCATION` global constant to `ES_GEOLOCATION_IP`.
 
 ### Fixed
 
@@ -1342,7 +1348,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - customSuccess label is now translatable from settings.
 - validator will now skip the input type hidden because there is no need for that.
 - Greenhouse timeout issue on large files.
-- wrong mime type for google docs file format .docx
+- wrong mime type for google docs file format `.docx`.
 - internal filter naming for functions
 
 ### Removed
@@ -1457,6 +1463,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.4.1]: https://github.com/infinum/eightshift-forms/compare/8.4.0...8.4.1
 [8.4.0]: https://github.com/infinum/eightshift-forms/compare/8.3.0...8.4.0
 [8.3.0]: https://github.com/infinum/eightshift-forms/compare/8.2.1...8.3.0
 [8.2.1]: https://github.com/infinum/eightshift-forms/compare/8.2.0...8.2.1

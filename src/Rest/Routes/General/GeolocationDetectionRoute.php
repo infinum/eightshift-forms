@@ -119,6 +119,17 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 
 		$data = EncryptionHelpers::decryptor($params['data'] ?? '');
 
+		if (!$data) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA,
+				]
+			);
+			// phpcs:enable
+		}
+
 		$dataOutput = \json_decode($data, true);
 
 		if (!\is_array($dataOutput) && !$dataOutput) {
