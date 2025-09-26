@@ -34,7 +34,7 @@
 	},
 	"dependencies": {
 		"@eightshift/frontend-libs": "^12.1.9",
-		"@eightshift/ui-components": "^5.2.1",
+		"@eightshift/ui-components": "^5.3.3",
 		"autosize": "^6.0.1",
 		"choices.js": "^11.1.0",
 		"dropzone": "^6.0.0-beta.2",
