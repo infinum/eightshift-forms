@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.4.0]
+
+### Added
+
+- Option to exclude files from confirmation email.
+- Additional checks for files uploaded and files sent to the backend becaouse of async uploads.
+
+### Changed
+
+- File names are now send to email and integration as it was uploaded.
+- Updated dependencies to the latest version.
+
+### Fixed
+
+- Broken file upload for importing forms in admin.
+- Activity logs now sending files also.
+
 ## [8.3.0]
 
 ### Added
@@ -1440,6 +1457,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.4.0]: https://github.com/infinum/eightshift-forms/compare/8.3.0...8.4.0
 [8.3.0]: https://github.com/infinum/eightshift-forms/compare/8.2.1...8.3.0
 [8.2.1]: https://github.com/infinum/eightshift-forms/compare/8.2.0...8.2.1
 [8.2.0]: https://github.com/infinum/eightshift-forms/compare/8.1.4...8.2.0

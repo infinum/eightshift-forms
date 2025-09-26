@@ -655,7 +655,7 @@
 			"addon": "addonData",
 			"successRedirectUrl": "successRedirectUrl",
 			"successRedirectBaseUrl": "successRedirectBaseUrl",
-			"file": "file",
+			"fileName": "fileName",
 			"stepType": "stepType",
 			"stepNextStep": "stepNextStep",
 			"stepProgressBarItems": "stepProgressBarItems",
@@ -674,7 +674,6 @@
 			"captchaRetry": "captchaRetry",
 			"captchaResponse": "captchaResponse",
 			"geolocationCountries": "countries",
-			
 			"editorIntegrationItems": "integrationItems",
 			"editorSyncForm": "syncForm",
 			"editorFormFields": "fields",

@@ -116,7 +116,6 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	{
 		switch ($params[Config::FD_TYPE]) {
 			case Config::SETTINGS_GLOBAL_TYPE_NAME:
-				// case Config::FILE_UPLOAD_ADMIN_TYPE_NAME: // TODO: Add file upload admin.
 				return [];
 			default:
 				return [

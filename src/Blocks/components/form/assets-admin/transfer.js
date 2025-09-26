@@ -25,10 +25,6 @@ export class Transfer {
 	onClick = (event) => {
 		event.preventDefault();
 
-		if(!confirm(this.confirmMsg)) {
-			return;
-		}
-
 		this.submit(event.target);
 	};
 

@@ -58,6 +58,15 @@ final class UploadHelpers
 	{
 		$output = $file;
 
+		$fieldName = $file['fieldName'] ?? '';
+		$fileId = $file['id'] ?? '';
+		$fileName = $file['name'] ?? '';
+		$error = $file['error'] ?? '';
+		$ext = \pathinfo($fileName, \PATHINFO_EXTENSION);
+		$name = \pathinfo($fileName, \PATHINFO_FILENAME);
+		$tmpName = $file['tmp_name'] ?? '';
+		$uniqueId = \bin2hex(\random_bytes(4));
+
 		if (!$file) {
 			return \array_merge(
 				$output,
@@ -67,8 +76,6 @@ final class UploadHelpers
 			);
 		}
 
-		$fieldName = $file['fieldName'] ?? '';
-
 		if (!$fieldName) {
 			return \array_merge(
 				$output,
@@ -77,8 +84,6 @@ final class UploadHelpers
 				]
 			);
 		}
-
-		$fileId = $file['id'] ?? '';
 
 		if (!$fileId) {
 			return \array_merge(
@@ -112,8 +117,6 @@ final class UploadHelpers
 			}
 		}
 
-		$error = $file['error'] ?? '';
-
 		// If file is faulty return error.
 		if ($error !== \UPLOAD_ERR_OK) {
 			return \array_merge(
@@ -124,16 +127,12 @@ final class UploadHelpers
 			);
 		}
 
-		// Create hashed file name so there is no collision.
-		$ext = \explode('.', $file['name']);
-		$ext = \end($ext);
-		$name = "{$fileId}.{$ext}";
-
 		// Create final folder location path.
-		$finalFilePath = "{$folderPath}{$name}";
+		$outputName = \sanitize_file_name("{$name}-{$uniqueId}.{$ext}");
+		$finalFilePath = "{$folderPath}{$outputName}";
 
 		// Move the file to new location.
-		$move = \move_uploaded_file($file['tmp_name'], $finalFilePath);
+		$move = \move_uploaded_file($tmpName, $finalFilePath);
 		if (!$move) {
 			return \array_merge(
 				$output,
@@ -147,6 +146,7 @@ final class UploadHelpers
 			$output,
 			[
 				'path' => $finalFilePath,
+				'outputName' => $outputName,
 				'ext' => $ext,
 				'errorOutput' => '',
 			]
