@@ -767,9 +767,8 @@ export class Utils {
 		if (!file) {
 			return '';
 		}
-		const fileExt = file.upload.filename.split('.').slice(-1)?.[0];
-
-		return `${file.upload.uuid}.${fileExt}`;
+		
+		return JSON.parse(file.xhr.response).data.fileName || '';
 	}
 
 	/**

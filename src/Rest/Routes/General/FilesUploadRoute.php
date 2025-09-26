@@ -97,6 +97,12 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function getMandatoryParams(array $params): array
 	{
+		$type = $params[Config::FD_TYPE] ?? '';
+
+		if ($type === Config::FILE_UPLOAD_ADMIN_TYPE_NAME) {
+			return [];
+		}
+
 		return [
 			Config::FD_FORM_ID => 'string',
 			Config::FD_POST_ID => 'string',
@@ -163,7 +169,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
-				UtilsHelper::getStateResponseOutputKey('file') => $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '',
+				UtilsHelper::getStateResponseOutputKey('fileName') => $uploadFile['outputName'] ?? '',
 			],
 		];
 	}

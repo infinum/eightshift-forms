@@ -10,10 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailer;
 
-use CURLFile;
 use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Config\Config;
@@ -220,23 +218,8 @@ class Mailer implements MailerInterface
 
 		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
 
-		$filesOutput = [];
-		if ($files) {
-			switch ($type) {
-				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
-					foreach ($files as $file) {
-						if ($file instanceof CURLFile) {
-							$filesOutput[] = $file->name;
-						}
-					}
-					break;
-				default:
-					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
-					break;
-			}
-		}
 
-		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
+		return \wp_mail($to, $subject, $body, $headers, $this->prepareFiles($files));
 	}
 
 	/**
@@ -276,13 +259,15 @@ class Mailer implements MailerInterface
 			return false;
 		}
 
+		$excludeFiles = SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY, SettingsMailer::SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY, $formId);
+
 		// Send email.
 		return $this->internalSendEmail(
 			$formId,
 			$senderEmail,
 			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
-			$files,
+			$excludeFiles ? [] : $files,
 			$params,
 			$responseTags
 		);
@@ -470,11 +455,11 @@ class Mailer implements MailerInterface
 	 */
 	private function prepareFiles(array $files): array
 	{
-		$output = [];
-
 		if (!$files) {
-			return $output;
+			return [];
 		}
+
+		$output = [];
 
 		foreach ($files as $file) {
 			$value = $file['value'] ?? [];
@@ -483,13 +468,14 @@ class Mailer implements MailerInterface
 				continue;
 			}
 
-			$output = [
-				...$output,
-				...$value,
-			];
+			$output[] = $value;
 		}
 
-		return $output;
+		if (!$output) {
+			return [];
+		}
+
+		return Helpers::flattenArray($output);
 	}
 
 	/**

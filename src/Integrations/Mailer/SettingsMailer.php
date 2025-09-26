@@ -110,6 +110,11 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_MAILER_SENDER_USE_KEY = 'mailer-sender-use';
 
 	/**
+	 * Sender exclude files key.
+	 */
+	public const SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY = 'mailer-sender-exclude-files';
+
+	/**
 	 * Sender Subject key.
 	 */
 	public const SETTINGS_MAILER_SENDER_SUBJECT_KEY = 'mailer-sender-subject';
@@ -484,6 +489,25 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 											%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags), SettingsOutputHelpers::getPartialResponseTags($formResponseTags)),
 										'textareaIsRequired' => true,
 										'textareaValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkboxes',
+										'checkboxesFieldLabel' => '',
+										'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY),
+										'checkboxesContent' => [
+											[
+												'component' => 'checkbox',
+												'checkboxLabel' => \__('Exclude files from confirmation e-mail', 'eightshift-forms'),
+												'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY, self::SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY, $formId),
+												'checkboxValue' => self::SETTINGS_MAILER_SENDER_EXCLUDE_FILES_KEY,
+												'checkboxSingleSubmit' => true,
+												'checkboxAsToggle' => true,
+											]
+										]
 									],
 								] : []),
 							],

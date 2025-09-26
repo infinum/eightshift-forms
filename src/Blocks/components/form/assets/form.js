@@ -821,8 +821,6 @@ export class Form {
 							data.value = this.utils.getFileNameFromFileObject(file);
 							this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 						}
-					} else {
-						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
 					break;
 				case 'input':
