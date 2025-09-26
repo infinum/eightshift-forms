@@ -767,8 +767,12 @@ export class Utils {
 		if (!file) {
 			return '';
 		}
-		
-		return JSON.parse(file.xhr.response).data.fileName || '';
+
+		if (!file?.xhr?.response) {
+			return '';
+		}
+
+		return JSON.parse(file.xhr.response)?.data?.fileName || '';
 	}
 
 	/**
