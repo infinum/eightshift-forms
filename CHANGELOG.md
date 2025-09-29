@@ -12,6 +12,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Form field error will hide once user interacts with the field.
 - Admin settings for global settings timeout.
 
+### Fixed
+
+- Top Admin bar issue in admin.
+- Top Admin bar issue for PHP 8.5+.
+
 ## [8.4.1]
 
 ### Fixed
