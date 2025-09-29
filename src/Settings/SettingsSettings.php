@@ -52,6 +52,11 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY = 'disable-scroll-to-field-key';
 
 	/**
+	 * Hide global message timeout key.
+	 */
+	public const SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT = 'hide-global-msg-timeout';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -166,6 +171,20 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxSingleSubmit' => true,
 									],
 								],
+							],
+							[
+								'component' => 'input',
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
+								'inputFieldLabel' => \__('Hide global message timeout', 'eightshift-forms'),
+								'inputFieldHelp' => \__("The amount of time the global message is displayed. If you don't want to hide the global message, set it to a high value.", 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputMax' => 6,
+								'inputStep' => 1,
+								'inputPlaceholder' => 6,
+								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
 							],
 						],
 					],

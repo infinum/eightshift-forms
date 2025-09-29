@@ -79,7 +79,6 @@ final class Filters
 				],
 				'form' => [
 					'redirectionTimeout',
-					'hideGlobalMsgTimeout',
 					'successRedirectUrl',
 					'variation',
 					'trackingEventName',

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\I18n;
 
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -17,6 +18,27 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class I18n implements ServiceInterface
 {
+	/**
+	 * Available languages.
+	 */
+	public const AVAILABLE_LANGUAGES = [
+		'ar' => 'Arabic (Arabic)',
+		'de_DE' => 'German (Germany)',
+		'es_ES' => 'Spanish (Spain)',
+		'fr_FR' => 'French (France)',
+		'hr' => 'Croatian (Croatia)',
+		'id_ID' => 'Indonesian (Indonesia)',
+		'it_IT' => 'Italian (Italy)',
+		'ko_KR' => 'Korean (South Korea)',
+		'ms_MY' => 'Malay (Malaysia)',
+		'pt_PT' => 'Portuguese (Portugal)',
+		'ru_RU' => 'Russian (Russia)',
+		'th' => 'Thai (Thailand)',
+		'vi_VN' => 'Vietnamese (Vietnam)',
+		'zh_CN' => 'Chinese (China)',
+		'zh_TW' => 'Chinese (Taiwan)',
+	];
+
 	/**
 	 * Register all the hooks
 	 *
@@ -34,6 +56,6 @@ class I18n implements ServiceInterface
 	 */
 	public function loadTextdomain(): void
 	{
-		\load_plugin_textdomain('eightshift-forms', false, \plugin_basename(__DIR__) . '/languages');
+		\load_plugin_textdomain(Config::MAIN_PLUGIN_PROJECT_SLUG, false, \plugin_basename(__DIR__) . '/languages');
 	}
 }

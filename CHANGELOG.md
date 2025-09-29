@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.5.0]
+
+### Added
+
+- Option to force locale for the form.
+- Form field error will hide once user interacts with the field.
+- Admin settings for global settings timeout.
+- `getFormDetails` helper function.
+
+### Fixed
+
+- Top Admin bar issue in admin.
+- Top Admin bar issue for PHP 8.5+.
+
 ## [8.4.1]
 
 ### Fixed
@@ -1463,6 +1477,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.5.0]: https://github.com/infinum/eightshift-forms/compare/8.4.1...8.5.0
 [8.4.1]: https://github.com/infinum/eightshift-forms/compare/8.4.0...8.4.1
 [8.4.0]: https://github.com/infinum/eightshift-forms/compare/8.3.0...8.4.0
 [8.3.0]: https://github.com/infinum/eightshift-forms/compare/8.2.1...8.3.0

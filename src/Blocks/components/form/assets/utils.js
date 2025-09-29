@@ -877,6 +877,8 @@ export class Utils {
 			this.conditionalTags.setField(formId, name);
 		}
 
+		this.unsetFieldError(formId, name);
+
 		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
