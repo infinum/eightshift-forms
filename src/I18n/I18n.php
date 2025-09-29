@@ -23,6 +23,8 @@ class I18n implements ServiceInterface
 	 */
 	public const AVAILABLE_LANGUAGES = [
 		'ar' => 'Arabic (Arabic)',
+		'en_US' => 'English (United States)',
+		'en_GB' => 'English (United Kingdom)',
 		'de_DE' => 'German (Germany)',
 		'es_ES' => 'Spanish (Spain)',
 		'fr_FR' => 'French (France)',
