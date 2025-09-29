@@ -179,7 +179,6 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 								'inputFieldHelp' => \__("The amount of time the global message is displayed. If you don't want to hide the global message, set it to a high value.", 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
-								'inputMax' => 6,
 								'inputStep' => 1,
 								'inputPlaceholder' => 6,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
