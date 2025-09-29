@@ -38,6 +38,7 @@ module.exports = (env, argv) => {
 		entry: {
 			...project.entry,
 			applicationAdmin: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-admin.js'),
+			applicationAdminAll: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-admin-all.js'),
 			applicationBlocksFrontendMandatory: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-blocks-frontend-mandatory.js'),
 		},
 	};

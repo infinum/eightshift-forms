@@ -18,6 +18,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\I18n\I18n;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -108,6 +109,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	 * Increment length key.
 	 */
 	public const SETTINGS_INCREMENT_LENGTH_KEY = 'increment-length';
+
+	/**
+	 * Force locale key.
+	 */
+	public const SETTINGS_FORCE_LOCALE = 'force-locale';
 
 	/**
 	 * Register all the hooks
@@ -205,58 +211,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									],
 								],
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
-										'checkboxHelp' => \__('Hide global message after successful submission.', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									],
-								],
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
-										'checkboxHelp' => \__('Hide form after successful submission.', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									],
-								],
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Skip reset form on success', 'eightshift-forms'),
-										'checkboxHelp' => \__('Skip form reset too original state after successful submission.', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									],
-								],
-							],
 						],
 					],
 					[
@@ -338,7 +292,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Identification', 'eightshift-forms'),
+						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
@@ -348,6 +302,78 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputFieldHelp' => \__('Target a form (or a set of forms) and apply changes through filters, in code.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Hide global message after successful submission.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Hide form after successful submission.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Skip reset form on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Skip form reset too original state after successful submission.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'select',
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_FORCE_LOCALE),
+								'selectId' => SettingsHelpers::getSettingName(self::SETTINGS_FORCE_LOCALE),
+								'selectFieldLabel' => \__('Force locale', 'eightshift-forms'),
+								'selectFieldHelp' => \__('Force the locale for this form.', 'eightshift-forms'),
+								'selectContent' => \array_map(static function ($item, $key) use ($formId) {
+									return [
+										'component' => 'select-option',
+										'selectOptionLabel' => \ucfirst($item),
+										'selectOptionValue' => $key,
+										'selectOptionIsSelected' => $key === SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
+									];
+								}, I18n::AVAILABLE_LANGUAGES, \array_keys(I18n::AVAILABLE_LANGUAGES)),
+								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
 							],
 						],
 					],

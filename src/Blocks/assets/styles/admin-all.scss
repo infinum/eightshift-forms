@@ -1,0 +1,14 @@
+// stylelint-disable scss/load-partial-extension
+
+/**
+ * This is the main entry point for Admin styles used for the `WordPress admin`.
+ * File names must follow naming convention to be able to run dynamically.
+ *
+ * `src/blocks/custom/block_name/block_name-admin-all.scss`.
+ *
+ * Usage: `WordPress admin`.
+ *
+ */
+
+// Find all components and require component_name-admin.scss inside it.
+@import './../../components/*/*-admin-all.scss';

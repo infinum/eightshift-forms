@@ -36,6 +36,8 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminStylesAll'], 50);
+
 		if (!GeneralHelpers::isEightshiftFormsAdminPages()) {
 			return;
 		}
@@ -110,5 +112,25 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 		}
 
 		return $scriptsDependencyOutput;
+	}
+
+	/**
+	 * Enqueue admin styles all.
+	 *
+	 * @return void
+	 */
+	public function enqueueAdminStylesAll(): void
+	{
+		$handle = "{$this->getAssetsPrefix()}-admin-all-styles";
+
+		\wp_register_style(
+			$handle,
+			$this->setAssetsItem('applicationAdminAll.css'),
+			[],
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handle);
 	}
 }

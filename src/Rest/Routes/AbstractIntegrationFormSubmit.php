@@ -35,6 +35,7 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\I18n\I18n;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -134,6 +135,8 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		// Prepare all data.
 		// Must be on the top of the try catch block.
 		$formDetails = $this->getFormDetailsApi($request);
+
+		$this->forceSetLocale($formDetails[Config::FD_FORM_ID] ?? '');
 
 		try {
 			// If route is used for admin only, check if user has permission. (generally used for settings).
@@ -1427,5 +1430,27 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			},
 			$params
 		);
+	}
+
+	/**
+	 * Force set locale.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return void
+	 */
+	private function forceSetLocale(string $formId): void
+	{
+		$forceLocale = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_FORCE_LOCALE, $formId);
+
+		if (!$forceLocale) {
+			return;
+		}
+
+		if (!isset(I18n::AVAILABLE_LANGUAGES[$forceLocale])) {
+			return;
+		}
+
+		\switch_to_locale($forceLocale);
 	}
 }

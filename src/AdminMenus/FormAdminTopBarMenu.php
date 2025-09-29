@@ -90,8 +90,8 @@ class FormAdminTopBarMenu implements ServiceInterface
 		$adminBar->add_menu(
 			[
 				'id' => $prefix,
-				'parent' => null,
-				'group' => null,
+				'parent' => '',
+				'group' => '',
 				'title' => $isDevelopMode ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
 				'href' => GeneralHelpers::getListingPageUrl(),
 				'meta' => [
