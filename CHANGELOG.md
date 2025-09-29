@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.5.2]
+
+### Added
+
+- English US and GB options for forcing form localization.
+
 ## [8.5.1]
 
 ### Fixed
@@ -1483,6 +1489,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.5.2]: https://github.com/infinum/eightshift-forms/compare/8.5.1...8.5.2
 [8.5.1]: https://github.com/infinum/eightshift-forms/compare/8.5.0...8.5.1
 [8.5.0]: https://github.com/infinum/eightshift-forms/compare/8.4.1...8.5.0
 [8.4.1]: https://github.com/infinum/eightshift-forms/compare/8.4.0...8.4.1
