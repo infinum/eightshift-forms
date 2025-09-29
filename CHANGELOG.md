@@ -11,6 +11,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Option to force locale for the form.
 - Form field error will hide once user interacts with the field.
 - Admin settings for global settings timeout.
+- `getFormDetails` helper function.
 
 ### Fixed
 

@@ -165,3 +165,15 @@ function getParamValue(string $key, array $params): string|array
 {
 	return FormsHelper::getParamValue($key, $params);
 }
+
+/**
+ * Get form details.
+ *
+ * @param string $formId Form ID.
+ *
+ * @return array<string, mixed>
+ */
+function getFormDetails(string $formId): array
+{
+	return GeneralHelpers::getFormDetails($formId);
+}
