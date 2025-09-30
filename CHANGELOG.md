@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.5.3]
+
+### Fixed
+
+- Select field will now open dropdown if there is no value selected.
+
 ## [8.5.2]
 
 ### Added
@@ -1489,6 +1495,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.5.3]: https://github.com/infinum/eightshift-forms/compare/8.5.2...8.5.3
 [8.5.2]: https://github.com/infinum/eightshift-forms/compare/8.5.1...8.5.2
 [8.5.1]: https://github.com/infinum/eightshift-forms/compare/8.5.0...8.5.1
 [8.5.0]: https://github.com/infinum/eightshift-forms/compare/8.4.1...8.5.0

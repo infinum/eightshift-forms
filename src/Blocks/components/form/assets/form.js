@@ -1909,10 +1909,12 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-
+		const value = this.state.getStateElementValue(name, formId);
 		const custom = this.state.getStateElementCustom(name, formId);
 
-		custom?.showDropdown();
+		if (!value?.length) {
+			custom?.showDropdown();
+		}
 
 		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {	
 			this.utils.scrollAction(field);
