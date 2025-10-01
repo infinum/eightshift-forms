@@ -94,6 +94,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public const SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY = 'skip-reset-form-on-success';
 
 	/**
+	 * Multistep skip scroll to top key.
+	 */
+	public const SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY = 'multistep-skip-scroll-to';
+
+	/**
 	 * Increment meta key.
 	 *
 	 * @var string
@@ -350,6 +355,22 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 										'checkboxHelp' => \__('Skip form reset too original state after successful submission.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Multistep skip scroll', 'eightshift-forms'),
+										'checkboxHelp' => \__('Skip scroll to top of the form after step change and successful submission on multistep form.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY, self::SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									],

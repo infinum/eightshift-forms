@@ -44,6 +44,7 @@ $formPostId = $formParentSettings['postId'] ?? '';
 $formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
 $formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
 $formType = $formParentSettings['formType'] ?? '';
+$formMultistepSkipScroll = $formParentSettings['multistepSkipScroll'] ?? false;
 
 $formDataTypeSelectorFilterName = HooksHelpers::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -121,6 +122,10 @@ if ($formAction) {
 
 if ($formActionExternal) {
 	$formAttrs[UtilsHelper::getStateAttribute('actionExternal')] = esc_attr($formActionExternal);
+}
+
+if ($formMultistepSkipScroll) {
+	$formAttrs[UtilsHelper::getStateAttribute('multistepSkipScroll')] = esc_attr($formMultistepSkipScroll);
 }
 
 if ($formMethod) {
