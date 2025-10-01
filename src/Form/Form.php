@@ -92,6 +92,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$attributes["{$prefix}ParentSettings"]['formType'] = SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY;
 		}
 
+		// Multistep skip scroll.
+		$attributes["{$prefix}ParentSettings"]['multistepSkipScroll'] = SettingsHelpers::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY, SettingsGeneral::SETTINGS_MULTISTEP_SKIP_SCROLL_TO_KEY, $formId);
+
 		return $attributes;
 	}
 

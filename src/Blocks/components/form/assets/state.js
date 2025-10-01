@@ -82,6 +82,9 @@ export class State {
 	getStateFormActionExternal = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formId);
 	};
+	getStateFormMultistepSkipScroll = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.MULTISTEP_SKIP_SCROLL], formId);
+	};
 	getStateFormSecureData = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.SECURE_DATA], formId);
 	};

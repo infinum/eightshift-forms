@@ -607,6 +607,7 @@
 			"actionExternal": "data-action-external",
 			"settingsType": "data-settings-type",
 			"groupSaveAsOneField": "data-group-save-as-one-field",
+			"multistepSkipScroll": "data-multistep-skip-scroll",
 
 			"datePreviewFormat": "data-preview-format",
 			"dateOutputFormat": "data-output-format",

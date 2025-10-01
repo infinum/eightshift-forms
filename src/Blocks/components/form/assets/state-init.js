@@ -24,6 +24,7 @@ export const StateEnum = {
 	METHOD: 'method',
 	ACTION: 'action',
 	ACTION_EXTERNAL: 'actionExternal',
+	MULTISTEP_SKIP_SCROLL: 'multistepSkipScroll',
 	SECURE_DATA: 'secureData',
 	FIELD: 'field',
 	FIELDSET: 'fieldset',
@@ -324,6 +325,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.METHOD], formElement?.getAttribute('method'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION], formElement?.getAttribute('action'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement?.getAttribute(getStateAttribute('actionExternal')), formId);
+	setState([StateEnum.FORM, StateEnum.MULTISTEP_SKIP_SCROLL], Boolean(formElement?.getAttribute(getStateAttribute('multistepSkipScroll'))), formId);
 	setState([StateEnum.FORM, StateEnum.SECURE_DATA], formElement?.getAttribute(getStateAttribute('formSecureData')), formId);
 	setState([StateEnum.FORM, StateEnum.TYPE_SETTINGS], formElement?.getAttribute(getStateAttribute('settingsType')), formId);
 	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getStateSelector('loader', true)), formId);
