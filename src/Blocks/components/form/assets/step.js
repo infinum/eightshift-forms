@@ -223,7 +223,6 @@ export class Steps {
 
 		// Scroll to the next step.
 		if (!this.state.getStateFormMultistepSkipScroll(formId)) {
-			console.log('scroll to next step');
 			this.utils.scrollAction(nextStepElement);
 		}
 
