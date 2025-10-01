@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.5.4]
+
+### Fixed
+
+- Scroll to step issue on initial form load.
+
+### Updated
+
+- Updated dependencies to the latest version.
+
 ## [8.5.3]
 
 ### Fixed
@@ -1495,6 +1505,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.5.4]: https://github.com/infinum/eightshift-forms/compare/8.5.3...8.5.4
 [8.5.3]: https://github.com/infinum/eightshift-forms/compare/8.5.2...8.5.3
 [8.5.2]: https://github.com/infinum/eightshift-forms/compare/8.5.1...8.5.2
 [8.5.1]: https://github.com/infinum/eightshift-forms/compare/8.5.0...8.5.1

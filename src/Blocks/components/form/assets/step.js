@@ -172,17 +172,18 @@ export class Steps {
 	 * Reset steps to first step.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {boolean} skipScroll Skip scroll.
 	 *
 	 * @returns {void}
 	 */
-	resetSteps(formId) {
+	resetSteps(formId, skipScroll = false) {
 		const firstStep = this.state.getStateFormStepsFirstStep(formId);
 
 		if (!firstStep) {
 			return;
 		}
 
-		this.setChangeStep(formId, firstStep, []);
+		this.setChangeStep(formId, firstStep, [], 0, skipScroll);
 
 		// Hide prev button.
 		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
@@ -197,10 +198,11 @@ export class Steps {
 	 * @param {string} nextStep Next step Id.
 	 * @param {array} flow Flow to update.
 	 * @param {int} progressBarItems Progress bar number of items.
+	 * @param {boolean} skipScroll Skip scroll.
 	 *
 	 * @returns {void}
 	 */
-	setChangeStep(formId, nextStep, flow, progressBarItems = 0) {
+	setChangeStep(formId, nextStep, flow, progressBarItems = 0, skipScroll = false) {
 		if (!nextStep) {
 			return;
 		}
@@ -219,7 +221,9 @@ export class Steps {
 		nextStepElement?.setAttribute('aria-hidden', 'false');
 
 		// Scroll to the next step.
-		this.utils.scrollAction(nextStepElement);
+		if (!skipScroll) {
+			this.utils.scrollAction(nextStepElement);
+		}
 
 		// Reset filled steps.
 		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
@@ -364,7 +368,7 @@ export class Steps {
 		const { formId } = event.detail;
 
 		// Set fields logic.
-		this.resetSteps(formId);
+		this.resetSteps(formId, true);
 
 		// Toggle Debug Preview.
 		this.toggleDebugPreview();
@@ -427,11 +431,11 @@ export class Steps {
 			goToStepWithError: (formId, errors) => {
 				this.goToStepWithError(formId, errors);
 			},
-			resetSteps: (formId) => {
-				this.resetSteps(formId);
+			resetSteps: (formId, skipScroll = false) => {
+				this.resetSteps(formId, skipScroll);
 			},
-			setChangeStep: (formId, nextStep, flow, progressBarItems = 0) => {
-				this.setChangeStep(formId, nextStep, flow, progressBarItems);
+			setChangeStep: (formId, nextStep, flow, progressBarItems = 0, skipScroll = false) => {
+				this.setChangeStep(formId, nextStep, flow, progressBarItems, skipScroll);
 			},
 			setProgressBar: (formId, nextStep, flow, progressBarItems = 0) => {
 				this.setProgressBar(formId, nextStep, flow, progressBarItems);
