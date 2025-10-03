@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.6.1]
+
+### Fixed
+
+- `esFormsAfterCaptchaInit` only outputting the raw response, which is already used so it can't be read again
+
 ## [8.6.0]
 
 ### Added
@@ -1511,6 +1517,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.6.1]: https://github.com/infinum/eightshift-forms/compare/8.6.0...8.6.1
 [8.6.0]: https://github.com/infinum/eightshift-forms/compare/8.5.4...8.6.0
 [8.5.4]: https://github.com/infinum/eightshift-forms/compare/8.5.3...8.5.4
 [8.5.3]: https://github.com/infinum/eightshift-forms/compare/8.5.2...8.5.3
