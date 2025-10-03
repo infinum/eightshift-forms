@@ -22,7 +22,7 @@ export class Captcha {
 
 	/**
 	 * Init all actions.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	init() {
@@ -75,7 +75,7 @@ export class Captcha {
 
 	/**
 	 * Handle form submit and all logic in case we have captcha in place for init load.
-	 * 
+	 *
 	 * @param {string} token Captcha token from api.
 	 * @param {bool} isEnterprise Is enterprise setup.
 	 * @param {string} action Action to use.
@@ -111,7 +111,7 @@ export class Captcha {
 				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response?.message} Action: ${action}`);
 			}
 
-			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), response);
+			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), { responseData: parsedResponse, rawResponse: response });
 		} catch ({name, message}) {
 			if (name === 'AbortError') {
 				return;
@@ -140,7 +140,7 @@ export class Captcha {
 
 	/**
 	 * Set all public methods.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	publicMethods() {
