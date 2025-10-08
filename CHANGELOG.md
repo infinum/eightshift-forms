@@ -31,6 +31,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 
 - Scroll to step issue on initial form load.
+- Bug in Moments client for some edge cases with `select`s and `checkbox`es
 
 ### Updated
 
