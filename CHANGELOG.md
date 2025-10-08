@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.6.2]
+
+### Fixed
+
+- Display issue with `input` range fields if value is 0 and `min` is not set due to browser implementations of `<input type="range">`.
+
+### Changed
+
+- `input` will no longer output `max` and `step` if not set.
+
 ## [8.6.1]
 
 ### Fixed
@@ -21,6 +31,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 
 - Scroll to step issue on initial form load.
+- Bug in Moments client for some edge cases with `select`s and `checkbox`es
 
 ### Updated
 
@@ -1517,6 +1528,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.6.2]: https://github.com/infinum/eightshift-forms/compare/8.6.1...8.6.2
 [8.6.1]: https://github.com/infinum/eightshift-forms/compare/8.6.0...8.6.1
 [8.6.0]: https://github.com/infinum/eightshift-forms/compare/8.5.4...8.6.0
 [8.5.4]: https://github.com/infinum/eightshift-forms/compare/8.5.3...8.5.4

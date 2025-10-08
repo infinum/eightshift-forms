@@ -395,7 +395,12 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
 
-			$value = $param['value'] ?? '';
+			if ($type === 'select' || $type === 'checkbox') {
+				$value = $param['value'] ?? [];
+			} else {
+				$value = $param['value'] ?? '';
+			}
+
 			if (!$value) {
 				continue;
 			}
