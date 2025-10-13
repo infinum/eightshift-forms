@@ -77,12 +77,20 @@ if ($inputUseLabelAsPlaceholder) {
 }
 
 if ($inputType === 'range') {
-	$inputAttrs['min'] = esc_attr($inputMin);
-	$inputAttrs['max'] = esc_attr($inputMax);
-	$inputAttrs['step'] = esc_attr($inputStep);
+	// Fallback is the browser default value if no min is set.
+	// Without fallback .value in JS returns a mid value between min (or 0 if unset) and max (or 100 if unset), which can cause weird display issue.
+	$inputAttrs['min'] = esc_attr($inputMin ?: 0);
+
+	if ($inputMax) {
+		$inputAttrs['max'] = esc_attr($inputMax);
+	}
+
+	if ($inputStep) {
+		$inputAttrs['step'] = esc_attr($inputStep);
+	}
 
 	if (!$inputValue) {
-		$inputAttrs['value'] = esc_attr($inputMin);
+		$inputAttrs['value'] = esc_attr($inputAttrs['min']);
 	}
 
 	if ($inputRangeShowMin) {
