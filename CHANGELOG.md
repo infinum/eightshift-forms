@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.7.0]
+
+### Changed
+
+- CorvusPay integration test url was updated.
+
+### Fixed
+
+- Bug in Captcha validation for Enterprise mode.
+
+### Added
+
+- Additional checks for Captcha validation for Enterprise.
+- Steps how to setup Enterprise Captcha.
+
+### Updated
+
+- Updated dependencies to the latest version.
+
 ## [8.6.2]
 
 ### Fixed
@@ -1528,6 +1547,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.7.0]: https://github.com/infinum/eightshift-forms/compare/8.6.2...8.7.0
 [8.6.2]: https://github.com/infinum/eightshift-forms/compare/8.6.1...8.6.2
 [8.6.1]: https://github.com/infinum/eightshift-forms/compare/8.6.0...8.6.1
 [8.6.0]: https://github.com/infinum/eightshift-forms/compare/8.5.4...8.6.0

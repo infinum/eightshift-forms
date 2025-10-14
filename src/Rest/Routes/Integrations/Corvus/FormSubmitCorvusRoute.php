@@ -299,6 +299,6 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	{
 		$isTest = SettingsHelpers::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_IS_TEST, SettingsCorvus::SETTINGS_CORVUS_IS_TEST, $formId);
 
-		return $isTest ? 'https://test-wallet.corvuspay.com/checkout/' : 'https://wallet.corvuspay.com/checkout/';
+		return $isTest ? 'https://wallet.test.corvuspay.com/checkout/' : 'https://wallet.corvuspay.com/checkout/';
 	}
 }
