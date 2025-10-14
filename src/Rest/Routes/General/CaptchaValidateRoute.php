@@ -78,7 +78,7 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		return [
 			'token' => 'string',
 			'action' => 'string',
-			'isEnterprise' => 'string',
+			'isEnterprise' => 'boolean',
 		];
 	}
 
@@ -111,10 +111,10 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 			];
 		}
 
-		$token = $params['token'] ?? '';
-		$action = $params['action'] ?? '';
-		$isEnterprise = $params['isEnterprise'] ?? 'false';
-
-		return $this->captcha->check($token, $action, $isEnterprise === 'true');
+		return $this->captcha->check(
+			$params['token'] ?? '',
+			$params['action'] ?? '',
+			$params['isEnterprise'] ?? false
+		);
 	}
 }

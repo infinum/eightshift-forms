@@ -320,12 +320,35 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'steps',
-								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
+								'stepsTitle' => \__('How to get the Free reCAPTCHA API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									// translators: %s will be replaced with the external link.
 									\sprintf(\__('Visit this <a href="%s" target="_blank" rel="noopener noreferrer">link</a>.', 'eightshift-forms'), 'https://www.google.com/recaptcha/admin/create'),
 									\__('Configure all the options. Make sure to select <strong>reCaptcha version 3</strong>!', 'eightshift-forms'),
 									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'steps',
+								'stepsTitle' => \__('How to get the Enterprise reCAPTCHA API key?', 'eightshift-forms'),
+								'stepsContent' => [
+									// translators: %s will be replaced with the external link.
+									\sprintf(\__('Visit <a href="%s" target="_blank" rel="noopener noreferrer">Google Cloud Console</a>.', 'eightshift-forms'), 'https://console.cloud.google.com/'),
+									\__('Create a new project and set that project as <strong>Project ID</strong>.', 'eightshift-forms'),
+									\__('Search and go to <strong>reCAPTCHA</strong> product.', 'eightshift-forms'),
+									\__('You will probably need to set billing service for this product.', 'eightshift-forms'),
+									\__('Create a new key and set that key as <strong>Site key</strong>.', 'eightshift-forms'),
+									// translators: %s will be replaced with the website domain.
+									\sprintf(\__('Limit the key to your website domain. Domain: <strong>%s</strong> (exact, no trailing slash and protocol).', 'eightshift-forms'), \preg_replace("(^https?://)", "", \site_url())),
+									\__('Search and go to <strong>API & Services</strong> product.', 'eightshift-forms'),
+									\__('Go to <strong>Credentials</strong> section and create a new API key.', 'eightshift-forms'),
+									// translators: %s will be replaced with the website domain.
+									\sprintf(\__('Create a new key for <strong>Website</strong>, add restrictions to your website domain <strong>%s</strong> (exact, no trailing slash, with protocol) and set API restrictions to <strong>reCAPTCHA Enterprise</strong>.', 'eightshift-forms'), \esc_url(\site_url())),
+									\__('Set that key as <strong>API key</strong>.', 'eightshift-forms'),
 								],
 							],
 						],

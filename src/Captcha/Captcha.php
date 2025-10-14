@@ -128,14 +128,15 @@ class Captcha implements CaptchaInterface
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
 			[
 				'headers' => [
-					'Content-Type' => 'application/json; charset=utf-8'
+					'Content-Type' => 'application/json; charset=utf-8',
+					'Referer' => \site_url(),
 				],
 				'data_format' => 'body',
 				'body' => \wp_json_encode([
 					'event' => [
 						'siteKey' => $siteKey,
-						"token" => $token,
-						"expectedAction" => $action
+						'token' => $token,
+						'expectedAction' => $action
 					]
 				]),
 			]
@@ -182,11 +183,20 @@ class Captcha implements CaptchaInterface
 			'action' => $action,
 		]);
 
-		// Check the status.
-		$output = $responseBody['success'] ?? false;
+		if (!isset($responseBody['tokenProperties']['valid']) || !$responseBody['tokenProperties']['valid']) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('captchaError'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
 
 		// If response is error.
-		if (!$output) {
+		if (!isset($responseBody['riskAnalysis']['score'])) {
 			$errorCode = isset($responseBody['error-codes']) ? \array_flip($responseBody['error-codes']) : [];
 
 			$retry = false;
@@ -236,11 +246,8 @@ class Captcha implements CaptchaInterface
 			'action' => $action,
 		]);
 
-		// Check the status.
-		$output = $responseBody['success'] ?? false;
-
 		// If response is error.
-		if (!$output) {
+		if (!isset($responseBody['score'])) {
 			$errorCode = isset($responseBody['error-codes']) ? \array_flip($responseBody['error-codes']) : [];
 
 			$retry = false;

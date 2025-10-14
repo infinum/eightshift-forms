@@ -397,11 +397,17 @@ class Validator extends AbstractValidation
 				return false;
 			}
 
+			$type = \gettype($params[$paramName]);
+
+			if ($paramType === 'boolean') {
+				continue;
+			}
+
 			if (empty($params[$paramName])) {
 				return false;
 			}
 
-			if (\gettype($params[$paramName]) !== $paramType) {
+			if ($type !== $paramType) {
 				return false;
 			}
 		}
