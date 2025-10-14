@@ -332,7 +332,6 @@ class Captcha implements CaptchaInterface
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => true,
-					UtilsHelper::getStateResponseOutputKey('captchaResponse') => $responseBody,
 				]
 			);
 			// phpcs:enable
@@ -346,7 +345,6 @@ class Captcha implements CaptchaInterface
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => false,
-				UtilsHelper::getStateResponseOutputKey('captchaResponse') => $responseBody,
 			],
 		];
 	}
