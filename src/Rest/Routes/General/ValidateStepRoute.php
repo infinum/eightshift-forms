@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
@@ -281,7 +282,18 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 				$paramValue = $params[$name]['value'] ?? '';
 
-				if ($paramValue === $value) {
+				// Param can be an array of values.
+				if (\is_array($paramValue)) {
+					// If there are multiple values, we need to implode them as a string with delimiter and use "c" as operator.
+					if (\count($paramValue) > 1) {
+						$paramValue = \implode(Config::DELIMITER, $paramValue);
+					} else {
+						// If there is only one value, we need to use it as a string.
+						$paramValue = $paramValue[0];
+					}
+				}
+
+				if (FormsHelper::getComparator($operator, $value, $paramValue)) {
 					$output[$index][$innerIndex] = true;
 				}
 			}

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.8.0]
+
+### Added
+
+- Multiflow form will now check for correct operators before checks.
+
 ## [8.7.0]
 
 ### Changed
@@ -1547,6 +1553,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.8.0]: https://github.com/infinum/eightshift-forms/compare/8.7.0...8.8.0
 [8.7.0]: https://github.com/infinum/eightshift-forms/compare/8.6.2...8.7.0
 [8.6.2]: https://github.com/infinum/eightshift-forms/compare/8.6.1...8.6.2
 [8.6.1]: https://github.com/infinum/eightshift-forms/compare/8.6.0...8.6.1
