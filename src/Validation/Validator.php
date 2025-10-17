@@ -381,29 +381,29 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate mandatory params or FormDetails.
 	 *
-	 * @param array<string, mixed> $params Params to validate or FormDetails.
+	 * @param array<string, mixed> $items Params to validate or FormDetails.
 	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
 	 *
 	 * @return boolean
 	 */
-	public function validateMandatoryParams(array $params, array $mandatoryParams): bool
+	public function validateMandatoryParams(array $items, array $mandatoryParams): bool
 	{
-		if (!$params) {
+		if (!$items) {
 			return true;
 		}
 
 		foreach ($mandatoryParams as $paramName => $paramType) {
-			if (!isset($params[$paramName])) {
+			if (!isset($items[$paramName])) {
 				return false;
 			}
 
-			$type = \gettype($params[$paramName]);
+			$type = \gettype($items[$paramName]);
 
 			if ($paramType === 'boolean') {
 				continue;
 			}
 
-			if (empty($params[$paramName])) {
+			if (empty($items[$paramName])) {
 				return false;
 			}
 

@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.9.0]
+
+### Added
+
+- New validation for mandatory params and items.
+- Country/Phone field will now output country code and output type based on the settings at the time of the submission.
+- Phone field can now output number with + prefix.
+
+### Fixed
+
+- Phone field missing duplicate items.
+- File upload validation for empty files.
+- Fatal error for missing geolocation db.
+- Output of "LOCALHOST" in the cookie for geolocation.
+- Better handling of cookie for geolocation when setting country/phone field.
+
 ## [8.8.0]
 
 ### Added
@@ -1553,6 +1569,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.9.0]: https://github.com/infinum/eightshift-forms/compare/8.8.0...8.9.0
 [8.8.0]: https://github.com/infinum/eightshift-forms/compare/8.7.0...8.8.0
 [8.7.0]: https://github.com/infinum/eightshift-forms/compare/8.6.2...8.7.0
 [8.6.2]: https://github.com/infinum/eightshift-forms/compare/8.6.1...8.6.2

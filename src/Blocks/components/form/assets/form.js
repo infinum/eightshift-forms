@@ -807,6 +807,11 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
+				case 'country':
+					data.value = this.utils.getCountryCombinedValues(formId, name);
+
+					this.FORM_DATA.append(name, JSON.stringify(data));
+					break;
 				case 'file':
 					if (disabled) {
 						break;
@@ -821,6 +826,9 @@ export class Form {
 							data.value = this.utils.getFileNameFromFileObject(file);
 							this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 						}
+					} else {
+						// Most be so we send the data if no files are uploaded.
+						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
 					break;
 				case 'input':
@@ -1295,9 +1303,10 @@ export class Form {
 			}
 
 			const customProperties = [
-				this.state.getStateAttribute('selectCountryCode'),
-				this.state.getStateAttribute('selectCountryLabel'),
-				this.state.getStateAttribute('selectCountryNumber'),
+				this.state.getStateAttribute('countryCode'),
+				this.state.getStateAttribute('countryName'),
+				this.state.getStateAttribute('countryNumber'),
+				this.state.getStateAttribute('countryUnlocalizedName'),
 				this.state.getStateAttribute('conditionalTags'),
 				this.state.getStateAttribute('selectOptionIsHidden'),
 			];
@@ -1313,9 +1322,10 @@ export class Form {
 				searchFields: [
 					'label',
 					'value',
-					`customProperties.${this.state.getStateAttribute('selectCountryCode')}`,
-					`customProperties.${this.state.getStateAttribute('selectCountryLabel')}`,
-					`customProperties.${this.state.getStateAttribute('selectCountryNumber')}`,
+					`customProperties.${this.state.getStateAttribute('countryCode')}`,
+					`customProperties.${this.state.getStateAttribute('countryName')}`,
+					`customProperties.${this.state.getStateAttribute('countryNumber')}`,
+					`customProperties.${this.state.getStateAttribute('countryUnlocalizedName')}`,
 				],
 				itemSelectText: '',
 				classNames: {

@@ -211,6 +211,10 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 					return \filter_var($item, \FILTER_VALIDATE_BOOLEAN);
 				}
 
+				if ($item === 'null') {
+					return '';
+				}
+
 				return \sanitize_text_field($item);
 			},
 			$params

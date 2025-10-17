@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\ValidationFailedException;
+use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -89,6 +90,16 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if params validation should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckParamsValidation(): bool
+	{
+		return false;
+	}
+
+	/**
 	 * Get mandatory params.
 	 *
 	 * @param array<string, mixed> $params Params passed from the request.
@@ -106,6 +117,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		return [
 			Config::FD_FORM_ID => 'string',
 			Config::FD_POST_ID => 'string',
+			Config::FD_PARAMS => 'array',
+			Config::FD_FILES_UPLOAD => 'array',
 		];
 	}
 
@@ -121,7 +134,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	protected function submitAction(array $formDetails)
 	{
 		// Validate files.
-		if ($this->shouldCheckParamsValidation()) {
+		if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
 			if ($validate = $this->getValidator()->validateFiles($formDetails)) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(

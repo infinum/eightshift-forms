@@ -106,6 +106,7 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 			Config::FD_POST_ID => 'string',
 			Config::FD_ITEM_ID => 'string',
 			Config::FD_INNER_ID => 'string',
+			Config::FD_PARAMS => 'array',
 		];
 	}
 

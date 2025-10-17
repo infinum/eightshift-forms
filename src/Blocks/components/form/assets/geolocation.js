@@ -62,7 +62,7 @@ export class Geolocation {
 		const { formId } = event.detail;
 		const countryCookie = cookies?.getCookie('esForms-country')?.toLocaleLowerCase();
 
-		if (!countryCookie) {
+		if (!countryCookie || countryCookie.length !== 2) {
 			return;
 		}
 
@@ -73,10 +73,10 @@ export class Geolocation {
 
 			switch (type) {
 				case 'country':
-					this.utils.setManualSelectByAttributeValue(formId, name, [countryCookie], this.state.getStateAttribute('selectCountryCode'));
+					this.utils.setManualSelectByAttributeValue(formId, name, [countryCookie], this.state.getStateAttribute('countryCode'));
 					break;
 				case 'phone':
-					this.utils.setManualPhonePrefixByAttributeValue(formId, name, countryCookie, this.state.getStateAttribute('selectCountryCode'));
+					this.utils.setManualPhonePrefixByAttributeValue(formId, name, countryCookie, this.state.getStateAttribute('countryCode'));
 					break;
 			}
 		});

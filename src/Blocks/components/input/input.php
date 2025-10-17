@@ -99,7 +99,9 @@ if ($inputType === 'range') {
 			FormsHelper::getTwPart($twClasses, 'range', 'min', "{$componentClass}__range--min"),
 		]);
 
-		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
+		$min = $inputAttrs['min'] ?? '';
+
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$min}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
@@ -115,7 +117,9 @@ if ($inputType === 'range') {
 			FormsHelper::getTwPart($twClasses, 'range', 'max', "{$componentClass}__range--max"),
 		]);
 
-		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");
+		$max = $inputAttrs['max'] ?? '';
+
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$max}{$inputRangeShowMaxSuffix}</span>");
 	}
 }
 

@@ -103,7 +103,9 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['country']['dataset'];
 	}
 
-	$preselectedValue = strtolower($settings['country']['preselectedValue'] ?: $countryValue); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$countryValue = array_flip(explode(',', str_replace(' ', '', strtolower($countryValue))));
+
+	$countryAttrs[UtilsHelper::getStateAttribute('countryOutputType')] = esc_attr($countryValueType);
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
@@ -111,25 +113,11 @@ if (has_filter($filterName)) {
 		$value = $option[2] ?? ''; // Country phone code.
 		$unlocalizedLabel = $option[3] ?? '';
 
-		switch ($countryValueType) {
-			case 'countryCode':
-				$optionValue = $code;
-				break;
-			case 'countryNumber':
-				$optionValue = $value;
-				break;
-			case 'countryUnlocalizedName':
-				$optionValue = $unlocalizedLabel;
-				break;
-			default:
-				$optionValue = $label;
-				break;
-		}
-
 		$customProperties = [
-			UtilsHelper::getStateAttribute('selectCountryCode') => $code,
-			UtilsHelper::getStateAttribute('selectCountryLabel') => $label,
-			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
+			UtilsHelper::getStateAttribute('countryCode') => $code,
+			UtilsHelper::getStateAttribute('countryName') => $label,
+			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unlocalizedLabel,
+			UtilsHelper::getStateAttribute('countryNumber') => $value,
 		];
 
 		$optionAttrs = array_merge([
@@ -138,9 +126,9 @@ if (has_filter($filterName)) {
 
 		$options[] = '
 			<option
-				value="' . $optionValue . '"
+				value="' . $code . '"
 				' .  Helpers::getAttrsOutput($optionAttrs) . '
-				' . selected($code, $preselectedValue, false) . '
+				' . selected($code, isset($countryValue[$code]) ? $code : null, false) . '
 			>' . $label . '</option>';
 	}
 }

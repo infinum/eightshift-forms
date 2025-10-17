@@ -65,6 +65,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		return [
 			Config::FD_FORM_ID => 'string',
 			Config::FD_POST_ID => 'string',
+			Config::FD_PARAMS => 'array',
 		];
 	}
 

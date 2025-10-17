@@ -31,6 +31,7 @@ export const PhoneOptions = (attributes) => {
 	const phoneUseSearch = checkAttr('phoneUseSearch', attributes, manifest);
 	const phoneUseLabelAsPlaceholder = checkAttr('phoneUseLabelAsPlaceholder', attributes, manifest);
 	const phoneSelectValue = checkAttr('phoneSelectValue', attributes, manifest);
+	const phoneValueType = checkAttr('phoneValueType', attributes, manifest);
 
 	let phoneValidationPatternOptions = [];
 
@@ -102,34 +103,69 @@ export const PhoneOptions = (attributes) => {
 							label={__('Initial value', 'eightshift-forms')}
 						/>
 					}
+					type='number'
+					min='1'
 					value={phoneValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneValue', attributes, manifest), phoneDisabledOptions)}
+					help={__('Initial value of the field in phone number format (e.g. "1234567890").', 'eightshift-forms')}
 				/>
 
 				<TextControl
 					label={
 						<IconLabel
 							icon={icons.titleGeneric}
-							label={__('Select initial value', 'eightshift-forms')}
+							label={__('Dropdown initial value', 'eightshift-forms')}
 						/>
 					}
 					value={phoneSelectValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneSelectValue', attributes, manifest), phoneDisabledOptions)}
-					help={__('Initial value of the field in country code format (e.g. "hr").', 'eightshift-forms')}
+					help={__('Initial value of the field in country code format (e.g. "hr"). Only one value is allowed. Phone dropdown can\'t be empty so if no value is provided, the first option will be selected. If geolocation is enabled it will be preselected based on the user\'s location.', 'eightshift-forms')}
 				/>
 
 				<Select
 					icon={icons.visible}
 					label={__('View type', 'eightshift-forms')}
 					help={__('Select the type of view for the phone field.', 'eightshift-forms')}
-					options={getOption('phoneViewType', attributes, manifest)}
+					options={[
+						{
+							value: "number",
+							label: __("Number", "eightshift-forms")
+						},
+						{
+							value: "number-country-code",
+							label: __("Number with country code", "eightshift-forms")
+						},
+						{
+							value: "number-country-label",
+							label: __("Number with country label", "eightshift-forms")
+						}
+					]}
 					value={checkAttr('phoneViewType', attributes, manifest)}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneViewType', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneViewType', attributes, manifest), phoneDisabledOptions)}
 					simpleValue
 					noSearch
+				/>
+
+				<Select
+					icon={icons.migrationAlt}
+					value={phoneValueType}
+					onChange={(value) => setAttributes({ [getAttrKey('phoneValueType', attributes, manifest)]: value })}
+					label={__('Output value type', 'eightshift-forms')}
+					help={__('Determine what value to sent on form submission.', 'eightshift-forms')}
+					options={[
+						{
+							value: 'countryNumber',
+							label: __('Country number', 'eightshift-forms')
+						},
+						{
+							value: 'countryNumberWithPlusPrefix',
+							label: __('Country number with "+" prefix', 'eightshift-forms')
+						},
+					]}
+					simpleValue
 				/>
 
 				<FieldOptionsVisibility
