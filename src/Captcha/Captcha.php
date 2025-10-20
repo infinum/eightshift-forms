@@ -184,24 +184,11 @@ class Captcha implements CaptchaInterface
 		]);
 
 		if (!isset($responseBody['tokenProperties']['valid']) || !$responseBody['tokenProperties']['valid']) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				]
-			);
-			// phpcs:enable
-		}
-
-		// If response is error.
-		if (!isset($responseBody['riskAnalysis']['score'])) {
-			$errorCode = isset($responseBody['error-codes']) ? \array_flip($responseBody['error-codes']) : [];
+			$errorCode = isset($responseBody['tokenProperties']['invalidReason']) ?? '';
 
 			$retry = false;
 
-			if (isset($errorCode['browser-error'])) {
+			if ($errorCode === 'BROWSER_ERROR') {
 				$retry = true;
 			}
 
@@ -214,6 +201,19 @@ class Captcha implements CaptchaInterface
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
+				]
+			);
+			// phpcs:enable
+		}
+
+		// If response is error.
+		if (!isset($responseBody['riskAnalysis']['score'])) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('captchaError'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
 			// phpcs:enable
