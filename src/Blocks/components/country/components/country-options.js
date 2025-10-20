@@ -178,7 +178,7 @@ export const CountryOptions = (attributes) => {
 					value={countryValueType}
 					onChange={(value) => setAttributes({ [getAttrKey('countryValueType', attributes, manifest)]: value })}
 					label={__('Output value type', 'eightshift-forms')}
-					help={__('Determine what value to sent on form submission.', 'eightshift-forms')}
+					help={__('Determine which value to send on form submission.', 'eightshift-forms')}
 					options={[
 						{
 							value: 'countryCode',
