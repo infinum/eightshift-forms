@@ -827,7 +827,7 @@ export class Form {
 							this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 						}
 					} else {
-						// Most be so we send the data if no files are uploaded.
+						// Must be so we send the data if no files are uploaded.
 						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
 					break;
