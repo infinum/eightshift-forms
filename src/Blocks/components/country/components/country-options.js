@@ -170,23 +170,34 @@ export const CountryOptions = (attributes) => {
 					value={countryValue}
 					onChange={(value) => setAttributes({ [getAttrKey('countryValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryValue', attributes, manifest), countryDisabledOptions)}
-					help={__('Initial value of the field in country code format (e.g. "hr").', 'eightshift-forms')}
+					help={__('Initial value of the field in country code format (e.g. "hr"). If you want to select multiple countries, separate them with a comma. If geolocation is enabled it will be preselected based on the user\'s location.', 'eightshift-forms')}
 				/>
 
 				<Select
 					icon={icons.migrationAlt}
 					value={countryValueType}
 					onChange={(value) => setAttributes({ [getAttrKey('countryValueType', attributes, manifest)]: value })}
-					label={__('Value type', 'eightshift-forms')}
-					subtitle={__('Determine whether to send the value as a country code, number or (un)localized name to the integration.', 'eightshift-forms')}
+					label={__('Output value type', 'eightshift-forms')}
+					help={__('Determine which value to send on form submission.', 'eightshift-forms')}
 					options={[
-						{ value: 'countryCode', label: __('Country code', 'eightshift-forms') },
-						{ value: 'countryName', label: __('Localized country name (site locale)', 'eightshift-forms') },
-						{ value: 'countryUnlocalizedName', label: __('Country name in English', 'eightshift-forms') },
-						{ value: 'countryNumber', label: __('Country phone number prefix', 'eightshift-forms') },
+						{
+							value: 'countryCode',
+							label: __('Country code (lowercase)', 'eightshift-forms')
+						},
+						{
+							value: 'countryCodeUppercase',
+							label: __('Country code (uppercase)', 'eightshift-forms')
+						},
+						{
+							value: 'countryName',
+							label: __('Localized country name (site locale)', 'eightshift-forms')
+						},
+						{
+							value: 'countryUnlocalizedName',
+							label: __('Country name in English', 'eightshift-forms')
+						},
 					]}
 					simpleValue
-					noBottomSpacing
 				/>
 
 				<FieldOptionsVisibility

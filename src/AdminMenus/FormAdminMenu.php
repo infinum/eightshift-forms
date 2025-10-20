@@ -1193,7 +1193,8 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Locations', 'eightshift-forms'),
 						'submitAttrs' => [
-							UtilsHelper::getStateAttribute('locationsId') => $formId
+							UtilsHelper::getStateAttribute('locationsId') => $formId,
+							UtilsHelper::getStateAttribute('locationsType') => Forms::POST_TYPE_SLUG,
 						],
 						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 					]),

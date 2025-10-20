@@ -335,7 +335,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			}
 		}
 
-		return $this->cleanCookieValue($this->getGeolocation());
+		try {
+			return $this->cleanCookieValue($this->getGeolocation());
+		} catch (Exception $e) {
+			return '';
+		}
 	}
 
 	/**

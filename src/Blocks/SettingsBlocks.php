@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Countries\CountriesInterface;
-use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
@@ -47,7 +46,6 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	 * Country keys.
 	 */
 	public const SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY = 'block-country-override-global-settings';
-	public const SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY = 'us';
 	public const SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY = 'block-country-data-set';
 	public const SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY = self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY . '-global';
 
@@ -62,13 +60,6 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY . '-global';
 
 	/**
-	 * Instance variable of geolocation data.
-	 *
-	 * @var GeolocationInterface
-	 */
-	private GeolocationInterface $geolocation;
-
-	/**
 	 * Instance variable of countries data.
 	 *
 	 * @var CountriesInterface
@@ -78,14 +69,10 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	/**
 	 * Create a new admin instance.
 	 *
-	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
 	 * @param CountriesInterface $countries Inject countries which holds data about for storing to countries.
 	 */
-	public function __construct(
-		GeolocationInterface $geolocation,
-		CountriesInterface $countries
-	) {
-		$this->geolocation = $geolocation;
+	public function __construct(CountriesInterface $countries)
+	{
 		$this->countries = $countries;
 	}
 
@@ -299,21 +286,12 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 			$phoneDatasetValue = SettingsHelpers::getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default');
 		}
 
-		$geolocation = \strtolower($this->geolocation->getUsersGeolocation());
-
-		$preselectedValue = self::SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY;
-		if ($geolocation !== 'localhost') {
-			$preselectedValue = $geolocation;
-		}
-
 		return [
 			'country' => [
 				'dataset' => $countryDatasetValue,
-				'preselectedValue' => $preselectedValue,
 			],
 			'phone' => [
 				'dataset' => $phoneDatasetValue,
-				'preselectedValue' => $preselectedValue,
 			],
 			'countries' => $this->countries->getCountriesDataSet(),
 		];

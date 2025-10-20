@@ -38,6 +38,7 @@ $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $
 $phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 $phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
 $phoneViewType = Helpers::checkAttr('phoneViewType', $attributes, $manifest);
+$phoneValueType = Helpers::checkAttr('phoneValueType', $attributes, $manifest);
 
 $phoneId = $phoneName . '-' . Helpers::getUnique();
 
@@ -85,12 +86,15 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['phone']['dataset'];
 	}
 
-	$preselectedValue = strtolower($settings['phone']['preselectedValue'] ?: $phoneSelectValue); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$phoneSelectValue = str_replace(' ', '', strtolower($phoneSelectValue));
+
+	$phoneAttrsSelect[UtilsHelper::getStateAttribute('countryOutputType')] = esc_attr($phoneValueType);
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
+		$unlocalizedLabel = $option[3] ?? '';
 
 		switch ($phoneViewType) {
 			case 'number-country-code':
@@ -105,9 +109,10 @@ if (has_filter($filterName)) {
 		}
 
 		$customProperties = [
-			UtilsHelper::getStateAttribute('selectCountryCode') => $code,
-			UtilsHelper::getStateAttribute('selectCountryLabel') => $label,
-			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
+			UtilsHelper::getStateAttribute('countryCode') => $code,
+			UtilsHelper::getStateAttribute('countryName') => $label,
+			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unlocalizedLabel,
+			UtilsHelper::getStateAttribute('countryNumber') => $value,
 		];
 
 		$optionAttrs = array_merge([
@@ -116,9 +121,9 @@ if (has_filter($filterName)) {
 
 		$options[] = '
 			<option
-				value="' . $value . '"
+				value="' . $code . '"
 				' .  Helpers::getAttrsOutput($optionAttrs) . '
-				' . selected($code, $preselectedValue, false) . '
+				' . selected($code, $phoneSelectValue, false) . '
 			>' . $optionLabel . '</option>';
 	}
 }

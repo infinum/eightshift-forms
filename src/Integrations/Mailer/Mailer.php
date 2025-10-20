@@ -187,8 +187,10 @@ class Mailer implements MailerInterface
 
 		$data = $debugKey ? $data : $this->getDebugOutputLevel($data);
 
-		// translators: %1$s replaces the form title, %2$s replaces the form id, %3$s replaces the debug key.
-		$subject = \sprintf(\__('Troubleshooting form: %1$s (%2$s)(%3$s)', 'eightshift-forms'), \get_the_title($formId), \esc_html($formId), \esc_html($debugKeyValue));
+		$status = \str_contains($debugKeyValue, 'Success') ? 'Success' : 'Error';
+
+		// translators: %1$s replaces the status, %2$s replaces the form title, %3$s replaces the form id, %4$s replaces the debug key.
+		$subject = \sprintf(\__('Forms ACL %1$s: %2$s (%3$s) (%4$s)', 'eightshift-forms'), \esc_html($status), \get_the_title($formId), \esc_html($formId), \esc_html($debugKeyValue));
 
 		$body = '<p style="font-family: monospace;">' . \esc_html__('It seems like there was an issue with form on your website. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
 

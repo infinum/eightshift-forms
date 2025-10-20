@@ -1625,11 +1625,78 @@ export class Utils {
 		}
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
-			return data?.prefix === '' ? '' : `${data?.prefix}${data?.value}`;
+			const option = this.state.getStateElementCustom(name, formId).passedElement?.element?.selectedOptions?.[0];
+			const type = this.state.getStateElementCustom(name, formId).passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
+			const prefixOutput = this.getCountryCombinedValue(formId, name, option, type);
+
+			return (data?.prefix === '' || !prefixOutput) ? '' : `${prefixOutput}${data?.value}`;
 		}
 
 		return data?.value;
 	}
+
+	/**
+	 * Get country combined value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} option Option object.
+	 * @param {string} type Type of the country.
+	 *
+	 * @returns {string|array}
+	 */
+	getCountryCombinedValue(formId, name, option, type) {
+		const data = this.state.getStateElementValue(name, formId);
+
+		if (!data || data?.value === '') {
+			return '';
+		}
+
+		switch (type) {
+			case 'countryCode':
+				return option?.getAttribute(this.state.getStateAttribute('countryCode'));
+			case 'countryCodeUppercase':
+				return option?.getAttribute(this.state.getStateAttribute('countryCode'))?.toUpperCase();
+			case 'countryName':
+				return option?.getAttribute(this.state.getStateAttribute('countryName'));
+			case 'countryUnlocalizedName':
+				return option?.getAttribute(this.state.getStateAttribute('countryUnlocalizedName'));
+			case 'countryNumber':
+				return option?.getAttribute(this.state.getStateAttribute('countryNumber'));
+			case 'countryNumberWithPlusPrefix':
+				return `+${option?.getAttribute(this.state.getStateAttribute('countryNumber'))}`;
+			default:
+				return '';
+		}
+	}
+
+	/**
+	 * Get country combined value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {string|array}
+	 */
+		getCountryCombinedValues(formId, name) {
+			const data = this.state.getStateElementValue(name, formId);
+
+			if (!data || data?.value === '') {
+				return [];
+			}
+
+			const options = this.state.getStateElementCustom(name, formId).passedElement?.element?.selectedOptions;
+
+			if (!options.length) {
+				return [];
+			}
+
+			const type = this.state.getStateElementCustom(name, formId).passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
+
+			return [...options].map((option) => {
+				return this.getCountryCombinedValue(formId, name, option, type);
+			});
+		}
 
 	/**
 	 * Build helper for form data object.
@@ -1846,6 +1913,12 @@ export class Utils {
 			},
 			getPhoneCombinedValue: (formId, name) => {
 				return this.getPhoneCombinedValue(formId, name);
+			},
+			getCountryCombinedValue: (formId, name, option, type) => {
+				return this.getCountryCombinedValue(formId, name, option, type);
+			},
+			getCountryCombinedValues: (formId, name) => {
+				return this.getCountryCombinedValues(formId, name);
 			},
 			buildFormDataItems: (data, dataSet) => {
 				this.buildFormDataItems(data, dataSet);

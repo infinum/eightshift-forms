@@ -616,12 +616,15 @@
 			"selectIsMultiple": "data-is-multiple",
 			"selectPlaceholder": "data-placeholder",
 			"selectCustomProperties": "data-custom-properties",
-			"selectCountryCode": "data-country-code",
-			"selectCountryLabel": "data-country-label",
-			"selectCountryNumber": "data-country-number",
 			"selectOptionIsHidden": "data-option-is-hidden",
 			"selectId": "data-id",
 			"selectValue": "data-value",
+
+			"countryOutputType": "data-country-output-type",
+			"countryCode": "data-country-code",
+			"countryName": "data-country-name",
+			"countryNumber": "data-country-number",
+			"countryUnlocalizedName": "data-country-unlocalized-name",
 
 			"ratingValue": "data-rating",
 

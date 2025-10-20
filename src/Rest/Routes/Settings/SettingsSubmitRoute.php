@@ -116,10 +116,15 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	{
 		switch ($params[Config::FD_TYPE]) {
 			case Config::SETTINGS_GLOBAL_TYPE_NAME:
-				return [];
+				return [
+					Config::FD_TYPE => 'string',
+					Config::FD_PARAMS => 'array',
+				];
 			default:
 				return [
 					Config::FD_FORM_ID => 'string',
+					Config::FD_TYPE => 'string',
+					Config::FD_PARAMS => 'array',
 				];
 		}
 	}

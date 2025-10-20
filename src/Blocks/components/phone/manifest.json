@@ -30,6 +30,10 @@
 		"phoneSelectValue": {
 			"type": "string"
 		},
+		"phoneValueType": {
+			"type": "string",
+			"default": "countryNumber"
+		},
 		"phoneUseLabelAsPlaceholder": {
 			"type": "boolean",
 			"default": false
@@ -94,21 +98,5 @@
 		"phoneTwSelectorsData": {
 			"type": "array"
 		}
-	},
-	"options": {
-		"phoneViewType": [
-			{
-				"value": "number",
-				"label": "Number"
-			},
-			{
-				"value": "number-country-code",
-				"label": "Number with country code"
-			},
-			{
-				"value": "number-country-label",
-				"label": "Number with country label"
-			}
-		]
 	}
 }
