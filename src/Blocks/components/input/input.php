@@ -54,7 +54,7 @@ $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attribute
 
 $twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range']);
 
-$inputClass = Helpers::classnames([
+$inputClass = Helpers::clsx([
 	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
@@ -91,10 +91,12 @@ if ($inputType === 'range') {
 
 	if (!$inputValue) {
 		$inputAttrs['value'] = esc_attr($inputAttrs['min']);
+
+		dump($inputAttrs['min']);
 	}
 
 	if ($inputRangeShowMin) {
-		$cssSelector = Helpers::classnames([
+		$cssSelector = Helpers::clsx([
 			UtilsHelper::getStateSelector('inputRangeMin'),
 			FormsHelper::getTwPart($twClasses, 'range', 'min', "{$componentClass}__range--min"),
 		]);
@@ -112,7 +114,7 @@ if ($inputType === 'range') {
 	}
 
 	if ($inputRangeShowMax) {
-		$cssSelector = Helpers::classnames([
+		$cssSelector = Helpers::clsx([
 			UtilsHelper::getStateSelector('inputRangeMax'),
 			FormsHelper::getTwPart($twClasses, 'range', 'max', "{$componentClass}__range--max"),
 		]);

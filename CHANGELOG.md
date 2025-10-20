@@ -20,6 +20,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Output of "LOCALHOST" in the cookie for geolocation.
 - Better handling of cookie for geolocation when setting country/phone field.
 
+### Changed
+
+- Subject for troubleshooting email now uses new format.
+
 ## [8.8.0]
 
 ### Added

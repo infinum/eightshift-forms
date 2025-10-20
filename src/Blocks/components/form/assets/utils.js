@@ -1670,7 +1670,7 @@ export class Utils {
 		}
 	}
 
-		/**
+	/**
 	 * Get country combined value.
 	 *
 	 * @param {string} formId Form Id.
