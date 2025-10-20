@@ -32,6 +32,7 @@ export const PhoneOptions = (attributes) => {
 	const phoneUseLabelAsPlaceholder = checkAttr('phoneUseLabelAsPlaceholder', attributes, manifest);
 	const phoneSelectValue = checkAttr('phoneSelectValue', attributes, manifest);
 	const phoneValueType = checkAttr('phoneValueType', attributes, manifest);
+	const phoneViewType = checkAttr('phoneViewType', attributes, manifest);
 
 	let phoneValidationPatternOptions = [];
 
@@ -142,7 +143,7 @@ export const PhoneOptions = (attributes) => {
 							label: __("Number with country label", "eightshift-forms")
 						}
 					]}
-					value={checkAttr('phoneViewType', attributes, manifest)}
+					value={phoneViewType}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneViewType', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneViewType', attributes, manifest), phoneDisabledOptions)}
 					simpleValue
