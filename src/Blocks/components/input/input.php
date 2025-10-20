@@ -91,8 +91,6 @@ if ($inputType === 'range') {
 
 	if (!$inputValue) {
 		$inputAttrs['value'] = esc_attr($inputAttrs['min']);
-
-		dump($inputAttrs['min']);
 	}
 
 	if ($inputRangeShowMin) {
