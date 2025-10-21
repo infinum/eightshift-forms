@@ -144,7 +144,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 
 		$formFields = GeneralHelpers::getFormDetails($formId)[Config::FD_FIELD_NAMES] ?? [];
 
-		$eventsMap = \array_fill(1, \count($formFields) - 1, 'question');
+		$eventsMap = !empty($formFields) ? \array_fill(1, \count($formFields) - 1, 'question') : [];
 
 		$eventsMapValue = SettingsHelpers::getSettingValueGroup(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
 		$eventsEmailFieldValue = SettingsHelpers::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
