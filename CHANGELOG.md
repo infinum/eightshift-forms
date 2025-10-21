@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.9.2]
+
+### Fixed
+
+- Moments integration fix for empty form fields.
+
 ## [8.9.1]
 
 ### Fixed
@@ -1579,7 +1585,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-
+[8.9.2]: https://github.com/infinum/eightshift-forms/compare/8.9.1...8.9.2
 [8.9.1]: https://github.com/infinum/eightshift-forms/compare/8.9.0...8.9.1
 [8.9.0]: https://github.com/infinum/eightshift-forms/compare/8.8.0...8.9.0
 [8.8.0]: https://github.com/infinum/eightshift-forms/compare/8.7.0...8.8.0
