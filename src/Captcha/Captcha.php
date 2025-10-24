@@ -184,7 +184,7 @@ class Captcha implements CaptchaInterface
 		]);
 
 		if (!isset($responseBody['tokenProperties']['valid']) || !$responseBody['tokenProperties']['valid']) {
-			$errorCode = isset($responseBody['tokenProperties']['invalidReason']) ?? '';
+			$errorCode = $responseBody['tokenProperties']['invalidReason'] ?? '';
 
 			$retry = false;
 

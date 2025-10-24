@@ -1654,17 +1654,19 @@ export class Utils {
 
 		switch (type) {
 			case 'countryCode':
-				return option?.getAttribute(this.state.getStateAttribute('countryCode'));
+				return option?.getAttribute(this.state.getStateAttribute('countryCode')) || '';
 			case 'countryCodeUppercase':
-				return option?.getAttribute(this.state.getStateAttribute('countryCode'))?.toUpperCase();
+				return option?.getAttribute(this.state.getStateAttribute('countryCode'))?.toUpperCase() || '';
 			case 'countryName':
-				return option?.getAttribute(this.state.getStateAttribute('countryName'));
+				return option?.getAttribute(this.state.getStateAttribute('countryName')) || '';
 			case 'countryUnlocalizedName':
-				return option?.getAttribute(this.state.getStateAttribute('countryUnlocalizedName'));
+				return option?.getAttribute(this.state.getStateAttribute('countryUnlocalizedName')) || '';
 			case 'countryNumber':
-				return option?.getAttribute(this.state.getStateAttribute('countryNumber'));
+				return option?.getAttribute(this.state.getStateAttribute('countryNumber')) || '';
 			case 'countryNumberWithPlusPrefix':
-				return `+${option?.getAttribute(this.state.getStateAttribute('countryNumber'))}`;
+				const countryNumber = option?.getAttribute(this.state.getStateAttribute('countryNumber'));
+
+				return countryNumber ? `+${countryNumber}` : '';
 			default:
 				return '';
 		}
@@ -1693,9 +1695,17 @@ export class Utils {
 
 			const type = this.state.getStateElementCustom(name, formId).passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
 
-			return [...options].map((option) => {
-				return this.getCountryCombinedValue(formId, name, option, type);
+			const output = [];
+
+			[...options].forEach((option) => {
+				const item = this.getCountryCombinedValue(formId, name, option, type);
+
+				if (item) {
+					output.push(item);
+				}
 			});
+
+			return output;
 		}
 
 	/**
