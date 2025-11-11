@@ -77,9 +77,13 @@ class ActivityLogHelper
 	/**
 	 * Get all activity logs.
 	 *
+	 * @param int $page Page number.
+	 * @param int $perPage Number of items per page.
+	 * @param string $search Search query.
+	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getActivityLogsAll(): array
+	public static function getActivityLogsAll(int $page = 1, int $perPage = Config::PER_PAGE_DEFAULT, string $search = ''): array
 	{
 		global $wpdb;
 
@@ -89,7 +93,15 @@ class ActivityLogHelper
 
 		if (!$output) {
 			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-				"SELECT * FROM {$tableName}", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->prepare(
+					"SELECT * FROM {$tableName} WHERE status_key LIKE %s OR data LIKE %s ORDER BY created_at DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					[
+						'%' . $search . '%',
+						'%' . $search . '%',
+						(int) $perPage,
+						(int) $perPage * ($page - 1),
+					]
+				),
 				\ARRAY_A
 			);
 
@@ -100,21 +112,41 @@ class ActivityLogHelper
 			return [];
 		}
 
+		$results = [];
+
 		foreach ($output as $key => $value) {
-			$output[$key] = self::prepareActivityLogOutput($value);
+			$results[$key] = self::prepareActivityLogOutput($value);
 		}
 
-		return $output;
+		$totalPages = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$tableName} WHERE status_key LIKE %s OR data LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				[
+					'%' . $search . '%',
+					'%' . $search . '%',
+				]
+			)
+		);
+
+		return [
+			'currentPage' => (int) $page,
+			'totalPages' => (int) \ceil($totalPages / $perPage),
+			'count' => \count($output),
+			'items' => $results,
+		];
 	}
 
 	/**
 	 * Get activity logs by form ID.
 	 *
 	 * @param string $formId Form Id.
+	 * @param int $page Page number.
+	 * @param int $perPage Number of items per page.
+	 * @param string $search Search query.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function getActivityLogs(string $formId): array
+	public static function getActivityLogs(string $formId, int $page = 1, int $perPage = Config::PER_PAGE_DEFAULT, string $search = ''): array
 	{
 		global $wpdb;
 
@@ -125,9 +157,13 @@ class ActivityLogHelper
 		if (!$output) {
 			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->prepare(
-					"SELECT * FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT * FROM {$tableName} WHERE form_id = %d AND (status_key LIKE %s OR data LIKE %s) ORDER BY created_at DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
-						(int) $formId
+						(int) $formId,
+						'%' . $search . '%',
+						'%' . $search . '%',
+						(int) $perPage,
+						(int) $perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -146,7 +182,23 @@ class ActivityLogHelper
 			$results[] = self::prepareActivityLogOutput($value);
 		}
 
-		return $results;
+		$totalPages = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d AND (status_key LIKE %s OR data LIKE %s)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				[
+					(int) $formId,
+					'%' . $search . '%',
+					'%' . $search . '%',
+				]
+			)
+		);
+
+		return [
+			'currentPage' => (int) $page,
+			'totalPages' => (int) \ceil($totalPages / $perPage),
+			'count' => \count($results),
+			'items' => $results,
+		];
 	}
 
 	/**

@@ -25,6 +25,7 @@ use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class FormSubmitActiveCampaignRoute
@@ -155,7 +156,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		$contactId = $response['contactId'] ?? '';
 
 		// Make an additional requests to the API.
-		if ($response['status'] === Config::STATUS_SUCCESS && $contactId) {
+		if ($response['status'] === AbstractRoute::STATUS_SUCCESS && $contactId) {
 			// If form has action to save tags.
 			$actionTags = $params['actionTags']['value'] ?? [];
 

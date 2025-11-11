@@ -111,7 +111,7 @@ export class Steps {
 			currentStep,
 		];
 
-		this.setChangeStep(formId, nextStep, flow, progressBarItems);
+		this.setChangeStep(formId, nextStep, flow, progressBarItems, !this.state.getStateFormMultistepSkipScroll(formId));
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
@@ -141,7 +141,7 @@ export class Steps {
 			...flow,
 		];
 
-		this.setChangeStep(formId, nextStep, newFlow);
+		this.setChangeStep(formId, nextStep, newFlow, 0, !this.state.getStateFormMultistepSkipScroll(formId));
 
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsGoToPrevStep'), formId);
 	}
@@ -168,24 +168,25 @@ export class Steps {
 			newFlow.splice(nextStepIndex, flow.length);
 		}
 
-		this.setChangeStep(formId, nextStep, newFlow);
+		this.setChangeStep(formId, nextStep, newFlow, 0, !this.state.getStateFormMultistepSkipScroll(formId));
 	}
 
 	/**
 	 * Reset steps to first step.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {boolean} shouldScroll Should scroll to the first step.
 	 *
 	 * @returns {void}
 	 */
-	resetSteps(formId) {
+	resetSteps(formId, shouldScroll = true) {
 		const firstStep = this.state.getStateFormStepsFirstStep(formId);
 
 		if (!firstStep) {
 			return;
 		}
 
-		this.setChangeStep(formId, firstStep);
+		this.setChangeStep(formId, firstStep, [], 0, shouldScroll);
 
 		// Hide prev button.
 		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
@@ -200,10 +201,11 @@ export class Steps {
 	 * @param {string} nextStep Next step Id.
 	 * @param {array} flow Flow to update.
 	 * @param {int} progressBarItems Progress bar number of items.
+	 * @param {boolean} shouldScroll Should scroll to the next step.
 	 *
 	 * @returns {void}
 	 */
-	setChangeStep(formId, nextStep, flow = [], progressBarItems = 0) {
+	setChangeStep(formId, nextStep, flow = [], progressBarItems = 0, shouldScroll = true) {
 		if (!nextStep) {
 			return;
 		}
@@ -222,7 +224,7 @@ export class Steps {
 		nextStepElement?.setAttribute('aria-hidden', 'false');
 
 		// Scroll to the next step.
-		if (!this.state.getStateFormMultistepSkipScroll(formId)) {
+		if (shouldScroll) {
 			this.utils.scrollAction(nextStepElement);
 		}
 
@@ -369,7 +371,7 @@ export class Steps {
 		const { formId } = event.detail;
 
 		// Set fields logic.
-		this.resetSteps(formId, true);
+		this.resetSteps(formId, false);
 
 		// Toggle Debug Preview.
 		this.toggleDebugPreview();
@@ -432,11 +434,11 @@ export class Steps {
 			goToStepWithError: (formId, errors) => {
 				this.goToStepWithError(formId, errors);
 			},
-			resetSteps: (formId) => {
-				this.resetSteps(formId);
+			resetSteps: (formId, shouldScroll = true) => {
+				this.resetSteps(formId, shouldScroll);
 			},
-			setChangeStep: (formId, nextStep, flow, progressBarItems = 0) => {
-				this.setChangeStep(formId, nextStep, flow, progressBarItems);
+			setChangeStep: (formId, nextStep, flow, progressBarItems = 0, shouldScroll = true) => {
+				this.setChangeStep(formId, nextStep, flow, progressBarItems, shouldScroll);
 			},
 			setProgressBar: (formId, nextStep, flow, progressBarItems = 0) => {
 				this.setProgressBar(formId, nextStep, flow, progressBarItems);

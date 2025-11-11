@@ -5,7 +5,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
+		gap: 0.5rem;
 		border-block-end: 1px solid var(--global-colors-esf-gray-300);
 		margin: 0 -1.5rem;
 		padding: 0 1.5rem 1.5rem;
@@ -15,10 +15,18 @@
 	&__top-bar-right {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.3rem;
 
 		.es-checkbox {
 			margin: 0;
+		}
+
+		.es-input[name='search'] {
+			min-width: 6.25rem;
+		}
+
+		.es-select__select[name='per-page'] {
+			width: 4.375rem;
 		}
 	}
 
@@ -41,5 +49,48 @@
 
 	.es-global-msg {
 		z-index: 10;
+	}
+}
+
+
+.es-pagination {
+	border-top: 1px solid var(--global-colors-esf-gray-300);
+	padding-top: 1.5rem;
+	margin-inline: -1.5rem;
+
+	ul {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+
+	li {
+		list-style: none;
+	}
+
+	a,
+	span.current {
+		text-decoration: none;
+		padding: 0.7rem 1rem;
+		border-radius: 0.5rem;
+		background: transparent;
+		color: var(--global-colors-esf-gray-500);
+		border: 1px solid var(--global-colors-esf-gray-300);
+		transition: {
+			property: background-color, color, border-color;
+			timing-function: linear;
+			duration: 0.3s;
+		}
+
+		&:hover {
+			background: var(--global-colors-esf-admin-accent-05);
+		}
+
+		&.current {
+			background: var(--global-colors-esf-admin-accent);
+			border-color: var(--global-colors-esf-admin-accent);
+			color: var(--global-colors-esf-white);
+		}
 	}
 }

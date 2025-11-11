@@ -18,10 +18,10 @@ interface FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @param string $type Type of listing to output.
-	 * @param string $parent Parent type for listing to output.
+	 * @param array<string, mixed> $additionalQuery Additional query arguments.
+	 * @param bool $showTrash Whether to show trash posts.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<mixed>
 	 */
-	public function getFormsList(string $type = '', string $parent = ''): array;
+	public function getFormsList(array $additionalQuery = [], bool $showTrash = false): array;
 }

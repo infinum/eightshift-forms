@@ -110,16 +110,17 @@ domReady(() => {
 	}
 
 	////////////////////////////////////////////////////////////////
-	// Filter
+	// Search
 	////////////////////////////////////////////////////////////////
 
-	const selectorFilter = state.getStateSelectorAdmin('listingFilter', true);
+	const selectorSearch = state.getStateSelectorAdmin('listingSearch', true);
 
-	if (document.querySelector(selectorFilter)) {
+	if (document.querySelector(selectorSearch)) {
 		import('./filter').then(({ Filter }) => {
 			new Filter({
 				utils: utils,
-				filterSelector: selectorFilter,
+				searchSelector: selectorSearch,
+				pageSelector: state.getStateSelectorAdmin('listingPerPage', true),
 				itemSelector: state.getStateSelectorAdmin('listingItem', true),
 			}).init();
 		});

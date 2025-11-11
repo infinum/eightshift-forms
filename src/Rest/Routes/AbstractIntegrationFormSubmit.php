@@ -435,14 +435,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 		$response = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[Config::IARD_VALIDATION] ?? [];
-		$status = $response[Config::IARD_STATUS] ?? Config::STATUS_ERROR;
+		$status = $response[Config::IARD_STATUS] ?? AbstractRoute::STATUS_ERROR;
 
 		// Output integrations validation issues.
 		if ($validation) {
 			$response[Config::IARD_VALIDATION] = $this->getValidator()->getValidationLabelItems($validation, $formId);
 		}
 
-		if ($status === Config::STATUS_ERROR) {
+		if ($status === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),

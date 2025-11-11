@@ -175,7 +175,7 @@ final class ApiHelpers
 	public static function getApiSuccessPublicOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
-			'status' => Config::STATUS_SUCCESS,
+			'status' => AbstractRoute::STATUS_SUCCESS,
 			'code' => AbstractRoute::API_RESPONSE_CODE_OK,
 			'message' => $msg,
 		];

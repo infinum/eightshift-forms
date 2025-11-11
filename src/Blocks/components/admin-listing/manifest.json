@@ -22,6 +22,9 @@
 		},
 		"adminListingTopItems": {
 			"type": "array"
+		},
+		"adminListingPagination": {
+			"type": "array"
 		}
 	}
 }

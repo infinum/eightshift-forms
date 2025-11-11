@@ -425,27 +425,6 @@ class Config
 	public const DELIMITER = '---';
 
 	/**
-	 * Status error const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_ERROR = 'error';
-
-	/**
-	 * Status success const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_SUCCESS = 'success';
-
-	/**
-	 * Status warning const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_WARNING = 'warning';
-
-	/**
 	 * Routes namespace.
 	 *
 	 * @var string
@@ -458,8 +437,6 @@ class Config
 	 * @var string
 	 */
 	public const ROUTE_VERSION = 'v1';
-
-	public const API_RESPONSE_CODE_SUCCESS = 200;
 
 	// ------------------------------------------------------------------
 	// Form details keys
@@ -603,4 +580,15 @@ class Config
 		self::CAP_FORM_RESULT_PUBLISH,
 		self::CAP_FORM_RESULT_READ_PRIVATE,
 	];
+
+	// ------------------------------------------------------------------
+	// MISCELLANEOUS
+	// ------------------------------------------------------------------
+
+	/**
+	 * Per page default.
+	 *
+	 * @var int
+	 */
+	public const PER_PAGE_DEFAULT = 50;
 }
