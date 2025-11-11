@@ -9,7 +9,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 
 - Moments internation now supports hidden fields overrides.
-- Pagination for all admin listings.
+- Pagination and search for all admin listings.
 
 ### Fixed
 
