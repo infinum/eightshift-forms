@@ -21,6 +21,7 @@ $adminListingPageTitle = Helpers::checkAttr('adminListingPageTitle', $attributes
 $adminListingPageSubTitle = Helpers::checkAttr('adminListingPageSubTitle', $attributes, $manifest);
 $adminListingShowNoItems = Helpers::checkAttr('adminListingShowNoItems', $attributes, $manifest);
 $adminListingItems = Helpers::checkAttr('adminListingItems', $attributes, $manifest);
+$adminListingPagination = Helpers::checkAttr('adminListingPagination', $attributes, $manifest);
 $adminListingTopItems = Helpers::checkAttr('adminListingTopItems', $attributes, $manifest);
 $adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $manifest);
 
@@ -71,6 +72,9 @@ $help = Helpers::render('container', [
 					$adminListingShowNoItems ?
 						Helpers::ensureString($adminListingNoItems) :
 						Helpers::ensureString($adminListingItems),
+					Helpers::render('pagination', [
+						'data' => $adminListingPagination,
+					], 'components', false, 'admin-listing/partials'),
 				]),
 			]),
 			$help,

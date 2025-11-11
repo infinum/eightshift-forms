@@ -89,7 +89,7 @@ class ActivityLogAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function getJobCallback()
 	{
-		$logs = ActivityLogHelper::getActivityLogsAll();
+		$logs = ActivityLogHelper::getActivityLogsAll(1, 100000);
 
 		$retentionInterval = SettingsHelpers::getOptionValueWithFallback(SettingsFallback::SETTINGS_FALLBACK_AUTO_DELETE_RETENTION_KEY, (string) SettingsFallback::SETTINGS_FALLBACK_AUTO_DELETE_RETENTION_DEFAULT_VALUE);
 

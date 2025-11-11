@@ -24,6 +24,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftForms_Parsedown as Parsedown;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Exception;
 
 /**
  * Class Mailer
@@ -393,9 +394,13 @@ class Mailer implements MailerInterface
 		}
 
 		if ($shouldParse) {
-			$parsedown = new Parsedown();
+			try {
+				$parsedown = new Parsedown();
 
-			return $parsedown->text($template);
+				return $parsedown->text($template);
+			} catch (Exception $e) {
+				return $template;
+			}
 		}
 
 		return $template;

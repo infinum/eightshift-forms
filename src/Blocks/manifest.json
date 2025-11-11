@@ -481,7 +481,8 @@
 		},
 		"selectorsAdmin": {
 			"singleSubmit": "js-es-block-single-submit",
-			"listingFilter": "js-es-admin-listing-filter",
+			"listingSearch": "js-es-admin-listing-search",
+			"listingPerPage": "js-es-admin-listing-per-page",
 			"listingItem": "js-es-admin-listing-item",
 			"listingLocations": "js-es-admin-listing-locations",
 			"listingBulk": "js-es-admin-listing-bulk",

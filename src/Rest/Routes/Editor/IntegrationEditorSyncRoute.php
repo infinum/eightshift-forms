@@ -19,6 +19,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class IntegrationEditorSyncRoute
@@ -117,7 +118,7 @@ class IntegrationEditorSyncRoute extends AbstractSimpleFormSubmit
 		$status = $syncForm['status'] ?? '';
 		$message = $syncForm['message'] ?? '';
 
-		if ($status === Config::STATUS_ERROR) {
+		if ($status === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$message,

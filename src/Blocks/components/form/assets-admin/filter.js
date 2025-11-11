@@ -5,71 +5,44 @@ export class Filter {
 		/** @type {import('./../assets/state').State} */
 		this.state = this.utils.getState();
 
-		this.filterSelector = options.filterSelector;
-		this.itemSelector = options.itemSelector;
+
+		this.searchSelector = document.querySelector(options.searchSelector);
+		this.pageSelector = document.querySelector(options.pageSelector);
+		this.itemSelector = document.querySelector(options.itemSelector);
 	}
 
 	init = () => {
-		if (!document.querySelectorAll(this.itemSelector)?.length) {
-			return;
-		}
-
-		this.setActiveFilterByUrl();
-
-		document.querySelector(this.filterSelector).addEventListener('change', this.onChange, true);
+		this.searchSelector.focus();
+		this.searchSelector.addEventListener('change', this.onChangeInput, true);
+		this.pageSelector.addEventListener('change', this.onChangeSelect, true);
 	};
 
 	// Handle form submit and all logic.
-	onChange = (event) => {
+	onChangeInput = (event) => {
 		const element = event.target;
-		const selectedValue = element.options[element.selectedIndex].value;
+		const selectedValue = element.value;
 
-		this.setActiveItemsByFilter(selectedValue);
+		this.updateSearchToUrl(element.name, selectedValue);
 	};
 
-	setActiveItemsByFilter = (selectedValue) => {
-		this.updateFilterToUrl(selectedValue);
+	onChangeSelect = (event) => {
+		const element = event.target;
+		const selectedValue = element.value;
 
-		this.filterResetItems();
-
-		if (selectedValue !== '') {
-			this.filterItems(selectedValue);
-		}
+		this.updateSearchToUrl(element.name, selectedValue);
 	};
 
-	setActiveFilterByUrl = () => {
+	updateSearchToUrl = (param, value) => {
 		const url = new URL(window.location);
 
-		const param = url.searchParams.get('filter');
-
-		if (param) {
-			document.querySelector(`${this.filterSelector} option[value=${param}]`).selected = true;
-			this.setActiveItemsByFilter(param);
-		}
-	};
-
-	filterItems = (selectedValue) => {
-		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
-			if (item.getAttribute(this.state.getStateAttribute('adminIntegrationType')) !== selectedValue) {
-				item?.classList?.add(this.state.getStateSelector('isHidden'));
-			}
-		});
-	};
-
-	filterResetItems = () => {
-		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
-			item?.classList?.remove(this.state.getStateSelector('isHidden'));
-		});
-	};
-
-	updateFilterToUrl = (filter) => {
-		const url = new URL(window.location);
-
-		if (filter) {
-			url.searchParams.set('filter', filter);
+		if (value) {
+			url.searchParams.set(param, value);
 		} else {
-			url.searchParams.delete('filter');
+			url.searchParams.delete(param);
 		}
-		window.history.pushState(null, '', url.toString());
+
+		url.searchParams.delete('paged');
+
+		window.location.href = url;
 	};
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\CronJobs;
 
 use DateTime;
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Helpers\SettingsHelpers;
@@ -103,7 +104,9 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function getJobCallback()
 	{
-		$forms = $this->formsListing->getFormsList();
+		$forms = $this->formsListing->getFormsList([
+			'post_type' => Forms::POST_TYPE_SLUG,
+		]);
 
 		foreach ($forms as $form) {
 			$formId = (string) $form['id'] ?: '';
@@ -115,7 +118,7 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 				continue;
 			}
 
-			$entries = EntriesHelper::getEntries($formId);
+			$entries = EntriesHelper::getEntries($formId, 1, 100000);
 
 			foreach ($entries as $entry) {
 				$entryId = $entry['id'] ?? '';

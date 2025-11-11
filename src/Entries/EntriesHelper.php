@@ -152,9 +152,13 @@ class EntriesHelper
 	/**
 	 * Get all entries.
 	 *
+	 * @param int $page Page number.
+	 * @param int $perPage Number of items per page.
+	 * @param string $search Search query.
+	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getEntriesAll(): array
+	public static function getEntriesAll(int $page = 1, int $perPage = Config::PER_PAGE_DEFAULT, string $search = ''): array
 	{
 		global $wpdb;
 
@@ -164,7 +168,14 @@ class EntriesHelper
 
 		if (!$output) {
 			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-				"SELECT * FROM {$tableName}", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->prepare(
+					"SELECT * FROM {$tableName} WHERE entry_value LIKE %s ORDER BY created_at DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					[
+						'%' . $search . '%',
+						(int) $perPage,
+						(int) $perPage * ($page - 1),
+					]
+				),
 				\ARRAY_A
 			);
 
@@ -175,21 +186,40 @@ class EntriesHelper
 			return [];
 		}
 
+		$results = [];
+
 		foreach ($output as $key => $value) {
-			$output[$key] = self::prepareEntryOutput($value);
+			$results[$key] = self::prepareEntryOutput($value);
 		}
 
-		return $output;
+		$totalPages = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$tableName} WHERE entry_value LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				[
+					'%' . $search . '%',
+				]
+			)
+		);
+
+		return [
+			'currentPage' => (int) $page,
+			'totalPages' => (int) \ceil($totalPages / $perPage),
+			'count' => \count($results),
+			'items' => $results,
+		];
 	}
 
 	/**
 	 * Get entries by form ID.
 	 *
 	 * @param string $formId Form Id.
+	 * @param int $page Page number.
+	 * @param int $perPage Number of items per page.
+	 * @param string $search Search query.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function getEntries(string $formId): array
+	public static function getEntries(string $formId, int $page = 1, int $perPage = Config::PER_PAGE_DEFAULT, string $search = ''): array
 	{
 		global $wpdb;
 
@@ -200,9 +230,12 @@ class EntriesHelper
 		if (!$output) {
 			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->prepare(
-					"SELECT * FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT * FROM {$tableName} WHERE form_id = %d AND (entry_value LIKE %s) ORDER BY created_at DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
-						(int) $formId
+						(int) $formId,
+						'%' . $search . '%',
+						(int) $perPage,
+						(int) $perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -221,38 +254,22 @@ class EntriesHelper
 			$results[] = self::prepareEntryOutput($value);
 		}
 
-		return $results;
-	}
+		$totalPages = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d AND (entry_value LIKE %s)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				[
+					(int) $formId,
+					'%' . $search . '%',
+				]
+			)
+		);
 
-	/**
-	 * Get entries count by form ID.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return string
-	 */
-	public static function getEntriesCount(string $formId): string
-	{
-		global $wpdb;
-
-		$tableName = self::getFullTableName();
-
-		$output = \wp_cache_get($formId, self::TABLE_NAME . 'entries_count');
-
-		if (!$output) {
-			$output = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					[
-						(int) $formId
-					]
-				)
-			) ?: '0'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries_count');
-		}
-
-		return $output;
+		return [
+			'currentPage' => (int) $page,
+			'totalPages' => (int) \ceil($totalPages / $perPage),
+			'count' => \count($results),
+			'items' => $results,
+		];
 	}
 
 	/**

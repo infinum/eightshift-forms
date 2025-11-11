@@ -487,7 +487,7 @@ export class Form {
 
 				// Return to original first step.
 				if (isFinalStep) {
-					this.steps.resetSteps(formId);
+					this.steps.resetSteps(formId, !this.state.getStateFormMultistepSkipScroll(formId));
 				}
 
 				// Set output results.

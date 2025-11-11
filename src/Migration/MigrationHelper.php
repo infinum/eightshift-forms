@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * MigrationHelper trait.
@@ -111,7 +112,7 @@ trait MigrationHelper
 
 		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
 		$syncFormOutput = $syncForm['data']['output'] ?? [];
-		$syncFormStatus = $syncForm['status'] ?? Config::STATUS_ERROR;
+		$syncFormStatus = $syncForm['status'] ?? AbstractRoute::STATUS_ERROR;
 		$syncFormDebugType = $syncForm['debugType'] ?? '';
 
 		if (!$itemId) {
@@ -132,7 +133,7 @@ trait MigrationHelper
 			return $output;
 		}
 
-		if ($syncFormStatus === Config::STATUS_ERROR) {
+		if ($syncFormStatus === AbstractRoute::STATUS_ERROR) {
 			// translators: %s will be replaced with the debug type.
 			$output['msg'][] = \sprintf(\__("Sync form status is error - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;

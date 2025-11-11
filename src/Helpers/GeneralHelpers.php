@@ -30,15 +30,25 @@ final class GeneralHelpers
 	 */
 	public static function getListingPageUrl(string $type = '', string $formId = '', string $parent = '', string $page = Config::SLUG_ADMIN): string
 	{
-		return \add_query_arg(
-			[
-				'page' => $page,
-				'type' => $type,
-				'formId' => $formId,
-				'parent' => $parent,
-			],
-			\get_admin_url(null, "admin.php")
-		);
+		$output = [];
+
+		if ($page) {
+			$output['page'] = $page;
+		}
+
+		if ($type) {
+			$output['type'] = $type;
+		}
+
+		if ($formId) {
+			$output['formId'] = $formId;
+		}
+
+		if ($parent) {
+			$output['parent'] = $parent;
+		}
+
+		return \add_query_arg($output, \get_admin_url(null, "admin.php"));
 	}
 
 	/**
@@ -75,12 +85,13 @@ final class GeneralHelpers
 	 */
 	public static function getNewFormPageUrl(string $postType): string
 	{
-		return \add_query_arg(
-			[
-				'post_type' => $postType,
-			],
-			\get_admin_url(null, "post-new.php")
-		);
+		$output = [];
+
+		if ($postType) {
+			$output['post_type'] = $postType;
+		}
+
+		return \add_query_arg($output, \get_admin_url(null, "post-new.php"));
 	}
 
 	/**

@@ -21,7 +21,6 @@ use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
-use EightshiftForms\Helpers\IntegrationsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
@@ -179,167 +178,114 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$formId = isset($_GET['formId']) ? \sanitize_text_field(\wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$parent = isset($_GET['parent']) ? \sanitize_text_field(\wp_unslash($_GET['parent'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : '';
+		$formId = isset($_GET['formId']) ? \sanitize_text_field(\wp_unslash($_GET['formId'])) : '';
+		$parent = isset($_GET['parent']) ? \sanitize_text_field(\wp_unslash($_GET['parent'])) : '';
+		$search = isset($_GET['search']) ? \sanitize_text_field(\wp_unslash($_GET['search'])) : '';
+		$perPage = isset($_GET['per-page']) ? (int) $_GET['per-page'] : Config::PER_PAGE_DEFAULT;
+		$page = isset($_GET['paged']) ? (int) $_GET['paged'] : 1;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
 		$output = [];
 
 		switch ($type) {
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
-				$items = GeneralHelpers::getBlockLocations($formId, '');
-				$count = \count($items);
+				$data = GeneralHelpers::getBlockLocations($formId, '');
+				$items = $data;
+				$count = \count($data);
 				$formTitle = \get_the_title((int) $formId);
 
 				$output = [
 					// Translators: %s is the form title.
 					'adminListingPageTitle' => $this->getMultiLangTitle(\sprintf(\__('Locations where your "%s" form is used', 'eightshift-forms'), $formTitle)),
-					// Translators: %s is the number of locations.
-					'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 form location.', 'eightshift-forms') : \sprintf(\__('Showing %s form locations.', 'eightshift-forms'), $count),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
 				if ($formId) {
-					$items = EntriesHelper::getEntries($formId);
+					$data = EntriesHelper::getEntries($formId, $page, $perPage, $search);
 				} else {
-					$items = EntriesHelper::getEntriesAll();
+					$data = EntriesHelper::getEntriesAll($page, $perPage, $search);
 				}
 
-				$count = \count($items);
+				$items = $data['items'] ?? [];
+				$count = $data['count'] ?? 0;
 
 				$output = [
 					'adminListingPageTitle' => $formId ?
 						// Translators: %s is the form title.
 						$this->getMultiLangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
 						$this->getMultiLangTitle(\__('All entries', 'eightshift-forms')),
-					'adminListingPageSubTitle' => $formId ?
-						\sprintf(
-							// Translators: %s is the number of forms.
-							\_n(
-								'Showing %d form entry.',
-								'Showing %d form entries.',
-								$count,
-								'eightshift-forms'
-							),
-							$count
-						) :
-						\sprintf(
-							// Translators: %s is the number of forms.
-							\_n(
-								'Showing %d entry.',
-								'Showing %d entries.',
-								$count,
-								'eightshift-forms'
-							),
-							$count
-						),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				if ($formId) {
-					$items = ActivityLogHelper::getActivityLogs($formId);
+					$data = ActivityLogHelper::getActivityLogs($formId, $page, $perPage, $search);
 				} else {
-					$items = ActivityLogHelper::getActivityLogsAll();
+					$data = ActivityLogHelper::getActivityLogsAll($page, $perPage, $search);
 				}
 
-				$count = \count($items);
+				$items = $data['items'] ?? [];
+				$count = $data['count'] ?? 0;
 
 				$output = [
 					'adminListingPageTitle' => $formId ?
 						// Translators: %s is the form title.
 						$this->getMultiLangTitle(\sprintf(\__('Activity logs for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
 						$this->getMultiLangTitle(\__('All activity logs', 'eightshift-forms')),
-					'adminListingPageSubTitle' => $formId ?
-						\sprintf(
-							// Translators: %s is the number of forms.
-							\_n(
-								'Showing %d form activity log.',
-								'Showing %d form activity logs.',
-								$count,
-								'eightshift-forms'
-							),
-							$count
-						) :
-						\sprintf(
-							// Translators: %s is the number of forms.
-							\_n(
-								'Showing %d activity log.',
-								'Showing %d activity logs.',
-								$count,
-								'eightshift-forms'
-							),
-							$count
-						),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
-				$items = $this->formsListing->getFormsList($type, $parent);
-				$count = \count($items);
+				$data = $this->formsListing->getFormsList([
+					'post_type' => $parent === Config::SLUG_ADMIN_LISTING_RESULTS ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG,
+					'post_status' => 'trash',
+					'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+					'paged' => $page,
+					's' => $search,
+				], true);
+
+				$items = $data['items'] ?? [];
+				$count = $data['count'] ?? 0;
 
 				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
 					$output = [
 						// Translators: %s is the form title.
 						'adminListingPageTitle' => $this->getMultiLangTitle(\__('Deleted result outputs', 'eightshift-forms')),
-						'adminListingPageSubTitle' => \sprintf(
-							// Translators: %s is the number of forms.
-							\_n(
-								'Showing %d trashed result output.',
-								'Showing %d trashed result outputs.',
-								$count,
-								'eightshift-forms'
-							),
-							$count
-						),
 					];
 				} else {
 					$output = [
 						'adminListingPageTitle' => $this->getMultiLangTitle(\__('Deleted forms', 'eightshift-forms')),
-						'adminListingPageSubTitle' => \sprintf(
-							// Translators: %s is the number of forms.
-							\_n(
-								'Showing %d trashed form.',
-								'Showing %d trashed forms.',
-								$count,
-								'eightshift-forms'
-							),
-							$count
-						),
 					];
 				}
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
-				$items = $this->formsListing->getFormsList($type, $parent);
-				$count = \count($items);
+				$data = $this->formsListing->getFormsList([
+					'post_type' => Result::POST_TYPE_SLUG,
+					'posts_per_page' => $perPage,
+					'paged' => $page,
+					's' => $search,
+				]);
+
+				$items = $data['items'] ?? [];
+				$count = $data['count'] ?? 0;
 
 				$output = [
 					'adminListingPageTitle' => $this->getMultiLangTitle(\__('Result outputs', 'eightshift-forms')),
-					'adminListingPageSubTitle' => \sprintf(
-						// Translators: %s is the number of forms.
-						\_n(
-							'Showing %d result output.',
-							'Showing %d result outputs.',
-							$count,
-							'eightshift-forms'
-						),
-						$count
-					),
 				];
 				break;
 			default:
-				$items = $this->formsListing->getFormsList($type, $parent);
-				$count = \count($items);
+				$data = $this->formsListing->getFormsList([
+					'post_type' => Forms::POST_TYPE_SLUG,
+					'posts_per_page' => $perPage,
+					'paged' => $page,
+					's' => $search,
+				]);
+
+				$items = $data['items'] ?? [];
+				$count = $data['count'] ?? 0;
 
 				$output = [
 					'adminListingPageTitle' => $this->getMultiLangTitle(\__('All Forms', 'eightshift-forms')),
-					'adminListingPageSubTitle' => \sprintf(
-						// Translators: %s is the number of forms.
-						\_n(
-							'Showing %d form.',
-							'Showing %d forms.',
-							$count,
-							'eightshift-forms'
-						),
-						$count
-					),
 				];
 				break;
 		}
@@ -349,8 +295,9 @@ class FormAdminMenu extends AbstractAdminMenu
 			[
 				'adminListingShowNoItems' => $count === 0,
 				'adminListingItems' => $this->getListingItems($items, $type, $parent),
-				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent),
+				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent, $search, $perPage),
 				'adminListingNoItems' => $this->getNoItemsMessage($type, $parent),
+				'adminListingPagination' => $data
 			]
 		);
 	}
@@ -482,15 +429,17 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * @param string $type Type of the listing.
 	 * @param string $formId Form ID.
 	 * @param string $parent Parent type of the listing.
+	 * @param string $search Search query.
+	 * @param int $perPage Number of items per page.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getTopBarItems(string $type, string $formId, string $parent): array
+	private function getTopBarItems(string $type, string $formId, string $parent, string $search, int $perPage): array
 	{
 		$bulkSelector = UtilsHelper::getStateSelectorAdmin('listingBulk');
-		$filterSelector = UtilsHelper::getStateSelectorAdmin('listingFilter');
+		$searchSelector = UtilsHelper::getStateSelectorAdmin('listingSearch');
+		$perPageSelector = UtilsHelper::getStateSelectorAdmin('listingPerPage');
 		$exportSelector = UtilsHelper::getStateSelectorAdmin('listingExport');
-		$selectAllSelector = UtilsHelper::getStateSelectorAdmin('listingSelectAll');
 
 		$left = [];
 		$right = [];
@@ -509,18 +458,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$left = [
-					Helpers::render('checkbox', [
-						'checkboxValue' => 'all',
-						'checkboxName' => 'all',
-						'additionalClass' => $selectAllSelector,
-					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(),
-						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
-					]),
+					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
@@ -558,18 +496,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
 				$left = [
-					Helpers::render('checkbox', [
-						'checkboxValue' => 'all',
-						'checkboxName' => 'all',
-						'additionalClass' => $selectAllSelector,
-					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(),
-						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
-					]),
+					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
@@ -606,18 +533,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$left = [
-					Helpers::render('checkbox', [
-						'checkboxValue' => 'all',
-						'checkboxName' => 'all',
-						'additionalClass' => $selectAllSelector,
-					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(),
-						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
-					]),
+					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
@@ -655,18 +571,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
 					$left = [
-						Helpers::render('checkbox', [
-							'checkboxValue' => 'all',
-							'checkboxName' => 'all',
-							'additionalClass' => $selectAllSelector,
-						]),
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS),
-							'submitValue' => \__('Back', 'eightshift-forms'),
-							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
-						]),
+						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitValue' => \__('Restore', 'eightshift-forms'),
@@ -679,18 +584,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					];
 				} else {
 					$left = [
-						Helpers::render('checkbox', [
-							'checkboxValue' => 'all',
-							'checkboxName' => 'all',
-							'additionalClass' => $selectAllSelector,
-						]),
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(),
-							'submitValue' => \__('Back', 'eightshift-forms'),
-							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
-						]),
+						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitValue' => \__('Restore', 'eightshift-forms'),
@@ -717,18 +611,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			default:
 				$left = [
-					Helpers::render('checkbox', [
-						'checkboxValue' => 'all',
-						'checkboxName' => 'all',
-						'additionalClass' => $selectAllSelector,
-					]),
-					Helpers::render('select', [
-						'fieldSkip' => true,
-						'selectName' => 'filter',
-						'selectContent' => $this->getFilterOptions(),
-						'selectPlaceholder' => \__('Show all', 'eightshift-forms'),
-						'additionalClass' => $filterSelector,
-					]),
+					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
@@ -1219,42 +1102,72 @@ class FormAdminMenu extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get filter options.
+	 * Get default left top bar items.
 	 *
-	 * @return string
+	 * @param string $search Search query.
+	 * @param int $perPage Number of items per page.
+	 * @param array<string> $include Include these items.
+	 *
+	 * @return array<mixed>
 	 */
-	private function getFilterOptions(): string
+	private function getDefaultLeftTopBarItems($search, $perPage, $include = []): array
 	{
-		$filterOptions = Helpers::render(
-			'select-option',
-			[
-				'selectOptionLabel' => \__('Not Configured', 'eightshift-forms'),
-				'selectOptionValue' => self::ADMIN_MENU_FILTER_NOT_CONFIGURED,
-			]
-		);
+		$selectAllSelector = UtilsHelper::getStateSelectorAdmin('listingSelectAll');
+		$searchSelector = UtilsHelper::getStateSelectorAdmin('listingSearch');
+		$perPageSelector = UtilsHelper::getStateSelectorAdmin('listingPerPage');
 
-		$activeIntegration = \array_flip(IntegrationsHelpers::getActiveIntegrations());
+		$include = \array_flip($include);
 
-		foreach (\apply_filters(Config::FILTER_SETTINGS_DATA, []) as $key => $value) {
-			$type = $value['type'] ?? '';
-
-			if ($type !== Config::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
-				continue;
-			}
-
-			if (!isset($activeIntegration[$key])) {
-				continue;
-			}
-
-			$filterOptions .= Helpers::render(
-				'select-option',
-				[
-					'selectOptionLabel' => $value['labels']['title'] ?? '',
-					'selectOptionValue' => $key,
-				]
-			);
-		}
-
-		return $filterOptions;
+		return [
+			Helpers::render('checkbox', [
+				'checkboxValue' => 'all',
+				'checkboxName' => 'all',
+				'additionalClass' => $selectAllSelector,
+			]),
+			...(isset($include['search']) ? [
+				Helpers::render('input', [
+					'fieldSkip' => true,
+					'inputName' => 'search',
+					'inputPlaceholder' => \__('Search', 'eightshift-forms'),
+					'additionalClass' => $searchSelector,
+					'inputValue' => $search,
+				]),
+			] : []),
+			...(isset($include['perPage']) ? [
+				Helpers::render('select', [
+					'fieldSkip' => true,
+					'selectName' => 'per-page',
+					'selectContent' => \implode('', [
+						Helpers::render('select-option', [
+							'selectOptionLabel' => '50',
+							'selectOptionValue' => 50,
+							'selectOptionIsSelected' => $perPage === 50,
+						]),
+						Helpers::render('select-option', [
+							'selectOptionLabel' => '100',
+							'selectOptionValue' => 100,
+							'selectOptionIsSelected' => $perPage === 100,
+						]),
+						Helpers::render('select-option', [
+							'selectOptionLabel' => '500',
+							'selectOptionValue' => 500,
+							'selectOptionIsSelected' => $perPage === 500,
+						]),
+						Helpers::render('select-option', [
+							'selectOptionLabel' => '1000',
+							'selectOptionValue' => 1000,
+							'selectOptionIsSelected' => $perPage === 1000,
+						]),
+						Helpers::render('select-option', [
+							'selectOptionLabel' => '9999',
+							'selectOptionValue' => 9999,
+							'selectOptionIsSelected' => $perPage === 9999,
+						]),
+					]),
+					'selectPlaceholder' => \__('Per page', 'eightshift-forms'),
+					'additionalClass' => $perPageSelector,
+				]),
+			] : []),
+		];
 	}
 }
