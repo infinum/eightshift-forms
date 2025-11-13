@@ -105,7 +105,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 			$this->getValidator()->setValidationSubmitOnce($formId);
 
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccessRedirect', $formId),
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccessRedirect'),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT,

@@ -131,7 +131,7 @@ class Mailer implements MailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('mailerSuccess'),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('mailerSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS,
