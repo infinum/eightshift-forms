@@ -498,7 +498,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$this->getValidator()->setValidationSubmitOnce($formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success"),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success", $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS,
