@@ -2,8 +2,6 @@
 
 [![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
 [![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-forms.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-forms)
-[![license](https://img.shields.io/github/license/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
-[![codecov](https://img.shields.io/codecov/c/gh/infinum/eightshift-forms/branch/develop?label=Codecov&style=for-the-badge&token=02Lfa2jjoK)](https://codecov.io/gh/infinum/eightshift-forms)
 
 # Eightshift Forms Plugin
 
@@ -32,6 +30,25 @@ Clone the project + build to get started:
 Eightshift forms documentation is located [here](docs/README.md).
 
 Eightshift forms plugin is created on the [Eightshift development kit](https://eightshift.com).
+
+## 🧪 Testing
+
+All Selenium tests are located in the `tests/selenium` folder. To run them you must provide the `SELENIUM_URL` environment variable with the URL of the test environment and correct url structure.
+
+URL structure is:
+* `<test-environment>/tests/basic`
+* `<test-environment>/tests/validation`
+* etc.
+
+How to setup test environment:
+1. Create a new WordPress installation.
+2. Install the Eightshift Forms plugin.
+3. Activate `Calculator` form type.
+4. Create a new forms for each test from the `tests/selenium/dataset` folder.
+5. Create new pages with the correct url structure.
+6. Run `SELENIUM_URL=https://<test-environment>/ bun run test:selenium` to run the tests.
+
+In order for the tests to work, forms must be public and accessible by the test environment.
 
 ## 🛟 Getting help
 

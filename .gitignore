@@ -5,7 +5,3 @@
 /node_modules
 /.vscode
 /eightshift
-
-# Tests
-tests/coverage/*
-.phpunit.result.cache

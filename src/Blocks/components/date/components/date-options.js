@@ -4,7 +4,7 @@ import React from 'react';
 import { isArray } from 'lodash';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
 	icons,
@@ -45,6 +45,7 @@ export const DateOptions = (attributes) => {
 	const dateUseLabelAsPlaceholder = checkAttr('dateUseLabelAsPlaceholder', attributes, manifest);
 	const datePreviewFormat = checkAttr('datePreviewFormat', attributes, manifest);
 	const dateOutputFormat = checkAttr('dateOutputFormat', attributes, manifest);
+	const dateMode = checkAttr('dateMode', attributes, manifest);
 
 	let dateValidationPatternOptions = [];
 
@@ -179,6 +180,17 @@ export const DateOptions = (attributes) => {
 					value={dateValue}
 					onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
+				/>
+
+				<Select
+					label={__('Mode', 'eightshift-forms')}
+					value={dateMode}
+					options={getOption('dateMode', attributes, manifest)}
+					disabled={isOptionDisabled(getAttrKey('dateMode', attributes, manifest), dateDisabledOptions)}
+					onChange={(value) => setAttributes({ [getAttrKey('dateMode', attributes, manifest)]: value })}
+					simpleValue
+					noSearch
+					inlineLabel
 				/>
 
 				<FieldOptionsVisibility
