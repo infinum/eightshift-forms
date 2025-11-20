@@ -9,7 +9,8 @@ const SUBMIT_URL = '/eightshift-forms/v1/submit/calculator';
  * @param {import('selenium-webdriver').WebDriver} driver - The driver instance.
  */
 const setTestEnvironment = async (driver) => {
-	await driver.executeScript(`document.body.id = "dev-tests";`);
+	const className = process.env.ES_CLASS || 'es-forms-tests';
+	await driver.executeScript(`document.body.classList.add("${className}");`);
 };
 
 /**
@@ -19,7 +20,7 @@ const setTestEnvironment = async (driver) => {
  * @param {string} path - The path to the test environment.
  */
 const openUrl = async (driver, path) => {
-	await driver.get(`${process.env.SELENIUM_URL}/tests/${path}`);
+	await driver.get(`${process.env.ES_URL}/tests/${path}`);
 };
 
 /**

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.11.0]
+
+### Added
+
+- Selenium tests for the forms.
+- Date field now supports `multiple` and `range` modes.
+
+### Removed
+
+- Old outdated tests.
+
 ## [8.10.1]
 
 ### Fixed
@@ -1608,6 +1619,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+
+[8.11.0]: https://github.com/infinum/eightshift-forms/compare/8.10.1...8.11.0
 [8.10.1]: https://github.com/infinum/eightshift-forms/compare/8.10.0...8.10.1
 [8.10.0]: https://github.com/infinum/eightshift-forms/compare/8.9.3...8.10.0
 [8.9.3]: https://github.com/infinum/eightshift-forms/compare/8.9.2...8.9.3
