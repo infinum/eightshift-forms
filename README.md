@@ -35,6 +35,8 @@ Eightshift forms plugin is created on the [Eightshift development kit](https://e
 
 All Selenium tests are located in the `tests/selenium` folder. To run them you must provide the `ES_URL` environment variable with the URL of the test environment and correct url structure.
 
+**Make sure you only have form on the page that you want to test and no other content like headers, footers, etc.**
+
 URL structure is:
 * `<test-environment>/tests/basic`
 * `<test-environment>/tests/validation`
