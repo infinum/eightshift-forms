@@ -1,0 +1,690 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - navigation:
+      - generic:
+        - generic:
+          - generic:
+            - link "Infinum":
+              - /url: https://infinum.test
+              - img "Infinum"
+          - generic:
+            - generic:
+              - button "Expertise":
+                - generic:
+                  - text: Expertise
+                  - generic:
+                    - img
+            - list:
+              - listitem:
+                - link "Work":
+                  - /url: /work/
+                  - generic: Work
+              - listitem:
+                - link "About":
+                  - /url: https://infinum.test/about/
+                  - generic: About
+              - listitem:
+                - link "Blog":
+                  - /url: https://infinum.test/blog/
+                  - generic: Blog
+              - listitem:
+                - link "Careers":
+                  - /url: https://infinum.test/careers/
+                  - generic: Careers
+            - list:
+              - listitem:
+                - link "Contact":
+                  - /url: https://infinum.test/contact/
+                  - generic: Contact
+            - button "Toggle navigation" [ref=e3] [cursor=pointer]
+  - main [ref=e6]:
+    - paragraph [ref=e10]: Forma
+    - generic [ref=e16]:
+      - generic [ref=e18]:
+        - generic [ref=e19]: Input email *
+        - textbox "Input email *" [ref=e22]
+        - alert
+      - generic [ref=e24]:
+        - generic [ref=e25]: Input regular *
+        - textbox "Input regular *" [ref=e28]: "12345678901234567890"
+        - alert
+      - generic [ref=e30]:
+        - generic [ref=e31]: Input url *
+        - textbox "Input url *" [ref=e34]
+        - alert
+      - generic [ref=e36]:
+        - generic [ref=e37]: Input number *
+        - spinbutton "Input number *" [ref=e40]
+        - alert
+      - generic [ref=e42]:
+        - generic [ref=e43]: Input number min max *
+        - spinbutton "Input number min max *" [ref=e46]
+        - alert
+      - generic [ref=e48]:
+        - generic [ref=e49]: Input range *
+        - generic [ref=e51]:
+          - slider "Input range *" [ref=e52]: "33"
+          - text: "1"
+          - generic [ref=e53]: –33–
+          - text: "100"
+        - alert
+      - generic [ref=e55]:
+        - generic [ref=e56]: Country single *
+        - combobox "Country single *" [ref=e59]:
+          - option [selected]
+          - option "Afghanistan"
+          - option "Åland Islands"
+          - option "Albania"
+          - option "Algeria"
+          - option "American Samoa"
+          - option "Andorra"
+          - option "Angola"
+          - option "Anguilla"
+          - option "Antarctica"
+          - option "Antigua and Barbuda"
+          - option "Argentina"
+          - option "Armenia"
+          - option "Aruba"
+          - option "Australia"
+          - option "Austria"
+          - option "Azerbaijan"
+          - option "Bahamas"
+          - option "Bahrain"
+          - option "Bangladesh"
+          - option "Barbados"
+          - option "Belarus"
+          - option "Belgium"
+          - option "Belize"
+          - option "Benin"
+          - option "Bermuda"
+          - option "Bhutan"
+          - option "Bolivia"
+          - option "Bonaire"
+          - option "Bosnia and Herzegovina"
+          - option "Botswana"
+          - option "Brazil"
+          - option "British Indian Ocean Territory"
+          - option "Brunei Darussalam"
+          - option "Bulgaria"
+          - option "Burkina Faso"
+          - option "Burundi"
+          - option "Cambodia"
+          - option "Cameroon"
+          - option "Canada"
+          - option "Cabo Verde"
+          - option "Cayman Islands"
+          - option "Central African Republic"
+          - option "Chad"
+          - option "Chile"
+          - option "China"
+          - option "Christmas Island"
+          - option "Cocos (Keeling) Island"
+          - option "Colombia"
+          - option "Comoros"
+          - option "Congo"
+          - option "Congo (Democratic Republic)"
+          - option "Cook Islands"
+          - option "Costa Rica"
+          - option "Côte d’Ivoire"
+          - option "Croatia"
+          - option "Curaçao"
+          - option "Cyprus"
+          - option "Czech Republic"
+          - option "Denmark"
+          - option "Djibouti"
+          - option "Dominica"
+          - option "Dominican Republic"
+          - option "Ecuador"
+          - option "Egypt"
+          - option "El Salvador"
+          - option "Equatorial Guinea"
+          - option "Eritrea"
+          - option "Estonia"
+          - option "Eswatini"
+          - option "Ethiopia"
+          - option "Falkland Islands"
+          - option "Faroe Islands"
+          - option "Fiji"
+          - option "Finland"
+          - option "France"
+          - option "French Guiana"
+          - option "French Polynesia"
+          - option "French Southern Territories"
+          - option "Gabon"
+          - option "Gambia"
+          - option "Georgia"
+          - option "Germany"
+          - option "Ghana"
+          - option "Gibraltar"
+          - option "Greece"
+          - option "Greenland"
+          - option "Grenada"
+          - option "Guadeloupe"
+          - option "Guam"
+          - option "Guatemala"
+          - option "Guernsey"
+          - option "Guinea"
+          - option "Guinea-Bissau"
+          - option "Guyana"
+          - option "Haiti"
+          - option "Holy See"
+          - option "Honduras"
+          - option "Hong Kong"
+          - option "Hungary"
+          - option "Iceland"
+          - option "India"
+          - option "Indonesia"
+          - option "Iraq"
+          - option "Ireland"
+          - option "Isle of Man"
+          - option "Israel"
+          - option "Italy"
+          - option "Jamaica"
+          - option "Japan"
+          - option "Jersey"
+          - option "Jordan"
+          - option "Kazakhstan"
+          - option "Kenya"
+          - option "Kiribati"
+          - option "Korea, the Republic of"
+          - option "Kuwait"
+          - option "Kyrgyzstan"
+          - option "Lao People’s Democratic Republic"
+          - option "Latvia"
+          - option "Lebanon"
+          - option "Lesotho"
+          - option "Liberia"
+          - option "Libya"
+          - option "Liechtenstein"
+          - option "Lithuania"
+          - option "Luxembourg"
+          - option "Macao"
+          - option "Madagascar"
+          - option "Malawi"
+          - option "Malaysia"
+          - option "Maldives"
+          - option "Mali"
+          - option "Malta"
+          - option "Marshall Islands"
+          - option "Martinique"
+          - option "Mauritania"
+          - option "Mauritius"
+          - option "Mayotte"
+          - option "Mexico"
+          - option "Micronesia (Federated States of)"
+          - option "Moldova"
+          - option "Monaco"
+          - option "Mongolia"
+          - option "Montenegro"
+          - option "Montserrat"
+          - option "Morocco"
+          - option "Mozambique"
+          - option "Myanmar"
+          - option "Namibia"
+          - option "Nauru"
+          - option "Nepal"
+          - option "Netherlands"
+          - option "New Caledonia"
+          - option "New Zealand"
+          - option "Nicaragua"
+          - option "Niger"
+          - option "Nigeria"
+          - option "Niue"
+          - option "Norfolk Island"
+          - option "North Macedonia"
+          - option "Northern Mariana Islands"
+          - option "Norway"
+          - option "Oman"
+          - option "Pakistan"
+          - option "Palau"
+          - option "Palestine"
+          - option "Panama"
+          - option "Papua New Guinea"
+          - option "Paraguay"
+          - option "Peru"
+          - option "Philippines"
+          - option "Pitcairn"
+          - option "Poland"
+          - option "Portugal"
+          - option "Puerto Rico"
+          - option "Qatar"
+          - option "Réunion"
+          - option "Romania"
+          - option "Russian Federation"
+          - option "Rwanda"
+          - option "Saba"
+          - option "Saint Barthélemy"
+          - option "Saint Helena"
+          - option "Saint Kitts and Nevis"
+          - option "Saint Lucia"
+          - option "Saint Martin (French part)"
+          - option "Saint Pierre and Miquelon"
+          - option "Saint Vincent and The Grenadines"
+          - option "Samoa"
+          - option "San Marino"
+          - option "Sao Tome and Principe"
+          - option "Saudi Arabia"
+          - option "Senegal"
+          - option "Serbia"
+          - option "Seychelles"
+          - option "Sierra Leone"
+          - option "Singapore"
+          - option "Sint Maarten"
+          - option "Slovakia"
+          - option "Slovenia"
+          - option "Solomon Islands"
+          - option "Somalia"
+          - option "South Africa"
+          - option "South Georgia and the South Sandwich Islands"
+          - option "South Sudan"
+          - option "Spain"
+          - option "Sri Lanka"
+          - option "Sudan"
+          - option "Suriname"
+          - option "Svalbard"
+          - option "Sweden"
+          - option "Switzerland"
+          - option "Taiwan, China"
+          - option "Tajikistan"
+          - option "Tanzania"
+          - option "Thailand"
+          - option "Timor-Leste"
+          - option "Togo"
+          - option "Tokelau"
+          - option "Tonga"
+          - option "Trinidad and Tobago"
+          - option "Tunisia"
+          - option "Turkey"
+          - option "Turkmenistan"
+          - option "Turks and Caicos Islands"
+          - option "Tuvalu"
+          - option "Uganda"
+          - option "Ukraine"
+          - option "United Arab Emirates"
+          - option "United Kingdom"
+          - option "United States"
+          - option "United States Minor Outlying Islands"
+          - option "Uruguay"
+          - option "Uzbekistan"
+          - option "Vanuatu"
+          - option "Venezuela"
+          - option "Vietnam"
+          - option "Virgin Islands (British)"
+          - option "Virgin Islands (U.S.)"
+          - option "Wallis and Futuna"
+          - option "Western Sahara"
+          - option "Yemen"
+          - option "Zambia"
+          - option "Zimbabwe"
+        - alert
+      - generic [ref=e61]:
+        - generic [ref=e62]: Country multiple *
+        - listbox "Country multiple *" [ref=e65]:
+          - option [ref=e66]
+          - option "Afghanistan" [ref=e67]
+          - option "Åland Islands" [ref=e68]
+          - option "Albania" [ref=e69]
+          - option "Algeria" [ref=e70]
+          - option "American Samoa" [ref=e71]
+          - option "Andorra" [ref=e72]
+          - option "Angola" [ref=e73]
+          - option "Anguilla" [ref=e74]
+          - option "Antarctica" [ref=e75]
+          - option "Antigua and Barbuda" [ref=e76]
+          - option "Argentina" [ref=e77]
+          - option "Armenia" [ref=e78]
+          - option "Aruba" [ref=e79]
+          - option "Australia" [ref=e80]
+          - option "Austria" [ref=e81]
+          - option "Azerbaijan" [ref=e82]
+          - option "Bahamas" [ref=e83]
+          - option "Bahrain" [ref=e84]
+          - option "Bangladesh" [ref=e85]
+          - option "Barbados" [ref=e86]
+          - option "Belarus" [ref=e87]
+          - option "Belgium" [ref=e88]
+          - option "Belize" [ref=e89]
+          - option "Benin" [ref=e90]
+          - option "Bermuda" [ref=e91]
+          - option "Bhutan" [ref=e92]
+          - option "Bolivia" [ref=e93]
+          - option "Bonaire" [ref=e94]
+          - option "Bosnia and Herzegovina" [ref=e95]
+          - option "Botswana" [ref=e96]
+          - option "Brazil" [ref=e97]
+          - option "British Indian Ocean Territory" [ref=e98]
+          - option "Brunei Darussalam" [ref=e99]
+          - option "Bulgaria" [ref=e100]
+          - option "Burkina Faso" [ref=e101]
+          - option "Burundi" [ref=e102]
+          - option "Cambodia" [ref=e103]
+          - option "Cameroon" [ref=e104]
+          - option "Canada" [ref=e105]
+          - option "Cabo Verde" [ref=e106]
+          - option "Cayman Islands" [ref=e107]
+          - option "Central African Republic" [ref=e108]
+          - option "Chad" [ref=e109]
+          - option "Chile" [ref=e110]
+          - option "China" [ref=e111]
+          - option "Christmas Island" [ref=e112]
+          - option "Cocos (Keeling) Island" [ref=e113]
+          - option "Colombia" [ref=e114]
+          - option "Comoros" [ref=e115]
+          - option "Congo" [ref=e116]
+          - option "Congo (Democratic Republic)" [ref=e117]
+          - option "Cook Islands" [ref=e118]
+          - option "Costa Rica" [ref=e119]
+          - option "Côte d’Ivoire" [ref=e120]
+          - option "Croatia" [ref=e121]
+          - option "Curaçao" [ref=e122]
+          - option "Cyprus" [ref=e123]
+          - option "Czech Republic" [ref=e124]
+          - option "Denmark" [ref=e125]
+          - option "Djibouti" [ref=e126]
+          - option "Dominica" [ref=e127]
+          - option "Dominican Republic" [ref=e128]
+          - option "Ecuador" [ref=e129]
+          - option "Egypt" [ref=e130]
+          - option "El Salvador" [ref=e131]
+          - option "Equatorial Guinea" [ref=e132]
+          - option "Eritrea" [ref=e133]
+          - option "Estonia" [ref=e134]
+          - option "Eswatini" [ref=e135]
+          - option "Ethiopia" [ref=e136]
+          - option "Falkland Islands" [ref=e137]
+          - option "Faroe Islands" [ref=e138]
+          - option "Fiji" [ref=e139]
+          - option "Finland" [ref=e140]
+          - option "France" [ref=e141]
+          - option "French Guiana" [ref=e142]
+          - option "French Polynesia" [ref=e143]
+          - option "French Southern Territories" [ref=e144]
+          - option "Gabon" [ref=e145]
+          - option "Gambia" [ref=e146]
+          - option "Georgia" [ref=e147]
+          - option "Germany" [ref=e148]
+          - option "Ghana" [ref=e149]
+          - option "Gibraltar" [ref=e150]
+          - option "Greece" [ref=e151]
+          - option "Greenland" [ref=e152]
+          - option "Grenada" [ref=e153]
+          - option "Guadeloupe" [ref=e154]
+          - option "Guam" [ref=e155]
+          - option "Guatemala" [ref=e156]
+          - option "Guernsey" [ref=e157]
+          - option "Guinea" [ref=e158]
+          - option "Guinea-Bissau" [ref=e159]
+          - option "Guyana" [ref=e160]
+          - option "Haiti" [ref=e161]
+          - option "Holy See" [ref=e162]
+          - option "Honduras" [ref=e163]
+          - option "Hong Kong" [ref=e164]
+          - option "Hungary" [ref=e165]
+          - option "Iceland" [ref=e166]
+          - option "India" [ref=e167]
+          - option "Indonesia" [ref=e168]
+          - option "Iraq" [ref=e169]
+          - option "Ireland" [ref=e170]
+          - option "Isle of Man" [ref=e171]
+          - option "Israel" [ref=e172]
+          - option "Italy" [ref=e173]
+          - option "Jamaica" [ref=e174]
+          - option "Japan" [ref=e175]
+          - option "Jersey" [ref=e176]
+          - option "Jordan" [ref=e177]
+          - option "Kazakhstan" [ref=e178]
+          - option "Kenya" [ref=e179]
+          - option "Kiribati" [ref=e180]
+          - option "Korea, the Republic of" [ref=e181]
+          - option "Kuwait" [ref=e182]
+          - option "Kyrgyzstan" [ref=e183]
+          - option "Lao People’s Democratic Republic" [ref=e184]
+          - option "Latvia" [ref=e185]
+          - option "Lebanon" [ref=e186]
+          - option "Lesotho" [ref=e187]
+          - option "Liberia" [ref=e188]
+          - option "Libya" [ref=e189]
+          - option "Liechtenstein" [ref=e190]
+          - option "Lithuania" [ref=e191]
+          - option "Luxembourg" [ref=e192]
+          - option "Macao" [ref=e193]
+          - option "Madagascar" [ref=e194]
+          - option "Malawi" [ref=e195]
+          - option "Malaysia" [ref=e196]
+          - option "Maldives" [ref=e197]
+          - option "Mali" [ref=e198]
+          - option "Malta" [ref=e199]
+          - option "Marshall Islands" [ref=e200]
+          - option "Martinique" [ref=e201]
+          - option "Mauritania" [ref=e202]
+          - option "Mauritius" [ref=e203]
+          - option "Mayotte" [ref=e204]
+          - option "Mexico" [ref=e205]
+          - option "Micronesia (Federated States of)" [ref=e206]
+          - option "Moldova" [ref=e207]
+          - option "Monaco" [ref=e208]
+          - option "Mongolia" [ref=e209]
+          - option "Montenegro" [ref=e210]
+          - option "Montserrat" [ref=e211]
+          - option "Morocco" [ref=e212]
+          - option "Mozambique" [ref=e213]
+          - option "Myanmar" [ref=e214]
+          - option "Namibia" [ref=e215]
+          - option "Nauru" [ref=e216]
+          - option "Nepal" [ref=e217]
+          - option "Netherlands" [ref=e218]
+          - option "New Caledonia" [ref=e219]
+          - option "New Zealand" [ref=e220]
+          - option "Nicaragua" [ref=e221]
+          - option "Niger" [ref=e222]
+          - option "Nigeria" [ref=e223]
+          - option "Niue" [ref=e224]
+          - option "Norfolk Island" [ref=e225]
+          - option "North Macedonia" [ref=e226]
+          - option "Northern Mariana Islands" [ref=e227]
+          - option "Norway" [ref=e228]
+          - option "Oman" [ref=e229]
+          - option "Pakistan" [ref=e230]
+          - option "Palau" [ref=e231]
+          - option "Palestine" [ref=e232]
+          - option "Panama" [ref=e233]
+          - option "Papua New Guinea" [ref=e234]
+          - option "Paraguay" [ref=e235]
+          - option "Peru" [ref=e236]
+          - option "Philippines" [ref=e237]
+          - option "Pitcairn" [ref=e238]
+          - option "Poland" [ref=e239]
+          - option "Portugal" [ref=e240]
+          - option "Puerto Rico" [ref=e241]
+          - option "Qatar" [ref=e242]
+          - option "Réunion" [ref=e243]
+          - option "Romania" [ref=e244]
+          - option "Russian Federation" [ref=e245]
+          - option "Rwanda" [ref=e246]
+          - option "Saba" [ref=e247]
+          - option "Saint Barthélemy" [ref=e248]
+          - option "Saint Helena" [ref=e249]
+          - option "Saint Kitts and Nevis" [ref=e250]
+          - option "Saint Lucia" [ref=e251]
+          - option "Saint Martin (French part)" [ref=e252]
+          - option "Saint Pierre and Miquelon" [ref=e253]
+          - option "Saint Vincent and The Grenadines" [ref=e254]
+          - option "Samoa" [ref=e255]
+          - option "San Marino" [ref=e256]
+          - option "Sao Tome and Principe" [ref=e257]
+          - option "Saudi Arabia" [ref=e258]
+          - option "Senegal" [ref=e259]
+          - option "Serbia" [ref=e260]
+          - option "Seychelles" [ref=e261]
+          - option "Sierra Leone" [ref=e262]
+          - option "Singapore" [ref=e263]
+          - option "Sint Maarten" [ref=e264]
+          - option "Slovakia" [ref=e265]
+          - option "Slovenia" [ref=e266]
+          - option "Solomon Islands" [ref=e267]
+          - option "Somalia" [ref=e268]
+          - option "South Africa" [ref=e269]
+          - option "South Georgia and the South Sandwich Islands" [ref=e270]
+          - option "South Sudan" [ref=e271]
+          - option "Spain" [ref=e272]
+          - option "Sri Lanka" [ref=e273]
+          - option "Sudan" [ref=e274]
+          - option "Suriname" [ref=e275]
+          - option "Svalbard" [ref=e276]
+          - option "Sweden" [ref=e277]
+          - option "Switzerland" [ref=e278]
+          - option "Taiwan, China" [ref=e279]
+          - option "Tajikistan" [ref=e280]
+          - option "Tanzania" [ref=e281]
+          - option "Thailand" [ref=e282]
+          - option "Timor-Leste" [ref=e283]
+          - option "Togo" [ref=e284]
+          - option "Tokelau" [ref=e285]
+          - option "Tonga" [ref=e286]
+          - option "Trinidad and Tobago" [ref=e287]
+          - option "Tunisia" [ref=e288]
+          - option "Turkey" [ref=e289]
+          - option "Turkmenistan" [ref=e290]
+          - option "Turks and Caicos Islands" [ref=e291]
+          - option "Tuvalu" [ref=e292]
+          - option "Uganda" [ref=e293]
+          - option "Ukraine" [ref=e294]
+          - option "United Arab Emirates" [ref=e295]
+          - option "United Kingdom" [ref=e296]
+          - option "United States" [ref=e297]
+          - option "United States Minor Outlying Islands" [ref=e298]
+          - option "Uruguay" [ref=e299]
+          - option "Uzbekistan" [ref=e300]
+          - option "Vanuatu" [ref=e301]
+          - option "Venezuela" [ref=e302]
+          - option "Vietnam" [ref=e303]
+          - option "Virgin Islands (British)" [ref=e304]
+          - option "Virgin Islands (U.S.)" [ref=e305]
+          - option "Wallis and Futuna" [ref=e306]
+          - option "Western Sahara" [ref=e307]
+          - option "Yemen" [ref=e308]
+          - option "Zambia" [ref=e309]
+          - option "Zimbabwe" [ref=e310]
+        - alert
+      - generic [ref=e312]:
+        - generic [ref=e313]: Date single *
+        - textbox "Date single *" [ref=e316]
+        - alert
+      - generic [ref=e318]:
+        - generic [ref=e319]: Date multiple *
+        - textbox "Date multiple *" [ref=e322]
+        - alert
+      - generic [ref=e324]:
+        - generic [ref=e325]: Date range *
+        - textbox "Date range *" [ref=e328]
+        - alert
+      - generic [ref=e330]:
+        - generic [ref=e331]: Date time *
+        - textbox "Date time *" [ref=e334]
+        - alert
+      - radiogroup [ref=e335]:
+        - generic [ref=e336]:
+          - generic [ref=e337]: Rating *
+          - radiogroup [ref=e340]:
+            - radio "Star rating 1" [ref=e341] [cursor=pointer]
+            - generic "Star rating 1" [ref=e342]:
+              - img [ref=e343]
+            - radio "Star rating 2" [ref=e345] [cursor=pointer]
+            - generic "Star rating 2" [ref=e346]:
+              - img [ref=e347]
+            - radio "Star rating 3" [ref=e349] [cursor=pointer]
+            - generic "Star rating 3" [ref=e350]:
+              - img [ref=e351]
+            - radio "Star rating 4" [ref=e353] [cursor=pointer]
+            - generic "Star rating 4" [ref=e354]:
+              - img [ref=e355]
+            - radio "Star rating 5" [ref=e357] [cursor=pointer]
+            - generic "Star rating 5" [ref=e358]:
+              - img [ref=e359]
+          - alert
+      - generic [ref=e362]:
+        - generic [ref=e363]: Phone *
+        - textbox "Phone *" [ref=e366]
+        - alert
+      - radiogroup "Radios *" [ref=e367]:
+        - generic [ref=e368]:
+          - generic [ref=e369]: Radios *
+          - generic [ref=e371]:
+            - generic [ref=e373]:
+              - radio "Radio 1" [ref=e374]
+              - generic [ref=e375] [cursor=pointer]: Radio 1
+            - generic [ref=e377]:
+              - radio "Radio 2" [ref=e378]
+              - generic [ref=e379] [cursor=pointer]: Radio 2
+            - generic [ref=e381]:
+              - radio "Radio 3" [ref=e382]
+              - generic [ref=e383] [cursor=pointer]: Radio 3
+          - alert
+      - generic [ref=e385]:
+        - generic [ref=e386]: Select *
+        - combobox "Select *" [ref=e389]:
+          - option [selected]
+          - option "Option 1"
+          - option "Option 2"
+          - option "Option 3"
+        - alert
+      - generic [ref=e391]:
+        - generic [ref=e392]: Select multiple *
+        - listbox "Select multiple *" [ref=e395]:
+          - option [ref=e396]
+          - option "Option 1" [ref=e397]
+          - option "Option 2" [ref=e398]
+          - option "Option 3" [ref=e399]
+        - alert
+      - group "Checkboxes *" [ref=e400]:
+        - generic [ref=e401]:
+          - generic [ref=e402]: Checkboxes *
+          - generic [ref=e404]:
+            - generic [ref=e406]:
+              - checkbox "Checkbox 1" [ref=e407]
+              - generic [ref=e408] [cursor=pointer]: Checkbox 1
+            - generic [ref=e410]:
+              - checkbox "Checkbox 2" [ref=e411]
+              - generic [ref=e412] [cursor=pointer]: Checkbox 2
+            - generic [ref=e414]:
+              - checkbox "Checkbox 3" [ref=e415]
+              - generic [ref=e416] [cursor=pointer]: Checkbox 3
+          - alert
+      - generic [ref=e418]:
+        - generic [ref=e419]: Message *
+        - textbox "Message *" [ref=e422]
+        - alert
+      - button "Submit" [active] [ref=e427] [cursor=pointer]:
+        - generic:
+          - generic: Submit
+          - generic:
+            - img
+  - contentinfo [ref=e429]:
+    - generic [ref=e432]:
+      - link "Infinum" [ref=e434] [cursor=pointer]:
+        - /url: https://infinum.test
+        - img "Infinum" [ref=e435]
+      - list [ref=e445]:
+        - listitem [ref=e446]:
+          - link "Code of Conduct" [ref=e447] [cursor=pointer]:
+            - /url: https://infinum.test/code-of-conduct/
+            - generic [ref=e448]: Code of Conduct
+        - listitem [ref=e449]:
+          - link "Privacy Policy" [ref=e450] [cursor=pointer]:
+            - /url: https://infinum.test/privacy-policy/
+            - generic [ref=e451]: Privacy Policy
+        - listitem [ref=e452]:
+          - link "Legal Information" [ref=e453] [cursor=pointer]:
+            - /url: https://infinum.test/legal/
+            - generic [ref=e454]: Legal Information
+        - listitem [ref=e455]:
+          - link "Social and enviromental policy" [ref=e456] [cursor=pointer]:
+            - /url: https://infinum.test/social-and-enviromental-policy/
+            - generic [ref=e457]: Social and enviromental policy
+      - paragraph [ref=e460]: © 2025 Infinum Inc.
+```

@@ -1,0 +1,267 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - link "Infinum" [ref=e7] [cursor=pointer]:
+          - /url: https://infinum.test
+          - img "Infinum" [ref=e8]
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - button "Expertise" [ref=e19] [cursor=pointer]:
+              - generic [ref=e20]:
+                - text: Expertise
+                - img [ref=e22]
+            - generic [ref=e24]:
+              - list [ref=e26]:
+                - listitem [ref=e27]:
+                  - link "Resources" [ref=e28] [cursor=pointer]:
+                    - /url: https://infinum.test/resources/
+                    - generic: Resources
+                - listitem [ref=e29]:
+                  - link "Delivered" [ref=e30] [cursor=pointer]:
+                    - /url: https://infinum.test/delivered/
+                    - generic: Delivered
+                - listitem [ref=e31]:
+                  - link "Events" [ref=e32] [cursor=pointer]:
+                    - /url: https://infinum.test/events/
+                    - generic: Events
+                - listitem [ref=e33]:
+                  - link "Newsroom" [ref=e34] [cursor=pointer]:
+                    - /url: https://infinum.test/news/
+                    - generic: Newsroom
+                - listitem [ref=e35]:
+                  - link "Newsletters" [ref=e36] [cursor=pointer]:
+                    - /url: https://infinum.test/newsletter/
+                    - generic: Newsletters
+                - listitem [ref=e37]:
+                  - link "Open Source" [ref=e38] [cursor=pointer]:
+                    - /url: https://infinum.test/open-source/
+                    - generic: Open Source
+                - listitem [ref=e39]:
+                  - link "Handbook" [ref=e40] [cursor=pointer]:
+                    - /url: https://infinum.test/handbook/
+                    - generic: Handbook
+                - listitem [ref=e41]:
+                  - link "Accessibility" [ref=e42] [cursor=pointer]:
+                    - /url: https://infinum.test/accessibility/
+                    - generic: Accessibility
+              - list [ref=e44]:
+                - listitem [ref=e45]:
+                  - link "Product Strategy and Design" [ref=e46] [cursor=pointer]:
+                    - /url: https://infinum.test/strategy-design/
+                    - generic: Product Strategy and Design
+                - listitem [ref=e47]:
+                  - link "Mobile and Web Apps" [ref=e48] [cursor=pointer]:
+                    - /url: https://infinum.test/mobile-web-apps/
+                    - generic: Mobile and Web Apps
+                - listitem [ref=e49]:
+                  - link "AI and Data Engineering" [ref=e50] [cursor=pointer]:
+                    - /url: https://infinum.test/ai-and-data-engineering/
+                    - generic: AI and Data Engineering
+                - listitem [ref=e51]:
+                  - link "Custom IoT Solutions" [ref=e52] [cursor=pointer]:
+                    - /url: https://infinum.test/custom-iot-solutions/
+                    - generic: Custom IoT Solutions
+                - listitem [ref=e53]:
+                  - link "Enterprise Platforms" [ref=e54] [cursor=pointer]:
+                    - /url: https://infinum.test/enterprise-platforms/
+                    - generic: Enterprise Platforms
+                - listitem [ref=e55]:
+                  - link "Cybersecurity" [ref=e56] [cursor=pointer]:
+                    - /url: https://infinum.test/cybersecurity/
+                    - generic: Cybersecurity
+          - list [ref=e57]:
+            - listitem [ref=e58]:
+              - link "Work" [ref=e59] [cursor=pointer]:
+                - /url: /work/
+                - generic [ref=e60]: Work
+            - listitem [ref=e61]:
+              - link "About" [ref=e62] [cursor=pointer]:
+                - /url: https://infinum.test/about/
+                - generic [ref=e63]: About
+            - listitem [ref=e64]:
+              - link "Blog" [ref=e65] [cursor=pointer]:
+                - /url: https://infinum.test/blog/
+                - generic [ref=e66]: Blog
+            - listitem [ref=e67]:
+              - link "Careers" [ref=e68] [cursor=pointer]:
+                - /url: https://infinum.test/careers/
+                - generic [ref=e69]: Careers
+          - list [ref=e70]:
+            - listitem [ref=e71]:
+              - link "Contact" [ref=e72] [cursor=pointer]:
+                - /url: https://infinum.test/contact/
+                - generic: Contact
+  - main [ref=e73]:
+    - paragraph [ref=e77]: Forma
+    - generic [ref=e82]:
+      - generic [ref=e85]: Missing one or more required parameters to process the request.
+      - generic [ref=e86]:
+        - generic [ref=e88]:
+          - generic [ref=e89]: Input email *
+          - textbox "Input email *" [active] [ref=e92]
+          - alert [ref=e93]: This field is required.
+        - generic [ref=e95]:
+          - generic [ref=e96]: Input regular *
+          - textbox "Input regular *" [ref=e99]
+          - alert [ref=e100]: This field is required.
+        - generic [ref=e102]:
+          - generic [ref=e103]: Input url *
+          - textbox "Input url *" [ref=e106]
+          - alert [ref=e107]: This field is required.
+        - generic [ref=e108]:
+          - generic: "Name: input-number"
+          - generic [ref=e109]:
+            - generic [ref=e110]: Input number *
+            - spinbutton "Input number *" [ref=e113]
+            - alert [ref=e114]: This field is required.
+        - generic [ref=e116]:
+          - generic [ref=e117]: Input number min max *
+          - spinbutton "Input number min max *" [ref=e120]: "20"
+          - alert [ref=e121]: This field value is more than expected. Maximal number should be 10.
+        - generic [ref=e123]:
+          - generic [ref=e124]: Input range *
+          - generic [ref=e126]:
+            - slider "Input range *" [ref=e127]: "33"
+            - text: "1"
+            - generic [ref=e128]: –33–
+            - text: "100"
+          - alert
+        - generic [ref=e130]:
+          - generic [ref=e131]: Country single *
+          - combobox [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]:
+              - listbox:
+                - option "Select option" [selected]
+          - alert [ref=e136]: This field is required.
+        - generic [ref=e138]:
+          - generic [ref=e139]: Country multiple *
+          - combobox [ref=e142]:
+            - generic [ref=e143]:
+              - listbox
+              - searchbox "Country multiple" [ref=e144]
+          - alert [ref=e145]: This field is required.
+        - generic [ref=e147]:
+          - generic [ref=e148]: Date single *
+          - textbox "Date single *" [ref=e151]:
+            - /placeholder: ""
+          - alert [ref=e152]: This field is required.
+        - generic [ref=e154]:
+          - generic [ref=e155]: Date multiple *
+          - textbox "Date multiple *" [ref=e158]:
+            - /placeholder: ""
+          - alert [ref=e159]: This field is required.
+        - generic [ref=e161]:
+          - generic [ref=e162]: Date range *
+          - textbox "Date range *" [ref=e165]:
+            - /placeholder: ""
+          - alert [ref=e166]: This field is required.
+        - generic [ref=e168]:
+          - generic [ref=e169]: Date time *
+          - textbox "Date time *" [ref=e172]:
+            - /placeholder: ""
+          - alert [ref=e173]: This field is required.
+        - radiogroup [ref=e174]:
+          - generic [ref=e175]:
+            - generic [ref=e176]: Rating *
+            - radiogroup [ref=e179]:
+              - radio "Star rating 1" [ref=e180] [cursor=pointer]
+              - generic "Star rating 1" [ref=e181]:
+                - img [ref=e182]
+              - radio "Star rating 2" [ref=e184] [cursor=pointer]
+              - generic "Star rating 2" [ref=e185]:
+                - img [ref=e186]
+              - radio "Star rating 3" [ref=e188] [cursor=pointer]
+              - generic "Star rating 3" [ref=e189]:
+                - img [ref=e190]
+              - radio "Star rating 4" [ref=e192] [cursor=pointer]
+              - generic "Star rating 4" [ref=e193]:
+                - img [ref=e194]
+              - radio "Star rating 5" [ref=e196] [cursor=pointer]
+              - generic "Star rating 5" [ref=e197]:
+                - img [ref=e198]
+            - alert [ref=e200]: This field is required.
+        - generic [ref=e202]:
+          - generic [ref=e203]: Phone *
+          - textbox "Phone *" [ref=e206]
+          - alert [ref=e207]: This field is required.
+        - radiogroup "Radios *" [ref=e208]:
+          - generic [ref=e209]:
+            - generic [ref=e210]: Radios *
+            - generic [ref=e212]:
+              - generic [ref=e214]:
+                - radio "Radio 1" [ref=e215]
+                - generic [ref=e216] [cursor=pointer]: Radio 1
+              - generic [ref=e218]:
+                - radio "Radio 2" [ref=e219]
+                - generic [ref=e220] [cursor=pointer]: Radio 2
+              - generic [ref=e222]:
+                - radio "Radio 3" [ref=e223]
+                - generic [ref=e224] [cursor=pointer]: Radio 3
+            - alert [ref=e225]: This field is required.
+        - generic [ref=e227]:
+          - generic [ref=e228]: Select *
+          - combobox [ref=e231] [cursor=pointer]:
+            - generic [ref=e232]:
+              - listbox:
+                - option "Select option" [selected]
+          - alert [ref=e233]: This field is required.
+        - generic [ref=e235]:
+          - generic [ref=e236]: Select multiple *
+          - combobox [ref=e239]:
+            - generic [ref=e240]:
+              - listbox
+              - searchbox "Select multiple" [ref=e241]
+          - alert [ref=e242]: This field is required.
+        - group "Checkboxes *" [ref=e243]:
+          - generic [ref=e244]:
+            - generic [ref=e245]: Checkboxes *
+            - generic [ref=e247]:
+              - generic [ref=e249]:
+                - checkbox "Checkbox 1" [ref=e250]
+                - generic [ref=e251] [cursor=pointer]: Checkbox 1
+              - generic [ref=e253]:
+                - checkbox "Checkbox 2" [ref=e254]
+                - generic [ref=e255] [cursor=pointer]: Checkbox 2
+              - generic [ref=e257]:
+                - checkbox "Checkbox 3" [ref=e258]
+                - generic [ref=e259] [cursor=pointer]: Checkbox 3
+            - alert [ref=e260]: This field is required.
+        - generic [ref=e262]:
+          - generic [ref=e263]: Message *
+          - textbox "Message *" [ref=e266]
+          - alert [ref=e267]: This field is required.
+        - button "Submit" [ref=e272] [cursor=pointer]:
+          - generic:
+            - generic: Submit
+            - generic:
+              - img
+  - contentinfo [ref=e274]:
+    - generic [ref=e277]:
+      - link "Infinum" [ref=e279] [cursor=pointer]:
+        - /url: https://infinum.test
+        - img "Infinum" [ref=e280]
+      - list [ref=e290]:
+        - listitem [ref=e291]:
+          - link "Code of Conduct" [ref=e292] [cursor=pointer]:
+            - /url: https://infinum.test/code-of-conduct/
+            - generic [ref=e293]: Code of Conduct
+        - listitem [ref=e294]:
+          - link "Privacy Policy" [ref=e295] [cursor=pointer]:
+            - /url: https://infinum.test/privacy-policy/
+            - generic [ref=e296]: Privacy Policy
+        - listitem [ref=e297]:
+          - link "Legal Information" [ref=e298] [cursor=pointer]:
+            - /url: https://infinum.test/legal/
+            - generic [ref=e299]: Legal Information
+        - listitem [ref=e300]:
+          - link "Social and enviromental policy" [ref=e301] [cursor=pointer]:
+            - /url: https://infinum.test/social-and-enviromental-policy/
+            - generic [ref=e302]: Social and enviromental policy
+      - paragraph [ref=e305]: © 2025 Infinum Inc.
+```

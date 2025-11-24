@@ -1,0 +1,263 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner:
+    - navigation:
+      - generic:
+        - generic:
+          - generic:
+            - link "Infinum":
+              - /url: https://infinum.test
+              - img "Infinum"
+          - generic:
+            - generic:
+              - button "Expertise":
+                - generic:
+                  - text: Expertise
+                  - generic:
+                    - img
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - link "Resources":
+                        - /url: https://infinum.test/resources/
+                        - generic: Resources
+                    - listitem:
+                      - link "Delivered":
+                        - /url: https://infinum.test/delivered/
+                        - generic: Delivered
+                    - listitem:
+                      - link "Events":
+                        - /url: https://infinum.test/events/
+                        - generic: Events
+                    - listitem:
+                      - link "Newsroom":
+                        - /url: https://infinum.test/news/
+                        - generic: Newsroom
+                    - listitem:
+                      - link "Newsletters":
+                        - /url: https://infinum.test/newsletter/
+                        - generic: Newsletters
+                    - listitem:
+                      - link "Open Source":
+                        - /url: https://infinum.test/open-source/
+                        - generic: Open Source
+                    - listitem:
+                      - link "Handbook":
+                        - /url: https://infinum.test/handbook/
+                        - generic: Handbook
+                    - listitem:
+                      - link "Accessibility":
+                        - /url: https://infinum.test/accessibility/
+                        - generic: Accessibility
+                - generic:
+                  - list:
+                    - listitem:
+                      - link "Product Strategy and Design":
+                        - /url: https://infinum.test/strategy-design/
+                        - generic: Product Strategy and Design
+                    - listitem:
+                      - link "Mobile and Web Apps":
+                        - /url: https://infinum.test/mobile-web-apps/
+                        - generic: Mobile and Web Apps
+                    - listitem:
+                      - link "AI and Data Engineering":
+                        - /url: https://infinum.test/ai-and-data-engineering/
+                        - generic: AI and Data Engineering
+                    - listitem:
+                      - link "Custom IoT Solutions":
+                        - /url: https://infinum.test/custom-iot-solutions/
+                        - generic: Custom IoT Solutions
+                    - listitem:
+                      - link "Enterprise Platforms":
+                        - /url: https://infinum.test/enterprise-platforms/
+                        - generic: Enterprise Platforms
+                    - listitem:
+                      - link "Cybersecurity":
+                        - /url: https://infinum.test/cybersecurity/
+                        - generic: Cybersecurity
+            - list:
+              - listitem:
+                - link "Work":
+                  - /url: /work/
+                  - generic: Work
+              - listitem:
+                - link "About":
+                  - /url: https://infinum.test/about/
+                  - generic: About
+              - listitem:
+                - link "Blog":
+                  - /url: https://infinum.test/blog/
+                  - generic: Blog
+              - listitem:
+                - link "Careers":
+                  - /url: https://infinum.test/careers/
+                  - generic: Careers
+            - list:
+              - listitem:
+                - link "Contact":
+                  - /url: https://infinum.test/contact/
+                  - generic: Contact
+            - button "Toggle navigation" [ref=e3] [cursor=pointer]
+  - main [ref=e6]:
+    - paragraph [ref=e10]: Forma
+    - generic [ref=e16]:
+      - generic [ref=e18]:
+        - generic [ref=e19]: Input email
+        - textbox "Input email" [ref=e22]: john.doe@example.com
+        - alert
+      - generic [ref=e24]:
+        - generic [ref=e25]: Input regular
+        - textbox "Input regular" [ref=e28]
+        - alert
+      - generic [ref=e30]:
+        - generic [ref=e31]: Input url
+        - textbox "Input url" [ref=e34]
+        - alert
+      - generic [ref=e36]:
+        - generic [ref=e37]: Input number
+        - spinbutton "Input number" [ref=e40]
+        - alert
+      - generic [ref=e42]:
+        - generic [ref=e43]: Input range
+        - generic [ref=e45]:
+          - slider "Input range" [ref=e46]: "33"
+          - text: "1"
+          - generic [ref=e47]: –33–
+          - text: "100"
+        - alert
+      - generic [ref=e49]:
+        - generic [ref=e50]: Country single
+        - combobox [ref=e53] [cursor=pointer]:
+          - generic [ref=e54]:
+            - listbox:
+              - option "Select option" [selected]
+        - alert
+      - generic [ref=e56]:
+        - generic [ref=e57]: Country multiple
+        - combobox [ref=e60]:
+          - generic [ref=e61]:
+            - listbox
+            - searchbox "Country multiple" [ref=e62]
+        - alert
+      - generic [ref=e64]:
+        - generic [ref=e65]: Date single
+        - textbox "Date single" [ref=e68]:
+          - /placeholder: ""
+        - alert
+      - generic [ref=e70]:
+        - generic [ref=e71]: Date multiple
+        - textbox "Date multiple" [ref=e74]:
+          - /placeholder: ""
+        - alert
+      - generic [ref=e76]:
+        - generic [ref=e77]: Date range
+        - textbox "Date range" [ref=e80]:
+          - /placeholder: ""
+        - alert
+      - generic [ref=e82]:
+        - generic [ref=e83]: Date time
+        - textbox "Date time" [ref=e86]:
+          - /placeholder: ""
+        - alert
+      - radiogroup [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e89]: Rating
+          - radiogroup [ref=e92]:
+            - radio "Star rating 1" [ref=e93] [cursor=pointer]
+            - generic "Star rating 1" [ref=e94]:
+              - img [ref=e95]
+            - radio "Star rating 2" [ref=e97] [cursor=pointer]
+            - generic "Star rating 2" [ref=e98]:
+              - img [ref=e99]
+            - radio "Star rating 3" [ref=e101] [cursor=pointer]
+            - generic "Star rating 3" [ref=e102]:
+              - img [ref=e103]
+            - radio "Star rating 4" [ref=e105] [cursor=pointer]
+            - generic "Star rating 4" [ref=e106]:
+              - img [ref=e107]
+            - radio "Star rating 5" [ref=e109] [cursor=pointer]
+            - generic "Star rating 5" [ref=e110]:
+              - img [ref=e111]
+          - alert
+      - generic [ref=e114]:
+        - generic [ref=e115]: Phone
+        - textbox "Phone" [ref=e118]
+        - alert
+      - radiogroup "Radios" [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]: Radios
+          - generic [ref=e123]:
+            - generic [ref=e125]:
+              - radio "Radio 1" [ref=e126]
+              - generic [ref=e127] [cursor=pointer]: Radio 1
+            - generic [ref=e129]:
+              - radio "Radio 2" [ref=e130]
+              - generic [ref=e131] [cursor=pointer]: Radio 2
+            - generic [ref=e133]:
+              - radio "Radio 3" [ref=e134]
+              - generic [ref=e135] [cursor=pointer]: Radio 3
+          - alert
+      - generic [ref=e137]:
+        - generic [ref=e138]: Select
+        - combobox [ref=e141] [cursor=pointer]:
+          - generic [ref=e142]:
+            - listbox:
+              - option "Select option" [selected]
+        - alert
+      - generic [ref=e144]:
+        - generic [ref=e145]: Select multiple
+        - combobox [ref=e148]:
+          - generic [ref=e149]:
+            - listbox
+            - searchbox "Select multiple" [ref=e150]
+        - alert
+      - group "Checkboxes" [ref=e151]:
+        - generic [ref=e152]:
+          - generic [ref=e153]: Checkboxes
+          - generic [ref=e155]:
+            - generic [ref=e157]:
+              - checkbox "Checkbox 1" [ref=e158]
+              - generic [ref=e159] [cursor=pointer]: Checkbox 1
+            - generic [ref=e161]:
+              - checkbox "Checkbox 2" [ref=e162]
+              - generic [ref=e163] [cursor=pointer]: Checkbox 2
+            - generic [ref=e165]:
+              - checkbox "Checkbox 3" [ref=e166]
+              - generic [ref=e167] [cursor=pointer]: Checkbox 3
+          - alert
+      - generic [ref=e169]:
+        - generic [ref=e170]: Message
+        - textbox "Message" [ref=e173]
+        - alert
+      - button "Submit" [active] [ref=e178] [cursor=pointer]:
+        - generic:
+          - generic: Submit
+  - contentinfo [ref=e180]:
+    - generic [ref=e183]:
+      - link "Infinum" [ref=e185] [cursor=pointer]:
+        - /url: https://infinum.test
+        - img "Infinum" [ref=e186]
+      - list [ref=e196]:
+        - listitem [ref=e197]:
+          - link "Code of Conduct" [ref=e198] [cursor=pointer]:
+            - /url: https://infinum.test/code-of-conduct/
+            - generic [ref=e199]: Code of Conduct
+        - listitem [ref=e200]:
+          - link "Privacy Policy" [ref=e201] [cursor=pointer]:
+            - /url: https://infinum.test/privacy-policy/
+            - generic [ref=e202]: Privacy Policy
+        - listitem [ref=e203]:
+          - link "Legal Information" [ref=e204] [cursor=pointer]:
+            - /url: https://infinum.test/legal/
+            - generic [ref=e205]: Legal Information
+        - listitem [ref=e206]:
+          - link "Social and enviromental policy" [ref=e207] [cursor=pointer]:
+            - /url: https://infinum.test/social-and-enviromental-policy/
+            - generic [ref=e208]: Social and enviromental policy
+      - paragraph [ref=e211]: © 2025 Infinum Inc.
+```
