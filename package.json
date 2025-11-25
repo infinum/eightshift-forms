@@ -26,7 +26,9 @@
 		"start": "webpack --progress --watch --mode development",
 		"build": "webpack --mode production",
 		"test:selenium": "npx jest tests/selenium",
-		"test:e2e": "playwright test"
+		"test:e2e": "ES_URL=https://infinum.test/ playwright test",
+		"test:e2e:ui": "ES_URL=https://infinum.test/ playwright test --ui",
+		"test:e2e:report": "playwright show-report"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.56.1",
