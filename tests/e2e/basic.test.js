@@ -1,4 +1,5 @@
-const { test } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
+
 const { testFieldSimple, testFieldMultiple, testMessage } = require('./helpers/tests');
 const {
 	SUBMIT_URL,
@@ -14,60 +15,67 @@ const {
 	populateRange,
 	populateSelect,
 	populateSelectMultiple,
-	populateDateSingle,
+	populateDate,
+	populateDateTime,
 	populateDateMultiple,
 } = require('./helpers');
 
 let payload = null;
+let submittedPage = null;
+let browserContext = null;
 
 test.describe('Basic form tests', () => {
 	test.beforeAll(async ({ browser }) => {
-		const context = await browser.newContext();
-		const page = await context.newPage();
+		browserContext = await browser.newContext();
+		submittedPage = await browserContext.newPage();
 
-		await openUrl(page, 'basic');
-		await setTestEnvironment(page);
+		await openUrl(submittedPage, 'basic');
+		await setTestEnvironment(submittedPage);
 
 		// INPUT.
-		await populateInput(page, 'input-email', 'john.doe@example.com');
-		// await populateInput(page, 'input-regular', 'John Doe');
-		// await populateInput(page, 'input-url', 'https://eightshift.com/');
-		// await populateInput(page, 'input-number', '1234567890');
-		// await populateRange(page, 'input-range');
+		await populateInput(submittedPage, 'input-email', 'john.doe@example.com');
+		await populateInput(submittedPage, 'input-regular', 'John Doe');
+		await populateInput(submittedPage, 'input-url', 'https://eightshift.com/');
+		await populateInput(submittedPage, 'input-number', '1234567890');
+		await populateRange(submittedPage, 'input-range', 10);
 
-		// // SELECT.
-		// await populateSelect(page, 'country-single', 'Croatia');
-		// await populateSelectMultiple(page, 'country-multiple', ['Croatia', 'United States']);
+		// SELECT.
+		await populateSelect(submittedPage, 'country-single', 'Croatia');
+		await populateSelectMultiple(submittedPage, 'country-multiple', ['Croatia', 'United States']);
 
-		// // DATE.
-		// await populateDateSingle(page, 'date-single');
-		// await populateDateMultiple(page, 'date-multiple', true);
-		// await populateDateMultiple(page, 'date-range');
-		// await populateDateSingle(page, 'date-time', true);
+		// DATE.
+		await populateDate(submittedPage, 'date-single', '2022-04-30');
+		await populateDateMultiple(submittedPage, 'date-multiple', ['2025-11-24', '2025-11-26']);
+		await populateDateMultiple(submittedPage, 'date-range', ['2025-11-24', '2025-11-26']);
+		await populateDateTime(submittedPage, 'date-time', '2022-04-30 15:30');
 
-		// // RATING.
-		// await populateRating(page, 'rating', 5);
+		// RATING.
+		await populateRating(submittedPage, 'rating', 5);
 
-		// // PHONE.
-		// await populatePhone(page, 'phone', '385911234567');
+		// PHONE.
+		await populatePhone(submittedPage, 'phone', '385911234567');
 
-		// // RADIO.
-		// await populateRadio(page, 'radios', 'radio-2');
+		// RADIO.
+		await populateRadio(submittedPage, 'radios', 'radio-2');
 
-		// // SELECT.
-		// await populateSelect(page, 'select-single', 'Option 2');
-		// await populateSelectMultiple(page, 'select-multiple', ['Option 2', 'Option 3']);
+		// SELECT.
+		await populateSelect(submittedPage, 'select-single', 'Option 2');
+		await populateSelectMultiple(submittedPage, 'select-multiple', ['Option 2', 'Option 3']);
 
-		// // CHECKBOXES.
-		// await populateCheckbox(page, 'checkboxes', 'checkbox-2');
+		// CHECKBOXES.
+		await populateCheckbox(submittedPage, 'checkboxes', 'checkbox-2');
 
-		// // TEXTAREA.
-		// await populateTextarea(page, 'textarea', 'Hello, world!');
+		// TEXTAREA.
+		await populateTextarea(submittedPage, 'textarea', 'Hello, world!');
 
 		// SUBMIT and get request data
-		payload = await submitFormAction(page, SUBMIT_URL, 5000);
+		payload = await submitFormAction(submittedPage, SUBMIT_URL, 5000);
+	});
 
-		await context.close();
+	test.afterAll(async () => {
+		if (browserContext) {
+			await browserContext.close();
+		}
 	});
 
 	test('should populate input email field', async () => {
@@ -87,7 +95,7 @@ test.describe('Basic form tests', () => {
 	});
 
 	test('should populate input range field', async () => {
-		testFieldSimple(payload, 'input-range', '34', 'range', 'range', '');
+		testFieldSimple(payload, 'input-range', '10', 'range', 'range', '');
 	});
 
 	test('should populate country single field', async () => {
@@ -99,19 +107,19 @@ test.describe('Basic form tests', () => {
 	});
 
 	test('should populate date single field', async () => {
-		testFieldSimple(payload, 'date-single', '2025-11-24', 'date', 'date', '');
+		testFieldSimple(payload, 'date-single', '2022-04-30', 'date', 'date', '');
 	});
 
 	test('should populate date multiple field', async () => {
-		testFieldSimple(payload, 'date-multiple', '2025-11-24---2025-11-25', 'date', 'date', '');
+		testFieldSimple(payload, 'date-multiple', '2025-11-24---2025-11-26', 'date', 'date', '');
 	});
 
 	test('should populate date range field', async () => {
-		testFieldSimple(payload, 'date-range', '2025-11-24---2025-11-25', 'date', 'date', '');
+		testFieldSimple(payload, 'date-range', '2025-11-24---2025-11-26', 'date', 'date', '');
 	});
 
 	test('should populate date time field', async () => {
-		testFieldSimple(payload, 'date-time', '2025-11-24 12:00', 'dateTime', 'datetime-local', '');
+		testFieldSimple(payload, 'date-time', '2022-04-30 15:30', 'dateTime', 'datetime-local', '');
 	});
 
 	test('should populate rating field', async () => {
@@ -146,55 +154,8 @@ test.describe('Basic form tests', () => {
 		testFieldSimple(payload, 'textarea', 'Hello, world!', 'textarea', 'textarea', '');
 	});
 
-	test('should submit form and show success', async ({ page }) => {
-		await testMessage(page, 'success');
+	test('should submit form and show success', async () => {
+		await testMessage(submittedPage, 'success');
 	});
-
-	// test('should submit form and show success', async ({ page }) => {
-	// 	await openUrl(page, 'basic');
-	// 	await setTestEnvironment(page);
-	// 	await waitFormLoaded(page);
-
-	// 	// INPUT.
-	// 	await populateInput(page, 'input-email', 'john.doe@example.com');
-	// 	await populateInput(page, 'input-regular', 'John Doe');
-	// 	await populateInput(page, 'input-url', 'https://eightshift.com/');
-	// 	await populateInput(page, 'input-number', '1234567890');
-	// 	await populateRange(page, 'input-range');
-
-	// 	// SELECT.
-	// 	await populateSelect(page, 'country-single', 'Croatia');
-	// 	await populateSelectMultiple(page, 'country-multiple', ['Croatia', 'United States']);
-
-	// 	// DATE.
-	// 	await populateDateSingle(page, 'date-single');
-	// 	await populateDateMultiple(page, 'date-multiple', true);
-	// 	await populateDateMultiple(page, 'date-range');
-	// 	await populateDateSingle(page, 'date-time', true);
-
-	// 	// RATING.
-	// 	await populateRating(page, 'rating', 5);
-
-	// 	// PHONE.
-	// 	await populatePhone(page, 'phone', '385911234567');
-
-	// 	// RADIO.
-	// 	await populateRadio(page, 'radios', 'radio-2');
-
-	// 	// SELECT.
-	// 	await populateSelect(page, 'select-single', 'Option 2');
-	// 	await populateSelectMultiple(page, 'select-multiple', ['Option 2', 'Option 3']);
-
-	// 	// CHECKBOXES.
-	// 	await populateCheckbox(page, 'checkboxes', 'checkbox-2');
-
-	// 	// TEXTAREA.
-	// 	await populateTextarea(page, 'textarea', 'Hello, world!');
-
-	// 	// SUBMIT.
-	// 	await submitFormAction(page);
-
-	// 	await testMessage(page, 'success');
-	// });
 });
 

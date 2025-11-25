@@ -35,73 +35,93 @@ const waitFormLoaded = async (page) => {
 };
 
 /**
- * Submit the form action and return the request data.
+ * Submit the form action and return the response data and form data.
+ * This function ensures the form actually submits to the real API.
  *
  * @param {import('@playwright/test').Page} page - The page instance.
  * @param {string} urlPattern - Optional URL pattern to match (defaults to SUBMIT_URL).
- * @param {number} timeout - Timeout in milliseconds to wait for the request.
- * @returns {Promise<Object>} The request data with jsonValue.
+ * @param {number} timeout - Timeout in milliseconds to wait for the response.
+ * @returns {Promise<Object>} Object with responseData and formData keys.
  */
 const submitFormAction = async (page, urlPattern = SUBMIT_URL, timeout = 10000) => {
-	// Set up waitForRequest BEFORE submitting (order matters!)
+	// Ensure form is loaded before submitting
+	await waitFormLoaded(page);
+
+	// Set up waitForRequest and waitForResponse BEFORE submitting (order matters!)
+	// Using waitForResponse ensures the API call completes and reaches the real API
 	const requestPromise = page.waitForRequest(
 		(request) => request.url().includes(urlPattern),
 		{ timeout }
 	);
+	const responsePromise = page.waitForResponse(
+		(response) => response.url().includes(urlPattern),
+		{ timeout }
+	);
 
-	// Submit the form
-	await page.locator('.es-field--submit button[type="submit"]').click();
+	// Wait for submit button to be ready and visible
+	const submitButton = page.locator('.es-field--submit button[type="submit"]');
+	await submitButton.waitFor({ state: 'visible', timeout: TIMEOUT });
 
-	// Wait for the request
+	// Submit the form - this will trigger the actual API call
+	await submitButton.click();
+
+	// Wait for both request and response
 	const request = await requestPromise;
+	const response = await responsePromise;
+	
+	// Get the response body
+	const responseData = await response.json();
+
+	// Parse the form data from the request
+	let formData = {};
 	const postData = request.postData();
 
-	const output = request.response();
-	// const outputText = await output.text();
+	if (postData) {
+		// Parse multipart/form-data
+		formData = await page.evaluate((data) => {
+			const result = {};
+			const boundaryMatch = data.match(/^------([^\r\n]+)/);
 
-	// console.log(outputText);
+			if (boundaryMatch) {
+				const boundary = `------${boundaryMatch[1]}`;
+				const parts = data.split(boundary);
 
-	// Parse multipart/form-data using browser's native parsing via evaluate
-	const jsonValue = await page.evaluate((data) => {
-		const result = {};
-		const boundaryMatch = data.match(/^------([^\r\n]+)/);
+				for (const part of parts) {
+					if (!part.trim() || part.trim() === '--') {
+						continue;
+					}
 
-		if (boundaryMatch) {
-			const boundary = `------${boundaryMatch[1]}`;
-			const parts = data.split(boundary);
+					const nameMatch = part.match(/Content-Disposition:\s*form-data;\s*name="([^"]+)"/);
 
-			for (const part of parts) {
-				if (!part.trim() || part.trim() === '--') {
-					continue;
-				}
+					if (!nameMatch) {
+						continue;
+					}
 
-				const nameMatch = part.match(/Content-Disposition:\s*form-data;\s*name="([^"]+)"/);
+					const fieldName = nameMatch[1];
+					const bodyStart = part.indexOf('\r\n\r\n');
 
-				if (!nameMatch) {
-					continue;
-				}
+					if (bodyStart === -1) {
+						continue;
+					}
 
-				const fieldName = nameMatch[1];
-				const bodyStart = part.indexOf('\r\n\r\n');
+					const jsonValue = part.substring(bodyStart + 4).trim().replace(/\r\n$/, '');
 
-				if (bodyStart === -1) {
-					continue;
-				}
-
-				const jsonValue = part.substring(bodyStart + 4).trim().replace(/\r\n$/, '');
-
-				try {
-					result[fieldName] = JSON.parse(jsonValue);
-				} catch {
-					result[fieldName] = jsonValue;
+					try {
+						result[fieldName] = JSON.parse(jsonValue);
+					} catch {
+						result[fieldName] = jsonValue;
+					}
 				}
 			}
-		}
 
-		return result;
-	}, postData);
+			return result;
+		}, postData);
+	}
 
-	return jsonValue;
+	return {
+		responseData,
+		formData,
+	};
 };
 
 /**
@@ -112,7 +132,7 @@ const submitFormAction = async (page, urlPattern = SUBMIT_URL, timeout = 10000) 
  * @param {string} value - The value to populate the input field with.
  */
 const populateInput = async (page, name, value) => {
-	await page.locator(`.es-field[data-field-name="${name}"] .es-input`).fill(value);
+	await page.locator(`.es-field[data-field-name="${name}"] .es-input`).fill(value.toString());
 };
 
 /**
@@ -124,16 +144,8 @@ const populateInput = async (page, name, value) => {
  * @param {string} name - The name of the range field.
  * @param {string} type - The type of the range field.
  */
-const populateRange = async (page, name, type = 'plus') => {
-	const rangeInput = page.locator(`.es-field[data-field-name="${name}"] .es-input__range`);
-
-	if (type === 'plus') {
-		await rangeInput.press('ArrowRight');
-	}
-
-	if (type === 'minus') {
-		await rangeInput.press('ArrowLeft');
-	}
+const populateRange = async (page, name, value) => {
+	await page.locator(`.es-field[data-field-name="${name}"] .es-input__range`).fill(value.toString());
 };
 
 /**
@@ -144,7 +156,7 @@ const populateRange = async (page, name, type = 'plus') => {
  * @param {string} value - The value to populate the phone field with.
  */
 const populatePhone = async (page, name, value) => {
-	await page.locator(`.es-field[data-field-name="${name}"] .es-phone`).fill(value);
+	await page.locator(`.es-field[data-field-name="${name}"] .es-phone`).fill(value.toString());
 };
 
 /**
@@ -155,7 +167,7 @@ const populatePhone = async (page, name, value) => {
  * @param {string} value - The value to populate the textarea field with.
  */
 const populateTextarea = async (page, name, value) => {
-	await page.locator(`.es-field[data-field-name="${name}"] .es-textarea`).fill(value);
+	await page.locator(`.es-field[data-field-name="${name}"] .es-textarea`).fill(value.toString());
 };
 
 /**
@@ -220,41 +232,79 @@ const populateRating = async (page, name, value) => {
 };
 
 /**
- * Populate the date single field.
- *
- * Unable to select specific dates, only today's date is selected.
+ * Populate the date field.
  *
  * @param {import('@playwright/test').Page} page - The page instance.
  * @param {string} name - The name of the date single field.
- * @param {boolean} closeOnSelect - Whether to close the date picker on select.
  */
-const populateDateSingle = async (page, name, closeOnSelect = false) => {
-	await page.locator(`.es-field[data-field-name="${name}"] .input`).click();
-	await page.locator(`.flatpickr-calendar.${name} .flatpickr-day.today`).click();
+const populateDate = async (page, name, value) => {
+	const date = new Date(value);
+	const year = date.getFullYear();
+	const month = date.getMonth();
+	const day = date.getDate();
 
-	if (closeOnSelect) {
-		await page.locator(`.flatpickr-calendar.${name}`).press('Escape');
-	}
+	await page.locator(`.es-field[data-field-name="${name}"] .input`).click();
+	await page.locator(`.flatpickr-calendar.${name} .numInputWrapper .numInput`).fill(year.toString());
+	await page.locator(`.flatpickr-calendar.${name} .numInputWrapper .numInput`).press('Enter');
+	await page.locator(`.flatpickr-calendar.${name} select.flatpickr-monthDropdown-months`).selectOption(month.toString());
+	await page.locator(`.flatpickr-calendar.${name} .dayContainer .flatpickr-day:not(.prevMonthDay):not(.nextMonthDay):has-text("${day}")`).click();
+};
+
+/**
+ * Populate the date time field.
+ *
+ * @param {import('@playwright/test').Page} page - The page instance.
+ * @param {string} name - The name of the date single field.
+ */
+const populateDateTime = async (page, name, value) => {
+	const date = new Date(value);
+	const year = date.getFullYear().toString();
+	const month = date.getMonth().toString();
+	const day = date.getDate().toString();
+	const hour = date.getHours().toString().padStart(2, '0');
+	const minute = date.getMinutes().toString().padStart(2, '0');
+
+	await page.locator(`.es-field[data-field-name="${name}"] .input`).click();
+	await page.locator(`.flatpickr-calendar.${name} input.flatpickr-hour`).fill(hour);
+	await page.locator(`.flatpickr-calendar.${name} input.flatpickr-minute`).fill(minute);
+	await page.locator(`.flatpickr-calendar.${name} input.cur-year`).fill(year);
+	await page.locator(`.flatpickr-calendar.${name} input.cur-year`).press('Enter');
+	await page.locator(`.flatpickr-calendar.${name} select.flatpickr-monthDropdown-months`).selectOption(month);
+	await page.locator(`.flatpickr-calendar.${name} .dayContainer .flatpickr-day:not(.prevMonthDay):not(.nextMonthDay):has-text("${day}")`).click();
+	await page.locator(`.flatpickr-calendar.${name}`).press('Escape');
 };
 
 /**
  * Populate the date multiple field.
  *
- * Unable to select specific dates, only today's date and the next day is selected.
- *
  * @param {import('@playwright/test').Page} page - The page instance.
  * @param {string} name - The name of the date multiple field.
- * @param {boolean} closeOnSelect - Whether to close the date picker on select.
+ * @param {string[]} values - The values to populate the date multiple field with.
  */
-const populateDateMultiple = async (page, name, closeOnSelect = false) => {
+const populateDateMultiple = async (page, name, values) => {
 	await page.locator(`.es-field[data-field-name="${name}"] .input`).click();
-	await page.waitForSelector(`.flatpickr-calendar.${name} .flatpickr-day.today`, { timeout: TIMEOUT });
-	await page.locator(`.flatpickr-calendar.${name} .flatpickr-day.today`).click();
-	await page.locator(`.flatpickr-calendar.${name} .flatpickr-day.today + .flatpickr-day`).click();
 
-	if (closeOnSelect) {
-		await page.locator(`.flatpickr-calendar.${name}`).press('Escape');
+	let index = 0;
+
+	for (const value of values) {
+		if (index === 2) {
+			continue;
+		}
+
+		const date = new Date(value);
+		const year = date.getFullYear();
+		const month = date.getMonth();
+		const day = date.getDate();
+
+		await page.locator(`.flatpickr-calendar.${name} .numInputWrapper .numInput`).fill(year.toString());
+		await page.locator(`.flatpickr-calendar.${name} .numInputWrapper .numInput`).press('Enter');
+		await page.locator(`.flatpickr-calendar.${name} select.flatpickr-monthDropdown-months`).selectOption(month.toString());
+		await page.locator(`.flatpickr-calendar.${name} .dayContainer .flatpickr-day:not(.prevMonthDay):not(.nextMonthDay):has-text("${day}")`).click();
+
+		index++;
 	}
+
+	await page.locator(`.flatpickr-calendar.${name}`).press('Escape');
 };
 
 /**
@@ -314,7 +364,8 @@ module.exports = {
 	populateRange,
 	populateSelect,
 	populateSelectMultiple,
-	populateDateSingle,
+	populateDate,
+	populateDateTime,
 	populateDateMultiple,
 	getNetworkRequest,
 };

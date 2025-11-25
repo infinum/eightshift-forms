@@ -11,9 +11,9 @@ const { expect } = require('@playwright/test');
  * @param {string} innerName - The inner name of the field.
  */
 const testFieldSimple = (payload, name, value, type, typeCustom, innerName) => {
-	expect(payload).toHaveProperty(name);
+	expect(payload.formData).toHaveProperty(name);
 
-	const data = payload[name];
+	const data = payload.formData[name];
 
 	let expectedType = 'string';
 
@@ -37,6 +37,8 @@ const testFieldSimple = (payload, name, value, type, typeCustom, innerName) => {
 	} else {
 		expect(data.value).toBe(value);
 	}
+
+
 };
 
 /**
@@ -51,7 +53,7 @@ const testFieldSimple = (payload, name, value, type, typeCustom, innerName) => {
  */
 const testFieldMultiple = (payload, name, expectedValue, type, typeCustom, initialValues = []) => {
 	// Find all fields with the pattern name[index]
-	const fieldKeys = Object.keys(payload).filter((key) => key.startsWith(`${name}[`));
+	const fieldKeys = Object.keys(payload.formData).filter((key) => key.startsWith(`${name}[`));
 
 	if (fieldKeys.length === 0) {
 		expect(fieldKeys).toHaveLength(1);
@@ -63,11 +65,11 @@ const testFieldMultiple = (payload, name, expectedValue, type, typeCustom, initi
 
 	// Parse and validate each field
 	fieldKeys.forEach((key, index) => {
-		if (!(key in payload)) {
+		if (!(key in payload.formData)) {
 			expect(key).toBeIn(payload);
 		}
 
-		const data = payload[key];
+		const data = payload.formData[key];
 
 		if (!data) {
 			expect(data).toBeDefined();
@@ -117,11 +119,9 @@ const testFieldMultiple = (payload, name, expectedValue, type, typeCustom, initi
  * @param {string} status - The status of the message.
  */
 const testMessage = async (page, status) => {
+	await page.waitForSelector('.es-global-msg[data-status="success"]', { timeout: 10000 });
 	const message = await page.locator(`.es-global-msg[data-status="${status}"] div span`).textContent();
-
-	console.log(message);
-	
-	expect(message).toBeTruthy();
+	expect(message).toBe('Application submitted successfully. Thank you!');
 };
 
 /**
