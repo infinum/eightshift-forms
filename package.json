@@ -28,7 +28,8 @@
 		"test:selenium": "npx jest tests/selenium",
 		"test:e2e": "ES_URL=https://infinum.test/ playwright test",
 		"test:e2e:ui": "ES_URL=https://infinum.test/ playwright test --ui",
-		"test:e2e:report": "playwright show-report"
+		"test:e2e:report:show": "playwright show-report",
+		"test:e2e:report:pdf": "node tests/e2e/helpers/generate-pdf-report.js"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.56.1",
