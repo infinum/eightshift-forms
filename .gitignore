@@ -5,3 +5,6 @@
 /node_modules
 /.vscode
 /eightshift
+
+/ test-results
+/ playwright-report
