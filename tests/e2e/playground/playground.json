@@ -20,8 +20,10 @@
 		},
 		{
 			"step": "importWxr",
-			"resource": "file",
-			"url": "./tests/e2e/playground/dataset.xml"
+			"file": {
+				"resource": "url",
+				"url": "https://github.com/infinum/eightshift-forms/blob/feature/tests/tests/e2e/playground/dataset.xml"
+			}
 		}
 	],
 	"preferredVersions": {
