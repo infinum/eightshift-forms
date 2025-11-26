@@ -33,7 +33,8 @@
 		{
 			"step": "setSiteOptions",
 			"options": {
-				"es-forms-calculator-use": "calculator-use"
+				"es-forms-calculator-use": "calculator-use",
+				"es-forms-validation-use-email-tld": "validation-use-email-tld"
 			}
 		}
 	],

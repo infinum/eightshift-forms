@@ -38,7 +38,7 @@ test.describe('Validation tests', () => {
 		await openUrl(page, 'validation');
 		await populateInput(page, 'input-email', 'invalid-email');
 		await submitFormAction(page);
-		await testFieldValidationMessage(page, 'input-email', 'Enter a valid email address.');
+		await testFieldValidationMessage(page, 'input-email', 'This e-mail is not valid.');
 	});
 
 	test('should show validation message for input email field when email is not valid TLD', async ({ page }) => {
