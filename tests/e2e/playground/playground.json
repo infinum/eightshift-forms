@@ -1,0 +1,40 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/post-new.php",
+	"login": true,
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://github.com/infinum/eightshift-forms/releases/download/8.10.1/release.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "importWxr",
+			"resource": "file",
+			"url": "./tests/e2e/playground/dataset.xml"
+		}
+	],
+	"preferredVersions": {
+		"php": "8.4",
+		"wp": "6.8.3"
+	},
+	"constants": {
+		"COMPRESS_CSS": true,
+		"COMPRESS_SCRIPTS": true,
+		"CONCATENATE_SCRIPTS": true,
+		"ENFORCE_GZIP": true,
+		"SCRIPT_DEBUG": false,
+		"WP_MEMORY_LIMIT": "256M",
+		"WP_ENVIRONMENT_TYPE": "production"
+	}
+}

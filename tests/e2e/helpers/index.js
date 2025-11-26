@@ -1,3 +1,5 @@
+import { baseURL } from '../../../playwright.config';
+
 const TIMEOUT = 10000;
 const SUBMIT_URL = '/eightshift-forms/v1/submit/calculator';
 
@@ -21,8 +23,7 @@ const setTestEnvironment = async (page) => {
  * @param {string} path - The path to the test environment.
  */
 const openUrl = async (page, path) => {
-	const baseUrl = process.env.ES_URL || 'http://localhost:3000';
-	await page.goto(`${baseUrl}/tests/${path}`);
+	await page.goto(`${baseURL}/tests/${path}`);
 };
 
 /**
