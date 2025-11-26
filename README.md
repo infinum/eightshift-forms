@@ -33,28 +33,29 @@ Eightshift forms plugin is created on the [Eightshift development kit](https://e
 
 ## 🧪 Testing
 
-All Selenium tests are located in the `tests/selenium` folder. To run them you must provide the `ES_URL` environment variable with the URL of the test environment and correct url structure.
-
-**Make sure you only have form on the page that you want to test and no other content like headers, footers, etc.**
+All e2d tests are run using Playwright and are located in the `tests/e2e` folder and are run in isolated environment using WP Playground with predefined dataset.
 
 URL structure is:
-* `<test-environment>/tests/basic`
-* `<test-environment>/tests/validation`
+* `http://127.0.0.1:9400/tests/basic`
+* `http://127.0.0.1:9400/tests/validation`
 * etc.
 
-How to setup test environment:
+To run the tests locally using WP Playground:
+1. `bun run test:e2e:playground` - creates a new WP Playground instance and imports the dataset.
+2. `bun run test:e2e:ui` or `bun run test:e2e` - runs the tests in the browser UI or headless mode.
+3. `bun run test:e2e:report:show` - shows the test report.
+4. `bun run test:e2e:report:pdf` - generates a PDF report of the tests.
+
+Setting up custom test environment:
 1. Create a new WordPress installation.
 2. Install the Eightshift Forms plugin.
-3. Activate `Calculator` form type.
-4. Create a new forms for each test from the `tests/selenium/dataset` folder.
-5. Create new pages with the correct url structure.
-6. Run `ES_URL=https://<test-environment>/ bun run test:selenium` to run the tests.
+3. Check the `options` for the forms set in the `tests/e2e/playground/playground.json` file.
+4. Import the dataset from the `tests/e2e/playground/dataset.xml` file, make sure you have a clean installation before importing the dataset as the page/forms ID increments remains the same as in the dataset.
+6. Run `ES_URL=https://<test-environment>/ bun run test:e2e:ui` to run the tests.
 
 Available environment variables:
 * `ES_URL`: URL of the test environment. Required.
 * `ES_CLASS`: Class name to be added to the body tag for additional styling if needed. Default is `es-forms-tests`.
-
-In order for the tests to work, forms must be public and accessible by the test environment.
 
 ## 🛟 Getting help
 
