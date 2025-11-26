@@ -1,10 +1,9 @@
-const { test, expect } = require('@playwright/test');
+const { test } = require('@playwright/test');
 
 const { testFieldSimple, testFieldMultiple, testMessage } = require('./helpers/tests');
 const {
 	SUBMIT_URL,
 	openUrl,
-	setTestEnvironment,
 	submitFormAction,
 	populateInput,
 	populateCheckbox,
@@ -30,7 +29,6 @@ test.describe('Basic form tests', () => {
 		submittedPage = await browserContext.newPage();
 
 		await openUrl(submittedPage, 'basic');
-		await setTestEnvironment(submittedPage);
 
 		// INPUT.
 		await populateInput(submittedPage, 'input-email', 'john.doe@example.com');
@@ -69,7 +67,7 @@ test.describe('Basic form tests', () => {
 		await populateTextarea(submittedPage, 'textarea', 'Hello, world!');
 
 		// SUBMIT and get request data
-		payload = await submitFormAction(submittedPage, SUBMIT_URL, 5000);
+		payload = await submitFormAction(submittedPage, SUBMIT_URL);
 	});
 
 	test.afterAll(async () => {

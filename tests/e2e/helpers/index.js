@@ -1,8 +1,16 @@
-import { baseURL } from '../../../playwright.config';
-
-const TIMEOUT = 10000;
 const SUBMIT_URL = '/eightshift-forms/v1/submit/calculator';
 
+/**
+ * Get the URL for the test environment.
+ *
+ * @param {import('@playwright/test').Page} page - The page instance.
+ * @param {string} path - The path to the test environment.
+ */
+const openUrl = async (page, path) => {
+	await page.goto(`/tests/${path}`);
+	await waitFormLoaded(page);
+	await setTestEnvironment(page);
+};
 
 /**
  * Set the test environment to remove unnecessary elements and styles.
@@ -17,22 +25,12 @@ const setTestEnvironment = async (page) => {
 };
 
 /**
- * Get the URL for the test environment.
- *
- * @param {import('@playwright/test').Page} page - The page instance.
- * @param {string} path - The path to the test environment.
- */
-const openUrl = async (page, path) => {
-	await page.goto(`${baseURL}/tests/${path}`);
-};
-
-/**
  * Wait for the form to be loaded.
  *
  * @param {import('@playwright/test').Page} page - The page instance.
  */
 const waitFormLoaded = async (page) => {
-	await page.waitForSelector('.es-form', { timeout: TIMEOUT });
+	await page.waitForSelector('.es-form');
 };
 
 /**
@@ -41,27 +39,21 @@ const waitFormLoaded = async (page) => {
  *
  * @param {import('@playwright/test').Page} page - The page instance.
  * @param {string} urlPattern - Optional URL pattern to match (defaults to SUBMIT_URL).
- * @param {number} timeout - Timeout in milliseconds to wait for the response.
  * @returns {Promise<Object>} Object with responseData and formData keys.
  */
-const submitFormAction = async (page, urlPattern = SUBMIT_URL, timeout = 10000) => {
-	// Ensure form is loaded before submitting
-	await waitFormLoaded(page);
+const submitFormAction = async (page, urlPattern = SUBMIT_URL) => {
+	const submitButton = page.locator('.es-field--submit .es-submit');
+	await submitButton.waitFor({ state: 'visible' });
 
 	// Set up waitForRequest and waitForResponse BEFORE submitting (order matters!)
 	// Using waitForResponse ensures the API call completes and reaches the real API
 	const requestPromise = page.waitForRequest(
 		(request) => request.url().includes(urlPattern),
-		{ timeout }
-	);
-	const responsePromise = page.waitForResponse(
-		(response) => response.url().includes(urlPattern),
-		{ timeout }
 	);
 
-	// Wait for submit button to be ready and visible
-	const submitButton = page.locator('.es-field--submit button[type="submit"]');
-	await submitButton.waitFor({ state: 'visible', timeout: TIMEOUT });
+	const responsePromise = page.waitForResponse(
+		(response) => response.url().includes(urlPattern),
+	);
 
 	// Submit the form - this will trigger the actual API call
 	await submitButton.click();
@@ -350,11 +342,8 @@ const getNetworkRequest = async (page, urlPattern, timeout = 10000) => {
 };
 
 module.exports = {
-	TIMEOUT,
 	SUBMIT_URL,
-	setTestEnvironment,
 	openUrl,
-	waitFormLoaded,
 	submitFormAction,
 	populateInput,
 	populateTextarea,

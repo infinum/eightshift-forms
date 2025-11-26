@@ -2,16 +2,21 @@
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"landingPage": "/wp-admin/post-new.php",
 	"login": true,
+	"features": {
+		"networking": false
+	},
 	"steps": [
 		{
-			"step": "installPlugin",
-			"pluginData": {
-				"resource": "url",
-				"url": "https://github.com/infinum/eightshift-forms/releases/download/8.10.1/release.zip"
-			},
-			"options": {
-				"activate": true
-			}
+			"step": "resetData"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/mu-plugins/mu-plugins.php",
+			"data": "<?php remove_filter('the_content', 'wpautop'); ?>"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; activate_plugin('eightshift-forms/eightshift-forms.php'); ?>"
 		},
 		{
 			"step": "login",
@@ -23,6 +28,12 @@
 			"file": {
 				"resource": "url",
 				"url": "https://github.com/infinum/eightshift-forms/blob/feature/tests/tests/e2e/playground/dataset.xml"
+			}
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"es-forms-calculator-use": "calculator-use"
 			}
 		}
 	],
