@@ -1,6 +1,6 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
-	"landingPage": "/wp-admin/post-new.php",
+	"landingPage": "/",
 	"login": true,
 	"features": {
 		"networking": false
@@ -17,11 +17,6 @@
 		{
 			"step": "runPHP",
 			"code": "<?php require_once '/wordpress/wp-load.php'; activate_plugin('eightshift-forms/eightshift-forms.php'); ?>"
-		},
-		{
-			"step": "login",
-			"username": "admin",
-			"password": "password"
 		},
 		{
 			"step": "importWxr",

@@ -25,7 +25,7 @@
 		"lint": "npm run lintJs && npm run lintStyle && composer test:standards",
 		"start": "webpack --progress --watch --mode development",
 		"build": "webpack --mode production",
-		"test:e2e:playground": "npx @wp-playground/cli@latest server --mount=.:/wordpress/wp-content/plugins/eightshift-forms --blueprint=./tests/e2e/playground/playground.json",
+		"test:e2e:playground": "npx @wp-playground/cli@latest server --auto-mount --blueprint=./tests/e2e/playground/playground.json",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
 		"test:e2e:report:show": "playwright show-report",
