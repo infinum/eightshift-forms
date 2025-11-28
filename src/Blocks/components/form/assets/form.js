@@ -1500,9 +1500,6 @@ export class Form {
 
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);
-
-				button.focus();
-				this.utils.setOnFocus(button);
 			});
 
 			// Add data formData to the api call for the file upload.
