@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.10.2]
+
+### Fixed
+
+- File upload removed file event now properly focuses.
+
 ## [8.10.1]
 
 ### Fixed
@@ -1608,6 +1614,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.10.2]: https://github.com/infinum/eightshift-forms/compare/8.10.1...8.10.2
 [8.10.1]: https://github.com/infinum/eightshift-forms/compare/8.10.0...8.10.1
 [8.10.0]: https://github.com/infinum/eightshift-forms/compare/8.9.3...8.10.0
 [8.9.3]: https://github.com/infinum/eightshift-forms/compare/8.9.2...8.9.3
