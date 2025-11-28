@@ -7,7 +7,7 @@ const SUBMIT_URL = '/eightshift-forms/v1/submit/calculator';
  * @param {string} path - The path to the test environment.
  */
 const openUrl = async (page, path) => {
-	await page.goto(`/tests/${path}`);
+	await page.goto(`/${path}`);
 	await waitFormLoaded(page);
 	await setTestEnvironment(page);
 };

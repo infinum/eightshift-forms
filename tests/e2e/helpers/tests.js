@@ -10,7 +10,7 @@ const { expect } = require('@playwright/test');
  * @param {string} typeCustom - The custom type of the field.
  * @param {string} innerName - The inner name of the field.
  */
-const testFieldSimple = (payload, name, value, type, typeCustom, innerName) => {
+const testFieldSingle = (payload, name, value, type, typeCustom, innerName) => {
 	expect(payload.formData).toHaveProperty(name);
 
 	const data = payload.formData[name];
@@ -37,8 +37,16 @@ const testFieldSimple = (payload, name, value, type, typeCustom, innerName) => {
 	} else {
 		expect(data.value).toBe(value);
 	}
+};
 
-
+/**
+ * Test a single field that is missing from the form payload.
+ *
+ * @param {Object} payload - The form payload object.
+ * @param {string} name - The field name.
+ */
+const testFieldSingleMissing = (payload, name) => {
+	expect(payload.formData).not.toHaveProperty(name);
 };
 
 /**
@@ -124,22 +132,10 @@ const testMessage = async (page, status) => {
 	expect(message).toBe('Application submitted successfully. Thank you!');
 };
 
-/**
- * Test the validation of a field.
- *
- * @param {import('@playwright/test').Page} page - The page instance.
- * @param {string} name - The name of the field.
- * @param {string} expectedMessage - The expected validation message.
- */
-const testFieldValidationMessage = async (page, name, expectedMessage) => {
-	const errorMessage = await page.locator(`.es-field[data-field-name="${name}"] .es-error`).textContent();
-	expect(errorMessage).toBe(expectedMessage);
-};
-
 module.exports = {
-	testFieldSimple,
+	testFieldSingle,
+	testFieldSingleMissing,
 	testFieldMultiple,
 	testMessage,
-	testFieldValidationMessage,
 };
 

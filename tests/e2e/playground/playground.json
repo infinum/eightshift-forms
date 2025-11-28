@@ -12,7 +12,7 @@
 		{
 			"step": "writeFile",
 			"path": "/wordpress/wp-content/mu-plugins/mu-plugins.php",
-			"data": "<?php remove_filter('the_content', 'wpautop'); ?>"
+			"data": "<?php remove_filter('the_content', 'wpautop'); remove_theme_support('core-block-patterns'); add_filter('should_load_remote_block_patterns', '__return_false'); ?>"
 		},
 		{
 			"step": "runPHP",
@@ -42,9 +42,12 @@
 		"COMPRESS_CSS": true,
 		"COMPRESS_SCRIPTS": true,
 		"CONCATENATE_SCRIPTS": true,
-		"ENFORCE_GZIP": true,
 		"SCRIPT_DEBUG": false,
 		"WP_MEMORY_LIMIT": "256M",
-		"WP_ENVIRONMENT_TYPE": "production"
+		"WP_ENVIRONMENT_TYPE": "production",
+		"WP_HTTP_BLOCK_EXTERNAL": true,
+		"DISABLE_WP_CRON": true,
+		"AUTOSAVE_INTERVAL": 0,
+		"WP_POST_REVISIONS": false
 	}
 }

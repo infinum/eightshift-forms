@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const { testFieldValidationMessage } = require('./helpers/tests');
 const {
 	openUrl,
 	submitFormAction,
@@ -13,6 +12,7 @@ const {
 	getFieldSuffixContent,
 	getFieldHelp,
 } = require('./helpers');
+const { testFieldSingle, testFieldSingleMissing } = require('./helpers/tests');
 
 const URL = 'field-input-text';
 
@@ -373,5 +373,19 @@ test.describe('Field input text tests', () => {
 		const field = await getField(page, selector);
 
 		await expect(field).toHaveAttribute('data-tracking', 'tracking');
+	});
+
+	test('input-submit-check-submitted-data', async ({ page }) => {
+		await openUrl(page, URL);
+		const payload = await submitFormAction(page);
+
+		testFieldSingle(payload, 'input-default', '', 'input', 'text', '');
+		testFieldSingle(payload, 'input-value', 'input-value', 'input', 'text', '');
+		testFieldSingle(payload, 'input-readonly', '', 'input', 'text', '');
+		testFieldSingle(payload, 'input-readonly-value', 'input-readonly-value', 'input', 'text', '');
+		testFieldSingleMissing(payload, 'input-disabled');
+		testFieldSingleMissing(payload, 'input-disabled-value');
+		testFieldSingle(payload, 'input-hidden', '', 'input', 'text', '');
+		testFieldSingle(payload, 'input-hidden-value', 'input-hidden-value', 'input', 'text', '');
 	});
 });
