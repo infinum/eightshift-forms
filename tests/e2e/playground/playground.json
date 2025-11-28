@@ -28,6 +28,7 @@
 		{
 			"step": "setSiteOptions",
 			"options": {
+				"permalink_structure": "/%postname%/",
 				"es-forms-calculator-use": "calculator-use",
 				"es-forms-validation-use-email-tld": "validation-use-email-tld"
 			}
