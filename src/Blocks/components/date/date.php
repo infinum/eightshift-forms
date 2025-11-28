@@ -32,6 +32,7 @@ $datePreviewFormat = Helpers::checkAttr('datePreviewFormat', $attributes, $manif
 $dateOutputFormat = Helpers::checkAttr('dateOutputFormat', $attributes, $manifest);
 $dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
 $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
+$dateMode = Helpers::checkAttr('dateMode', $attributes, $manifest);
 $dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $manifest);
 
 $dateId = $dateName . '-' . Helpers::getUnique();
@@ -55,6 +56,7 @@ if ($datePlaceholder) {
 	$dateAttrs['placeholder'] = esc_attr($datePlaceholder);
 }
 
+$dateAttrs[UtilsHelper::getStateAttribute('dateMode')] = esc_attr($dateMode);
 $dateAttrs[UtilsHelper::getStateAttribute('datePreviewFormat')] = $datePreviewFormat ? esc_attr($datePreviewFormat) : $manifest['formats'][$dateType]['preview'];
 $dateAttrs[UtilsHelper::getStateAttribute('dateOutputFormat')] = $dateOutputFormat ? esc_attr($dateOutputFormat) : $manifest['formats'][$dateType]['output'];
 

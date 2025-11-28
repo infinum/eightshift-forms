@@ -2,8 +2,6 @@
 
 [![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
 [![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-forms.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-forms)
-[![license](https://img.shields.io/github/license/infinum/eightshift-forms.svg?style=for-the-badge)](https://github.com/infinum/eightshift-forms)
-[![codecov](https://img.shields.io/codecov/c/gh/infinum/eightshift-forms/branch/develop?label=Codecov&style=for-the-badge&token=02Lfa2jjoK)](https://codecov.io/gh/infinum/eightshift-forms)
 
 # Eightshift Forms Plugin
 
@@ -32,6 +30,32 @@ Clone the project + build to get started:
 Eightshift forms documentation is located [here](docs/README.md).
 
 Eightshift forms plugin is created on the [Eightshift development kit](https://eightshift.com).
+
+## 🧪 Testing
+
+All e2d tests are run using Playwright and are located in the `tests/e2e` folder and are run in isolated environment using WP Playground with predefined dataset.
+
+URL structure is:
+* `http://127.0.0.1:9400/tests/basic`
+* `http://127.0.0.1:9400/tests/validation`
+* etc.
+
+To run the tests locally using WP Playground:
+1. `bun run test:e2e:playground` - creates a new WP Playground instance and imports the dataset.
+2. `bun run test:e2e:ui` or `bun run test:e2e` - runs the tests in the browser UI or headless mode.
+3. `bun run test:e2e:report:show` - shows the test report.
+4. `bun run test:e2e:report:pdf` - generates a PDF report of the tests.
+
+Setting up custom test environment:
+1. Create a new WordPress installation.
+2. Install the Eightshift Forms plugin.
+3. Check the `options` for the forms set in the `tests/e2e/playground/playground.json` file.
+4. Import the dataset from the `tests/e2e/playground/dataset.xml` file, make sure you have a clean installation before importing the dataset as the page/forms ID increments remains the same as in the dataset.
+6. Run `ES_URL=https://<test-environment>/ bun run test:e2e:ui` to run the tests.
+
+Available environment variables:
+* `ES_URL`: URL of the test environment. Required.
+* `ES_CLASS`: Class name to be added to the body tag for additional styling if needed. Default is `es-forms-tests`.
 
 ## 🛟 Getting help
 
