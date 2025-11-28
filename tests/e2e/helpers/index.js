@@ -341,6 +341,38 @@ const getNetworkRequest = async (page, urlPattern, timeout = 10000) => {
 	};
 };
 
+const getFieldLabel = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-field__label-inner`);
+};
+
+const getFieldInput = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-input`);
+};
+
+const getField = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"]`);
+};
+
+const getFieldError = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-error`);
+};
+
+const getFieldBeforeContent = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-field__before-content`);
+};
+
+const getFieldAfterContent = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-field__after-content`);
+};
+
+const getFieldSuffixContent = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-field__suffix-content`);
+};
+
+const getFieldHelp = async (page, name) => {
+	return await page.locator(`.es-field[data-field-name="${name}"] .es-field__help`);
+};
+
 module.exports = {
 	SUBMIT_URL,
 	openUrl,
@@ -358,5 +390,13 @@ module.exports = {
 	populateDateTime,
 	populateDateMultiple,
 	getNetworkRequest,
+	getFieldLabel,
+	getFieldInput,
+	getField,
+	getFieldError,
+	getFieldBeforeContent,
+	getFieldAfterContent,
+	getFieldSuffixContent,
+	getFieldHelp,
 };
 
