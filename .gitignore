@@ -6,6 +6,5 @@
 /.vscode
 /eightshift
 
-# Tests
-tests/coverage/*
-.phpunit.result.cache
+/test-results
+/playwright-report

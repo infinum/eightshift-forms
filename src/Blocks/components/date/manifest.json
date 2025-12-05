@@ -34,6 +34,10 @@
 		"dateTypeCustom": {
 			"type": "string"
 		},
+		"dateMode": {
+			"type": "string",
+			"default": "single"
+		},
 		"dateIsDisabled": {
 			"type": "boolean",
 			"default": false
@@ -90,6 +94,20 @@
 			{
 				"label": "Date & time",
 				"value": "datetime-local"
+			}
+		],
+		"dateMode": [
+			{
+				"label": "Single",
+				"value": "single"
+			},
+			{
+				"label": "Multiple",
+				"value": "multiple"
+			},
+			{
+				"label": "Range",
+				"value": "range"
 			}
 		]
 	},
