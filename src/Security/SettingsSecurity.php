@@ -126,7 +126,6 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'component' => 'input',
 								'inputName' => SettingsHelpers::getSettingName(Security::RATE_LIMIT_SETTING_NAME),
 								'inputFieldLabel' => \__('Rate limit (submission attempts / seconds)', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \__('If set, the form will be rate limited based on the provided value, in addition to global rate limits.', 'eightshift-forms'),
 								'inputFieldAfterContent' => \__('per second', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
