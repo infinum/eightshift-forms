@@ -41,6 +41,8 @@
 		"@eightshift/frontend-libs": "^12.1.9",
 		"@eightshift/ui-components": "^5.6.1",
 		"autosize": "^6.0.1",
+		"baseline-browser-mapping": "^2.8.32",
+		"caniuse-lite": "^1.0.30001757",
 		"choices.js": "^11.1.0",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
