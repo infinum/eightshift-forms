@@ -22,6 +22,8 @@ class RateLimitingLogEntry
 	// We require WP 6.2 for preparing the identifier name.
 	// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnsupportedIdentifierPlaceholder
 
+	// phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+
 	/**
 	 * Construct a log entry model object.
 	 *
@@ -75,7 +77,7 @@ class RateLimitingLogEntry
 		return new self(
 			userToken: $this->userToken,
 			activityType: $this->activityType,
-			logId: $wpdb->insert_id, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+			logId: $wpdb->insert_id,
 			formId: $this->formId,
 			createdAt: $createdAt,
 		);
@@ -104,7 +106,6 @@ class RateLimitingLogEntry
 
 		return \array_map(static function ($result) {
 			// We use snake-case in the database column names.
-			// phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			return new RateLimitingLogEntry(
 				userToken: $result->user_token,
 				activityType: $result->activity_type,
@@ -112,7 +113,6 @@ class RateLimitingLogEntry
 				formId: $result->form_id,
 				createdAt: $result->created_at,
 			);
-			// phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 		}, $results);
 	}
 
@@ -157,13 +157,11 @@ class RateLimitingLogEntry
 
 		$results = $wpdb->get_results($wpdb->prepare("SELECT activity_type, COUNT(*) as count FROM %i WHERE user_token = %s AND created_at >= %d GROUP BY activity_type", $table, $userToken, $windowStart));
 
-		// phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 		return \array_map(static function ($result) {
 			return [
 				'activityType' => $result->activity_type,
 				'count' => $result->count,
 			];
-			// phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 		}, $results);
 	}
 
@@ -183,7 +181,4 @@ class RateLimitingLogEntry
 
 		$wpdb->query($wpdb->prepare("DELETE FROM %i WHERE created_at < %d", $table, $windowStart));
 	}
-
-	// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnsupportedIdentifierPlaceholder
 }
