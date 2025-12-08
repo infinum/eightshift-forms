@@ -808,7 +808,29 @@ export class Form {
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 				case 'country':
+					if (disabled) {
+						break;
+					}
+
 					data.value = this.utils.getCountryCombinedValues(formId, name);
+
+					this.FORM_DATA.append(name, JSON.stringify(data));
+					break;
+				case 'date':
+					if (disabled) {
+						break;
+					}
+
+					const dateInput = this.state.getStateElementInput(name, formId);
+					const dateMode = dateInput.getAttribute(this.state.getStateAttribute('dateMode'));
+
+					if (dateMode === 'range') {
+						data.value = data.value.replace(' to ', '---');
+					}
+
+					if (dateMode === 'multiple') {
+						data.value = data.value.replace(', ', '---');
+					}
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
@@ -1245,6 +1267,7 @@ export class Form {
 
 		const input = state.getStateElementInput(name, formId);
 		const field = state.getStateElementField(name, formId);
+		const fieldName = field.getAttribute(this.state.getStateAttribute('fieldName'), formId);
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
@@ -1252,8 +1275,12 @@ export class Form {
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
+				time_24hr: true,
+				mode: input.getAttribute(state.getStateAttribute('dateMode')),
 				onReady: function (selectedDates, value, instance) {
 					const id = instance.element.id;
+
+					instance.calendarContainer.classList.add(fieldName);
 					instance.element.setAttribute('tabindex', '-1');
 					instance.element.setAttribute('role', 'group');
 					instance.element.setAttribute('aria-hidden', 'true');
@@ -1267,10 +1294,10 @@ export class Form {
 
 					utils.setFieldFilledState(formId, name);
 				},
-				onOpen: function () {
+				onOpen: function (selectedDates, dateStr, instance) {
 					utils.setActiveState(formId, name);
 
-					if (!state.getStateSettingsDisableScrollToFieldOnFocus()) {	
+					if (!state.getStateSettingsDisableScrollToFieldOnFocus()) {
 						utils.scrollAction(field);
 					}
 				},

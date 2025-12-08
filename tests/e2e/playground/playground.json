@@ -1,0 +1,53 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/",
+	"login": true,
+	"features": {
+		"networking": false
+	},
+	"steps": [
+		{
+			"step": "resetData"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/mu-plugins/mu-plugins.php",
+			"data": "<?php remove_filter('the_content', 'wpautop'); remove_theme_support('core-block-patterns'); add_filter('should_load_remote_block_patterns', '__return_false'); ?>"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; activate_plugin('eightshift-forms/eightshift-forms.php'); ?>"
+		},
+		{
+			"step": "importWxr",
+			"file": {
+				"resource": "url",
+				"url": "https://github.com/infinum/eightshift-forms/blob/feature/tests/tests/e2e/playground/dataset.xml"
+			}
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"permalink_structure": "/%postname%/",
+				"es-forms-calculator-use": "calculator-use",
+				"es-forms-validation-use-email-tld": "validation-use-email-tld"
+			}
+		}
+	],
+	"preferredVersions": {
+		"php": "8.4",
+		"wp": "6.8.3"
+	},
+	"constants": {
+		"COMPRESS_CSS": true,
+		"COMPRESS_SCRIPTS": true,
+		"CONCATENATE_SCRIPTS": true,
+		"SCRIPT_DEBUG": false,
+		"WP_MEMORY_LIMIT": "256M",
+		"WP_ENVIRONMENT_TYPE": "production",
+		"WP_HTTP_BLOCK_EXTERNAL": true,
+		"DISABLE_WP_CRON": true,
+		"AUTOSAVE_INTERVAL": 0,
+		"WP_POST_REVISIONS": false
+	}
+}

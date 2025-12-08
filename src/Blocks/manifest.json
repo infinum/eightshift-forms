@@ -612,6 +612,7 @@
 
 			"datePreviewFormat": "data-preview-format",
 			"dateOutputFormat": "data-output-format",
+			"dateMode": "data-mode",
 
 			"selectAllowSearch": "data-allow-search",
 			"selectIsMultiple": "data-is-multiple",

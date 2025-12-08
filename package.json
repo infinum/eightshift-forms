@@ -25,17 +25,24 @@
 		"lint": "npm run lintJs && npm run lintStyle && composer test:standards",
 		"start": "webpack --progress --watch --mode development",
 		"build": "webpack --mode production",
-		"test": "wp boilerplate"
+		"test:e2e:playground": "npx @wp-playground/cli@latest server --auto-mount --blueprint=./tests/e2e/playground/playground.json",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
+		"test:e2e:report:show": "playwright show-report",
+		"test:e2e:report:pdf": "node tests/e2e/helpers/generate-pdf-report.js"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.56.1",
 		"husky": "^9.1.7",
-		"webpack": "^5.102.1",
+		"webpack": "^5.103.0",
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
 		"@eightshift/frontend-libs": "^12.1.9",
-		"@eightshift/ui-components": "^5.5.0",
+		"@eightshift/ui-components": "^5.6.1",
 		"autosize": "^6.0.1",
+		"baseline-browser-mapping": "^2.8.32",
+		"caniuse-lite": "^1.0.30001757",
 		"choices.js": "^11.1.0",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
@@ -43,7 +50,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm run lint"
+			"pre-commit": "bun run lint"
 		}
 	}
 }
