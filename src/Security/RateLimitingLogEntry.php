@@ -28,14 +28,14 @@ class RateLimitingLogEntry
 	 * @param string $userToken A user-identifying token. Can be anything, but mostly a hashed IP address.
 	 * @param string $activityType The type of activity that is being logged. E.g. submit-calculator.
 	 * @param integer|null $logId A log ID, if used to represent an existing log entry, e.g. as a return value from ::find().
-	 * @param integer|null $formId The ID of the form that the log entry is associated with.
+	 * @param string|null $formId The ID of the form that the log entry is associated with.
 	 * @param integer|null $createdAt The timestamp of the log entry creation.
 	 */
 	public function __construct(
 		public readonly string $userToken,
 		public readonly string $activityType,
 		public readonly ?int $logId = null,
-		public readonly ?int $formId = null,
+		public readonly ?string $formId = null,
 		public ?int $createdAt = null,
 	) {} // phpcs:ignore
 
@@ -120,14 +120,14 @@ class RateLimitingLogEntry
 	 * Count the number of log entries in the database, given a user token, form ID and a time window.
 	 *
 	 * @param string $userToken The user token to seek.
-	 * @param integer $formId The form ID to seek.
+	 * @param string $formId The form ID to seek.
 	 * @param integer $windowDuration The time window (from current time) in seconds.
 	 *
 	 * @return integer The number of log entries that match the criteria.
 	 */
 	public static function countByFormId(
 		string $userToken,
-		int $formId,
+		string $formId,
 		int $windowDuration
 	): int {
 		$windowStart = \time() - $windowDuration;
@@ -163,7 +163,7 @@ class RateLimitingLogEntry
 				'activityType' => $result->activity_type,
 				'count' => $result->count,
 			];
-		// phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+			// phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 		}, $results);
 	}
 

@@ -103,6 +103,10 @@
 	&__subtitle {
 		color: var(--global-colors-esf-gray-400);
 		font-size: 0.75rem;
+		display: flex;
+		gap: 0 0.25rem;
+		flex-direction: row;
+		align-items: center;
 	}
 
 	&__content {
@@ -185,5 +189,12 @@
 
 	.success-text {
 		color: var(--global-colors-esf-green-500);
+	}
+
+	.status-text {
+		background-color: var(--global-colors-esf-gray-400);
+		color: var(--global-colors-esf-white);
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.25rem;
 	}
 }

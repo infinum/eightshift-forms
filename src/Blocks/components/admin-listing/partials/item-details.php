@@ -36,22 +36,44 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 		foreach ($items as $item) {
 			$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			$postType = $item['postType'] ?? '';
+			$status = $item['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$viewLink = $item['viewLink'] ?? '';
+			$editLink = $item['editLink'] ?? '';
+			$subtitle = [];
 
-			$itemTitle = get_the_title($id);
+			if ($postType) {
+				$subtitle[] = ($postType === 'wp_block' ? __('Patterns', 'eightshift-forms') : ucfirst($postType));
+			}
+
+			if ($status !== 'publish') {
+				$subtitle[] = '<span class="status-text">' . ucfirst($status) . '</span>';
+			}
+
+			$itemTitle = get_the_title($id) ?: __('No title', 'eightshift-forms');
 
 			echo Helpers::render('card-inline', [
-				// translators: %1$s is the post type, %2$s is the post title.
-				'cardInlineTitle' => sprintf(__('%1$s - %2$s', 'eightshift-forms'), ucfirst($postType), $itemTitle) . ($isDevMode ? " ({$id})" : ''),
+				'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$id})" : ''),
 				'cardInlineTitleLink' => $item['editLink'] ?? '',
+				'cardInlineSubTitle' => implode('<span>|</span>', $subtitle),
 				'cardInlineIndented' => true,
 				'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
 				'cardInlineRightContent' => Helpers::ensureString([
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => $item['viewLink'] ?? '',
-						'submitValue' => __('View', 'eightshift-forms'),
-					]),
+					...($viewLink ? [
+						Helpers::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => $viewLink,
+							'submitValue' => __('View', 'eightshift-forms'),
+						]),
+					] : []),
+					...($editLink ? [
+						Helpers::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => $editLink,
+							'submitValue' => __('Edit', 'eightshift-forms'),
+						]),
+					] : []),
 				]),
 			]);
 		}

@@ -44,19 +44,17 @@ class Security implements SecurityInterface
 	 * Detect if the request is valid using rate limiting.
 	 *
 	 * @param string $formType Form type.
-	 * @param int $formId Form ID.
+	 * @param string $formId Form ID.
 	 *
 	 * @return boolean
 	 */
-	public function isRequestValid(string $formType, int $formId): bool
+	public function isRequestValid(string $formType, string $formId): bool
 	{
 		// Bailout if this feature is not enabled.
 		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return true;
 		}
 
-		$keyName = SettingsHelpers::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
-		$data = SettingsHelpers::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
@@ -81,7 +79,6 @@ class Security implements SecurityInterface
 
 		$window = \intval(SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW));
 
-
 		// Check if the request count exceeds the rate limit.
 		$rateLimit = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
 		$rateLimitCalculator = SettingsHelpers::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
@@ -100,7 +97,7 @@ class Security implements SecurityInterface
 			$sum += $aggregate['count'];
 
 			if ($aggregate['activity_type'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
-					return false;
+				return false;
 			}
 		}
 

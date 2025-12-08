@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\CronJobs;
 
 use EightshiftForms\Security\RateLimitingLogEntry;
+use EightshiftForms\Security\SettingsSecurity;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -18,7 +19,12 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class LogEntryCleanupJob implements ServiceInterface
 {
-	public const string LOG_ENTRY_CLEANUP_ACTION = 'es_forms_cleanup_log_entries';
+	/**
+	 * Job name.
+	 *
+	 * @var string
+	 */
+	public const string JOB_NAME = 'es_forms_cleanup_log_entries';
 
 	/**
 	 * Register all the hooks
@@ -27,38 +33,29 @@ class LogEntryCleanupJob implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'maybeCleanupLogEntries']);
+		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return;
+		}
+
+		\add_action('init', [$this, 'checkIfJobIsSet']);
 		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
-		\add_action(self::LOG_ENTRY_CLEANUP_ACTION, [$this, 'cleanupLogEntries']);
+		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
 	}
 
 	/**
-	 * Cleans up log entries using a recurring action if available, or immediately if not.
-	 * Recurring actions are scheduled using Action Scheduler if available and run daily.
+	 * Check if job is set and add it if not.
 	 *
 	 * @return void
 	 */
-	public function maybeCleanupLogEntries(): void
+	public function checkIfJobIsSet(): void
 	{
-		if (\function_exists('as_schedule_recurring_action')) {
-			\as_schedule_recurring_action(
-				\time(),
-				\DAY_IN_SECONDS,
-				self::LOG_ENTRY_CLEANUP_ACTION
+		if (!\wp_next_scheduled(self::JOB_NAME)) {
+			\wp_schedule_event(
+				\strtotime('tomorrow', \time()),
+				'daily',
+				self::JOB_NAME
 			);
-
-			return;
-		} else {
-			if (!\wp_next_scheduled(self::LOG_ENTRY_CLEANUP_ACTION)) {
-				\wp_schedule_event(
-					\strtotime('tomorrow', \time()),
-					'daily',
-					self::LOG_ENTRY_CLEANUP_ACTION
-				);
-			}
 		}
-
-		$this->cleanupLogEntries();
 	}
 
 	/**
@@ -79,11 +76,11 @@ class LogEntryCleanupJob implements ServiceInterface
 	}
 
 	/**
-	 * Cleans up log entries older than a day.
+	 * Run callback when event is triggered.
 	 *
 	 * @return void
 	 */
-	public function cleanupLogEntries(): void
+	public function getJobCallback(): void
 	{
 		RateLimitingLogEntry::cleanup(\DAY_IN_SECONDS);
 	}

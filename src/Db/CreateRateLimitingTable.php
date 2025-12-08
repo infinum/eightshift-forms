@@ -29,7 +29,7 @@ class CreateRateLimitingTable
 	 */
 	public static function createTable(): void
 	{
-		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php');  // @phpstan-ignore-line
+		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php');
 
 		global $wpdb;
 

@@ -661,14 +661,15 @@ final class GeneralHelpers
 				$id = $item->ID;
 				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 				$title = $isDeveloperModeActive ? "{$id} - {$title}" : $title;
+				$postType = $item->post_type; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
 				return [
 					'id' => $id,
-					'postType' => $item->post_type, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+					'postType' => $postType,
 					'title' => $title,
 					'status' => $item->post_status, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 					'editLink' => self::getFormEditPageUrl((string) $id),
-					'viewLink' => \get_permalink($id),
+					'viewLink' => $postType === 'wp_block' ? '' : \get_permalink($id),
 					'activeIntegration' => [
 						'isActive' => true,
 						'isValid' => true,
