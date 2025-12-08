@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- Selenium tests for the forms.
+- E2E tests for the forms.
 - Date field now supports `multiple` and `range` modes.
 
 ### Removed
