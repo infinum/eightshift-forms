@@ -190,6 +190,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsSecurity::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsSecurity::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsSecurity::FILTER_SETTINGS_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
 				'labels' => [

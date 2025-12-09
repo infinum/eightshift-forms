@@ -14,12 +14,13 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsSecurity class.
  */
-class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
+class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, SettingInterface
 {
 	/**
 	 * Filter global settings key.
@@ -32,6 +33,16 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_security';
 
 	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_security';
+
+	/**
+	 * Filter settings key.
+	 */
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_security';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'security';
@@ -40,11 +51,6 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	 * Security use key.
 	 */
 	public const SETTINGS_SECURITY_USE_KEY = 'security-use';
-
-	/**
-	 * Data data key.
-	 */
-	public const SETTINGS_SECURITY_DATA_KEY = 'security-data';
 
 	/**
 	 * Rate limit key.
@@ -74,9 +80,68 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
+	/**
+	 * Determine if settings are valid.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsValid(): bool
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Get settings data.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsData(string $formId): array
+	{
+
+		$rateLimit = \intval(SettingsHelpers::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, $formId));
+		$rateLimit = ($rateLimit > 0) ? $rateLimit : '';
+
+		return [
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Rate limiting', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => SettingsHelpers::getSettingName(Security::RATE_LIMIT_SETTING_NAME),
+								'inputFieldLabel' => \__('Rate limit (submission attempts / seconds)', 'eightshift-forms'),
+								'inputFieldHelp' => \__('If set, the form will be rate limited based on the provided value, in addition to global rate limits.', 'eightshift-forms'),
+								'inputFieldAfterContent' => \__('per second', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputMax' => 1000,
+								'inputStep' => 1,
+								'inputIsDisabled' => false,
+								'inputValue' => $rateLimit,
+							],
+						],
+					],
+				],
+			],
+		];
+	}
 	/**
 	 * Determine if settings global are valid.
 	 *

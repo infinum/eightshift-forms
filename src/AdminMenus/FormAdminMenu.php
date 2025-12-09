@@ -259,12 +259,12 @@ class FormAdminMenu extends AbstractAdminMenu
 				}
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
-				$data = $this->formsListing->getFormsList([
+				$data = $this->formsListing->getFormsList($this->getCustomSearchQueryForItems([
 					'post_type' => Result::POST_TYPE_SLUG,
 					'posts_per_page' => $perPage,
 					'paged' => $page,
 					's' => $search,
-				]);
+				]));
 
 				$items = $data['items'] ?? [];
 				$count = $data['count'] ?? 0;
@@ -274,12 +274,12 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			default:
-				$data = $this->formsListing->getFormsList([
+				$data = $this->formsListing->getFormsList($this->getCustomSearchQueryForItems([
 					'post_type' => Forms::POST_TYPE_SLUG,
 					'posts_per_page' => $perPage,
 					'paged' => $page,
 					's' => $search,
-				]);
+				]));
 
 				$items = $data['items'] ?? [];
 				$count = $data['count'] ?? 0;
@@ -320,6 +320,29 @@ class FormAdminMenu extends AbstractAdminMenu
 		}
 
 		return $title;
+	}
+
+	/**
+	 * Get custom search query for items.
+	 *
+	 * @param array<string, mixed> $query Query array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getCustomSearchQueryForItems(array $query): array
+	{
+		$search = $query['s'] ?? '';
+
+		if (!$search) {
+			return $query;
+		}
+
+		if ($search === 'draft') {
+			$query['post_status'] = $search;
+			unset($query['s']);
+		}
+
+		return $query;
 	}
 
 	/**
@@ -437,8 +460,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	private function getTopBarItems(string $type, string $formId, string $parent, string $search, int $perPage): array
 	{
 		$bulkSelector = UtilsHelper::getStateSelectorAdmin('listingBulk');
-		$searchSelector = UtilsHelper::getStateSelectorAdmin('listingSearch');
-		$perPageSelector = UtilsHelper::getStateSelectorAdmin('listingPerPage');
 		$exportSelector = UtilsHelper::getStateSelectorAdmin('listingExport');
 
 		$left = [];
@@ -682,16 +703,14 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				foreach ($items as $item) {
 					$itemId = $item['id'] ?? '';
-					$postType = $item['postType'] ?? '';
 					$editLink = $item['editLink'] ?? '';
 
-					$itemTitle = \get_the_title($itemId);
+					$itemTitle = \get_the_title($itemId) ?: \__('No title', 'eightshift-forms');
 
 					$output[] = Helpers::render('card-inline', [
-						// Translators: %1$s is the post type, %2$s is the post title.
-						'cardInlineTitle' => \sprintf(\__('%1$s - %2$s', 'eightshift-forms'), \ucfirst($postType), $itemTitle) . ($isDevMode ? " ({$itemId})" : ''),
+						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
+						'cardInlineSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item)),
 						'cardInlineUseHover' => true,
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
 						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
@@ -702,15 +721,14 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				foreach ($items as $item) {
 					$itemId = $item['id'] ?? '';
-					$postType = $item['postType'] ?? '';
 					$editLink = $item['editLink'] ?? '';
 
-					$itemTitle = \get_the_title($itemId);
+					$itemTitle = \get_the_title($itemId) ?: \__('No title', 'eightshift-forms');
 
 					$output[] = Helpers::render('card-inline', [
 						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['status'])),
+						'cardInlineSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item, ['status'])),
 						'cardInlineUseHover' => true,
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
 						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
@@ -846,12 +864,8 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				foreach ($items as $item) {
 					$itemId = $item['id'] ?? '';
-					$itemTitle = $item['title'] ?? '';
-
-					if (!$itemTitle) {
-						// Translators: %s is the form ID.
-						$itemTitle = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
-					}
+					// Translators: %s is the form ID.
+					$itemTitle = $item['title'] ?: \sprintf(\__('No Form title for ID %s', 'eightshift-forms'), $itemId);
 
 					$output[] = Helpers::render('card-inline', [
 						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
@@ -874,16 +888,11 @@ class FormAdminMenu extends AbstractAdminMenu
 			default:
 				foreach ($items as $item) {
 					$itemId = $item['id'] ?? '';
-					$itemTitle = $item['title'] ?? '';
+					// Translators: %s is the form ID.
+					$itemTitle = $item['title'] ?: \sprintf(\__('No Form title for ID %s', 'eightshift-forms'), $itemId);
 					$editLink = $item['editLink'] ?? '#';
-					$postType = $item['postType'] ?? '';
 					$activeIntegration = $item['activeIntegration'] ?? [];
 					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-					if (!$itemTitle) {
-						// Translators: %s is the form ID.
-						$itemTitle = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
-					}
 
 					$isValid = $this->isIntegrationValid($item);
 
@@ -951,12 +960,8 @@ class FormAdminMenu extends AbstractAdminMenu
 		$isValid = $item['activeIntegration']['isValid'] ?? false;
 		$isApiValid = $item['activeIntegration']['isApiValid'] ?? false;
 
-		if ($status !== 'publish' && $showOnlyStatus) {
-			$output[] = \ucfirst($status);
-
-			if ($postType) {
-				$output[] = \ucfirst($postType);
-			}
+		if ($postType) {
+			$output[] = ($postType === 'wp_block' ? \__('Patterns', 'eightshift-forms') : \ucfirst($postType));
 		}
 
 		if (!$isActive && $showOnlyIntegrationIsActive) {
@@ -969,6 +974,10 @@ class FormAdminMenu extends AbstractAdminMenu
 
 		if (!$isApiValid && $showOnlyIntegrationIsApiValid) {
 			$output[] = '<span class="error-text">' . \esc_html__('Missing form fields', 'eightshift-forms') . '</span>';
+		}
+
+		if ($status !== 'publish' && $showOnlyStatus) {
+			$output[] = '<span class="status-text">' . \ucfirst($status) . '</span>';
 		}
 
 		return $output;
@@ -1005,18 +1014,30 @@ class FormAdminMenu extends AbstractAdminMenu
 	private function getRightContent(array $item, string $type, string $parent): array
 	{
 		$formId = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$viewLink = $item['viewLink'] ?? '';
+		$editLink = $item['editLink'] ?? '';
 
 		$output = [];
 
 		switch ($type) {
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => $item['viewLink'] ?? '',
-						'submitValue' => \__('View', 'eightshift-forms'),
-					]),
+					...($viewLink ? [
+						Helpers::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => $viewLink,
+							'submitValue' => \__('View', 'eightshift-forms'),
+						])
+					] : []),
+					...($editLink ? [
+						Helpers::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => $editLink,
+							'submitValue' => \__('Edit', 'eightshift-forms'),
+						])
+					] : []),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
@@ -1033,7 +1054,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => $item['editLink'] ?? '',
+						'submitButtonAsLinkUrl' => $editLink,
 						'submitValue' => \__('Edit', 'eightshift-forms'),
 					]),
 				];

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.12.0]
+
+### Added
+
+- New granular rate limiting for each individual form.
+- Ability in admin listing to search for `draft` to get only draft forms.
+- Ability in locations listing to go to edit and view pages for the forms with the correct links.
+- Drafted items are now being shown in the admin listing.
+
 ## [8.11.0]
 
 ### Added
@@ -1626,6 +1635,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Initial production release.
 
 
+[8.12.0]: https://github.com/infinum/eightshift-forms/compare/8.11.0...8.12.0
 [8.11.0]: https://github.com/infinum/eightshift-forms/compare/8.10.2...8.11.0
 [8.10.2]: https://github.com/infinum/eightshift-forms/compare/8.10.1...8.10.2
 [8.10.1]: https://github.com/infinum/eightshift-forms/compare/8.10.0...8.10.1

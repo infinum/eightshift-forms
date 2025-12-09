@@ -29,69 +29,69 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	/**
 	 * Filter settings key.
 	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_general';
+	public const string FILTER_SETTINGS_NAME = 'es_forms_settings_general';
 
 	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'general';
+	public const string SETTINGS_TYPE_KEY = 'general';
 
 	/**
 	 * Redirection Success key for each integration with type prefix.
 	 */
-	public const SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY = 'redirection-success';
+	public const string SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY = 'redirection-success';
 
 	/**
 	 * Tracking event name key.
 	 */
-	public const SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'general-tracking-event-name';
+	public const string SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY = 'general-tracking-event-name';
 
 	/**
 	 * Tracking additional data key.
 	 */
-	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY = 'general-tracking-additional-data';
-	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY = 'general-tracking-additional-data-success';
-	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY = 'general-tracking-additional-data-error';
+	public const string SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY = 'general-tracking-additional-data';
+	public const string SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY = 'general-tracking-additional-data-success';
+	public const string SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY = 'general-tracking-additional-data-error';
 
 	/**
 	 * Variation key.
 	 */
-	public const SETTINGS_VARIATION_KEY = 'variation';
+	public const string SETTINGS_VARIATION_KEY = 'variation';
 
 	/**
 	 * Variation should append on global key.
 	 */
-	public const SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY = 'variation-should-append-on-global';
+	public const string SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY = 'variation-should-append-on-global';
 
 	/**
 	 * Form custom name key.
 	 */
-	public const SETTINGS_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
+	public const string SETTINGS_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
 
 	/**
 	 * Use single submit key.
 	 */
-	public const SETTINGS_USE_SINGLE_SUBMIT_KEY = 'use-single-submit';
+	public const string SETTINGS_USE_SINGLE_SUBMIT_KEY = 'use-single-submit';
 
 	/**
 	 * Success redirect url key.
 	 */
-	public const SETTINGS_SUCCESS_REDIRECT_URL_KEY = 'general-redirection-success';
+	public const string SETTINGS_SUCCESS_REDIRECT_URL_KEY = 'general-redirection-success';
 
 	/**
 	 * Hide global message on success key.
 	 */
-	public const SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
+	public const string SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
 
 	/**
 	 * Hide form on success key.
 	 */
-	public const SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
+	public const string SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
 
 	/**
 	 * Skip reset form on success key.
 	 */
-	public const SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY = 'skip-reset-form-on-success';
+	public const string SETTINGS_SKIP_RESET_FORM_ON_SUCCESS_KEY = 'skip-reset-form-on-success';
 
 	/**
 	 * Multistep skip scroll to top key.
@@ -103,22 +103,27 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	 *
 	 * @var string
 	 */
-	public const INCREMENT_META_KEY = 'es_forms_increment';
+	public const string INCREMENT_META_KEY = 'es_forms_increment';
 
 	/**
 	 * Increment start key.
 	 */
-	public const SETTINGS_INCREMENT_START_KEY = 'increment-start';
+	public const string SETTINGS_INCREMENT_START_KEY = 'increment-start';
 
 	/**
 	 * Increment length key.
 	 */
-	public const SETTINGS_INCREMENT_LENGTH_KEY = 'increment-length';
+	public const string SETTINGS_INCREMENT_LENGTH_KEY = 'increment-length';
+
+	/**
+	 * Granular rate limit for a particular form.
+	 */
+	public const string SETTINGS_RATE_LIMIT_KEY = 'rate-limit';
 
 	/**
 	 * Force locale key.
 	 */
-	public const SETTINGS_FORCE_LOCALE = 'force-locale';
+	public const string SETTINGS_FORCE_LOCALE = 'force-locale';
 
 	/**
 	 * Register all the hooks

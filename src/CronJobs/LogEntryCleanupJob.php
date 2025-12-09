@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds WP Cron job schedule event for - SecurityJob.
+ * A cleanup service for log entries.
  *
  * @package EightshiftForms\CronJobs
  */
@@ -10,22 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CronJobs;
 
+use EightshiftForms\Security\RateLimitingLogEntry;
 use EightshiftForms\Security\SettingsSecurity;
-use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * SecurityJob class.
+ * A log entry cleanup service.
  */
-class SecurityJob implements ServiceInterface, ServiceCliInterface
+class LogEntryCleanupJob implements ServiceInterface
 {
 	/**
 	 * Job name.
 	 *
 	 * @var string
 	 */
-	public const JOB_NAME = 'es_forms_security';
+	public const string JOB_NAME = 'es_forms_cleanup_log_entries';
 
 	/**
 	 * Register all the hooks
@@ -38,7 +37,7 @@ class SecurityJob implements ServiceInterface, ServiceCliInterface
 			return;
 		}
 
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
+		\add_action('init', [$this, 'checkIfJobIsSet']);
 		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
 	}
@@ -81,8 +80,8 @@ class SecurityJob implements ServiceInterface, ServiceCliInterface
 	 *
 	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
-		\delete_option(SettingsHelpers::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
+		RateLimitingLogEntry::cleanup(\DAY_IN_SECONDS);
 	}
 }
