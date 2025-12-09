@@ -46,6 +46,13 @@ class Config
 	 */
 	public const MAIN_PLUGIN_FULL_NAME = self::MAIN_PLUGIN_FOLDER_NAME . \DIRECTORY_SEPARATOR . self::MAIN_PLUGIN_FILE_NAME;
 
+	/**
+	 * DB version.
+	 *
+	 * @var int
+	 */
+	public const int DB_CURRENT_VERSION = 1;
+
 	// ------------------------------------------------------------------
 	// FILTERS
 	// ------------------------------------------------------------------

@@ -12,6 +12,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Ability in admin listing to search for `draft` to get only draft forms.
 - Ability in locations listing to go to edit and view pages for the forms with the correct links.
 - Drafted items are now being shown in the admin listing.
+- DB sync functionality for new tables if needed and for future migrations.
 
 ## [8.11.0]
 
