@@ -47,38 +47,22 @@ class DbSync implements ServiceInterface
 		$currentVersion = (int) \get_option(self::OPTION_NAME);
 		$targetVersion = Config::DB_CURRENT_VERSION;
 
-		// If version doesn't exist, install all tables and set version.
-		if (!$currentVersion) {
-			$this->installAllTables();
-			\update_option(self::OPTION_NAME, $targetVersion);
+		// If version matches, no sync needed.
+		if ($currentVersion === $targetVersion) {
 			return;
 		}
 
-		// If version exists but is different, update version and install only missing tables.
-		if ($currentVersion !== $targetVersion) {
-			$this->installMissingTables();
-			\update_option(self::OPTION_NAME, $targetVersion);
-		}
+		// Install missing tables and update version.
+		$this->installTables();
+		\update_option(self::OPTION_NAME, $targetVersion);
 	}
 
 	/**
-	 * Install all database tables.
+	 * Install database tables. Only installs tables that don't already exist.
 	 *
 	 * @return void
 	 */
-	private function installAllTables(): void
-	{
-		CreateEntriesTable::createTable();
-		CreateActivityLogsTable::createTable();
-		CreateRateLimitingTable::createTable();
-	}
-
-	/**
-	 * Install only missing database tables.
-	 *
-	 * @return void
-	 */
-	private function installMissingTables(): void
+	private function installTables(): void
 	{
 		global $wpdb;
 
