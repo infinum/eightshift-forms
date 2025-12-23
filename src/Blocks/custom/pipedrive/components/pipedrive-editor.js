@@ -1,25 +1,22 @@
 import React from 'react';
-import { select } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FormEditor, additionalBlocksNoIntegration } from '../../../components/form/components/form-editor';
 
 export const PipedriveEditor = ({ attributes, setAttributes, clientId }) => {
-	const manifest = select(STORE_NAME).getBlock('pipedrive');
-
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	return (
 		<div className={blockClass}>
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={additionalBlocksNoIntegration}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={additionalBlocksNoIntegration}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		</div>

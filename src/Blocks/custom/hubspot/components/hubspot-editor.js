@@ -1,26 +1,14 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
+import manifest from '../manifest.json';
 
-export const HubspotEditor = ({
-	attributes,
-	setAttributes,
-	itemIdKey,
-}) => {
-	const manifest = select(STORE_NAME).getBlock('hubspot');
-
-	const {
-		blockClass,
-	} = attributes;
-
+export const HubspotEditor = ({ attributes, setAttributes, itemIdKey }) => {
 	return (
-		<div className={blockClass}>
-			<IntegrationsEditor
-				itemId={checkAttr(itemIdKey, attributes, manifest)}
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-		</div>
+		<IntegrationsEditor
+			itemId={checkAttr(itemIdKey, attributes, manifest)}
+			attributes={attributes}
+			setAttributes={setAttributes}
+		/>
 	);
 };

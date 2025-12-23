@@ -1,0 +1,28 @@
+@import 'tailwindcss' prefix(esf);
+@reference '../../../../tailwind.css';
+
+@layer esf {
+	.esf-form {
+		@apply esf:max-w-3xl! esf:mx-auto! esf:px-48!;
+	}
+
+	.esf-form .block-editor-block-list__layout {
+		@apply esf:flex! esf:flex-row! esf:flex-wrap! esf:gap-15!;
+	}
+
+	.esf-form .block-editor-block-list__layout > * {
+		@apply esf:w-full!;
+	}
+
+	.esf-form .eightshift-block {
+		@apply esf:transition-[padding]!;
+	}
+
+	.esf-form .eightshift-block.is-selected::after {
+		@apply esf:outline-accent-500!;
+	}
+
+	.esf-form .eightshift-block.is-selected {
+		@apply esf:p-10!;
+	}
+}

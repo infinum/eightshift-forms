@@ -3,13 +3,11 @@ import { createHigherOrderComponent } from '@wordpress/compose';
 import { addFilter } from '@wordpress/hooks';
 import globalManifest from '../../manifest.json';
 import manifest from './manifest.json';
-import { classnames } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 
 const {
 	namespace,
-	globalVariables: {
-		customBlocksName,
-	},
+	globalVariables: { customBlocksName },
 } = globalManifest;
 
 const { blockName } = manifest;
@@ -21,18 +19,13 @@ const parentComponentBlock = createHigherOrderComponent((BlockListBlock) => {
 		const {
 			name,
 			clientId,
-			attributes: {
-				blockClass,
-			},
+			attributes: { blockClass },
 		} = innerProps;
 
-		let updatedProps = {...innerProps};
+		let updatedProps = { ...innerProps };
 
 		if (name === fullBlockName) {
-			const componentClass = classnames(
-				blockClass,
-				customBlocksName,
-			);
+			const componentClass = clsx(blockClass, customBlocksName);
 
 			updatedProps = {
 				...innerProps,
@@ -43,7 +36,10 @@ const parentComponentBlock = createHigherOrderComponent((BlockListBlock) => {
 		const dataProps = { 'data-id': clientId };
 
 		return (
-			<BlockListBlock {...updatedProps} wrapperProps={dataProps} />
+			<BlockListBlock
+				{...updatedProps}
+				wrapperProps={dataProps}
+			/>
 		);
 	};
 }, 'parentComponentBlock');

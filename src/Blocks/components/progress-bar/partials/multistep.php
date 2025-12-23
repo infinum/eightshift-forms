@@ -22,7 +22,7 @@ $jsClass = $attributes['jsClass'] ?? '';
 
 $hideLabels = $attributes['hideLabels'] ?? false;
 
-$progressBarItemClass = Helpers::classnames([
+$progressBarItemClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'progress-bar', 'item', "{$componentClass}__item"),
 	Helpers::selector($jsClass, $jsClass),
 ]);

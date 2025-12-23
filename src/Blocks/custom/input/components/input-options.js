@@ -1,5 +1,5 @@
 import React from 'react';
-import { props } from '@eightshift/frontend-libs/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { InputOptions as InputOptionsComponent } from '../../../components/input/components/input-options';
 
 export const InputOptions = ({ attributes, setAttributes }) => {

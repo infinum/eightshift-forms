@@ -1,30 +1,18 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import classnames from 'classnames';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';
+	StatusFieldOutput,
+	StatusIconConditionals,
+	StatusIconHidden,
+	StatusIconMissingName,
+	preventSaveOnMissingProps,
+} from './../../utils';
+import manifest from '../manifest.json';
+import { clsx } from '@eightshift/ui-components/utilities';
 
 export const RadioEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('radio');
-
-	const {
-		componentClass,
-	} = manifest;
-
-	const {
-		selectorClass = componentClass,
-		blockClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
 	const radioValue = checkAttr('radioValue', attributes, manifest);
@@ -33,36 +21,34 @@ export const RadioEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
-	const radioClass = classnames([
-		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
-		selector(radioIsHidden, 'es-form-is-hidden'),
-	]);
-
-	const radioLabelClass = classnames([
-		selector(componentClass, componentClass, 'label'),
-		selector(radioLabel === '', componentClass, 'label', 'placeholder'),
-		selector(radioIsChecked, componentClass, 'label', 'checked'),
-	]);
-
 	return (
-		<div className={radioClass}>
-			<VisibilityHidden value={radioIsHidden} label={__('Radio', 'eightshift-forms')} />
-
-			<div className={`${componentClass}__content`}>
-				<div className={radioLabelClass}>
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
-				</div>
-
-				<MissingName value={radioValue} />
-
-				{radioValue &&
-					<ConditionalTagsEditor
-						{...props('conditionalTags', attributes)}
-					/>
-				}
-			</div>
+		<div
+			className={clsx(
+				'esf-fieldset-radio',
+				'esf-fieldset-checkbox',
+				'esf-fieldset-item',
+				'esf:relative!',
+				radioIsHidden && 'esf-field-hidden',
+				radioIsChecked && 'esf-fieldset-checked',
+			)}
+		>
+			<span
+				dangerouslySetInnerHTML={{
+					__html: radioLabel
+						? radioLabel
+						: __(
+								'Please enter radio label in sidebar or this radio will not show on the frontend.',
+								'eightshift-forms',
+							),
+				}}
+			/>
+			<StatusFieldOutput
+				components={[
+					radioIsHidden && <StatusIconHidden />,
+					!radioValue && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
+			/>
 		</div>
 	);
 };

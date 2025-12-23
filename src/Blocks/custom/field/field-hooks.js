@@ -1,17 +1,16 @@
 /* global esFormsLocalization */
 
 import { addFilter } from '@wordpress/hooks';
-import { select } from '@wordpress/data';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { STORE_NAME } from '@eightshift/frontend-libs/scripts/editor';
 import { Field } from './field-block';
+import manifestField from './manifest.json';
+import manifestConditionalTags from '../../components/conditional-tags/manifest.json';
+import globalManifest from '../../manifest.json';
 
 // Wrap none forms block with field block.
 const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit) => {
 	return (innerProps) => {
-		const {
-			name,
-		} = innerProps;
+		const { name } = innerProps;
 
 		// Change only none forms blocks in forms post type.
 		if (esFormsLocalization?.currentPostType.isForms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
@@ -27,17 +26,16 @@ const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit)
 	};
 }, 'setNoneEightshiftFormsBlocksField');
 
-
 // Add none forms block attributes from field block.
-function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
+function setNoneEightshiftBlocksFieldAttributes(settings, name) {
 	// Change only none forms blocks in forms post type.
 	if (esFormsLocalization?.currentPostType.isForms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
 		return {
 			...settings,
 			attributes: {
 				...settings.attributes,
-				...select(STORE_NAME).getComponent('field').attributes,
-				...select(STORE_NAME).getComponent('conditional-tags').attributes,
+				...manifestField.attributes,
+				...manifestConditionalTags.attributes,
 			},
 		};
 	}
@@ -46,8 +44,8 @@ function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
 }
 
 export const hooks = () => {
-	const { blockName } = select(STORE_NAME).getBlock('field');
-	const namespace = select(STORE_NAME).getSettingsNamespace();
+	const { blockName } = manifestField;
+	const { namespace } = globalManifest;
 
 	addFilter('editor.BlockEdit', `${namespace}/${blockName}`, setNoneEightshiftFormsBlocksField);
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, setNoneEightshiftBlocksFieldAttributes);

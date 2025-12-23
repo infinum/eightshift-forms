@@ -1,24 +1,12 @@
 import React from 'react';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import manifest from '../manifest.json';
+import { clsx } from '@eightshift/ui-components/utilities';
 
 export const InputEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('input');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
@@ -27,13 +15,11 @@ export const InputEditor = (attributes) => {
 	const inputMin = checkAttr('inputMin', attributes, manifest);
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
+	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
+	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
+	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
-
-	const inputClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
 
 	let additionalProps = {};
 
@@ -49,21 +35,18 @@ export const InputEditor = (attributes) => {
 	const input = (
 		<>
 			<input
-				className={inputClass}
+				className={clsx(
+					'esf-input',
+					inputIsDisabled && 'esf-input-disabled',
+					inputIsReadOnly && 'esf-input-readonly',
+					inputIsRequired && 'esf-input-required',
+				)}
 				value={inputValue}
 				placeholder={inputPlaceholder}
 				type={inputType}
-				readOnly
+				disabled
 				{...additionalProps}
 			/>
-
-			<MissingName value={inputName} />
-
-			{inputName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
 		</>
 	);
 
@@ -74,8 +57,10 @@ export const InputEditor = (attributes) => {
 					fieldContent: input,
 					fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!inputName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);

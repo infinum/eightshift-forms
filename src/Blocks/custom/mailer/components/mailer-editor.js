@@ -2,24 +2,23 @@
 
 import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter } from '@eightshift/frontend-libs-tailwind/scripts';
 import { additionalBlocksNoIntegration, FormEditor } from '../../../components/form/components/form-editor';
 
 export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	return (
 		<div className={blockClass}>
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent:
+					formContent: (
 						<InnerBlocks
 							allowedBlocks={additionalBlocksNoIntegration}
 							renderAppender={() => <BlockInserter clientId={clientId} />}
 						/>
+					),
 				})}
 			/>
 		</div>

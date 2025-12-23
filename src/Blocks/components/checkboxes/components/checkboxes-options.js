@@ -1,35 +1,25 @@
 import React, { useEffect } from 'react';
+import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
+import { AnimatedVisibility, Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import {
-	checkAttr,
-	getAttrKey,
-	props,
-	icons,
-	Section,
-	IconToggle,
-	AnimatedContentVisibility,
-	STORE_NAME,
-	Select,
- } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
+	FieldOptions,
+	FieldOptionsMore,
+	FieldOptionsLayout,
+	FieldOptionsVisibility,
+} from '../../field/components/field-options';
+import { icons } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import manifest from '../manifest.json';
+import globalManifest from '../../../manifest.json';
 
 export const CheckboxesOptions = (attributes) => {
-	const globalManifest = select(STORE_NAME).getSettings();
-	const manifest = select(STORE_NAME).getComponent('checkboxes');
+	const { options } = manifest;
 
-	const {
-		options,
-	} = manifest;
-
-	const {
-		setAttributes,
-		clientId,
-	} = attributes;
+	const { setAttributes, clientId } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -56,18 +46,22 @@ export const CheckboxesOptions = (attributes) => {
 	}, [countInnerBlocksCheck]);
 
 	return (
-		<PanelBody title={__('Checkboxes', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-				<NameField
-					value={checkboxesName}
-					attribute={getAttrKey('checkboxesName', attributes, manifest)}
-					disabledOptions={checkboxesDisabledOptions}
-					setAttributes={setAttributes}
-					type={'checkboxes'}
-					isChanged={isNameChanged}
-					setIsChanged={setIsNameChanged}
-				/>
-			</Section>
+		<ContainerPanel>
+			<Spacer
+				border
+				icon={icons.options}
+				text={__('General', 'eightshift-forms')}
+			/>
+
+			<NameField
+				value={checkboxesName}
+				attribute={getAttrKey('checkboxesName', attributes, manifest)}
+				disabledOptions={checkboxesDisabledOptions}
+				setAttributes={setAttributes}
+				type={'checkboxes'}
+				isChanged={isNameChanged}
+				setIsChanged={setIsNameChanged}
+			/>
 
 			<Select
 				icon={icons.optionListAlt}
@@ -77,7 +71,6 @@ export const CheckboxesOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
 				simpleValue
-				inlineLabel
 				noSearch
 				clearable
 				placeholder={__('Choose an alternative', 'eightshift-forms')}
@@ -89,18 +82,22 @@ export const CheckboxesOptions = (attributes) => {
 				})}
 			/>
 
-			{checkboxesShowAs === 'select' &&
-				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-					{!checkboxesUseLabelAsPlaceholder &&
-						<TextControl
+			{checkboxesShowAs === 'select' && (
+				<>
+					{!checkboxesUseLabelAsPlaceholder && (
+						<InputField
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={checkboxesPlaceholder}
-							onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
-							disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
-							className='es-no-field-spacing'
+							onChange={(value) =>
+								setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })
+							}
+							disabled={isOptionDisabled(
+								getAttrKey('checkboxesPlaceholder', attributes, manifest),
+								checkboxesDisabledOptions,
+							)}
 						/>
-					}
-					<IconToggle
+					)}
+					<Toggle
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={checkboxesUseLabelAsPlaceholder}
@@ -109,8 +106,8 @@ export const CheckboxesOptions = (attributes) => {
 							setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
 						}}
 					/>
-				</Section>
-			}
+				</>
+			)}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -118,46 +115,62 @@ export const CheckboxesOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
-				<IconToggle
-					icon={icons.required}
-					label={__('Required', 'eightshift-forms')}
-					checked={checkboxesIsRequired}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
+			<Spacer
+				border
+				icon={icons.checks}
+				text={__('Validation', 'eightshift-forms')}
+			/>
+			<Toggle
+				icon={icons.required}
+				label={__('Required', 'eightshift-forms')}
+				checked={checkboxesIsRequired}
+				onChange={(value) => {
+					setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
 
-						if (!value) {
-							setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
+					if (!value) {
+						setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
+					}
+				}}
+			/>
+
+			<AnimatedVisibility visible={!checkboxesIsRequired}>
+				<div>
+					<span>{__('At least', 'eightshift-forms')}</span>
+					<InputField
+						value={checkboxesIsRequiredCount}
+						onChange={(value) =>
+							setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })
 						}
-					}}
-					reducedBottomSpacing={checkboxesIsRequired}
-					noBottomSpacing={!checkboxesIsRequired}
-				/>
+						min={options.checkboxesIsRequiredCount.min}
+						max={countInnerBlocks}
+						type='number'
+						disabled={isOptionDisabled(
+							getAttrKey('checkboxesIsRequiredCount', attributes, manifest),
+							checkboxesDisabledOptions,
+						)}
+					/>
+					<span>
+						{_n(
+							__('item needs to be checked', 'eightshift-forms'),
+							__('items need to be checked', 'eightshift-forms'),
+							checkboxesIsRequiredCount,
+							'eightshift-forms',
+						)}
+					</span>
+				</div>
+			</AnimatedVisibility>
 
-				<AnimatedContentVisibility showIf={checkboxesIsRequired}>
-					<div className='es-h-spaced'>
-						<span>{__('At least', 'eightshift-forms')}</span>
-						<TextControl
-							value={checkboxesIsRequiredCount}
-							onChange={(value) => setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })}
-							min={options.checkboxesIsRequiredCount.min}
-							max={countInnerBlocks}
-							type='number'
-							className='es-no-field-spacing'
-							disabled={isOptionDisabled(getAttrKey('checkboxesIsRequiredCount', attributes, manifest), checkboxesDisabledOptions)}
-						/>
-						<span>{_n(__('item needs to be checked', 'eightshift-forms'), __('items need to be checked', 'eightshift-forms'), checkboxesIsRequiredCount, 'eightshift-forms')}</span>
-					</div>
-				</AnimatedContentVisibility>
-			</Section>
+			<Spacer
+				border
+				icon={icons.tools}
+				text={__('Advanced', 'eightshift-forms')}
+			/>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<FieldOptionsVisibility
-					{...props('field', attributes, {
-						fieldDisabledOptions: checkboxesDisabledOptions,
-					})}
-				/>
-			</Section>
+			<FieldOptionsVisibility
+				{...props('field', attributes, {
+					fieldDisabledOptions: checkboxesDisabledOptions,
+				})}
+			/>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -171,6 +184,6 @@ export const CheckboxesOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

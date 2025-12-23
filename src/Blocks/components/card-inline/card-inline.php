@@ -25,7 +25,7 @@ $cardInlineIndented = Helpers::checkAttr('cardInlineIndented', $attributes, $man
 $cardInlineUseHover = Helpers::checkAttr('cardInlineUseHover', $attributes, $manifest);
 $cardInlineUseDivider = Helpers::checkAttr('cardInlineUseDivider', $attributes, $manifest);
 
-$cardInlineClass = Helpers::classnames([
+$cardInlineClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($cardInlineLastItem, $componentClass, '', 'last'),

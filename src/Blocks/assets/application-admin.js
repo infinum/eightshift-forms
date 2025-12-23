@@ -5,8 +5,12 @@
  * Usage: `WordPress admin`.
  */
 
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
+
 // Styles.
-import './styles/admin.scss';
+import './styles/admin.css';
+
+dynamicImport(require.context('./../components', true, /styles-admin\.css$/));
 
 // Scripts.
 import './scripts/admin';

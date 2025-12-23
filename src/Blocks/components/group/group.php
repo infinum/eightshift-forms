@@ -21,7 +21,7 @@ $groupStyle = Helpers::checkAttr('groupStyle', $attributes, $manifest);
 $groupBeforeContent = Helpers::checkAttr('groupBeforeContent', $attributes, $manifest);
 $groupHelp = Helpers::checkAttr('groupHelp', $attributes, $manifest);
 
-$groupClass = Helpers::classnames([
+$groupClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($additionalGroupClass, $additionalGroupClass),
 	Helpers::selector($groupStyle, $componentClass, '', $groupStyle),

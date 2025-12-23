@@ -1,28 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import {
-	props,
-	checkAttr,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from '../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconMissingName, StatusIconConditionals } from '../../utils';
+import manifest from '../manifest.json';
 
 export const CountryEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('country');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const countryName = checkAttr('countryName', attributes, manifest);
 
@@ -30,17 +14,11 @@ export const CountryEditor = (attributes) => {
 
 	const country = (
 		<>
-			<div className={`${componentClass}__info-text`}>
-				{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
-			</div>
-
-			<MissingName value={countryName} />
-
-			{countryName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
+			<input
+				className='esf-input'
+				placeholder={__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
+				disabled
+			/>
 		</>
 	);
 
@@ -51,8 +29,10 @@ export const CountryEditor = (attributes) => {
 					fieldContent: country,
 					fieldIsRequired: checkAttr('countryIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!countryName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);

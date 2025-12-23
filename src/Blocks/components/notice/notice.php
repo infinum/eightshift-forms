@@ -15,7 +15,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $noticeContent = Helpers::checkAttr('noticeContent', $attributes, $manifest);
 
-$noticeClass = Helpers::classnames([
+$noticeClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($selectorClass, $selectorClass, $componentClass),
 	Helpers::selector($additionalNoticeClass, $additionalNoticeClass),

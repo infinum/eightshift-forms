@@ -1,0 +1,7 @@
+/* Eightshift UI components */
+@import '@eightshift/ui-components/dist/assets/wp-overrides/replace-fonts.css';
+@import '@eightshift/ui-components/dist/assets/style-admin.css';
+
+/* ES Utils styles */
+@import 'tailwindcss' prefix(esf);
+@import '../../../../tailwind.css';

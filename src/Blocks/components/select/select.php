@@ -39,7 +39,7 @@ $selectId = $selectName . '-' . Helpers::getUnique();
 $selectHideLabel = false;
 $selectFieldLabel = $attributes[Helpers::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
 
-$selectClass = Helpers::classnames([
+$selectClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'select'),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),

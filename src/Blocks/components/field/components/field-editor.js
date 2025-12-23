@@ -1,54 +1,34 @@
 /* global esFormsLocalization */
 
 import React from 'react';
-import classnames from 'classnames';
-import { isObject } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { dispatch, select } from '@wordpress/data';
-import { selector, checkAttr, outputCssVariables, STORE_NAME, props } from '@eightshift/frontend-libs/scripts';
-import { MissingName, VisibilityHidden } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
+import { StatusIconHidden, StatusFieldOutput } from './../../utils';
+import manifest from '../manifest.json';
+import { clsx } from '@eightshift/ui-components/utilities';
 
-export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fieldName }) => {
-	const manifest = select(STORE_NAME).getComponent('field');
-
-	const { componentClass } = manifest;
-
-	const fieldClass = classnames([selector(componentClass, componentClass), selector(componentClass, componentClass, '', 'field')]);
-
+export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) => {
 	return (
-		<div className={fieldClass}>
-			{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-			<div className={`${componentClass}__inner`}>
-				<div className={`${componentClass}__content`}>
-					<div className={`${componentClass}__content-wrap`}>
+		<div>
+			<div>
+				<div>
+					<div>
 						{children}
 
-						<MissingName
-							value={fieldName}
-							isOptional
-						/>
-
-						{fieldName && (
+						{/* {fieldName && (
 							<ConditionalTagsEditor
 								{...props('conditionalTags', attributes)}
 								conditionalTagsUse={attributes?.conditionalTagsUse}
-								useCustom
 							/>
-						)}
+						)} */}
 					</div>
 				</div>
 			</div>
 		</div>
 	);
 };
-
 export const FieldEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('field');
-
-	const { componentClass } = manifest;
-
-	const { selectorClass = componentClass, additionalFieldClass, clientId } = attributes;
+	const { statusSlog = [] } = attributes;
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
@@ -64,98 +44,26 @@ export const FieldEditor = (attributes) => {
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldSuffixContent = checkAttr('fieldSuffixContent', attributes, manifest);
-	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
-	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const fieldClass = classnames([
-		selector(componentClass, componentClass),
-		selector(componentClass, componentClass, '', selectorClass),
-		selector(additionalFieldClass, additionalFieldClass),
-		selector(fieldHidden, 'es-form-is-hidden'),
-		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
-	]);
-
-	const labelClass = classnames([selector(componentClass, componentClass, 'label'), selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required')]);
-
-	const LabelDefault = () => (
-		<>
-			{!fieldHideLabel && (
-				<div className={labelClass}>
-					<span
-						className={`${componentClass}__label-inner`}
-						dangerouslySetInnerHTML={{ __html: fieldLabel }}
-					/>
-				</div>
+	return (
+		<div className={clsx('esf:w-full esf:flex! esf:flex-col! esf:gap-4!', fieldHidden && 'esf-field-hidden')}>
+			{fieldLabel && !fieldHideLabel && (
+				<div
+					className='esf:text-base! esf:text-secondary-900!'
+					dangerouslySetInnerHTML={{ __html: fieldLabel }}
+				/>
 			)}
-		</>
-	);
+			{fieldBeforeContent && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldBeforeContent}</div>}
 
-	const LegendDefault = () => (
-		<>
-			{!fieldHideLabel && (
-				<div className={labelClass}>
-					<span
-						className={`${componentClass}__label-inner`}
-						dangerouslySetInnerHTML={{ __html: fieldLabel }}
-					/>
-				</div>
-			)}
-		</>
-	);
-
-	const Content = () => (
-		<div className={`${componentClass}__content`}>
-			{fieldBeforeContent && <div className={`${componentClass}__before-content`}>{fieldBeforeContent}</div>}
-			<div className={`${componentClass}__content-wrap`}>
-				{fieldContent}
-
-				{fieldSuffixContent && <div className={`${componentClass}__suffix-content`}>{fieldSuffixContent}</div>}
+			<div className='esf:relative!'>
+				{fieldContent} <StatusFieldOutput components={[fieldHidden && <StatusIconHidden />, ...statusSlog]} />
 			</div>
-			{fieldAfterContent && <div className={`${componentClass}__after-content`}>{fieldAfterContent}</div>}
+
+			{fieldSuffixContent && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldSuffixContent}</div>}
+			{fieldAfterContent && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldAfterContent}</div>}
+			{fieldHelp && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldHelp}</div>}
 		</div>
 	);
-
-	const Help = () => <div className={`${componentClass}__help`}>{fieldHelp}</div>;
-
-	const DivContent = () => {
-		return (
-			<div className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-
-				<div className={`${componentClass}__inner`}>
-					{fieldLabel && <LabelDefault />}
-					<Content />
-					<Help />
-				</div>
-
-				<VisibilityHidden
-					value={fieldHidden}
-					label={__('Field', 'eightshift-forms')}
-				/>
-			</div>
-		);
-	};
-
-	const FieldsetContent = () => {
-		return (
-			<fieldset className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-
-				<div className={`${componentClass}__inner`}>
-					{fieldLabel && <LegendDefault />}
-					<Content />
-					<Help />
-				</div>
-
-				<VisibilityHidden
-					value={fieldHidden}
-					label={__('Field', 'eightshift-forms')}
-				/>
-			</fieldset>
-		);
-	};
-
-	return fieldType === 'div' ? <DivContent /> : <FieldsetContent />;
 };

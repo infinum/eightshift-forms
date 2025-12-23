@@ -1,75 +1,65 @@
 import React from 'react';
-import { camelCase } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import { Button, Placeholder } from '@wordpress/components';
+import { Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { Button } from '@eightshift/ui-components';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
+import { camelCase } from '@eightshift/ui-components/utilities';
 import { getUtilsIcons } from '../../../components/form/assets/state-init';
 import globalSettings from './../../../manifest.json';
 
-export const FormSelectorEditor = ({
-	clientId,
-	hasInnerBlocks,
-}) => {
-	const manifest = select(STORE_NAME).getBlock('form-selector');
-
-	const {
-		forms,
-	} = manifest;
-
+export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 	return (
 		<>
-			 {!hasInnerBlocks && (
+			{!hasInnerBlocks && (
 				<Placeholder
 					icon={icons.form}
-					label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-					className='es-max-w-108 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+					label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
 				>
-					<h4 className='es-mb-0! es-mx-0! es-mt-1! es-text-5 es-font-weight-500 es-color-pure-black es-min-w-full {'>{__('What type is your new form?', 'eightshift-forms')}</h4>
-					{forms.length > 0 &&
-						<div className='es-h-spaced-wrap es-gap-2!'>
+					<h4>{__('What type is your new form?', 'eightshift-forms')}</h4>
+					{forms.length > 0 && (
+						<div>
 							{forms.map((form, index) => {
-									const { label, slug, icon } = form;
+								const { label, slug, icon } = form;
 
-									let iconComponent = icon;
+								let iconComponent = icon;
 
-									if (!icon) {
-										iconComponent = getUtilsIcons(camelCase(slug));
-									}
+								if (!icon) {
+									iconComponent = getUtilsIcons(camelCase(slug));
+								}
 
-									return (
-										<Button
-											key={index}
-											className='es-v-spaced es-content-center! es-m-0! es-nested-w-8 es-nested-h-8 es-h-auto es-w-32 es-h-24 es-rounded-1.5 es-border es-border-cool-gray-100 es-hover-border-cool-gray-400 es-transition es-nested-m-0!'
-											onClick={() => createBlockFromTemplate(clientId, slug, forms)}
-											icon={<div dangerouslySetInnerHTML={{ __html: iconComponent }} />}
-										>
-											{label}
-										</Button>
-									);
-								})}
+								return (
+									<Button
+										key={index}
+										onClick={() => createBlockFromTemplate(clientId, slug, forms)}
+										icon={<div dangerouslySetInnerHTML={{ __html: iconComponent }} />}
+									>
+										{label}
+									</Button>
+								);
+							})}
 						</div>
-					}
+					)}
 
-					{forms.length < 1 &&
+					{forms.length < 1 && (
 						<>
-							{__('It appears that you don\'t have any active integrations set up for your project. Please go to the Eightshift Forms dashboard and configure your first integration.', 'eightshift-forms')}
+							{__(
+								"It appears that you don't have any active integrations set up for your project. Please go to the Eightshift Forms dashboard and configure your first integration.",
+								'eightshift-forms',
+							)}
 							<DashboardButton />
 						</>
-					}
+					)}
 				</Placeholder>
 			)}
 
 			<InnerBlocks
 				templateLock={false}
-				allowedBlocks={
-					[
-						...globalSettings.allowedBlocksList.integrationsBuilder,
-						...globalSettings.allowedBlocksList.integrationsNoBuilder,
-					]
-				}
+				allowedBlocks={[
+					...globalSettings.allowedBlocksList.integrationsBuilder,
+					...globalSettings.allowedBlocksList.integrationsNoBuilder,
+				]}
 			/>
 		</>
 	);
