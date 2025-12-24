@@ -13,6 +13,7 @@ import { ConditionalTagsOptions } from '../../conditional-tags/components/condit
 import { icons } from '@eightshift/ui-components/icons';
 import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
+import { Slider } from '@eightshift/ui-components';
 
 export const RatingOptions = (attributes) => {
 	const { setAttributes, title = __('Rating', 'eightshift-forms') } = attributes;
@@ -46,14 +47,13 @@ export const RatingOptions = (attributes) => {
 				setIsChanged={setIsNameChanged}
 			/>
 
-			<InputField
+			<Slider
 				icon={icons.star}
 				label={__('Amount of stars', 'eightshift-forms')}
 				value={ratingAmount}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
 				min={1}
 				max={10}
-				type='number'
 				disabled={isOptionDisabled(getAttrKey('ratingAmount', attributes, manifest), ratingDisabledOptions)}
 			/>
 
