@@ -15,6 +15,7 @@ import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
+import { NumberPicker } from '@eightshift/ui-components';
 
 export const CheckboxesOptions = (attributes) => {
 	const { options } = manifest;
@@ -117,11 +118,24 @@ export const CheckboxesOptions = (attributes) => {
 
 			<Spacer
 				border
+				icon={icons.tools}
+				text={__('Advanced', 'eightshift-forms')}
+			/>
+
+			<FieldOptionsVisibility
+				{...props('field', attributes, {
+					fieldDisabledOptions: checkboxesDisabledOptions,
+				})}
+			/>
+
+			<Spacer
+				border
 				icon={icons.checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
+
 			<Toggle
-				icon={icons.required}
+				icon={icons.fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={checkboxesIsRequired}
 				onChange={(value) => {
@@ -133,44 +147,23 @@ export const CheckboxesOptions = (attributes) => {
 				}}
 			/>
 
-			<AnimatedVisibility visible={!checkboxesIsRequired}>
-				<div>
-					<span>{__('At least', 'eightshift-forms')}</span>
-					<InputField
-						value={checkboxesIsRequiredCount}
-						onChange={(value) =>
-							setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })
-						}
-						min={options.checkboxesIsRequiredCount.min}
-						max={countInnerBlocks}
-						type='number'
-						disabled={isOptionDisabled(
-							getAttrKey('checkboxesIsRequiredCount', attributes, manifest),
-							checkboxesDisabledOptions,
-						)}
-					/>
-					<span>
-						{_n(
-							__('item needs to be checked', 'eightshift-forms'),
-							__('items need to be checked', 'eightshift-forms'),
-							checkboxesIsRequiredCount,
-							'eightshift-forms',
-						)}
-					</span>
-				</div>
-			</AnimatedVisibility>
-
-			<Spacer
-				border
-				icon={icons.tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
-
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: checkboxesDisabledOptions,
-				})}
-			/>
+			{checkboxesIsRequired && (
+				<NumberPicker
+					aria-label={__('At least', 'eightshift-forms')}
+					value={checkboxesIsRequiredCount}
+					onChange={(value) =>
+						setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })
+					}
+					min={options.checkboxesIsRequiredCount.min}
+					max={countInnerBlocks}
+					disabled={isOptionDisabled(
+						getAttrKey('checkboxesIsRequiredCount', attributes, manifest),
+						checkboxesDisabledOptions,
+					)}
+					prefix={__('At least', 'eightshift-forms')}
+					suffix={__('needs to be checked', 'eightshift-forms')}
+				/>
+			)}
 
 			<FieldOptionsMore
 				{...props('field', attributes, {

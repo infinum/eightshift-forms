@@ -5,7 +5,7 @@
 	"description" : "Phone number entry field",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-phone"
+		"src": "phone"
 	},
 	"keywords": [
 		"phone",

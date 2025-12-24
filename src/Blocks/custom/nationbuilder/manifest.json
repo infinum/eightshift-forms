@@ -5,7 +5,7 @@
 	"description" : "NationBuilder form block",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-nationbuilder"
+		"src": "nationbuilder"
 	},
 	"keywords": [
 		"nationbuilder"

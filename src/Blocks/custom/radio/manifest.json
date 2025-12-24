@@ -5,7 +5,7 @@
 	"description" : "Simple radio button",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-radio"
+		"src": "radio"
 	},
 	"keywords": [
 		"radio"

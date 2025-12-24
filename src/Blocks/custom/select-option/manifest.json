@@ -5,7 +5,7 @@
 	"description" : "Select field option",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-select-option"
+		"src": "select-option"
 	},
 	"keywords": [
 		"select",

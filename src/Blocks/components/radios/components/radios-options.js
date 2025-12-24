@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { Select, RichLabel, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
@@ -94,19 +94,6 @@ export const RadiosOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
-			<Toggle
-				icon={icons.required}
-				label={__('Required', 'eightshift-forms')}
-				checked={radiosIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
-			/>
-
-			<Spacer
-				border
 				icon={icons.tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
@@ -119,16 +106,28 @@ export const RadiosOptions = (attributes) => {
 
 			<Spacer
 				border
+				icon={icons.checks}
+				text={__('Validation', 'eightshift-forms')}
+			/>
+
+			<Toggle
+				icon={icons.fieldRequired}
+				label={__('Required', 'eightshift-forms')}
+				checked={radiosIsRequired}
+				onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
+			/>
+
+			<Spacer
+				border
 				icon={icons.alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
+
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={radiosTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('radiosTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('radiosTracking', attributes, manifest), radiosDisabledOptions)}

@@ -5,14 +5,12 @@ import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind
 import {
 	BaseControl,
 	Select,
-	RichLabel,
 	NumberPicker,
-	Button,
 	ContainerPanel,
 	InputField,
 	Toggle,
-	ContainerGroup,
 	Spacer,
+	ContainerGroup,
 } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
@@ -24,6 +22,7 @@ import {
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
+import { HStack } from '@eightshift/ui-components';
 
 export const CountryOptions = (attributes) => {
 	const { options } = manifest;
@@ -69,18 +68,7 @@ export const CountryOptions = (attributes) => {
 				})}
 			/>
 
-			<ContainerGroup
-				icon={icons.fieldPlaceholder}
-				label={__('Placeholder', 'eightshift-forms')}
-			>
-				{!countryUseLabelAsPlaceholder && (
-					<InputField
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={countryPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('countryPlaceholder', attributes, manifest), countryDisabledOptions)}
-					/>
-				)}
+			<ContainerGroup>
 				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
@@ -90,6 +78,15 @@ export const CountryOptions = (attributes) => {
 						setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
+				{!countryUseLabelAsPlaceholder && (
+					<InputField
+						placeholder={__('Enter placeholder', 'eightshift-forms')}
+						help={__('Shown when the field is empty', 'eightshift-forms')}
+						value={countryPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('countryPlaceholder', attributes, manifest), countryDisabledOptions)}
+					/>
+				)}
 			</ContainerGroup>
 
 			<FieldOptionsLayout
@@ -100,84 +97,14 @@ export const CountryOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
-			<Toggle
-				icon={icons.required}
-				label={__('Required', 'eightshift-forms')}
-				checked={countryIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('countryIsRequired', attributes, manifest), countryDisabledOptions)}
-			/>
-
-			{countryIsMultiple && (
-				<BaseControl
-					icon={icons.range}
-					label={__('Number of items', 'eightshift-forms')}
-				>
-					<div>
-						<div>
-							<NumberPicker
-								label={__('Min', 'eightshift-forms')}
-								value={countryMinCount}
-								onChange={(value) => setAttributes({ [getAttrKey('countryMinCount', attributes, manifest)]: value })}
-								min={options.countryMinCount.min}
-								step={options.countryMinCount.step}
-								disabled={isOptionDisabled(getAttrKey('countryMinCount', attributes, manifest), countryDisabledOptions)}
-								placeholder='–'
-								fixedWidth={4}
-							/>
-
-							{countryMinCount > 0 &&
-								!isOptionDisabled(getAttrKey('countryMinCount', attributes, manifest), countryDisabledOptions) && (
-									<Button
-										label={__('Clear', 'eightshift-forms')}
-										icon={icons.clear}
-										onClick={() => setAttributes({ [getAttrKey('countryMinCount', attributes, manifest)]: undefined })}
-										showTooltip
-									/>
-								)}
-						</div>
-
-						<div>
-							<NumberPicker
-								label={__('Max', 'eightshift-forms')}
-								value={countryMaxCount}
-								onChange={(value) => setAttributes({ [getAttrKey('countryMaxCount', attributes, manifest)]: value })}
-								min={options.countryMaxCount.min}
-								step={options.countryMaxCount.step}
-								disabled={isOptionDisabled(getAttrKey('countryMaxCount', attributes, manifest), countryDisabledOptions)}
-								placeholder='–'
-								fixedWidth={4}
-							/>
-
-							{countryMaxCount > 0 &&
-								!isOptionDisabled(getAttrKey('countryMaxCount', attributes, manifest), countryDisabledOptions) && (
-									<Button
-										label={__('Clear', 'eightshift-forms')}
-										icon={icons.clear}
-										onClick={() => setAttributes({ [getAttrKey('countryMaxCount', attributes, manifest)]: undefined })}
-										showTooltip
-									/>
-								)}
-						</div>
-					</div>
-				</BaseControl>
-			)}
-
-			<Spacer
-				border
 				icon={icons.tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
+
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.titleGeneric}
-						label={__('Initial value', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.titleGeneric}
+				label={__('Initial value', 'eightshift-forms')}
+				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={countryValue}
 				onChange={(value) => setAttributes({ [getAttrKey('countryValue', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('countryValue', attributes, manifest), countryDisabledOptions)}
@@ -185,33 +112,6 @@ export const CountryOptions = (attributes) => {
 					'Initial value of the field in country code format (e.g. "hr"). If you want to select multiple countries, separate them with a comma. If geolocation is enabled it will be preselected based on the user\'s location.',
 					'eightshift-forms',
 				)}
-			/>
-
-			<Select
-				icon={icons.migrationAlt}
-				value={countryValueType}
-				onChange={(value) => setAttributes({ [getAttrKey('countryValueType', attributes, manifest)]: value })}
-				label={__('Output value type', 'eightshift-forms')}
-				help={__('Determine which value to send on form submission.', 'eightshift-forms')}
-				options={[
-					{
-						value: 'countryCode',
-						label: __('Country code (lowercase)', 'eightshift-forms'),
-					},
-					{
-						value: 'countryCodeUppercase',
-						label: __('Country code (uppercase)', 'eightshift-forms'),
-					},
-					{
-						value: 'countryName',
-						label: __('Localized country name (site locale)', 'eightshift-forms'),
-					},
-					{
-						value: 'countryUnlocalizedName',
-						label: __('Country name in English', 'eightshift-forms'),
-					},
-				]}
-				simpleValue
 			/>
 
 			<FieldOptionsVisibility
@@ -246,6 +146,100 @@ export const CountryOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('countryIsMultiple', attributes, manifest), countryDisabledOptions)}
 			/>
 
+			<Select
+				icon={icons.migrationAlt}
+				value={countryValueType}
+				onChange={(value) => setAttributes({ [getAttrKey('countryValueType', attributes, manifest)]: value })}
+				label={__('Output value type', 'eightshift-forms')}
+				help={__('Determine which value to send on form submission.', 'eightshift-forms')}
+				options={[
+					{
+						value: 'countryCode',
+						label: __('Country code (lowercase)', 'eightshift-forms'),
+					},
+					{
+						value: 'countryCodeUppercase',
+						label: __('Country code (uppercase)', 'eightshift-forms'),
+					},
+					{
+						value: 'countryName',
+						label: __('Localized country name (site locale)', 'eightshift-forms'),
+					},
+					{
+						value: 'countryUnlocalizedName',
+						label: __('Country name in English', 'eightshift-forms'),
+					},
+				]}
+				simpleValue
+			/>
+
+			<Spacer
+				border
+				icon={icons.checks}
+				text={__('Validation', 'eightshift-forms')}
+			/>
+
+			<Toggle
+				icon={icons.fieldRequired}
+				label={__('Required', 'eightshift-forms')}
+				checked={countryIsRequired}
+				onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('countryIsRequired', attributes, manifest), countryDisabledOptions)}
+			/>
+
+			{countryIsMultiple && (
+				<BaseControl
+					icon={icons.range}
+					label={__('Number of items', 'eightshift-forms')}
+				>
+					<HStack>
+						<NumberPicker
+							aria-label={__('Min', 'eightshift-forms')}
+							value={countryMinCount}
+							onChange={(value) => setAttributes({ [getAttrKey('countryMinCount', attributes, manifest)]: value })}
+							min={options.countryMinCount.min}
+							step={options.countryMinCount.step}
+							disabled={isOptionDisabled(getAttrKey('countryMinCount', attributes, manifest), countryDisabledOptions)}
+							placeholder='–'
+							fixedWidth={4}
+							prefix={__('Min', 'eightshift-forms')}
+						>
+							<button
+								icon={icons.resetToZero}
+								tooltip={__('Reset', 'eightshift-forms')}
+								onClick={() => setAttributes({ [getAttrKey('countryMinCount', attributes, manifest)]: undefined })}
+								disabled={countryMinCount === 0}
+								type='ghost'
+							>
+								{__('x', 'eightshift-forms')}
+							</button>
+						</NumberPicker>
+
+						<NumberPicker
+							aria-label={__('Max', 'eightshift-forms')}
+							value={countryMaxCount}
+							onChange={(value) => setAttributes({ [getAttrKey('countryMaxCount', attributes, manifest)]: value })}
+							min={options.countryMaxCount.min}
+							step={options.countryMaxCount.step}
+							disabled={isOptionDisabled(getAttrKey('countryMaxCount', attributes, manifest), countryDisabledOptions)}
+							placeholder='–'
+							fixedWidth={4}
+							prefix={__('Max', 'eightshift-forms')}
+						>
+							<button
+								icon={icons.resetToZero}
+								tooltip={__('Reset', 'eightshift-forms')}
+								onClick={() => setAttributes({ [getAttrKey('countryMaxCount', attributes, manifest)]: undefined })}
+								disabled={countryMaxCount === 0}
+								type='ghost'
+							>
+								{__('x', 'eightshift-forms')}
+							</button>
+						</NumberPicker>
+					</HStack>
+				</BaseControl>
+			)}
+
 			<Spacer
 				border
 				icon={icons.alignHorizontalVertical}
@@ -253,12 +247,9 @@ export const CountryOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={countryTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('countryTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('countryTracking', attributes, manifest), countryDisabledOptions)}

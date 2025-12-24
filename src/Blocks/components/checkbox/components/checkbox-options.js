@@ -3,19 +3,12 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	AnimatedVisibility,
-	RichLabel,
-	Button,
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Spacer,
-} from '@eightshift/ui-components';
+import { Button, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
+import { Notice } from '@eightshift/ui-components';
 
 export const CheckboxOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -59,18 +52,20 @@ export const CheckboxOptions = (attributes) => {
 			{!checkboxHideLabelText && (
 				<InputField
 					type='multiline'
+					placeholder={__('Enter label', 'eightshift-forms')}
 					value={checkboxLabel}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
 				/>
 			)}
 
-			<AnimatedVisibility visible={!checkboxHideLabelText}>
-				<RichLabel
-					label={__('Might impact accessibility', 'eightshift-forms')}
+			{(checkboxHideLabelText || checkboxLabel === '') && (
+				<Notice
+					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
 					icon={icons.a11yWarning}
+					type='warning'
 				/>
-			</AnimatedVisibility>
+			)}
 
 			<Spacer
 				border
@@ -101,12 +96,6 @@ export const CheckboxOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
 			/>
 
-			<Spacer
-				border
-				icon={icons.image}
-				text={__('Field icon', 'eightshift-forms')}
-			/>
-
 			{checkboxIcon ? (
 				<>
 					<img
@@ -118,7 +107,7 @@ export const CheckboxOptions = (attributes) => {
 							setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: undefined });
 						}}
 						icon={icons.trash}
-						className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+						type='ghost'
 					/>
 				</>
 			) : (
@@ -137,12 +126,9 @@ export const CheckboxOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={checkboxTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}

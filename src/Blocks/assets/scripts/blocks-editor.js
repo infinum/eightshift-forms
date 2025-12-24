@@ -14,6 +14,7 @@ import { unregisterBlockType } from '@wordpress/blocks';
 import { registerBlocks } from '@eightshift/frontend-libs-tailwind/scripts/editor';
 import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts';
 import globalManifest from '../../manifest.json';
+import './editor-hooks';
 import './store';
 
 registerBlocks(

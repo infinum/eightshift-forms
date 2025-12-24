@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { Select, RichLabel, ContainerPanel, InputField } from '@eightshift/ui-components';
+import { Select, ContainerPanel, InputField } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
 	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
@@ -36,12 +36,8 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 			/>
 
 			<Select
-				label={
-					<RichLabel
-						icon={icons.containerSpacing}
-						label={__('Compare operator', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.containerSpacing}
+				label={__('Compare operator', 'eightshift-forms')}
 				value={resultOutputItemOperator}
 				options={getConstantsOptions({
 					...CONDITIONAL_TAGS_OPERATORS_LABELS,
@@ -55,14 +51,8 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.positionHStart}
-						label={
-							showEndValue ? __('Variable value start', 'eightshift-forms') : __('Variable value', 'eightshift-forms')
-						}
-					/>
-				}
+				icon={icons.positionHStart}
+				label={showEndValue ? __('Variable value start', 'eightshift-forms') : __('Variable value', 'eightshift-forms')}
 				help={showEndValue && __('Start value must be number.', 'eightshift-forms')}
 				value={resultOutputItemValueStart}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
@@ -70,12 +60,8 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 
 			{showEndValue && (
 				<InputField
-					label={
-						<RichLabel
-							icon={icons.positionHEnd}
-							label={__('Variable value end', 'eightshift-forms')}
-						/>
-					}
+					icon={icons.positionHEnd}
+					label={__('Variable value end', 'eightshift-forms')}
 					value={resultOutputItemValueEnd}
 					onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValueEnd', attributes, manifest)]: value })}
 					help={showEndValue && __('End value must be number.', 'eightshift-forms')}

@@ -78,7 +78,7 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 		path: `${getRestUrlByType('prefixIntegrationEditor', 'integrationsEditorSync', true, true)}?id=${postId}`,
 	}).then((response) => {
 		if (isDeveloperMode()) {
-			console.log(response);
+			console.info(response);
 		}
 
 		dispatch(FORMS_STORE_NAME).setSyncDialog({});
@@ -482,6 +482,7 @@ export const NameField = ({
 				<>
 					<InputField
 						label={<NameFieldLabel />}
+						placeholder={__('Enter name', 'eightshift-forms')}
 						help={helpText}
 						value={value}
 						onChange={(value) => {

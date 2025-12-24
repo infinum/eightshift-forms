@@ -5,7 +5,7 @@
 	"description" : "Goodbits subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-goodbits"
+		"src": "goodbits"
 	},
 	"keywords": [
 		"goodbits"

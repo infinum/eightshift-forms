@@ -4,7 +4,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { Select, RichLabel, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
@@ -15,6 +15,7 @@ import {
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
+import { ContainerGroup } from '@eightshift/ui-components';
 
 export const PhoneOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -66,23 +67,26 @@ export const PhoneOptions = (attributes) => {
 				})}
 			/>
 
-			{!phoneUseLabelAsPlaceholder && (
-				<InputField
-					help={__('Shown when the field is empty', 'eightshift-forms')}
-					value={phonePlaceholder}
-					onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('phonePlaceholder', attributes, manifest), phoneDisabledOptions)}
+			<ContainerGroup>
+				<Toggle
+					icon={icons.fieldPlaceholder}
+					label={__('Use label as placeholder', 'eightshift-forms')}
+					checked={phoneUseLabelAsPlaceholder}
+					onChange={(value) => {
+						setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: undefined });
+						setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value });
+					}}
 				/>
-			)}
-			<Toggle
-				icon={icons.fieldPlaceholder}
-				label={__('Use label as placeholder', 'eightshift-forms')}
-				checked={phoneUseLabelAsPlaceholder}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: undefined });
-					setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value });
-				}}
-			/>
+				{!phoneUseLabelAsPlaceholder && (
+					<InputField
+						placeholder={__('Enter placeholder', 'eightshift-forms')}
+						help={__('Shown when the field is empty', 'eightshift-forms')}
+						value={phonePlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('phonePlaceholder', attributes, manifest), phoneDisabledOptions)}
+					/>
+				)}
+			</ContainerGroup>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -97,12 +101,9 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.fieldValue}
-						label={__('Initial value', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.fieldValue}
+				label={__('Initial value', 'eightshift-forms')}
+				placeholder={__('Enter initial value', 'eightshift-forms')}
 				type='number'
 				min='1'
 				value={phoneValue}
@@ -112,12 +113,9 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.titleGeneric}
-						label={__('Dropdown initial value', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.titleGeneric}
+				label={__('Dropdown initial value', 'eightshift-forms')}
+				placeholder={__('Enter dropdown initial value', 'eightshift-forms')}
 				value={phoneSelectValue}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneSelectValue', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('phoneSelectValue', attributes, manifest), phoneDisabledOptions)}
@@ -125,6 +123,44 @@ export const PhoneOptions = (attributes) => {
 					'Initial value of the field in country code format (e.g. "hr"). Only one value is allowed. Phone dropdown can\'t be empty so if no value is provided, the first option will be selected. If geolocation is enabled it will be preselected based on the user\'s location.',
 					'eightshift-forms',
 				)}
+			/>
+
+			<FieldOptionsVisibility
+				{...props('field', attributes, {
+					fieldDisabledOptions: phoneDisabledOptions,
+				})}
+			/>
+
+			<Toggle
+				icon={icons.readOnly}
+				label={__('Read-only', 'eightshift-forms')}
+				checked={phoneIsReadOnly}
+				onChange={(value) => setAttributes({ [getAttrKey('phoneIsReadOnly', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('phoneIsReadOnly', attributes, manifest), phoneDisabledOptions)}
+			/>
+
+			<Toggle
+				icon={icons.cursorDisabled}
+				label={__('Disabled', 'eightshift-forms')}
+				checked={phoneIsDisabled}
+				onChange={(value) => setAttributes({ [getAttrKey('phoneIsDisabled', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('phoneIsDisabled', attributes, manifest), phoneDisabledOptions)}
+			/>
+
+			<Toggle
+				icon={icons.order}
+				label={__('Only numbers', 'eightshift-forms')}
+				checked={phoneIsNumber}
+				onChange={(value) => setAttributes({ [getAttrKey('phoneIsNumber', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('phoneIsNumber', attributes, manifest), phoneDisabledOptions)}
+			/>
+
+			<Toggle
+				icon={icons.search}
+				label={__('Search', 'eightshift-forms')}
+				checked={phoneUseSearch}
+				onChange={(value) => setAttributes({ [getAttrKey('phoneUseSearch', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('phoneUseSearch', attributes, manifest), phoneDisabledOptions)}
 			/>
 
 			<Select
@@ -171,51 +207,14 @@ export const PhoneOptions = (attributes) => {
 				simpleValue
 			/>
 
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: phoneDisabledOptions,
-				})}
-			/>
-
-			<Toggle
-				icon={icons.readOnly}
-				label={__('Read-only', 'eightshift-forms')}
-				checked={phoneIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('phoneIsReadOnly', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('phoneIsReadOnly', attributes, manifest), phoneDisabledOptions)}
-			/>
-
-			<Toggle
-				icon={icons.cursorDisabled}
-				label={__('Disabled', 'eightshift-forms')}
-				checked={phoneIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('phoneIsDisabled', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('phoneIsDisabled', attributes, manifest), phoneDisabledOptions)}
-			/>
-
-			<Toggle
-				icon={icons.order}
-				label={__('Number', 'eightshift-forms')}
-				checked={phoneIsNumber}
-				onChange={(value) => setAttributes({ [getAttrKey('phoneIsNumber', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('phoneIsNumber', attributes, manifest), phoneDisabledOptions)}
-			/>
-
-			<Toggle
-				icon={icons.search}
-				label={__('Search', 'eightshift-forms')}
-				checked={phoneUseSearch}
-				onChange={(value) => setAttributes({ [getAttrKey('phoneUseSearch', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('phoneUseSearch', attributes, manifest), phoneDisabledOptions)}
-			/>
-
 			<Spacer
 				border
 				icon={icons.checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
+
 			<Toggle
-				icon={icons.required}
+				icon={icons.fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={phoneIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneIsRequired', attributes, manifest)]: value })}
@@ -240,12 +239,9 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={phoneTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('phoneTracking', attributes, manifest), phoneDisabledOptions)}

@@ -5,7 +5,7 @@
 	"description" : "Jira issues application form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-jira"
+		"src": "jira"
 	},
 	"keywords": [
 		"jira"

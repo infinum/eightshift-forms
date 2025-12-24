@@ -41,6 +41,7 @@
 			"eightshift-forms/dynamic"
 		],
 		"fieldsIntegration": ["eightshift-forms/step"],
+		"fieldsWithChildren": ["eightshift-forms/checkbox", "eightshift-forms/radio", "eightshift-forms/select-option"],
 		"integrationsNoBuilder": [
 			"eightshift-forms/mailer",
 			"eightshift-forms/jira",

@@ -4,7 +4,7 @@ import { icons } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
-import { RichLabel, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const SubmitOptions = (attributes) => {
@@ -23,12 +23,8 @@ export const SubmitOptions = (attributes) => {
 				text={__('General', 'eightshift-forms')}
 			/>
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.titleGeneric}
-						label={__('Button label', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.titleGeneric}
+				label={__('Button label', 'eightshift-forms')}
 				value={submitValue}
 				onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
@@ -66,12 +62,9 @@ export const SubmitOptions = (attributes) => {
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={submitTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('submitTracking', attributes, manifest), submitDisabledOptions)}

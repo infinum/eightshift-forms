@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { icons } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
-import { RichLabel, ContainerPanel, InputField, Spacer } from '@eightshift/ui-components';
+import { ContainerPanel, InputField, Spacer } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const StepOptions = (attributes) => {
@@ -50,24 +50,16 @@ export const StepOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.tag}
-						label={__('Previous button label', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.tag}
+				label={__('Previous button label', 'eightshift-forms')}
 				placeholder={__('Previous', 'eightshift-forms')}
 				value={stepPrevLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('stepPrevLabel', attributes, manifest)]: value })}
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.tag}
-						label={__('Next button label', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.tag}
+				label={__('Next button label', 'eightshift-forms')}
 				placeholder={__('Next', 'eightshift-forms')}
 				value={stepNextLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('stepNextLabel', attributes, manifest)]: value })}

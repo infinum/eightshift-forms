@@ -11,7 +11,7 @@ import {
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { RichLabel, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const RatingOptions = (attributes) => {
@@ -47,12 +47,8 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.star}
-						label={__('Amount of stars', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.star}
+				label={__('Amount of stars', 'eightshift-forms')}
 				value={ratingAmount}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
 				min={1}
@@ -80,12 +76,9 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.titleGeneric}
-						label={__('Initial value', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.titleGeneric}
+				label={__('Initial value', 'eightshift-forms')}
+				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={ratingValue}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingValue', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('ratingValue', attributes, manifest), ratingDisabledOptions)}
@@ -119,7 +112,7 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.required}
+				icon={icons.fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={ratingIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingIsRequired', attributes, manifest)]: value })}
@@ -133,12 +126,9 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={ratingTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('ratingTracking', attributes, manifest), ratingDisabledOptions)}

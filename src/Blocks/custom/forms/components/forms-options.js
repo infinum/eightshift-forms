@@ -119,12 +119,8 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 					label={__('Advanced', 'eightshift-forms')}
 				>
 					<InputField
-						label={
-							<RichLabel
-								icon={icons.codeVariable}
-								label={__('Additional type specifier', 'eightshift-forms')}
-							/>
-						}
+						icon={icons.codeVariable}
+						label={__('Additional type specifier', 'eightshift-forms')}
 						help={__('Additional data type selectors', 'eightshift-forms')}
 						value={formsFormDataTypeSelector}
 						onChange={(value) =>

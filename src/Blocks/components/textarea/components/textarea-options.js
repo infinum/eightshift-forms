@@ -6,11 +6,9 @@ import { useState } from '@wordpress/element';
 import { icons } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	BaseControl,
 	Select,
-	RichLabel,
 	NumberPicker,
-	Button,
+	HStack,
 	InputField,
 	Toggle,
 	ContainerGroup,
@@ -60,6 +58,7 @@ export const TextareaOptions = (attributes) => {
 				icon={icons.options}
 				text={__('General', 'eightshift-forms')}
 			/>
+
 			<NameField
 				value={textareaName}
 				attribute={getAttrKey('textareaName', attributes, manifest)}
@@ -76,31 +75,25 @@ export const TextareaOptions = (attributes) => {
 				})}
 			/>
 
-			<ContainerGroup
+			<Toggle
 				icon={icons.fieldPlaceholder}
-				label={__('Placeholder', 'eightshift-forms')}
-			>
-				{!textareaUseLabelAsPlaceholder && (
-					<InputField
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={textareaPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(
-							getAttrKey('textareaPlaceholder', attributes, manifest),
-							textareaDisabledOptions,
-						)}
-					/>
-				)}
-				<Toggle
-					icon={icons.fieldPlaceholder}
-					label={__('Use label as placeholder', 'eightshift-forms')}
-					checked={textareaUseLabelAsPlaceholder}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined });
-						setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
-					}}
+				label={__('Use label as placeholder', 'eightshift-forms')}
+				checked={textareaUseLabelAsPlaceholder}
+				onChange={(value) => {
+					setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined });
+					setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
+				}}
+			/>
+
+			{!textareaUseLabelAsPlaceholder && (
+				<InputField
+					placeholder={__('Enter placeholder', 'eightshift-forms')}
+					help={__('Shown when the field is empty', 'eightshift-forms')}
+					value={textareaPlaceholder}
+					onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('textareaPlaceholder', attributes, manifest), textareaDisabledOptions)}
 				/>
-			</ContainerGroup>
+			)}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -110,104 +103,14 @@ export const TextareaOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
-
-			<Toggle
-				icon={icons.required}
-				label={__('Required', 'eightshift-forms')}
-				checked={textareaIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('textareaIsRequired', attributes, manifest), textareaDisabledOptions)}
-			/>
-
-			<Select
-				icon={icons.regex}
-				label={__('Match pattern', 'eightshift-forms')}
-				options={textareaValidationPatternOptions}
-				value={textareaValidationPattern}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(
-					getAttrKey('textareaValidationPattern', attributes, manifest),
-					textareaDisabledOptions,
-				)}
-				placeholder='–'
-				clearable
-			/>
-
-			<BaseControl
-				icon={icons.textLength}
-				label={__('Entry length', 'eightshift-forms')}
-			>
-				<div>
-					<div>
-						<NumberPicker
-							label={__('Min', 'eightshift-forms')}
-							value={textareaMinLength}
-							onChange={(value) => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: value })}
-							min={options.textareaMinLength.min}
-							step={options.textareaMinLength.step}
-							disabled={isOptionDisabled(
-								getAttrKey('textareaMinLength', attributes, manifest),
-								textareaDisabledOptions,
-							)}
-							placeholder='–'
-							fixedWidth={4}
-						/>
-
-						{textareaMinLength > 0 &&
-							!isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions) && (
-								<Button
-									label={__('Disable', 'eightshift-forms')}
-									icon={icons.clear}
-									onClick={() => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: undefined })}
-									showTooltip
-									isSmall
-								/>
-							)}
-					</div>
-					<div>
-						<NumberPicker
-							label={__('Max', 'eightshift-forms')}
-							value={textareaMaxLength}
-							onChange={(value) => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: value })}
-							min={options.textareaMaxLength.min}
-							step={options.textareaMaxLength.step}
-							disabled={isOptionDisabled(
-								getAttrKey('textareaMaxLength', attributes, manifest),
-								textareaDisabledOptions,
-							)}
-							placeholder='–'
-							fixedWidth={4}
-						/>
-
-						{textareaMaxLength > 0 &&
-							!isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions) && (
-								<Button
-									label={__('Disable', 'eightshift-forms')}
-									icon={icons.clear}
-									onClick={() => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: undefined })}
-									showTooltip
-								/>
-							)}
-					</div>
-				</div>
-			</BaseControl>
-
-			<Spacer
-				border
 				icon={icons.tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.fieldValue}
-						label={__('Initial value', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.fieldValue}
+				label={__('Initial value', 'eightshift-forms')}
+				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={textareaValue}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
@@ -237,17 +140,88 @@ export const TextareaOptions = (attributes) => {
 
 			<Spacer
 				border
+				icon={icons.checks}
+				text={__('Validation', 'eightshift-forms')}
+			/>
+
+			<Toggle
+				icon={icons.fieldRequired}
+				label={__('Required', 'eightshift-forms')}
+				checked={textareaIsRequired}
+				onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('textareaIsRequired', attributes, manifest), textareaDisabledOptions)}
+			/>
+
+			<Select
+				icon={icons.regex}
+				label={__('Match pattern', 'eightshift-forms')}
+				options={textareaValidationPatternOptions}
+				value={textareaValidationPattern}
+				onChange={(value) => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(
+					getAttrKey('textareaValidationPattern', attributes, manifest),
+					textareaDisabledOptions,
+				)}
+				placeholder='–'
+				clearable
+			/>
+
+			<HStack>
+				<NumberPicker
+					label={__('Min length', 'eightshift-forms')}
+					value={textareaMinLength}
+					onChange={(value) => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: value })}
+					min={options.textareaMinLength.min}
+					step={options.textareaMinLength.step}
+					disabled={isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions)}
+					placeholder='–'
+					fixedWidth={4}
+					prefix={__('Min length', 'eightshift-forms')}
+				>
+					<button
+						icon={icons.resetToZero}
+						tooltip={__('Reset', 'eightshift-forms')}
+						onClick={() => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: undefined })}
+						disabled={textareaMinLength === 0}
+						type='ghost'
+					>
+						{__('x', 'eightshift-forms')}
+					</button>
+				</NumberPicker>
+
+				<NumberPicker
+					label={__('Max length', 'eightshift-forms')}
+					value={textareaMaxLength}
+					onChange={(value) => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: value })}
+					min={options.textareaMaxLength.min}
+					step={options.textareaMaxLength.step}
+					disabled={isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions)}
+					placeholder='–'
+					fixedWidth={4}
+					prefix={__('Max length', 'eightshift-forms')}
+				>
+					<button
+						icon={icons.resetToZero}
+						tooltip={__('Reset', 'eightshift-forms')}
+						onClick={() => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: undefined })}
+						disabled={textareaMaxLength === 0}
+						type='ghost'
+					>
+						{__('x', 'eightshift-forms')}
+					</button>
+				</NumberPicker>
+			</HStack>
+
+			<Spacer
+				border
 				icon={icons.alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={textareaTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('textareaTracking', attributes, manifest), textareaDisabledOptions)}

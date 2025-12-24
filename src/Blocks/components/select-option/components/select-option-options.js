@@ -7,6 +7,7 @@ import { isOptionDisabled, NameField } from './../../utils';
 import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
+import { Notice } from '@eightshift/ui-components';
 
 export const SelectOptionOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -27,6 +28,7 @@ export const SelectOptionOptions = (attributes) => {
 				icon={icons.options}
 				text={__('General', 'eightshift-forms')}
 			/>
+
 			<NameField
 				value={selectOptionValue}
 				attribute={getAttrKey('selectOptionValue', attributes, manifest)}
@@ -40,10 +42,19 @@ export const SelectOptionOptions = (attributes) => {
 
 			<InputField
 				type='multiline'
+				placeholder={__('Enter label', 'eightshift-forms')}
 				value={selectOptionLabel}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
 			/>
+
+			{selectOptionLabel === '' && (
+				<Notice
+					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
+					icon={icons.a11yWarning}
+					type='warning'
+				/>
+			)}
 
 			<Spacer
 				border

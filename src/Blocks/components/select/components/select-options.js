@@ -5,9 +5,7 @@ import { icons } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,
-	RichLabel,
 	NumberPicker,
-	Button,
 	ContainerPanel,
 	InputField,
 	Toggle,
@@ -24,6 +22,8 @@ import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
+import { ContainerGroup } from '@eightshift/ui-components';
+import { HStack } from '@eightshift/ui-components';
 
 export const SelectOptions = (attributes) => {
 	const { options } = manifest;
@@ -81,23 +81,26 @@ export const SelectOptions = (attributes) => {
 				})}
 			/>
 
-			{!selectUseLabelAsPlaceholder && (
-				<InputField
-					help={__('Shown when the field is empty', 'eightshift-forms')}
-					value={selectPlaceholder}
-					onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
+			<ContainerGroup>
+				<Toggle
+					icon={icons.fieldPlaceholder}
+					label={__('Use label as placeholder', 'eightshift-forms')}
+					checked={selectUseLabelAsPlaceholder}
+					onChange={(value) => {
+						setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: undefined });
+						setAttributes({ [getAttrKey('selectUseLabelAsPlaceholder', attributes, manifest)]: value });
+					}}
 				/>
-			)}
-			<Toggle
-				icon={icons.fieldPlaceholder}
-				label={__('Use label as placeholder', 'eightshift-forms')}
-				checked={selectUseLabelAsPlaceholder}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: undefined });
-					setAttributes({ [getAttrKey('selectUseLabelAsPlaceholder', attributes, manifest)]: value });
-				}}
-			/>
+				{!selectUseLabelAsPlaceholder && (
+					<InputField
+						placeholder={__('Enter placeholder', 'eightshift-forms')}
+						help={__('Shown when the field is empty', 'eightshift-forms')}
+						value={selectPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
+					/>
+				)}
+			</ContainerGroup>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -107,78 +110,10 @@ export const SelectOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
-
-			<Toggle
-				icon={icons.required}
-				label={__('Required', 'eightshift-forms')}
-				checked={selectIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('selectIsRequired', attributes, manifest), selectDisabledOptions)}
-			/>
-
-			{selectIsMultiple && (
-				<BaseControl
-					icon={icons.range}
-					label={__('Number of items', 'eightshift-forms')}
-				>
-					<div>
-						<div>
-							<NumberPicker
-								label={__('Min', 'eightshift-forms')}
-								value={selectMinCount}
-								onChange={(value) => setAttributes({ [getAttrKey('selectMinCount', attributes, manifest)]: value })}
-								min={options.selectMinCount.min}
-								step={options.selectMinCount.step}
-								disabled={isOptionDisabled(getAttrKey('selectMinCount', attributes, manifest), selectDisabledOptions)}
-								placeholder='–'
-								fixedWidth={4}
-							/>
-
-							{selectMinCount > 0 &&
-								!isOptionDisabled(getAttrKey('selectMinCount', attributes, manifest), selectDisabledOptions) && (
-									<Button
-										label={__('Clear', 'eightshift-forms')}
-										icon={icons.clear}
-										onClick={() => setAttributes({ [getAttrKey('selectMinCount', attributes, manifest)]: undefined })}
-										showTooltip
-									/>
-								)}
-						</div>
-
-						<div>
-							<NumberPicker
-								label={__('Max', 'eightshift-forms')}
-								value={selectMaxCount}
-								onChange={(value) => setAttributes({ [getAttrKey('selectMaxCount', attributes, manifest)]: value })}
-								min={options.selectMaxCount.min}
-								step={options.selectMaxCount.step}
-								disabled={isOptionDisabled(getAttrKey('selectMaxCount', attributes, manifest), selectDisabledOptions)}
-								placeholder='–'
-								fixedWidth={4}
-							/>
-
-							{selectMaxCount > 0 &&
-								!isOptionDisabled(getAttrKey('selectMaxCount', attributes, manifest), selectDisabledOptions) && (
-									<Button
-										label={__('Clear', 'eightshift-forms')}
-										icon={icons.clear}
-										onClick={() => setAttributes({ [getAttrKey('selectMaxCount', attributes, manifest)]: undefined })}
-										showTooltip
-									/>
-								)}
-						</div>
-					</div>
-				</BaseControl>
-			)}
-
-			<Spacer
-				border
 				icon={icons.tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
+
 			<FieldOptionsVisibility
 				{...props('field', attributes, {
 					fieldDisabledOptions: selectDisabledOptions,
@@ -215,17 +150,81 @@ export const SelectOptions = (attributes) => {
 
 			<Spacer
 				border
+				icon={icons.checks}
+				text={__('Validation', 'eightshift-forms')}
+			/>
+
+			<Toggle
+				icon={icons.fieldRequired}
+				label={__('Required', 'eightshift-forms')}
+				checked={selectIsRequired}
+				onChange={(value) => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('selectIsRequired', attributes, manifest), selectDisabledOptions)}
+			/>
+
+			{selectIsMultiple && (
+				<BaseControl
+					icon={icons.range}
+					label={__('Number of items', 'eightshift-forms')}
+				>
+					<HStack>
+						<NumberPicker
+							aria-label={__('Min', 'eightshift-forms')}
+							value={selectMinCount}
+							onChange={(value) => setAttributes({ [getAttrKey('selectMinCount', attributes, manifest)]: value })}
+							min={options.selectMinCount.min}
+							step={options.selectMinCount.step}
+							disabled={isOptionDisabled(getAttrKey('selectMinCount', attributes, manifest), selectDisabledOptions)}
+							placeholder='–'
+							fixedWidth={4}
+							prefix={__('Min', 'eightshift-forms')}
+						>
+							<button
+								icon={icons.resetToZero}
+								tooltip={__('Reset', 'eightshift-forms')}
+								onClick={() => setAttributes({ [getAttrKey('selectMinCount', attributes, manifest)]: undefined })}
+								disabled={selectMinCount === 0}
+								type='ghost'
+							>
+								{__('x', 'eightshift-forms')}
+							</button>
+						</NumberPicker>
+
+						<NumberPicker
+							aria-label={__('Max', 'eightshift-forms')}
+							value={selectMaxCount}
+							onChange={(value) => setAttributes({ [getAttrKey('selectMaxCount', attributes, manifest)]: value })}
+							min={options.selectMaxCount.min}
+							step={options.selectMaxCount.step}
+							disabled={isOptionDisabled(getAttrKey('selectMaxCount', attributes, manifest), selectDisabledOptions)}
+							placeholder='–'
+							fixedWidth={4}
+							prefix={__('Max', 'eightshift-forms')}
+						>
+							<button
+								icon={icons.resetToZero}
+								tooltip={__('Reset', 'eightshift-forms')}
+								onClick={() => setAttributes({ [getAttrKey('selectMaxCount', attributes, manifest)]: undefined })}
+								disabled={selectMaxCount === 0}
+								type='ghost'
+							>
+								{__('x', 'eightshift-forms')}
+							</button>
+						</NumberPicker>
+					</HStack>
+				</BaseControl>
+			)}
+
+			<Spacer
+				border
 				icon={icons.alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				label={
-					<RichLabel
-						icon={icons.googleTagManager}
-						label={__('GTM tracking code', 'eightshift-forms')}
-					/>
-				}
+				icon={icons.googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={selectTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('selectTracking', attributes, manifest), selectDisabledOptions)}

@@ -8,6 +8,7 @@
 @source '/*.php';
 @source '/es-tw-responsive-classes.txt';
 @source '/manifest.json';
+@source '/src/Blocks/assets/styles/safelist-tailwind.txt';
 
 @theme {
 	--spacing: 0.0625rem; /* 1px */
@@ -32,51 +33,6 @@
 	--color-secondary-900: var(--esf-color-zinc-900);
 	--color-secondary-950: var(--esf-color-zinc-950);
 
-	/* --color-error-50: oklch(0.971 0.013 17.38);
-	--color-error-100: oklch(0.936 0.032 17.717);
-	--color-error-200: oklch(0.885 0.062 18.334);
-	--color-error-300: oklch(0.808 0.114 19.571);
-	--color-error-400: oklch(0.704 0.191 22.216);
-	--color-error-500: oklch(0.637 0.237 25.331);
-	--color-error-600: oklch(0.577 0.245 27.325);
-	--color-error-700: oklch(0.505 0.213 27.518);
-	--color-error-800: oklch(0.444 0.177 26.899);
-	--color-error-900: oklch(0.396 0.141 25.723);
-	--color-error-950: oklch(0.258 0.092 26.042);
-
-	--color-red-50: oklch(0.971 0.013 17.38);
-	--color-red-100: oklch(0.936 0.032 17.717);
-	--color-red-200: oklch(0.885 0.062 18.334);
-	--color-red-300: oklch(0.808 0.114 19.571);
-	--color-red-400: oklch(0.704 0.191 22.216);
-	--color-red-500: oklch(0.637 0.237 25.331);
-	--color-red-600: oklch(0.577 0.245 27.325);
-	--color-red-700: oklch(0.505 0.213 27.518);
-	--color-red-800: oklch(0.444 0.177 26.899);
-	--color-red-900: oklch(0.396 0.141 25.723);
-	--color-red-950: oklch(0.258 0.092 26.042);
-
-	--color-cyan-400: oklch(0.789 0.154 211.53);
-	--color-blue-400: oklch(0.707 0.165 254.624);
-	--color-emerald-400: oklch(0.765 0.177 163.223);
-	--color-orange-400: oklch(0.75 0.183 55.934);
-	--color-violet-400: oklch(0.702 0.183 293.541);
-
-	--color-yellow-400: oklch(0.852 0.199 91.936);
-
-	--color-secondary-50: var(--esf-color-zinc-50);
-	--color-secondary-100: var(--esf-color-zinc-100);
-	--color-secondary-200: var(--esf-color-zinc-200);
-	--color-secondary-300: var(--esf-color-zinc-300);
-	--color-secondary-400: var(--esf-color-zinc-400);
-	--color-secondary-500: var(--esf-color-zinc-500);
-	--color-secondary-600: var(--esf-color-zinc-600);
-	--color-secondary-700: var(--esf-color-zinc-700);
-	--color-secondary-800: var(--esf-color-zinc-800);
-	--color-secondary-900: var(--esf-color-zinc-900);
-	--color-secondary-950: var(--esf-color-zinc-950);
-	*/
-
 	--color-accent-50: var(--esf-color-teal-50);
 	--color-accent-100: var(--esf-color-teal-100);
 	--color-accent-200: var(--esf-color-teal-200);
@@ -88,53 +44,6 @@
 	--color-accent-800: var(--esf-color-teal-800);
 	--color-accent-900: var(--esf-color-teal-900);
 	--color-accent-950: var(--esf-color-teal-950);
-
-	/*
-
-	--color-green-50: oklch(0.982 0.018 155.826);
-	--color-green-100: oklch(0.962 0.044 156.743);
-	--color-green-200: oklch(0.925 0.084 155.995);
-	--color-green-300: oklch(0.871 0.15 154.449);
-	--color-green-400: oklch(0.792 0.209 151.711);
-	--color-green-500: oklch(0.723 0.219 149.579);
-	--color-green-600: oklch(0.627 0.194 149.214);
-	--color-green-700: oklch(0.527 0.154 150.069);
-	--color-green-800: oklch(0.448 0.119 151.328);
-	--color-green-900: oklch(0.393 0.095 152.535);
-	--color-green-950: oklch(0.266 0.065 152.934);
-
-	--radius-*: initial;
-	--radius-none: 0;
-	--radius-2xs: 0.125rem;
-	--radius-xs: 0.25rem;
-	--radius-sm: 0.5rem;
-	--radius-md: 0.75rem;
-	--radius-lg: 1rem;
-	--radius-xl: 1.125rem;
-	--radius-2xl: 1.5rem;
-	--radius-3xl: 2rem;
-	--radius-10: 0.625rem;
-
-	--aspect-2-3: 2 / 3;
-	--aspect-3-2: 3 / 2;
-	--aspect-3-4: 3 / 4;
-	--aspect-4-3: 4 / 3;
-	--aspect-4-5: 4 / 5;
-	--aspect-5-4: 5 / 4;
-	--aspect-cinema: 21 / 9;
-	--aspect-video-portrait: 9 / 16;
-	--aspect-cinema-portrait: 9 / 21;
-
-	--default-transition-duration: 300ms;
-
-	/* Easings */
-
-	/* --ease-spring-smooth: var(--motion-spring-smooth);
-	--ease-spring-snappy: var(--motion-spring-snappy);
-	--ease-spring-bouncy: var(--motion-spring-bouncy);
-	--ease-spring-bouncier: var(--motion-spring-bouncier);
-	--ease-spring-bounciest: var(--motion-spring-bounciest);
-	--ease-bounce: var(--motion-bounce); */
 }
 
 body {

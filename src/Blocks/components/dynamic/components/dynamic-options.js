@@ -8,7 +8,7 @@ import {
 	FieldOptionsLayout,
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
-import { RichLabel, ContainerPanel, InputField, Toggle, ContainerGroup } from '@eightshift/ui-components';
+import { ContainerPanel, InputField, Toggle, ContainerGroup } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -98,7 +98,7 @@ export const DynamicOptions = (attributes) => {
 						label={__('Validation', 'eightshift-forms')}
 					>
 						<Toggle
-							icon={icons.required}
+							icon={icons.fieldRequired}
 							label={__('Required', 'eightshift-forms')}
 							checked={dynamicIsRequired}
 							onChange={(value) => setAttributes({ [getAttrKey('dynamicIsRequired', attributes, manifest)]: value })}
@@ -112,12 +112,9 @@ export const DynamicOptions = (attributes) => {
 						collapsable
 					>
 						<InputField
-							label={
-								<RichLabel
-									icon={icons.googleTagManager}
-									label={__('GTM tracking code', 'eightshift-forms')}
-								/>
-							}
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
+							placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 							value={dynamicTracking}
 							onChange={(value) => setAttributes({ [getAttrKey('dynamicTracking', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('dynamicTracking', attributes, manifest), dynamicDisabledOptions)}

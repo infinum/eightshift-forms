@@ -4,18 +4,11 @@ import { __ } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
-import {
-	AnimatedVisibility,
-	RichLabel,
-	Button,
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Spacer,
-} from '@eightshift/ui-components';
+import { Button, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import manifest from '../manifest.json';
+import { Notice } from '@eightshift/ui-components';
 
 export const RadioOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -64,18 +57,20 @@ export const RadioOptions = (attributes) => {
 				/>
 			)}
 
-			<AnimatedVisibility visible={!radioHideLabelText}>
-				<RichLabel
-					label={__('Might impact accessibility', 'eightshift-forms')}
+			{(radioHideLabelText || radioLabel === '') && (
+				<Notice
+					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
 					icon={icons.a11yWarning}
+					type='warning'
 				/>
-			</AnimatedVisibility>
+			)}
 
 			<Spacer
 				border
 				icon={icons.tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
+
 			<Toggle
 				icon={icons.checkCircle}
 				label={__('Selected', 'eightshift-forms')}
@@ -100,12 +95,6 @@ export const RadioOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('radioIsHidden', attributes, manifest), radioDisabledOptions)}
 			/>
 
-			<Spacer
-				border
-				icon={icons.image}
-				text={__('Field icon', 'eightshift-forms')}
-			/>
-
 			{radioIcon ? (
 				<>
 					<img
@@ -117,7 +106,7 @@ export const RadioOptions = (attributes) => {
 							setAttributes({ [getAttrKey('radioIcon', attributes, manifest)]: undefined });
 						}}
 						icon={icons.trash}
-						className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+						type='ghost'
 					/>
 				</>
 			) : (
