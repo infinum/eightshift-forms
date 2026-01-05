@@ -8,8 +8,11 @@ import { createBlockFromTemplate, DashboardButton } from './../../../components/
 import { camelCase } from '@eightshift/ui-components/utilities';
 import { getUtilsIcons } from '../../../components/form/assets/state-init';
 import globalSettings from './../../../manifest.json';
+import manifest from '../manifest.json';
 
 export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
+	const { forms } = manifest;
+
 	return (
 		<>
 			{!hasInnerBlocks && (

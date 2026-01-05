@@ -601,7 +601,7 @@ export const FormEditButton = ({ formId }) => {
  *
  * @returns Component
  */
-export const SettingsButton = ({ formId }) => {
+export const SettingsButton = ({ formId = null }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 	const postId = select('core/editor').getCurrentPostId();
 
@@ -611,7 +611,9 @@ export const SettingsButton = ({ formId }) => {
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${settingsPageUrl}&formId=${id}`}
+			onPress={() => {
+				window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank');
+			}}
 			icon={icons.options}
 		>
 			{__('Edit settings', 'eightshift-forms')}
@@ -619,11 +621,6 @@ export const SettingsButton = ({ formId }) => {
 	);
 };
 
-/**
- * Returns global setting button component.
- *
- * @returns Component
- */
 export const GlobalSettingsButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
@@ -631,7 +628,9 @@ export const GlobalSettingsButton = () => {
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${globalSettingsPageUrl}`}
+			onPress={() => {
+				window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank');
+			}}
 			icon={icons.globe}
 		>
 			{__('Edit global settings', 'eightshift-forms')}
@@ -644,7 +643,7 @@ export const GlobalSettingsButton = () => {
  *
  * @returns Component
  */
-export const LocationsButton = ({ formId }) => {
+export const LocationsButton = ({ formId = null }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 	const postId = select('core/editor').getCurrentPostId();
 
@@ -674,7 +673,9 @@ export const DashboardButton = () => {
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${dashboardPageUrl}`}
+			onPress={() => {
+				window.open(`${wpAdminUrl}${dashboardPageUrl}`, '_blank');
+			}}
 			icon={icons.layoutAlt}
 		>
 			{__('Visit dashboard settings', 'eightshift-forms')}
