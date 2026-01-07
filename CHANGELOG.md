@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.12.1]
+
+### Added
+
+- New helper function for getting user's geolocation.
+
 ## [8.12.0]
 
 ### Added
@@ -1635,7 +1641,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-
+[8.12.1]: https://github.com/infinum/eightshift-forms/compare/8.12.0...8.12.1
 [8.12.0]: https://github.com/infinum/eightshift-forms/compare/8.11.0...8.12.0
 [8.11.0]: https://github.com/infinum/eightshift-forms/compare/8.10.2...8.11.0
 [8.10.2]: https://github.com/infinum/eightshift-forms/compare/8.10.1...8.10.2
