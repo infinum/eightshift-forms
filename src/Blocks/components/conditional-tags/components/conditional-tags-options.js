@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Modal } from '@wordpress/components';
 import { getAttrKey, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	BaseControl,
 	Select,
 	RichLabel,
 	Notice,
@@ -14,6 +12,8 @@ import {
 	Toggle,
 	ContainerGroup,
 	Spacer,
+	Modal,
+	HStack,
 } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import { getConstantsOptions } from '../../utils';
@@ -25,13 +25,13 @@ import {
 import { getRestUrl } from '../../form/assets/state-init';
 import globalManifest from '../../../manifest.json';
 import manifest from '../manifest.json';
+import { truncateMiddle } from '@eightshift/ui-components/utilities';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const { setAttributes } = attributes;
 
 	const postId = select('core/editor').getCurrentPostId();
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
@@ -72,11 +72,12 @@ export const ConditionalTagsOptions = (attributes) => {
 					}}
 					simpleValue
 					noSearch
+					className='esf:max-w-24'
 				/>
 
-				<div>{__('Set field exception rules', 'eightshift-forms')}</div>
+				<div className='esf:font-bold esf:mt-10'>{__('Set field exception rules', 'eightshift-forms')}</div>
 
-				<div>
+				<div className='esf:mb-10'>
 					{sprintf(
 						__('%s "%s" field if:', 'eightshift-forms'),
 						CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS[conditionalTagsRules[0]],
@@ -100,7 +101,9 @@ export const ConditionalTagsOptions = (attributes) => {
 								);
 							})}
 
-							{conditionalTagsRules?.[1]?.length > 1 && index + 1 < total && <div>{__('OR', 'eightshift-forms')}</div>}
+							{conditionalTagsRules?.[1]?.length > 1 && index + 1 < total && (
+								<div className='esf:font-bold'>{__('OR', 'eightshift-forms')}</div>
+							)}
 						</>
 					);
 				})}
@@ -136,17 +139,21 @@ export const ConditionalTagsOptions = (attributes) => {
 			(operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
 
 		return (
-			<div>
+			<HStack noWrap>
 				<Select
 					value={fieldValue}
-					options={formFields.filter((item) => {
-						// Remove current field from selection.
-						if (item.value !== conditionalTagsBlockName) {
-							return item;
-						}
+					options={formFields
+						.filter((item) => {
+							// Remove current field from selection.
+							if (item.value !== conditionalTagsBlockName) {
+								return item;
+							}
 
-						return null;
-					})}
+							return null;
+						})
+						.map((item) => {
+							return { ...item, label: truncateMiddle(item?.label, 20) };
+						})}
 					onChange={(value) => {
 						conditionalTagsRules[1][parent][index][0] = value;
 						conditionalTagsRules[1][parent][index][2] = '';
@@ -218,7 +225,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					}}
 					label={__('Remove', 'eightshift-forms')}
 				/>
-			</div>
+			</HStack>
 		);
 	};
 
@@ -251,63 +258,57 @@ export const ConditionalTagsOptions = (attributes) => {
 							}}
 						/>
 
-						<ContainerGroup showIf={conditionalTagsUse}>
+						<ContainerGroup hidden={!conditionalTagsUse}>
 							{conditionalTagsIsHidden && (
-								<Notice
-									label={__(
-										'Field is hidden. This might introduce issues if used with conditional tags.',
-										'eightshift-forms',
-									)}
-									type='warning'
-								/>
+								<>
+									<Notice
+										label={__('Field is hidden.', 'eightshift-forms')}
+										subtitle={__('This might introduce issues if used with conditional tags.', 'eightshift-forms')}
+										type='warning'
+									/>
+									<Spacer />
+								</>
 							)}
 
-							<BaseControl
+							<RichLabel
 								icon={icons.conditionH}
 								label={__('Rules', 'eightshift-forms')}
 								// Translators: %d refers to the number of active rules
 								subtitle={rulesCount > 0 && sprintf(__('%d rules', 'eightshift-forms'), rulesCount)}
+							/>
+
+							<Modal
+								className='esf:max-w-760!'
+								title={
+									<RichLabel
+										icon={icons.conditionalVisibility}
+										label={__('Conditional visibility', 'eightshift-forms')}
+									/>
+								}
+								triggerLabel={
+									rulesCount > 0 ? __('Edit rules', 'eightshift-forms') : __('Add rule', 'eightshift-forms')
+								}
+								actions={
+									<Button
+										type='selected'
+										slot='close'
+									>
+										{__('Close', 'eightshift-forms')}
+									</Button>
+								}
 							>
-								<Button
-									variant='tertiary'
-									onClick={() => setIsModalOpen(true)}
-								>
-									{rulesCount > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
-								</Button>
-							</BaseControl>
+								<ConditionalTagsType />
 
-							{isModalOpen && (
-								<Modal
-									title={
-										<RichLabel
-											icon={icons.conditionalVisibility}
-											label={__('Conditional visibility', 'eightshift-forms')}
-										/>
-									}
-									onRequestClose={() => setIsModalOpen(false)}
-								>
-									<div>
-										<ConditionalTagsType />
-									</div>
-
-									<div>
-										<RichLabel
-											icon={icons.lightBulb}
-											label={__(
-												"If you can't find a field, make sure the form is saved, and all fields have a name set.",
-												'eightshift-forms',
-											)}
-										/>
-
-										<Button
-											variant='primary'
-											onClick={() => setIsModalOpen(false)}
-										>
-											{__('Save', 'eightshift-forms')}
-										</Button>
-									</div>
-								</Modal>
-							)}
+								<Notice
+									label={__("Can't find a field?", 'eightshift-forms')}
+									subtitle={__(
+										"If you can't find a field, make sure the form is saved, and all fields have a name set.",
+										'eightshift-forms',
+									)}
+									icon={icons.lightBulb}
+									type='warning'
+								/>
+							</Modal>
 						</ContainerGroup>
 					</>
 				)}

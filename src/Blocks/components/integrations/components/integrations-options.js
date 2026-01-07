@@ -4,9 +4,16 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { select, useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Modal } from '@wordpress/components';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { BaseControl, Select, RichLabel, Button, ContainerPanel, ContainerGroup } from '@eightshift/ui-components';
+import {
+	BaseControl,
+	Select,
+	RichLabel,
+	Button,
+	ContainerPanel,
+	ContainerGroup,
+	Modal,
+} from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
 	updateIntegrationBlocks,

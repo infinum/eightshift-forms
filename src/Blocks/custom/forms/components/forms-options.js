@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { Modal, ExternalLink } from '@wordpress/components';
+import { ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { getAttrKey, checkAttr, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
@@ -19,6 +19,7 @@ import {
 	ContainerPanel,
 	InputField,
 	ContainerGroup,
+	Modal,
 } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { Modal } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
 import { getAttrKey, checkAttr, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
@@ -16,6 +15,7 @@ import {
 	ContainerGroup,
 	Spacer,
 	Notice,
+	Modal,
 } from '@eightshift/ui-components';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';

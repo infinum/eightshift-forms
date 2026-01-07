@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { Modal } from '@wordpress/components';
 import { getAttrKey, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,
@@ -14,6 +13,7 @@ import {
 	ContainerPanel,
 	Toggle,
 	ContainerGroup,
+	Modal,
 } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
@@ -28,7 +28,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 	const conditionalTagsRulesForms = checkAttr('conditionalTagsRulesForms', attributes, manifest);
 	const conditionalTagsPostId = checkAttr('conditionalTagsPostId', attributes, manifest);
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
@@ -37,7 +36,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				setFormFields(response.data.fields);
 			}
 		});
-	}, [conditionalTagsPostId, isModalOpen]);
+	}, [conditionalTagsPostId]);
 
 	const ConditionalTagsItem = ({ index }) => {
 		if (!formFields) {
@@ -129,8 +128,8 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				}}
 			/>
 
-			<ContainerGroup showIf={conditionalTagsUse}>
-				<BaseControl
+			<ContainerGroup hidden={!conditionalTagsUse}>
+				<RichLabel
 					icon={icons.conditionH}
 					label={__('Rules', 'eightshift-forms')}
 					// Translators: %d refers to the number of active rules
@@ -138,83 +137,77 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						conditionalTagsRulesForms?.length > 0 &&
 						sprintf(__('%d added', 'eightshift-forms'), conditionalTagsRulesForms.length)
 					}
-				>
-					<Button
-						variant='tertiary'
-						onClick={() => setIsModalOpen(true)}
-					>
-						{conditionalTagsRulesForms?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
-					</Button>
-				</BaseControl>
+				/>
 			</ContainerGroup>
 
-			{conditionalTagsUse && isModalOpen && (
-				<Modal
-					title={
-						<RichLabel
-							icon={icons.visibilityAlt}
-							label={__('Field visibility overrides', 'eightshift-forms')}
-						/>
-					}
-					onRequestClose={() => setIsModalOpen(false)}
-				>
-					<Notice
-						label={__(
-							'It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.',
-							'eightshift-forms',
-						)}
-						type={'warning'}
+			<Modal
+				title={
+					<RichLabel
+						icon={icons.visibilityAlt}
+						label={__('Field visibility overrides', 'eightshift-forms')}
 					/>
-
-					{conditionalTagsRulesForms.length > 0 && (
-						<div>
-							<span>{__('Field', 'eightshift-forms')}</span>
-							<span>{__('Visibility', 'eightshift-forms')}</span>
-						</div>
-					)}
-
-					<div>
-						{conditionalTagsRulesForms?.map((_, index) => {
-							return (
-								<div key={index}>
-									<ConditionalTagsItem index={index} />
-								</div>
-							);
-						})}
-					</div>
-
+				}
+				triggerLabel={
+					conditionalTagsRulesForms?.length > 0
+						? __('Edit rules', 'eightshift-forms')
+						: __('Add rule', 'eightshift-forms')
+				}
+				actions={
 					<Button
-						icon={icons.plusCircleFillAlt}
-						onClick={() =>
-							setAttributes({
-								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [
-									...conditionalTagsRulesForms,
-									[formFields?.[0]?.value ?? '', 'show', ''],
-								],
-							})
-						}
+						type='selected'
+						slot='close'
 					>
-						{__('Add visibility rule', 'eightshift-forms')}
+						{__('Close', 'eightshift-forms')}
 					</Button>
+				}
+			>
+				<Notice
+					label={__(
+						'It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.',
+						'eightshift-forms',
+					)}
+					type={'warning'}
+				/>
 
+				{conditionalTagsRulesForms.length > 0 && (
 					<div>
-						<RichLabel
-							icon={icons.lightBulb}
-							label={__(
-								"If you can't find a field, make sure the form is saved, and all fields have a name set.",
-								'eightshift-forms',
-							)}
-						/>
-
-						<Button
-							variant='primary'
-							onClick={() => setIsModalOpen(false)}
-						>
-							{__('Save', 'eightshift-forms')}
-						</Button>
+						<span>{__('Field', 'eightshift-forms')}</span>
+						<span>{__('Visibility', 'eightshift-forms')}</span>
 					</div>
-				</Modal>
-			)}
+				)}
+
+				<div>
+					{conditionalTagsRulesForms?.map((_, index) => {
+						return (
+							<div key={index}>
+								<ConditionalTagsItem index={index} />
+							</div>
+						);
+					})}
+				</div>
+
+				<Button
+					icon={icons.plusCircleFillAlt}
+					onClick={() =>
+						setAttributes({
+							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [
+								...conditionalTagsRulesForms,
+								[formFields?.[0]?.value ?? '', 'show', ''],
+							],
+						})
+					}
+				>
+					{__('Add visibility rule', 'eightshift-forms')}
+				</Button>
+
+				<RichLabel
+					icon={icons.lightBulb}
+					label={__(
+						"If you can't find a field, make sure the form is saved, and all fields have a name set.",
+						'eightshift-forms',
+					)}
+				/>
+			</Modal>
 		</ContainerPanel>
 	);
 };

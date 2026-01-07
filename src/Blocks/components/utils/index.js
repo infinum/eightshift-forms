@@ -4,11 +4,10 @@ import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { icons } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
-import { AnimatedVisibility, RichLabel, Notice, Button, InputField } from '@eightshift/ui-components';
+import { AnimatedVisibility, RichLabel, Notice, Button, InputField, Tooltip } from '@eightshift/ui-components';
 import { unescapeHTML, camelCase } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
@@ -653,7 +652,9 @@ export const LocationsButton = ({ formId = null }) => {
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${locationsPageUrl}&formId=${id}`}
+			onPress={() => {
+				window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank');
+			}}
 			icon={icons.notebook}
 		>
 			{__('Locations', 'eightshift-forms')}
