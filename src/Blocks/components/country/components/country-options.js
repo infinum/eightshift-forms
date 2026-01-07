@@ -11,6 +11,8 @@ import {
 	Toggle,
 	Spacer,
 	ContainerGroup,
+	Button,
+	HStack,
 } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
@@ -22,7 +24,6 @@ import {
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
-import { HStack } from '@eightshift/ui-components';
 
 export const CountryOptions = (attributes) => {
 	const { options } = manifest;
@@ -204,15 +205,16 @@ export const CountryOptions = (attributes) => {
 							fixedWidth={4}
 							prefix={__('Min', 'eightshift-forms')}
 						>
-							<button
+							<Button
 								icon={icons.resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('countryMinCount', attributes, manifest)]: undefined })}
 								disabled={countryMinCount === 0}
 								type='ghost'
+								slot={null}
 							>
 								{__('x', 'eightshift-forms')}
-							</button>
+							</Button>
 						</NumberPicker>
 
 						<NumberPicker
@@ -226,15 +228,16 @@ export const CountryOptions = (attributes) => {
 							fixedWidth={4}
 							prefix={__('Max', 'eightshift-forms')}
 						>
-							<button
+							<Button
 								icon={icons.resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('countryMaxCount', attributes, manifest)]: undefined })}
 								disabled={countryMaxCount === 0}
 								type='ghost'
+								slot={null}
 							>
 								{__('x', 'eightshift-forms')}
-							</button>
+							</Button>
 						</NumberPicker>
 					</HStack>
 				</BaseControl>

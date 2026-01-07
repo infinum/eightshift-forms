@@ -4,7 +4,16 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { getOption, checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { Select, NumberPicker, ContainerPanel, InputField, Toggle, HStack, Spacer } from '@eightshift/ui-components';
+import {
+	Select,
+	NumberPicker,
+	ContainerPanel,
+	InputField,
+	Toggle,
+	HStack,
+	Spacer,
+	Button,
+} from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
@@ -228,15 +237,16 @@ export const InputOptions = (attributes) => {
 						placeholder='–'
 						prefix={__('Min length', 'eightshift-forms')}
 					>
-						<button
+						<Button
 							icon={icons.resetToZero}
 							tooltip={__('Reset', 'eightshift-forms')}
 							onClick={() => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: undefined })}
 							disabled={inputMinLength === 0}
 							type='ghost'
+							slot={null}
 						>
 							{__('x', 'eightshift-forms')}
-						</button>
+						</Button>
 					</NumberPicker>
 
 					<NumberPicker
@@ -250,15 +260,16 @@ export const InputOptions = (attributes) => {
 						placeholder='–'
 						prefix={__('Max length', 'eightshift-forms')}
 					>
-						<button
+						<Button
 							icon={icons.resetToZero}
 							tooltip={__('Reset', 'eightshift-forms')}
 							onClick={() => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: undefined })}
 							disabled={inputMaxLength === 0}
 							type='ghost'
+							slot={null}
 						>
 							{__('x', 'eightshift-forms')}
-						</button>
+						</Button>
 					</NumberPicker>
 				</HStack>
 			)}
@@ -279,15 +290,16 @@ export const InputOptions = (attributes) => {
 							placeholder='–'
 							prefix={__('Min', 'eightshift-forms')}
 						>
-							<button
+							<Button
 								icon={icons.resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: undefined })}
 								disabled={inputMin === 0}
 								type='ghost'
+								slot={null}
 							>
 								{__('x', 'eightshift-forms')}
-							</button>
+							</Button>
 						</NumberPicker>
 
 						<NumberPicker
@@ -303,15 +315,16 @@ export const InputOptions = (attributes) => {
 							placeholder='–'
 							prefix={__('Max', 'eightshift-forms')}
 						>
-							<button
+							<Button
 								icon={icons.resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: undefined })}
 								disabled={inputMax === 0}
 								type='ghost'
+								slot={null}
 							>
 								{__('x', 'eightshift-forms')}
-							</button>
+							</Button>
 						</NumberPicker>
 						<NumberPicker
 							value={inputStep}
@@ -322,15 +335,16 @@ export const InputOptions = (attributes) => {
 							disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
 							prefix={__('Step', 'eightshift-forms')}
 						>
-							<button
+							<Button
 								icon={icons.resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: undefined })}
 								disabled={inputStep === 0}
 								type='ghost'
+								slot={null}
 							>
 								{__('x', 'eightshift-forms')}
-							</button>
+							</Button>
 						</NumberPicker>
 					</HStack>
 

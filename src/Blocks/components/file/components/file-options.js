@@ -2,7 +2,16 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { BaseControl, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import {
+	BaseControl,
+	ContainerPanel,
+	InputField,
+	Toggle,
+	Spacer,
+	Button,
+	HStack,
+	NumberPicker,
+} from '@eightshift/ui-components';
 import {
 	FieldOptions,
 	FieldOptionsMore,
@@ -13,8 +22,6 @@ import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
-import { NumberPicker } from '@eightshift/ui-components';
-import { HStack } from '@eightshift/ui-components';
 
 export const FileOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -156,8 +163,18 @@ export const FileOptions = (attributes) => {
 						placeholder='–'
 						prefix={__('Min', 'eightshift-forms')}
 						suffix={__('KB', 'eightshift-forms')}
-					/>
-
+					>
+						<Button
+							icon={icons.resetToZero}
+							tooltip={__('Reset', 'eightshift-forms')}
+							onClick={() => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: undefined })}
+							disabled={fileMinSize === 0}
+							type='ghost'
+							slot={null}
+						>
+							{__('x', 'eightshift-forms')}
+						</Button>
+					</NumberPicker>
 					<NumberPicker
 						aria-label={__('Max (KB)', 'eightshift-forms')}
 						value={fileMaxSize}
@@ -167,7 +184,18 @@ export const FileOptions = (attributes) => {
 						placeholder='–'
 						prefix={__('Max', 'eightshift-forms')}
 						suffix={__('KB', 'eightshift-forms')}
-					/>
+					>
+						<Button
+							icon={icons.resetToZero}
+							tooltip={__('Reset', 'eightshift-forms')}
+							onClick={() => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: undefined })}
+							disabled={fileMaxSize === 0}
+							type='ghost'
+							slot={null}
+						>
+							{__('x', 'eightshift-forms')}
+						</Button>
+					</NumberPicker>
 				</HStack>
 			</BaseControl>
 

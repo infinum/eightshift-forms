@@ -11,9 +11,9 @@ import {
 	HStack,
 	InputField,
 	Toggle,
-	ContainerGroup,
 	ContainerPanel,
 	Spacer,
+	Button,
 } from '@eightshift/ui-components';
 import {
 	FieldOptions,
@@ -178,15 +178,16 @@ export const TextareaOptions = (attributes) => {
 					fixedWidth={4}
 					prefix={__('Min length', 'eightshift-forms')}
 				>
-					<button
+					<Button
 						icon={icons.resetToZero}
 						tooltip={__('Reset', 'eightshift-forms')}
 						onClick={() => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: undefined })}
 						disabled={textareaMinLength === 0}
 						type='ghost'
+						slot={null}
 					>
 						{__('x', 'eightshift-forms')}
-					</button>
+					</Button>
 				</NumberPicker>
 
 				<NumberPicker
@@ -200,15 +201,16 @@ export const TextareaOptions = (attributes) => {
 					fixedWidth={4}
 					prefix={__('Max length', 'eightshift-forms')}
 				>
-					<button
+					<Button
 						icon={icons.resetToZero}
 						tooltip={__('Reset', 'eightshift-forms')}
 						onClick={() => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: undefined })}
 						disabled={textareaMaxLength === 0}
 						type='ghost'
+						slot={null}
 					>
 						{__('x', 'eightshift-forms')}
-					</button>
+					</Button>
 				</NumberPicker>
 			</HStack>
 
