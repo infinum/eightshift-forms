@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- New helper function for getting users geolocation.
+- New helper function for getting user's geolocation.
 
 ## [8.12.0]
 
