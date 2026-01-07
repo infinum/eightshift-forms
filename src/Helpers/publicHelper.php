@@ -53,6 +53,16 @@ function esFormsGeolocationCountriesList(): array
 }
 
 /**
+ * Get users geolocation.
+ * 
+ * @return string
+ */
+function esFormsGetUsersGeolocation(): string
+{
+	return (new Geolocation())->getUsersGeolocation();
+}
+
+/**
  * Output select options ass array from html string.
  *
  * @param string $options Options string.
