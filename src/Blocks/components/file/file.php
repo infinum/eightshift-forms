@@ -40,7 +40,7 @@ $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes,
 
 $twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
 
-$fileClass = Helpers::classnames([
+$fileClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);

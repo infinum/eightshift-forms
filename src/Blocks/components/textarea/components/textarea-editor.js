@@ -1,30 +1,11 @@
 import React from 'react';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('textarea');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
@@ -32,28 +13,15 @@ export const TextareaEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
-	const textareaClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
-
 	const textarea = (
 		<>
 			<textarea
-				className={textareaClass}
+				className='esf-input'
 				placeholder={textareaPlaceholder}
 				readOnly
 			>
 				{textareaValue}
 			</textarea>
-
-			<MissingName value={textareaName} />
-
-			{textareaName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
 		</>
 	);
 
@@ -64,8 +32,10 @@ export const TextareaEditor = (attributes) => {
 					fieldContent: textarea,
 					fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!textareaName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);

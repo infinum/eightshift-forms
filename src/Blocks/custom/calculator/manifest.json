@@ -5,7 +5,7 @@
 	"description" : "A form with calculator",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form"
+		"src": "calculator"
 	},
 	"keywords": [
 		"calculator"

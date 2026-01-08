@@ -46,7 +46,7 @@ $countryId = $countryName . '-' . Helpers::getUnique();
 $countryHideLabel = false;
 $countryFieldLabel = $attributes[Helpers::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
 
-$countryClass = Helpers::classnames([
+$countryClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
 	Helpers::selector($additionalClass, $additionalClass),

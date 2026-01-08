@@ -1,30 +1,30 @@
 @mixin form-styles() {
-	margin: 0 auto;
-	position: relative;
+	// margin: 0 auto;
+	// position: relative;
 }
 
 @mixin form-width-limit-styles() {
-	max-inline-size: var(--es-max-width);
-	padding: 0 var(--es-grid-spacing);
+	// max-inline-size: var(--es-max-width);
+	// padding: 0 var(--es-grid-spacing);
 }
 
 @mixin form-fields-mandatory-styles() {
-	display: flex;
-	flex-wrap: wrap;
+	// display: flex;
+	// flex-wrap: wrap;
 }
 
 @mixin form-fields-styles() {
-	margin-inline: calc(var(--es-grid-spacing) * -1);
+	// margin-inline: calc(var(--es-grid-spacing) * -1);
 }
 
 @mixin form-fields-children-mandatory-styles() {
-	flex: 0 0 var(--es-field-width, 100%);
-	max-inline-size: var(--es-field-width, 100%);
+	// flex: 0 0 var(--es-field-width, 100%);
+	// max-inline-size: var(--es-field-width, 100%);
 }
 
 @mixin form-fields-children-styles() {
-	padding-inline: var(--es-grid-spacing);
-	margin-block-end: var(--es-field-spacing);
+	// padding-inline: var(--es-grid-spacing);
+	// margin-block-end: var(--es-field-spacing);
 }
 
 @mixin form-reset() {

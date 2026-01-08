@@ -43,7 +43,7 @@ if ($resultOutputData['isRedirectPage']) {
 	$resultClass[] = UtilsHelper::getStateSelector('isHidden');
 }
 
-$resultClassOutput = Helpers::classnames($resultClass);
+$resultClassOutput = Helpers::clsx($resultClass);
 
 ?>
 

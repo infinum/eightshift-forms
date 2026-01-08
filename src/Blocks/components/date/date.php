@@ -43,7 +43,7 @@ $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes,
 
 $twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date']);
 
-$dateClass = Helpers::classnames([
+$dateClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'date', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);

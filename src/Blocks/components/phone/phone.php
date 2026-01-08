@@ -48,12 +48,12 @@ $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attribute
 
 $twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
 
-$phoneClass = Helpers::classnames([
+$phoneClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
-$phoneSelectClass = Helpers::classnames([
+$phoneSelectClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
 ]);

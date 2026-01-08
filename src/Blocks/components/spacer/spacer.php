@@ -11,7 +11,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$spacerClass = Helpers::classnames([
+$spacerClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);

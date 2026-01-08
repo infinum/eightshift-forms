@@ -5,7 +5,7 @@
 	"description" : "A form with mailer",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form"
+		"src": "form"
 	},
 	"keywords": [
 		"form"

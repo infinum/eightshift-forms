@@ -20,7 +20,7 @@ $globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attr
 
 $twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg']);
 
-$globalMsgClass = Helpers::classnames([
+$globalMsgClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('globalMsg'),

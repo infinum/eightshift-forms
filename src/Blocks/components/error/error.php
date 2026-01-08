@@ -20,7 +20,7 @@ $errorTwSelectorsData = Helpers::checkAttr('errorTwSelectorsData', $attributes, 
 
 $twClasses = FormsHelper::getTwSelectors($errorTwSelectorsData, ['error']);
 
-$errorClass = Helpers::classnames([
+$errorClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'error', $componentClass),
 	Helpers::selector($selectorClass, $selectorClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),

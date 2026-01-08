@@ -1,0 +1,16 @@
+/* Eightshift UI components - WP overrides */
+@import '@eightshift/ui-components/dist/assets/wp-overrides/fix-label-text-case.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/increase-sidebar-width.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/make-block-messages-nicer.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/restyle-tooltips.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/round-corners.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/unify-button-sizes.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/replace-fonts.css';
+@import '@eightshift/ui-components/dist/assets/wp-overrides/allow-full-width-blocks.css';
+
+/* Eightshift UI components */
+@import '@eightshift/ui-components/dist/assets/style.css';
+
+/* ES Forms styles */
+@import 'tailwindcss' prefix(esf);
+@import '../../../../tailwind.css';

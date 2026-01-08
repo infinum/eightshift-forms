@@ -1,45 +1,18 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import {
-	STORE_NAME,
-	checkAttr,
-	props,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconMissingName, StatusIconConditionals } from './../../utils';
+import manifest from '../manifest.json';
 
 export const RadiosEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('radios');
-
-	const {
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const radiosContent = checkAttr('radiosContent', attributes, manifest);
 	const radiosName = checkAttr('radiosName', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('radiosName', attributes, manifest), radiosName);
 
-	const radios = (
-		<>
-			{radiosContent}
-
-			<MissingName value={radiosName} />
-
-			{radiosName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
-		</>
-	);
+	const radios = <div className='esf-fieldset'>{radiosContent}</div>;
 
 	return (
 		<>
@@ -48,8 +21,10 @@ export const RadiosEditor = (attributes) => {
 					fieldContent: radios,
 					fieldIsRequired: checkAttr('radiosIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!radiosName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);
