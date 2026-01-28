@@ -18,6 +18,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Updated
 
 - Dependencies to the latest version.
+- Eightshift menu is now added to the admin bar.
 
 ### Changed
 
