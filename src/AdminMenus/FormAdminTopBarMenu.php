@@ -82,15 +82,22 @@ class FormAdminTopBarMenu implements ServiceInterface
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
 		$isDevelopMode = DeveloperHelpers::isDeveloperModeActive();
 
-		$version = Helpers::getPluginVersion();
+		$mainLabel = \esc_html__('Forms', 'eightshift-forms');
 
-		$mainLabel = \esc_html__('ES Forms', 'eightshift-forms');
+		if (!$adminBar->get_node('eightshift')) {
+			$adminBar->add_menu(
+				[
+					'id' => 'eightshift',
+					'title' => \esc_html__('Eightshift', 'eightshift-forms'),
+				],
+			);
+		}
 
 		// Add main menu item.
 		$adminBar->add_menu(
 			[
 				'id' => $prefix,
-				'parent' => '',
+				'parent' => 'eightshift',
 				'group' => '',
 				'title' => $isDevelopMode ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
 				'href' => GeneralHelpers::getListingPageUrl(),
@@ -162,7 +169,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-version",
 					'parent' => $troubleshootingPrefix,
 					// Translators: %s is the plugin version number.
-					'title' => \sprintf(\esc_html__('Version: %s', 'eightshift-forms'), \esc_html($version)),
+					'title' => \sprintf(\esc_html__('Version: %s', 'eightshift-forms'), \esc_html(Helpers::getPluginVersion())),
 					'href' => null,
 				],
 			);

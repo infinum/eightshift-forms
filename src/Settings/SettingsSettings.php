@@ -180,7 +180,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputStep' => 1,
-								'inputPlaceholder' => 6,
+								'inputPlaceholder' => 15,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
