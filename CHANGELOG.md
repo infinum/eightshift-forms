@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.13.0]
+
+### Added
+
+- Additional debug data for captcha validation.
+
+### Fixed
+
+- Linters and added husky for pre-commit hooks.
+- Global message role is now set correctly.
+
+### Updated
+
+- Dependencies to the latest version.
+
 ## [8.12.1]
 
 ### Added
@@ -1641,6 +1656,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.13.0]: https://github.com/infinum/eightshift-forms/compare/8.12.1...8.13.0
 [8.12.1]: https://github.com/infinum/eightshift-forms/compare/8.12.0...8.12.1
 [8.12.0]: https://github.com/infinum/eightshift-forms/compare/8.11.0...8.12.0
 [8.11.0]: https://github.com/infinum/eightshift-forms/compare/8.10.2...8.11.0
