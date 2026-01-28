@@ -19,6 +19,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Dependencies to the latest version.
 
+### Changed
+
+- Global message timeout is now set to 15 seconds by default.
+
 ## [8.12.1]
 
 ### Added
