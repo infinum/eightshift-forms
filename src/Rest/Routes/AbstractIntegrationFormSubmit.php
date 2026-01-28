@@ -228,7 +228,8 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				$this->getCaptcha()->check(
 					$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
 					$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
-					$formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? false
+					$formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? false,
+					$formDetails
 				);
 			}
 

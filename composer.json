@@ -62,6 +62,10 @@
 	"scripts": {
 		"test:types": "@php ./vendor/bin/phpstan analyze",
 		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.3-",
+		"test": [
+			"@test:standards",
+			"@test:types"
+		],
 		"prefix-namespaces": [
 			"@php strauss.phar",
 			"composer dump-autoload"

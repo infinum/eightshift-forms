@@ -47,12 +47,13 @@ class Captcha implements CaptchaInterface
 	 * @param string $token Token from frontend.
 	 * @param string $action Action to check.
 	 * @param boolean $isEnterprise Type of captcha.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
 	 *
 	 * @return array<mixed>
 	 */
-	public function check(string $token, string $action, bool $isEnterprise): array
+	public function check(string $token, string $action, bool $isEnterprise, array $formDetails = []): array
 	{
 		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [
@@ -67,6 +68,7 @@ class Captcha implements CaptchaInterface
 			'token' => $token,
 			'action' => $action,
 			'isEnterprise' => $isEnterprise,
+			'formDetails' => $formDetails,
 		];
 
 		if (!$token) {
