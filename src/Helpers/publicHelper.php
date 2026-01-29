@@ -54,7 +54,7 @@ function esFormsGeolocationCountriesList(): array
 
 /**
  * Get user's geolocation.
- * 
+ *
  * @return string
  */
 function esFormsGetUsersGeolocation(): string
