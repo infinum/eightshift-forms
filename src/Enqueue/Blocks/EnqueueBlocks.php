@@ -264,7 +264,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$redirectionTimeout = HooksHelpers::getFilterName(['block', 'form', 'redirectionTimeout']);
 		$fileRemoveLabel = HooksHelpers::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
-		$output['hideGlobalMessageTimeout'] = (int) SettingsHelpers::getOptionValueWithFallback(SettingsSettings::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT, '6') * 1000;
+		$output['hideGlobalMessageTimeout'] = (int) SettingsHelpers::getOptionValueWithFallback(SettingsSettings::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT, '15') * 1000;
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 		$output['labels'] = [
 			'selectOptionAria' => \esc_html__('Select option', 'eightshift-forms'),
