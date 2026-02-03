@@ -438,6 +438,9 @@ export class State {
 	getStateGeolocationIsUsed = () => {
 		return getState([StateEnum.IS_USED], StateEnum.GEOLOCATION) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
+	getStateGeolocationLocation = () => {
+		return getState([StateEnum.GEOLOCATION_LOCATION], StateEnum.GEOLOCATION);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Enrichment getters.

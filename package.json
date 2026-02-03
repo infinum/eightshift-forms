@@ -33,7 +33,7 @@
 		"test:e2e:report:pdf": "node tests/e2e/helpers/generate-pdf-report.js"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.57.0",
+		"@playwright/test": "^1.58.0",
 		"husky": "^9.1.7",
 		"webpack": "^5.104.1",
 		"webpack-cli": "^6.0.1",
@@ -43,8 +43,8 @@
 		"@eightshift/frontend-libs-tailwind": "^2.3.0",
 		"@eightshift/ui-components": "^6.0.6",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.9.16",
-		"caniuse-lite": "^1.0.30001765",
+		"baseline-browser-mapping": "^2.9.18",
+		"caniuse-lite": "^1.0.30001766",
 		"choices.js": "^11.1.0",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",

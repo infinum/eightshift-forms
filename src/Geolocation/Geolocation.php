@@ -25,21 +25,12 @@ use Exception;
 class Geolocation extends AbstractGeolocation implements GeolocationInterface
 {
 	/**
-	 * Geolocation check if user is geolocate constant.
-	 *
-	 * @var string
-	 */
-	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_user_located';
-
-	/**
 	 * Register all the hooks
 	 */
 	public function register(): void
 	{
 		// Use normal geolocation detection from db.
 		\add_action('init', [$this, 'setNormalLocationCookie']);
-
-		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
 
 	/**
