@@ -20,6 +20,7 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
+use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Validation\ValidationPatterns;
@@ -48,13 +49,22 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	protected EnrichmentInterface $enrichment;
 
 	/**
+	 * Instance variable of geolocation data.
+	 *
+	 * @var GeolocationInterface
+	 */
+	protected GeolocationInterface $geolocation;
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
+	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
 	 */
-	public function __construct(EnrichmentInterface $enrichment)
+	public function __construct(EnrichmentInterface $enrichment, GeolocationInterface $geolocation)
 	{
 		$this->enrichment = $enrichment;
+		$this->geolocation = $geolocation;
 	}
 
 	/**
@@ -316,6 +326,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		// Geolocation config.
 		$output['geolocation'] = [
 			'isUsed' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
+			'location' => $this->geolocation->getUsersGeolocation(),
 		];
 
 		// Check if Captcha data is set and valid.

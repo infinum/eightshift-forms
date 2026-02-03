@@ -60,9 +60,9 @@ export class Geolocation {
 	 */
 	onSetSelectField = (event) => {
 		const { formId } = event.detail;
-		const countryCookie = cookies?.getCookie('esForms-country')?.toLocaleLowerCase();
+		const location = this.state.getStateGeolocationLocation()?.toLocaleLowerCase();
 
-		if (!countryCookie || countryCookie.length !== 2) {
+		if (location === '' || location === 'localhost') {
 			return;
 		}
 
@@ -73,10 +73,10 @@ export class Geolocation {
 
 			switch (type) {
 				case 'country':
-					this.utils.setManualSelectByAttributeValue(formId, name, [countryCookie], this.state.getStateAttribute('countryCode'));
+					this.utils.setManualSelectByAttributeValue(formId, name, [location], this.state.getStateAttribute('countryCode'));
 					break;
 				case 'phone':
-					this.utils.setManualPhonePrefixByAttributeValue(formId, name, countryCookie, this.state.getStateAttribute('countryCode'));
+					this.utils.setManualPhonePrefixByAttributeValue(formId, name, location, this.state.getStateAttribute('countryCode'));
 					break;
 			}
 		});
