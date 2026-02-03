@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.0]
+
+### Updated
+
+- Dependencies to the latest version.
+
+### Changed
+
+- Geolocation is now using new way of detecting user's geolocation by providing data to the JS state via PHP code. Cookie will be set but manually changing the value on the frontend will not work anymore.
+
 ## [8.13.0]
 
 ### Added
@@ -1661,6 +1671,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.14.0]: https://github.com/infinum/eightshift-forms/compare/8.13.0...8.14.0
 [8.13.0]: https://github.com/infinum/eightshift-forms/compare/8.12.1...8.13.0
 [8.12.1]: https://github.com/infinum/eightshift-forms/compare/8.12.0...8.12.1
 [8.12.0]: https://github.com/infinum/eightshift-forms/compare/8.11.0...8.12.0

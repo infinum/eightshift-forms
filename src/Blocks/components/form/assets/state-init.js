@@ -111,6 +111,7 @@ export const StateEnum = {
 	ENRICHMENT_ALLOWED_SMART: 'allowedSmart',
 
 	GEOLOCATION: 'geolocation',
+	GEOLOCATION_LOCATION: 'location',
 
 	TRACKING: 'tracking',
 
@@ -268,6 +269,7 @@ export function setStateInitial() {
 	// Geolocation.
 	const geolocation = esFormsLocalization.geolocation ?? {};
 	setState([StateEnum.IS_USED], Boolean(geolocation.isUsed), StateEnum.GEOLOCATION);
+	setState([StateEnum.GEOLOCATION_LOCATION], geolocation.location, StateEnum.GEOLOCATION);
 
 	// Enrichment.
 	const enrichment = esFormsLocalization.enrichment ?? {};
