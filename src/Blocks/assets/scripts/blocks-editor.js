@@ -11,11 +11,10 @@
  */
 
 import { unregisterBlockType } from '@wordpress/blocks';
-import {
-	registerBlocks,
-	outputCssVariablesGlobal,
-} from '@eightshift/frontend-libs/scripts/editor';
+import { registerBlocks } from '@eightshift/frontend-libs-tailwind/scripts/editor';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts';
 import globalManifest from '../../manifest.json';
+import './editor-hooks';
 import './store';
 
 registerBlocks(
@@ -31,8 +30,9 @@ registerBlocks(
 	require.context('./../../custom', true, /-overrides.js$/),
 );
 
-// Output global css variables.
-outputCssVariablesGlobal();
+// Import styles.
+dynamicImport(require.context('./../../components', true, /styles-editor.css$/));
+dynamicImport(require.context('./../../custom', true, /styles-editor.css$/));
 
 if (esFormsLocalization?.currentPostType?.isForms) {
 	globalManifest?.unregisterBlocks?.forms?.forEach((block) => unregisterBlockType(block));
@@ -45,4 +45,3 @@ if (esFormsLocalization?.currentPostType?.isResults) {
 if (esFormsLocalization?.currentPostType?.isCommon) {
 	globalManifest?.unregisterBlocks?.common?.forEach((block) => unregisterBlockType(block));
 }
-

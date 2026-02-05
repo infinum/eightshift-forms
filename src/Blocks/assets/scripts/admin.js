@@ -8,7 +8,12 @@
  * Usage: `WordPress admin `.
  */
 
- import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 
 // Find all blocks and require assets index.js inside it.
 dynamicImport(require.context('./../../components', true, /assets-admin\/index\.js$/));
+dynamicImport(require.context('./../../custom', true, /assets-admin\/index\.js$/));
+
+// Output all frontend-only styles.
+dynamicImport(require.context('./../../components', true, /styles-admin.css$/));
+dynamicImport(require.context('./../../custom', true, /styles-admin.css$/));

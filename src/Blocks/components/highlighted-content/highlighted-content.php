@@ -16,7 +16,7 @@ $highlightedContentTitle = Helpers::checkAttr('highlightedContentTitle', $attrib
 $highlightedContentSubtitle = Helpers::checkAttr('highlightedContentSubtitle', $attributes, $manifest);
 $highlightedContentIcon = Helpers::checkAttr('highlightedContentIcon', $attributes, $manifest);
 
-$highlightedContentClass = Helpers::classnames([
+$highlightedContentClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);

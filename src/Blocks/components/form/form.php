@@ -58,7 +58,7 @@ $formAttrs = Helpers::checkAttr('formAttrs', $attributes, $manifest);
 $customClassSelectorFilterName = HooksHelpers::getFilterName(['block', 'form', 'customClassSelector']);
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
-$formClass = Helpers::classnames([
+$formClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'form', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($customClassSelector, $customClassSelector),

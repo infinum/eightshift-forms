@@ -16,12 +16,12 @@ $tabLabel = Helpers::checkAttr('tabLabel', $attributes, $manifest);
 $tabContent = Helpers::checkAttr('tabContent', $attributes, $manifest);
 $tabNoBg = Helpers::checkAttr('tabNoBg', $attributes, $manifest);
 
-$tabLabelClass = Helpers::classnames([
+$tabLabelClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'label'),
 	UtilsHelper::getStateSelectorAdmin('tabsItem'),
 ]);
 
-$tabContentClass = Helpers::classnames([
+$tabContentClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'content'),
 	Helpers::selector($tabNoBg, $componentClass, 'content', 'no-bg'),
 ]);

@@ -1,0 +1,114 @@
+/* stylelint-disable-next-line @stylistic/max-line-length */
+/* stylelint-disable declaration-block-no-duplicate-properties, block-no-redundant-nested-style-rules, no-invalid-position-declaration, at-rule-no-unknown, lightness-notation, hue-degree-notation, custom-property-empty-line-before, custom-property-pattern, at-rule-no-deprecated, nesting-selector-no-missing-scoping-root, selector-max-specificity */
+@plugin 'tailwindcss-motion';
+@plugin 'tailwindcss-react-aria-components';
+@plugin '@tailwindcss/typography';
+
+@source '/src/*.{html,js,php,json,css}';
+@source '/*.php';
+@source '/es-tw-responsive-classes.txt';
+@source '/manifest.json';
+@source '/src/Blocks/assets/styles/safelist-tailwind.txt';
+
+@theme {
+	--spacing: 0.0625rem; /* 1px */
+
+	--default-font-family: var(--es-font-sans, 'Geist Variable', system-ui, sans-serif);
+	--default-mono-font-family: var(--es-font-mono, 'Geist Mono Variable', ui-monospace, monospace);
+
+	--color-*: initial;
+
+	--color-black: oklch(0% 0 0);
+	--color-white: oklch(100% 0 0);
+
+	--color-secondary-50: var(--esf-color-zinc-50);
+	--color-secondary-100: var(--esf-color-zinc-100);
+	--color-secondary-200: var(--esf-color-zinc-200);
+	--color-secondary-300: var(--esf-color-zinc-300);
+	--color-secondary-400: var(--esf-color-zinc-400);
+	--color-secondary-500: var(--esf-color-zinc-500);
+	--color-secondary-600: var(--esf-color-zinc-600);
+	--color-secondary-700: var(--esf-color-zinc-700);
+	--color-secondary-800: var(--esf-color-zinc-800);
+	--color-secondary-900: var(--esf-color-zinc-900);
+	--color-secondary-950: var(--esf-color-zinc-950);
+
+	--color-accent-50: var(--esf-color-teal-50);
+	--color-accent-100: var(--esf-color-teal-100);
+	--color-accent-200: var(--esf-color-teal-200);
+	--color-accent-300: var(--esf-color-teal-300);
+	--color-accent-400: var(--esf-color-teal-400);
+	--color-accent-500: var(--esf-color-teal-500);
+	--color-accent-600: var(--esf-color-teal-600);
+	--color-accent-700: var(--esf-color-teal-700);
+	--color-accent-800: var(--esf-color-teal-800);
+	--color-accent-900: var(--esf-color-teal-900);
+	--color-accent-950: var(--esf-color-teal-950);
+}
+
+body {
+	--esf-color-secondary-50: var(--es-color-secondary-50);
+	--esf-color-secondary-100: var(--es-color-secondary-100);
+	--esf-color-secondary-200: var(--es-color-secondary-200);
+	--esf-color-secondary-300: var(--es-color-secondary-300);
+	--esf-color-secondary-400: var(--es-color-secondary-400);
+	--esf-color-secondary-500: var(--es-color-secondary-500);
+	--esf-color-secondary-600: var(--es-color-secondary-600);
+	--esf-color-secondary-700: var(--es-color-secondary-700);
+	--esf-color-secondary-800: var(--es-color-secondary-800);
+	--esf-color-secondary-900: var(--es-color-secondary-900);
+	--esf-color-secondary-950: var(--es-color-secondary-950);
+
+	--esf-color-accent-50: var(--es-color-accent-50);
+	--esf-color-accent-100: var(--es-color-accent-100);
+	--esf-color-accent-200: var(--es-color-accent-200);
+	--esf-color-accent-300: var(--es-color-accent-300);
+	--esf-color-accent-400: var(--es-color-accent-400);
+	--esf-color-accent-500: var(--es-color-accent-500);
+	--esf-color-accent-600: var(--es-color-accent-600);
+	--esf-color-accent-700: var(--es-color-accent-700);
+	--esf-color-accent-800: var(--es-color-accent-800);
+	--esf-color-accent-900: var(--es-color-accent-900);
+	--esf-color-accent-950: var(--es-color-accent-950);
+}
+
+.esf-input {
+	@apply esf:w-full! esf:border! esf:border-secondary-200! esf:bg-secondary-100! esf:p-10! esf:rounded-md! esf:text-sm! esf:h-42! esf:shadow-none! esf:text-secondary-900! esf:placeholder:text-secondary-400! esf:focus:border-accent-600! esf:focus:shadow-none! esf:focus:outline-none!;
+}
+
+.esf-field-hidden {
+	@apply esf:opacity-50!;
+}
+
+.esf-input-disabled {
+	@apply esf:bg-secondary-100! esf:text-secondary-400!;
+}
+
+.esf-input-readonly {
+	@apply esf:bg-secondary-100! esf:text-secondary-400!;
+}
+
+.esf-input-required {
+	@apply esf:bg-secondary-100! esf:text-secondary-400!;
+}
+
+.esf-fieldset {
+	@apply esf:flex! esf:flex-col! esf:gap-10! esf:border! esf:border-secondary-200! esf:bg-secondary-100! esf:p-10! esf:rounded-md! esf:text-sm! esf:text-secondary-900!;
+}
+
+.esf-fieldset-item {
+	@apply esf:py-8! esf:px-5!;
+}
+
+.esf-fieldset-checkbox {
+	@apply esf:flex! esf:flex-row! esf:gap-10! esf:items-center!;
+	@apply esf:before:content-['']! esf:before:block! esf:before:size-15! esf:before:border! esf:before:border-secondary-200!;
+}
+
+.esf-fieldset-radio {
+	@apply esf:before:rounded-full!;
+}
+
+.esf-fieldset-checked {
+	@apply esf:before:bg-accent-500! esf:before:border-accent-500!;
+}

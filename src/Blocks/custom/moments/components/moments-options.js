@@ -1,20 +1,10 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
+import manifest from '../manifest.json';
 
-export const MomentsOptions = ({
-	attributes,
-	setAttributes,
-	clientId,
-	itemIdKey,
-}) => {
-	const manifest = select(STORE_NAME).getBlock('moments');
-
-	const {
-		title,
-		blockName,
-	} = manifest;
+export const MomentsOptions = ({ attributes, setAttributes, clientId, itemIdKey }) => {
+	const { title, blockName } = manifest;
 
 	return (
 		<IntegrationsOptions

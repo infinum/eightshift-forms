@@ -19,7 +19,7 @@ $resultAttrs = [
 	UtilsHelper::getStateAttribute('formId') => esc_attr($resultOutputFormPostId),
 ];
 
-$resultClass = Helpers::classnames([
+$resultClass = Helpers::clsx([
 	Helpers::selector($blockClass, $blockClass),
 	Helpers::selector($resultOutputHide, UtilsHelper::getStateSelector('isHidden')),
 	UtilsHelper::getStateSelector('resultOutput'),

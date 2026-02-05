@@ -20,7 +20,7 @@
 	},
 	"homepage": "https://github.com/infinum/eightshift-forms#readme",
 	"scripts": {
-		"lintStyle": "stylelint **/*.scss",
+		"lintStyle": "stylelint **/*.css",
 		"lintJs": "eslint src/",
 		"lint": "eslint",
 		"start": "webpack --watch --mode development",
@@ -40,15 +40,20 @@
 		"lint-staged": "^16.2.7"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^12.1.9",
-		"@eightshift/ui-components": "^5.6.1",
+		"@eightshift/frontend-libs-tailwind": "^2.3.0",
+		"@eightshift/ui-components": "^6.0.6",
 		"autosize": "^6.0.1",
 		"baseline-browser-mapping": "^2.9.18",
 		"caniuse-lite": "^1.0.30001766",
 		"choices.js": "^11.1.0",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
-		"reactflow": "^11.11.4"
+		"reactflow": "^11.11.4",
+		"@tailwindcss/postcss": "^4.1.17",
+		"@tailwindcss/typography": "^0.5.19",
+		"tailwindcss": "^4.1.17",
+		"tailwindcss-motion": "^1.1.1",
+		"tailwindcss-react-aria-components": "^2.0.1"
 	},
 	"lint-staged": {
 		"*.js": "eslint",

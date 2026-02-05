@@ -13,7 +13,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $stepsTitle = Helpers::checkAttr('stepsTitle', $attributes, $manifest);
 $stepsContent = Helpers::checkAttr('stepsContent', $attributes, $manifest);
 
-$stepsClass = Helpers::classnames([
+$stepsClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 ]);
 

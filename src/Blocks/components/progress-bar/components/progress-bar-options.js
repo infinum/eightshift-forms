@@ -1,15 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import { TextControl } from '@wordpress/components';
-import { icons, checkAttr, IconToggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { InputField, Toggle } from '@eightshift/ui-components';
+import manifest from '../manifest.json';
 
 export const ProgressBarOptions = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('progress-bar');
-
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const progressBarUse = checkAttr('progressBarUse', attributes, manifest);
 	const progressBarHideLabels = checkAttr('progressBarHideLabels', attributes, manifest);
@@ -18,7 +15,7 @@ export const ProgressBarOptions = (attributes) => {
 
 	return (
 		<>
-			<IconToggle
+			<Toggle
 				icon={icons.scrollbarH}
 				label={__('Show progress bar', 'eightshift-forms')}
 				checked={progressBarUse}
@@ -27,7 +24,7 @@ export const ProgressBarOptions = (attributes) => {
 				}}
 			/>
 
-			<IconToggle
+			<Toggle
 				icon={icons.tag}
 				label={__('Hide progress bar labels', 'eightshift-forms')}
 				help={__('This will hide the labels on the progress bar.', 'eightshift-forms')}
@@ -37,14 +34,16 @@ export const ProgressBarOptions = (attributes) => {
 				}}
 			/>
 
-			{progressBarMultiflowUse &&
-				<TextControl
+			{progressBarMultiflowUse && (
+				<InputField
 					type={'number'}
 					label={__('Progress bar initial steps number', 'eightshift-forms')}
 					value={progressBarMultiflowInitCount}
-					onChange={(value) => setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })}
+					onChange={(value) =>
+						setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })
+					}
 				/>
-			}
+			)}
 		</>
 	);
 };

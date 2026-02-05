@@ -28,7 +28,7 @@ $adminSettingsType = Helpers::checkAttr('adminSettingsType', $attributes, $manif
 $adminSettingsIsGlobal = Helpers::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
 $adminSettingsNotice = Helpers::checkAttr('adminSettingsNotice', $attributes, $manifest);
 
-$layoutClass = Helpers::classnames([
+$layoutClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($sectionClass, $sectionClass),
 	Helpers::selector($sectionClass, $sectionClass, '', 'with-sidebar'),

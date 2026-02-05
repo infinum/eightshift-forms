@@ -1,28 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import {
-	props,
-	checkAttr,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import manifest from '../manifest.json';
 
 export const FileEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('file');
-
-	const {
-		componentClass,
-		componentName,
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const fileName = checkAttr('fileName', attributes, manifest);
 	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
@@ -32,25 +16,18 @@ export const FileEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('fileName', attributes, manifest), fileName);
 
 	const file = (
-		<>
-			<div className={`${componentClass}__custom-wrap`}>
-				{fileCustomInfoTextUse && fileCustomInfoText}
-				{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
+		<div className='esf:flex! esf:flex-col! esf:gap-10! esf:items-center! esf:text-center! esf:border! esf:border-dashed! esf:border-secondary-200! esf:bg-secondary-100! esf:p-20! esf:rounded-md!'>
+			<div>
+				<div className='esf:text-base! esf:text-secondary-600!'>
+					{fileCustomInfoTextUse && fileCustomInfoText}
+					{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
+				</div>
 
-
-				<div className={`${componentClass}__button`}>
+				<div className='esf:text-xs! esf:text-secondary-400!'>
 					{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}
 				</div>
 			</div>
-
-			<MissingName value={fileName} />
-
-			{fileName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
-		</>
+		</div>
 	);
 
 	return (
@@ -60,8 +37,10 @@ export const FileEditor = (attributes) => {
 					fieldContent: file,
 					fieldIsRequired: checkAttr('fileIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!fileName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);

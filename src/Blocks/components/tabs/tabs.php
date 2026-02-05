@@ -15,7 +15,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $tabsContent = Helpers::checkAttr('tabsContent', $attributes, $manifest);
 
-$tabsClass = Helpers::classnames([
+$tabsClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelectorAdmin('tabs'),

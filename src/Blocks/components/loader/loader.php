@@ -19,7 +19,7 @@ $loaderTwSelectorsData = Helpers::checkAttr('loaderTwSelectorsData', $attributes
 
 $twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader']);
 
-$loaderClass = Helpers::classnames([
+$loaderClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'loader', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('loader'),
@@ -27,11 +27,11 @@ $loaderClass = Helpers::classnames([
 	Helpers::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),
 ]);
 
-$loaderSpinnerClass = Helpers::classnames([
+$loaderSpinnerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'loader', 'spinner', "{$componentClass}__spinner"),
 ]);
 
-$loaderOverlayClass = Helpers::classnames([
+$loaderOverlayClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'loader', 'overlay', "{$componentClass}__overlay"),
 ]);
 

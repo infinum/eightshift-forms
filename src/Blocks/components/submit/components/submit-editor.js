@@ -1,37 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import {
-	selector,
-	props,
-	STORE_NAME,
-	checkAttr,
-} from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
+import manifest from '../manifest.json';
 
 export const SubmitEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('submit');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-	} = attributes;
-
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 
-	const submitClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
-
 	const submitComponent = (
-		<button className={submitClass}>
+		<button className='esf:w-full! esf:p-10! esf:rounded-md! esf:text-sm! esf:text-white! esf:bg-accent-600! esf:font-bold! esf:focus:border-accent-600! esf:focus:shadow-none! esf:focus:outline-none!'>
 			{submitValue}
 		</button>
 	);
@@ -42,8 +19,6 @@ export const SubmitEditor = (attributes) => {
 				{...props('field', attributes, {
 					fieldContent: submitComponent,
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

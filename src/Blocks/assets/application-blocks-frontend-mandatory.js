@@ -9,4 +9,4 @@
 import './images/blocks-frontend-mandatory';
 
 // Styles.
-import './styles/blocks-frontend-mandatory.scss';
+import './styles/blocks-frontend-mandatory.css';

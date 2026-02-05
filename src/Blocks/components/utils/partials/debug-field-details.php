@@ -20,7 +20,7 @@ if (!DeveloperHelpers::isDeveloperModeActive()) {
 
 $fieldManifest = Helpers::getComponent('field');
 
-$componentClass = Helpers::classnames([
+$componentClass = Helpers::clsx([
 	Helpers::selector(true, $fieldManifest['componentClass'], 'debug'),
 ]);
 

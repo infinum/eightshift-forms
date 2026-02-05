@@ -44,7 +44,7 @@ $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $att
 
 $twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea']);
 
-$textareaClass = Helpers::classnames([
+$textareaClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),

@@ -5,7 +5,7 @@
 	"description" : "Multiline text input field",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-textarea"
+		"src": "textarea"
 	},
 	"keywords": [
 		"textarea"

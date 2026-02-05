@@ -5,7 +5,7 @@
 	"description" : "Simple true/false toggle",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-checkbox"
+		"src": "checkbox"
 	},
 	"keywords": [
 		"checkbox"
