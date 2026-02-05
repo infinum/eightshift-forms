@@ -398,13 +398,13 @@ msgid "Application submitted successfully. Thank you!"
 msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
 
 msgid "Missing one or more required parameters to process the request."
-msgstr "Un ou plusieurs paramètres requis pour traiter la demande sont manquants."
+msgstr "Ein oder mehrere erforderliche Parameter zum Verarbeiten der Anfrage fehlen."
 
 msgid "File uploaded successfully."
-msgstr "Fichier téléchargé avec succès."
+msgstr "Datei erfolgreich hochgeladen."
 
 msgid "Form captcha skipped due to troubleshooting config set in settings."
-msgstr "Captcha du formulaire ignoré en raison de la configuration de dépannage définie dans les paramètres."
+msgstr "Das Formular-Captcha wurde aufgrund einer in den Einstellungen festgelegten Fehlerbehebungskonfiguration übersprungen."
 
 msgid "Afghanistan"
 msgstr "Afghanistan"
