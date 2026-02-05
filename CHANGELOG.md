@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.1]
+
+### Updated
+
+- Translations for the German language.
+
 ## [8.14.0]
 
 ### Updated
