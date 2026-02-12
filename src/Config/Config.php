@@ -93,7 +93,7 @@ class Config
 	public const PUBLIC_ACTIONS_NAME = 'actions';
 
 	/**
-	 * Constant name for all public non translatable names set on the global variable.
+	 * Constant name for all public non-translatable names set on the global variable.
 	 *
 	 * @var string
 	 */
