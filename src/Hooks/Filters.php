@@ -60,7 +60,7 @@ final class Filters
 		return [
 			Config::PUBLIC_FILTERS_NAME => self::getPublicFilters(),
 			Config::PUBLIC_ACTIONS_NAME => self::getPublicActions(),
-			Config::PUBLIC_NONE_TRANSLATABLE_NAMES_NAME => self::getSettingsNoneTranslatableNames(),
+			Config::PUBLIC_NON_TRANSLATABLE_NAMES_NAME => self::getSettingsNonTranslatableNames(),
 		];
 	}
 
@@ -362,10 +362,11 @@ final class Filters
 	 *
 	 * @return array<int, string>
 	 */
-	private static function getSettingsNoneTranslatableNames(): array
+	private static function getSettingsNonTranslatableNames(): array
 	{
 		return [
 			SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
+			SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY,

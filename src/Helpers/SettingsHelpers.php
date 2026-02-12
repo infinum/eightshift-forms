@@ -306,7 +306,7 @@ final class SettingsHelpers
 	{
 		$suffix = '';
 
-		$data = \EIGHTSHIFT_FORMS[Config::PUBLIC_NONE_TRANSLATABLE_NAMES_NAME] ?? []; // @phpstan-ignore-line
+		$data = \EIGHTSHIFT_FORMS[Config::PUBLIC_NON_TRANSLATABLE_NAMES_NAME] ?? []; // @phpstan-ignore-line
 
 		if (!isset(\array_flip($data)[$key])) {
 			$locale = I18nHelpers::getLocale();
