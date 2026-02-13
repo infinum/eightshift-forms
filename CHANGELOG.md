@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.2]
+
+### Fixed
+
+- Added reCaptcha Enterprise key to the WPML non-translatable list.
+- Fixed typo in `PUBLIC_NONE_TRANSLATABLE_NAMES_NAME` constant, associated methods, and keys.
+
 ## [8.14.1]
 
 ### Updated
@@ -1677,6 +1684,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.14.2]: https://github.com/infinum/eightshift-forms/compare/8.14.1...8.14.2
+[8.14.1]: https://github.com/infinum/eightshift-forms/compare/8.14.0...8.14.1
 [8.14.0]: https://github.com/infinum/eightshift-forms/compare/8.13.0...8.14.0
 [8.13.0]: https://github.com/infinum/eightshift-forms/compare/8.12.1...8.13.0
 [8.12.1]: https://github.com/infinum/eightshift-forms/compare/8.12.0...8.12.1
