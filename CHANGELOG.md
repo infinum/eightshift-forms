@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.3]
+
+### Fixed
+
+- Cache key for entries will now also include query params. Resolves the issue with object cache.
+
 ## [8.14.2]
 
 ### Fixed
@@ -1684,6 +1690,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.14.3]: https://github.com/infinum/eightshift-forms/compare/8.14.2...8.14.3
 [8.14.2]: https://github.com/infinum/eightshift-forms/compare/8.14.1...8.14.2
 [8.14.1]: https://github.com/infinum/eightshift-forms/compare/8.14.0...8.14.1
 [8.14.0]: https://github.com/infinum/eightshift-forms/compare/8.13.0...8.14.0
