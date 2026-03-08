@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.4]
+
+### Fixed
+
+- Multiselect field now correctly enforces the maximum number of selectable items on the frontend.
+- Project settings are now passed to `outputCssVariablesInline` so inline CSS variables are output correctly.
+
 ## [8.14.3]
 
 ### Fixed
