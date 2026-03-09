@@ -144,4 +144,4 @@ $formsClass = Helpers::classnames([
 
 <?php
 
-echo Helpers::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesInline(FormsHelper::getProjectSettings()); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
