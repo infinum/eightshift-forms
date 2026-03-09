@@ -79,6 +79,8 @@ export const StateEnum = {
 	CONFIG: 'config',
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
 	CONFIG_SELECT_USE_MULTIPLE: 'useMultiple',
+	CONFIG_SELECT_MIN_COUNT: 'minCount',
+	CONFIG_SELECT_MAX_COUNT: 'maxCount',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePhoneCountryPicker',
 	CONFIG_USE_SINGLE_SUBMIT: 'useSingleSubmit',
 
@@ -413,6 +415,18 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(getStateAttribute('selectAllowSearch'))), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], Boolean(item.getAttribute(getStateAttribute('selectIsMultiple'))), formId);
+
+				const selectMinCount = parseInt(item.getAttribute(getStateAttribute('selectMinCount')), 10);
+				const selectMaxCount = parseInt(item.getAttribute(getStateAttribute('selectMaxCount')), 10);
+
+				if (selectMinCount > 0) {
+					setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_MIN_COUNT], selectMinCount, formId);
+				}
+
+				if (selectMaxCount > 0) {
+					setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_MAX_COUNT], selectMaxCount, formId);
+				}
+
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			case 'tel':

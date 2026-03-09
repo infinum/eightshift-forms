@@ -616,6 +616,8 @@
 
 			"selectAllowSearch": "data-allow-search",
 			"selectIsMultiple": "data-is-multiple",
+			"selectMinCount": "data-min-count",
+			"selectMaxCount": "data-max-count",
 			"selectPlaceholder": "data-placeholder",
 			"selectCustomProperties": "data-custom-properties",
 			"selectOptionIsHidden": "data-option-is-hidden",
