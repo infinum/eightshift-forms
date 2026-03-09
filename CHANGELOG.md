@@ -391,6 +391,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.14]: https://github.com/infinum/eightshift-forms/compare/3.1.13...3.1.14
 [3.1.13]: https://github.com/infinum/eightshift-forms/compare/3.1.12...3.1.13
 [3.1.12]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.1.12
 [3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11

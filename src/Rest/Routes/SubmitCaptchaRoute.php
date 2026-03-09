@@ -100,7 +100,7 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 			$isEnterprise = $params['isEnterprise'];
 
 			return \rest_ensure_response(
-				$this->captcha->check($token, $action, $isEnterprise === 'true')
+				$this->captcha->check($token, $action, \filter_var($isEnterprise, \FILTER_VALIDATE_BOOLEAN))
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(

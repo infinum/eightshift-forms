@@ -110,19 +110,30 @@ class Captcha implements CaptchaInterface
 		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY)['value'];
 		$projectIdKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY)['value'];
 
+		$event = [
+			'siteKey' => $siteKey,
+			'token' => $token,
+			'expectedAction' => $action,
+		];
+
+		// Include user context for more accurate assessment scoring.
+		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+			$event['userAgent'] = \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT']));
+		}
+
+		if (!empty($_SERVER['REMOTE_ADDR'])) {
+			$event['userIpAddress'] = \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR']));
+		}
+
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
 			[
 				'headers' => [
-					'Content-Type' => 'application/json; charset=utf-8'
+					'Content-Type' => 'application/json; charset=utf-8',
 				],
 				'data_format' => 'body',
 				'body' => \wp_json_encode([
-					'event' => [
-						'siteKey' => $siteKey,
-						"token" => $token,
-						"expectedAction" => $action
-					]
+					'event' => $event,
 				]),
 			]
 		);
@@ -160,17 +171,22 @@ class Captcha implements CaptchaInterface
 	 */
 	private function getEnterpriseOutput($responseBody, string $action)
 	{
+		$tokenProperties = $responseBody['tokenProperties'] ?? [];
+		$riskAnalysis = $responseBody['riskAnalysis'] ?? [];
+
 		$debug = [
 			'responseBody' => $responseBody,
 			'action' => $action,
+			'tokenValid' => $tokenProperties['valid'] ?? null,
+			'invalidReason' => $tokenProperties['invalidReason'] ?? '',
+			'riskReasons' => $riskAnalysis['reasons'] ?? [],
+			'extendedVerdictReasons' => $riskAnalysis['extendedVerdictReasons'] ?? [],
 		];
 
-		// Check the status.
+		// Check for API-level error.
 		$error = $responseBody['error'] ?? [];
 
-		// If error status returns error.
 		if ($error) {
-			// Bailout on error.
 			return UtilsApiHelper::getApiErrorPublicOutput(
 				$error['message'] ?? '',
 				[
@@ -180,7 +196,28 @@ class Captcha implements CaptchaInterface
 			);
 		}
 
-		return $this->validate($responseBody, $action, $responseBody['tokenProperties']['action'] ?? '', $responseBody['riskAnalysis']['score'] ?? 0.0);
+		// Check if the token is valid before proceeding with score validation.
+		$isTokenValid = $tokenProperties['valid'] ?? false;
+
+		if (!$isTokenValid) {
+			$invalidReason = $tokenProperties['invalidReason'] ?? 'REASON_UNSPECIFIED';
+
+			return UtilsApiHelper::getApiErrorPublicOutput(
+				$this->labels->getLabel('captchaError'),
+				[
+					'response' => $responseBody,
+					'invalidReason' => $invalidReason,
+				],
+				$debug
+			);
+		}
+
+		return $this->validate(
+			$responseBody,
+			$action,
+			$tokenProperties['action'] ?? '',
+			(float) ($riskAnalysis['score'] ?? 0.0)
+		);
 	}
 
 	/**

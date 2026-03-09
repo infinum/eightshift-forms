@@ -247,7 +247,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						$captcha = $this->getCaptcha()->check(
 							$captchaParams['token'],
 							$captchaParams['action'],
-							$captchaParams['isEnterprise'] === 'true'
+							\filter_var($captchaParams['isEnterprise'], \FILTER_VALIDATE_BOOLEAN)
 						);
 
 						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
