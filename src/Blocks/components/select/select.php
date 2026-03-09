@@ -31,6 +31,8 @@ $selectTypeCustom = Helpers::checkAttr('selectTypeCustom', $attributes, $manifes
 $selectFieldAttrs = Helpers::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
+$selectMinCount = Helpers::checkAttr('selectMinCount', $attributes, $manifest);
+$selectMaxCount = Helpers::checkAttr('selectMaxCount', $attributes, $manifest);
 $selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
@@ -52,6 +54,14 @@ if ($selectUseSearch) {
 if ($selectIsMultiple) {
 	$selectAttrs[UtilsHelper::getStateAttribute('selectIsMultiple')] = esc_attr($selectIsMultiple);
 	$selectAttrs['multiple'] = 'true';
+
+	if ($selectMinCount) {
+		$selectAttrs[UtilsHelper::getStateAttribute('selectMinCount')] = esc_attr($selectMinCount);
+	}
+
+	if ($selectMaxCount) {
+		$selectAttrs[UtilsHelper::getStateAttribute('selectMaxCount')] = esc_attr($selectMaxCount);
+	}
 }
 
 $placeholderLabel = '';

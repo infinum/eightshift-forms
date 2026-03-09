@@ -93,11 +93,11 @@ class Config
 	public const PUBLIC_ACTIONS_NAME = 'actions';
 
 	/**
-	 * Constant name for all public none translatable names set on the global variable.
+	 * Constant name for all public non-translatable names set on the global variable.
 	 *
 	 * @var string
 	 */
-	public const PUBLIC_NONE_TRANSLATABLE_NAMES_NAME = 'noneTranslatableNames';
+	public const PUBLIC_NON_TRANSLATABLE_NAMES_NAME = 'nonTranslatableNames';
 
 	// ------------------------------------------------------------------
 	// BLOCKS

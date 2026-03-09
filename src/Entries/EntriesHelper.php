@@ -164,7 +164,9 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$output = \wp_cache_get('all', self::TABLE_NAME . 'entry');
+		$cacheKey = 'all_' . \md5("{$page}_{$perPage}_{$search}");
+
+		$output = \wp_cache_get($cacheKey, self::TABLE_NAME . 'entry');
 
 		if (!$output) {
 			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -179,7 +181,7 @@ class EntriesHelper
 				\ARRAY_A
 			);
 
-			\wp_cache_add('all', $output, self::TABLE_NAME . 'entry');
+			\wp_cache_add($cacheKey, $output, self::TABLE_NAME . 'entry');
 		}
 
 		if (\is_wp_error($output) || !$output) {
@@ -225,7 +227,9 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$output = \wp_cache_get($formId, self::TABLE_NAME . 'entries');
+		$cacheKey = $formId . '_' . \md5("{$page}_{$perPage}_{$search}");
+
+		$output = \wp_cache_get($cacheKey, self::TABLE_NAME . 'entries');
 
 		if (!$output) {
 			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -241,7 +245,7 @@ class EntriesHelper
 				\ARRAY_A
 			);
 
-			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries');
+			\wp_cache_add($cacheKey, $output, self::TABLE_NAME . 'entries');
 		}
 
 		if (\is_wp_error($output) || !$output) {

@@ -1371,6 +1371,7 @@ export class Form {
 			let input = this.state.getStateElementInput(name, formId);
 			const typeInternal = this.state.getStateElementTypeField(name, formId);
 			const labels = this.state.getStateSettingsLabels();
+			const maxCount = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_MAX_COUNT, formId);
 
 			if (typeInternal === 'phone') {
 				input = this.state.getStateElementInputSelect(name, formId);
@@ -1393,6 +1394,7 @@ export class Form {
 				searchResultLimit: 50,
 				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
+				...(maxCount > 0 && { maxItemCount: maxCount }),
 				searchFields: [
 					'label',
 					'value',
