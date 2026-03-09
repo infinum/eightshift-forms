@@ -31,16 +31,11 @@ jobs:
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
 
       - name: Install plugin
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin-legacy@main
         with:
           PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
-
-      - name: Set cache
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
-        with:
-          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
 
       - name: Post install cleanup - plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
