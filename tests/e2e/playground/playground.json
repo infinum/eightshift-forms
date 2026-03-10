@@ -21,8 +21,8 @@
 		{
 			"step": "importWxr",
 			"file": {
-				"resource": "url",
-				"url": "https://github.com/infinum/eightshift-forms/blob/feature/tests/tests/e2e/playground/dataset.xml"
+				"resource": "vfs",
+				"path": "/wordpress/wp-content/plugins/eightshift-forms/tests/e2e/playground/dataset.xml"
 			}
 		},
 		{
