@@ -55,6 +55,11 @@ class Security implements SecurityInterface
 			return true;
 		}
 
+		// Bailout if the form ID is not a valid form ID. Admin operations may not have a form ID.
+		if (!\is_numeric($formId) || (int)$formId <= 0) {
+			return true;
+		}
+
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
