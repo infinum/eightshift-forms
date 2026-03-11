@@ -101,7 +101,7 @@ class Security implements SecurityInterface
 		foreach ($aggregatedActivityByType as $aggregate) {
 			$sum += $aggregate['count'];
 
-			if ($aggregate['activity_type'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
+			if ($aggregate['activityType'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
 				return false;
 			}
 		}
