@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.5]
+
+### Fixed
+
+- Country component: removed incorrectly passed `fieldHideLabel` prop that caused issues with the hide label behavior.
+- Security: fixed rate limit calculator to use a proper fallback value when the setting is not configured.
+- Security: fixed activity type comparison using correct camelCase key (`activityType`) when checking per-type rate limits.
+
+### Updated
+
+- Dependencies to the latest versions.
+
 ## [8.14.4]
 
 ### Fixed
@@ -1697,6 +1709,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.14.5]: https://github.com/infinum/eightshift-forms/compare/8.14.4...8.14.5
+[8.14.4]: https://github.com/infinum/eightshift-forms/compare/8.14.3...8.14.4
 [8.14.3]: https://github.com/infinum/eightshift-forms/compare/8.14.2...8.14.3
 [8.14.2]: https://github.com/infinum/eightshift-forms/compare/8.14.1...8.14.2
 [8.14.1]: https://github.com/infinum/eightshift-forms/compare/8.14.0...8.14.1
