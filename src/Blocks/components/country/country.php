@@ -157,7 +157,6 @@ $fieldOutput = [
 	'fieldDisabled' => !empty($countryIsDisabled),
 	'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldTracking' => $countryTracking,
-	'fieldHideLabel' => $countryHideLabel,
 	'fieldConditionalTags' => Helpers::render(
 		'conditional-tags',
 		Helpers::props('conditionalTags', $attributes)
