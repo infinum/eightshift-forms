@@ -5,7 +5,7 @@
 	"description" : "Mailchimp subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-mailchimp"
+		"src": "mailchimp"
 	},
 	"keywords": [
 		"mailchimp"

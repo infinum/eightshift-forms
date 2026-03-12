@@ -21,7 +21,7 @@ $introIsHighlightedImportant = Helpers::checkAttr('introIsHighlightedImportant',
 $introIsHeading = Helpers::checkAttr('introIsHeading', $attributes, $manifest);
 $introIcon = Helpers::checkAttr('introIcon', $attributes, $manifest);
 
-$introClass = Helpers::classnames([
+$introClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($introIsHighlighted && $componentClass, $componentClass, 'highlighted'),
 	Helpers::selector($introIsHighlightedImportant && $componentClass, $componentClass, 'highlighted', 'important'),
@@ -31,7 +31,7 @@ $introClass = Helpers::classnames([
 	Helpers::selector($introIcon, $componentClass, '', 'with-icon'),
 ]);
 
-$titleClass = Helpers::classnames([
+$titleClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'title'),
 	Helpers::selector($introTitleSize, $componentClass, 'title', $introTitleSize),
 ]);

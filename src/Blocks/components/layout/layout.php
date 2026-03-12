@@ -22,7 +22,7 @@ $layoutContent = Helpers::checkAttr('layoutContent', $attributes, $manifest);
 $layoutTag = Helpers::checkAttr('layoutTag', $attributes, $manifest);
 $layoutType = Helpers::checkAttr('layoutType', $attributes, $manifest);
 
-$layoutClass = Helpers::classnames([
+$layoutClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($blockClass, $blockClass, $selectorClass),
 	Helpers::selector($additionalClass, $additionalClass),

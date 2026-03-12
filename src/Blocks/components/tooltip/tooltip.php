@@ -16,7 +16,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $tooltipContent = Helpers::checkAttr('tooltipContent', $attributes, $manifest);
 $tooltipPosition = Helpers::checkAttr('tooltipPosition', $attributes, $manifest);
 
-$tooltipClass = Helpers::classnames([
+$tooltipClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($tooltipPosition, $componentClass, '', $tooltipPosition),
 	Helpers::selector($selectorClass, $selectorClass, $componentClass),

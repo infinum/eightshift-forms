@@ -4,17 +4,12 @@ import { FieldEditor } from './components/field-editor';
 import { FieldOptions } from './components/field-options';
 
 export const Field = (props) => {
-	const {
-		setAttributes,
-		attributes,
-		children,
-		clientId,
-	} = props;
+	const { setAttributes, attributes, children, clientId } = props;
 
 	return (
 		<>
 			<InspectorControls>
-				<FieldOptions 
+				<FieldOptions
 					attributes={attributes}
 					setAttributes={setAttributes}
 				/>

@@ -2,23 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "date",
 	"title": "Date",
-	"description" : "Date/time picker field",
+	"description": "Date/time picker field",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-date"
+		"src": "date"
 	},
-	"keywords": [
-		"date",
-		"text",
-		"email",
-		"e-mail",
-		"number",
-		"numbers",
-		"url",
-		"urls",
-		"link",
-		"links"
-	],
+	"keywords": ["date", "text", "email", "e-mail", "number", "numbers", "url", "urls", "link", "links"],
 	"components": {
 		"date": "date"
 	}

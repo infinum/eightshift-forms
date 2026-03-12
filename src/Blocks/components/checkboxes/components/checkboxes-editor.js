@@ -1,45 +1,18 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import {
-	STORE_NAME,
-	checkAttr,
-	props,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import manifest from '../manifest.json';
 
 export const CheckboxesEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('checkboxes');
-
-	const {
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxesName', attributes, manifest), checkboxesName);
 
-	const checkboxes = (
-		<>
-			{checkboxesContent}
-
-			<MissingName value={checkboxesName} />
-
-			{checkboxesName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
-		</>
-	);
+	const checkboxes = <div className='esf-fieldset'>{checkboxesContent}</div>;
 
 	return (
 		<>
@@ -48,8 +21,10 @@ export const CheckboxesEditor = (attributes) => {
 					fieldContent: checkboxes,
 					fieldIsRequired: checkAttr('checkboxesIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!checkboxesName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);

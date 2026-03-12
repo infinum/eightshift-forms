@@ -91,7 +91,7 @@ $help = Helpers::render('container', [
 
 // This is fake form to be able to init state for global msg.
 
-$formClasses = Helpers::classnames([
+$formClasses = Helpers::clsx([
 	UtilsHelper::getStateSelector('form'),
 	Helpers::selector($componentClass, $componentClass, 'form'),
 ]);

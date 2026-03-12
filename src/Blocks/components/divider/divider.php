@@ -15,7 +15,7 @@ $dividerExtraVSpacing = Helpers::checkAttr('dividerExtraVSpacing', $attributes, 
 $dividerNoSpacing = Helpers::checkAttr('dividerNoSpacing', $attributes, $manifest);
 $dividerNoDivider = Helpers::checkAttr('dividerNoDivider', $attributes, $manifest);
 
-$dividerClass = Helpers::classnames([
+$dividerClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($dividerExtraVSpacing, $componentClass, '', 'extra-v-spacing'),

@@ -1,4 +1,4 @@
-import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 import { prefix, setStateWindow } from './state-init';
 
 /**
@@ -66,7 +66,10 @@ export class Geolocation {
 			return;
 		}
 
-		[...this.state.getStateElementByTypeField('country', formId), ...this.state.getStateElementByTypeField('phone', formId)].forEach((select) => {
+		[
+			...this.state.getStateElementByTypeField('country', formId),
+			...this.state.getStateElementByTypeField('phone', formId),
+		].forEach((select) => {
 			const name = select.name;
 
 			const type = this.state.getStateElementTypeField(name, formId);

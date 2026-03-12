@@ -34,14 +34,14 @@ $radioTwSelectorsData = Helpers::checkAttr('radioTwSelectorsData', $attributes, 
 
 $twClasses = FormsHelper::getTwSelectors($radioTwSelectorsData, ['radio']);
 
-$radioClass = Helpers::classnames([
+$radioClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'radio', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($radioIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($radioIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
-$radioInputClass = Helpers::classnames([
+$radioInputClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'radio', 'input', "{$componentClass}__input"),
 	Helpers::selector($radioSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
