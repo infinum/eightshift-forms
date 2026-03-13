@@ -87,26 +87,32 @@ $date = '
 	' . $additionalContent . '
 ';
 
+$fieldOutput = [
+	'fieldContent' => $date,
+	'fieldId' => $dateId,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
+	'fieldName' => $dateName,
+	'fieldTwSelectorsData' => $dateTwSelectorsData,
+	'fieldIsRequired' => $dateIsRequired,
+	'fieldDisabled' => !empty($dateIsDisabled),
+	'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $dateTracking,
+	'fieldConditionalTags' => Helpers::render(
+		'conditional-tags',
+		Helpers::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => $dateFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($dateHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
 echo Helpers::render(
 	'field',
 	array_merge(
-		Helpers::props('field', $attributes, [
-			'fieldContent' => $date,
-			'fieldId' => $dateId,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
-			'fieldName' => $dateName,
-			'fieldTwSelectorsData' => $dateTwSelectorsData,
-			'fieldIsRequired' => $dateIsRequired,
-			'fieldDisabled' => !empty($dateIsDisabled),
-			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $dateTracking,
-			'fieldHideLabel' => $dateHideLabel,
-			'fieldConditionalTags' => Helpers::render(
-				'conditional-tags',
-				Helpers::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $dateFieldAttrs,
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? ''
