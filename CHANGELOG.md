@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.14.6]
+
+### Fixed
+
+- Input, date, phone, rating, and textarea components: separated `fieldHideLabel` into a conditional assignment so it is only passed when explicitly set to true, allowing the field component's default hide-label behavior to work correctly.
+- Removed unused `missingType.generics` PHPStan ignore rule.
+
 ## [8.14.5]
 
 ### Fixed
@@ -1709,6 +1716,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.14.6]: https://github.com/infinum/eightshift-forms/compare/8.14.5...8.14.6
 [8.14.5]: https://github.com/infinum/eightshift-forms/compare/8.14.4...8.14.5
 [8.14.4]: https://github.com/infinum/eightshift-forms/compare/8.14.3...8.14.4
 [8.14.3]: https://github.com/infinum/eightshift-forms/compare/8.14.2...8.14.3

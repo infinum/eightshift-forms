@@ -90,26 +90,32 @@ $textarea = '<textarea
 	' . $additionalContent . '
 ';
 
+$fieldOutput = [
+	'fieldContent' => $textarea,
+	'fieldId' => $textareaId,
+	'fieldName' => $textareaName,
+	'fieldTwSelectorsData' => $textareaTwSelectorsData,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
+	'fieldIsRequired' => $textareaIsRequired,
+	'fieldDisabled' => !empty($textareaIsDisabled),
+	'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $textareaTracking,
+	'fieldConditionalTags' => Helpers::render(
+		'conditional-tags',
+		Helpers::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => $textareaFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($textareaHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
 echo Helpers::render(
 	'field',
 	array_merge(
-		Helpers::props('field', $attributes, [
-			'fieldContent' => $textarea,
-			'fieldId' => $textareaId,
-			'fieldName' => $textareaName,
-			'fieldTwSelectorsData' => $textareaTwSelectorsData,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
-			'fieldIsRequired' => $textareaIsRequired,
-			'fieldDisabled' => !empty($textareaIsDisabled),
-			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $textareaTracking,
-			'fieldHideLabel' => $textareaHideLabel,
-			'fieldConditionalTags' => Helpers::render(
-				'conditional-tags',
-				Helpers::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $textareaFieldAttrs,
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',

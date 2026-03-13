@@ -15,5 +15,4 @@ parameters:
 	ignoreErrors:
 		# Block templates
 		- '/^Variable (\$attributes|\$renderContent|\$manifest|\$globalManifest) might not be defined\.$/'
-		- identifier: missingType.generics
 
