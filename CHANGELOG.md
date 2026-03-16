@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.15.0]
+
+### Added
+
+- Forms listing: added `status:<value>` search syntax to filter forms by post status (e.g. `status:draft`, `status:publish`).
+- Forms listing: added `id:<value>` search syntax to filter forms by post ID.
+
+### Fixed
+
+- Security: escaped decrypted form submission output in `ResultOutputItemPart` shortcode to prevent XSS.
+
 ## [8.14.6]
 
 ### Fixed
@@ -1716,6 +1727,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.15.0]: https://github.com/infinum/eightshift-forms/compare/8.14.6...8.15.0
 [8.14.6]: https://github.com/infinum/eightshift-forms/compare/8.14.5...8.14.6
 [8.14.5]: https://github.com/infinum/eightshift-forms/compare/8.14.4...8.14.5
 [8.14.4]: https://github.com/infinum/eightshift-forms/compare/8.14.3...8.14.4
