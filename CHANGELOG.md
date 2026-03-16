@@ -8,13 +8,17 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- Forms listing: added `status:<value>` search syntax to filter forms by post status (e.g. `status:draft`, `status:publish`).
-- Forms listing: added `id:<value>` search syntax to filter forms by post ID.
+- Added `status:<value>` search syntax in forms listing to filter by post status (e.g. `status:draft`, `status:publish`), validated against registered post statuses.
+- Added `id:<value>` search syntax in forms listing to filter forms by post ID.
+
+### Removed
+
+- Removed hardcoded `draft` keyword search — superseded by `status:draft`.
 
 ### Fixed
 
-- Security: escaped decrypted form submission output in `ResultOutputItemPart` shortcode to prevent XSS.
-- Conditional tags: fixed radio field value being incorrectly reset when used in combination with multi-step forms.
+- Fixed XSS vulnerability in `ResultOutputItemPart` shortcode where decrypted form submission data was output unescaped.
+- Fixed conditional tags incorrectly resetting radio field value when used in combination with multi-step forms.
 
 ## [8.14.6]
 
