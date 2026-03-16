@@ -14,6 +14,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 
 - Security: escaped decrypted form submission output in `ResultOutputItemPart` shortcode to prevent XSS.
+- Conditional tags: fixed radio field value being incorrectly reset when used in combination with multi-step forms.
 
 ## [8.14.6]
 
