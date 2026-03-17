@@ -830,12 +830,17 @@ export class ConditionalTags {
 
 		let newValue = this.state.getStateElementValue(name, formId);
 		const inner = this.state.getStateElementItems(name, formId);
+		const currentValue = this.state.getStateElementValue(name, formId);
 
 		if (inner) {
 			Object.values(inner).forEach((item) => {
 				if (value.includes(item.value)) {
 					item.input.checked = false;
-					newValue = '';
+
+					// Only clear value if the current value is the same as the item value.
+					if (currentValue === item.value) {
+						newValue = '';
+					}
 				}
 			});
 		}
