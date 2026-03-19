@@ -1,5 +1,3 @@
-/* eslint-disable import/no-dynamic-require, global-require */
-
 const path = require('path');
 
 /**
@@ -28,6 +26,8 @@ module.exports = (env, argv) => {
 	return {
 		// Load all projects config from eightshift-frontend-libs.
 		...project,
+
+		...(argv.mode === 'production' && { devtool: 'source-map' }),
 
 		output: {
 			// Load all output config from eightshift-frontend-libs.
