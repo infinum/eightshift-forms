@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.15.1]
+
+### Changed
+
+- Updated webpack production build configuration to generate source maps.
+- Updated `caniuse-lite`, `lint-staged`, and `webpack` dependencies to latest patch versions.
+
 ## [8.15.0]
 
 ### Added
@@ -1732,6 +1739,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.15.1]: https://github.com/infinum/eightshift-forms/compare/8.15.0...8.15.1
 [8.15.0]: https://github.com/infinum/eightshift-forms/compare/8.14.6...8.15.0
 [8.14.6]: https://github.com/infinum/eightshift-forms/compare/8.14.5...8.14.6
 [8.14.5]: https://github.com/infinum/eightshift-forms/compare/8.14.4...8.14.5
