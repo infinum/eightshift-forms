@@ -9,6 +9,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 
 - Fixed reCAPTCHA Enterprise timeout errors being reported to Sentry by adding a client-side retry on first timeout, and gracefully showing a user-facing error on second failure instead of throwing.
+- Fixed IPv6 address anonymization incorrectly using `end()` (returns value) instead of `array_key_last()` (returns key), causing the last segment to not be replaced with `xxx`.
+- Fixed `array_pop()` in advanced condition logic evaluation not handling an empty stack, which could cause type-juggling issues with malformed condition strings.
+- Fixed stray blank lines before `return` statements in `executeFreeCaptcha` catch block introduced in previous commit.
 
 ## [8.15.1]
 
