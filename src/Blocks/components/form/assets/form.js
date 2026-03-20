@@ -620,6 +620,18 @@ export class Form {
 					return;
 				}
 
+				if (message?.includes('reCAPTCHA Timeout') && retry === false) {
+					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
+
+					return;
+				}
+
+				if (message?.includes('reCAPTCHA Timeout')) {
+					this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message);
+
+					return;
+				}
+
 				throw new Error(this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message));
 			}
 		});
@@ -654,6 +666,18 @@ export class Form {
 				}
 			} catch ({name, message}) {
 				if (name === 'AbortError') {
+					return;
+				}
+
+				if (message?.includes('reCAPTCHA Timeout') && retry === false) {
+					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
+
+					return;
+				}
+
+				if (message?.includes('reCAPTCHA Timeout')) {
+					this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message);
+
 					return;
 				}
 

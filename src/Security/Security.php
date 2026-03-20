@@ -170,7 +170,7 @@ class Security implements SecurityInterface
 				if (\filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
 					$output = \explode(':', $ip);
 					if ($output) {
-						$output[\end($output)] = 'xxx';
+						$output[\array_key_last($output)] = 'xxx';
 						return \implode(':', $output);
 					}
 				}
