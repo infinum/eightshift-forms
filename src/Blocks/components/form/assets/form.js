@@ -672,15 +672,13 @@ export class Form {
 				if (message?.includes('reCAPTCHA Timeout') && retry === false) {
 					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 
-					
-return;
+					return;
 				}
 
 				if (message?.includes('reCAPTCHA Timeout')) {
 					this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message);
 
-					
-return;
+					return;
 				}
 
 				throw new Error(this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message));
