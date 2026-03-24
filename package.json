@@ -37,15 +37,15 @@
 		"husky": "^9.1.7",
 		"webpack": "^5.105.4",
 		"webpack-cli": "^6.0.1",
-		"lint-staged": "^16.3.2"
+		"lint-staged": "^16.4.0"
 	},
 	"dependencies": {
 		"@eightshift/frontend-libs": "^12.1.9",
 		"@eightshift/ui-components": "^5.6.1",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.0",
-		"caniuse-lite": "^1.0.30001777",
-		"choices.js": "^11.1.0",
+		"baseline-browser-mapping": "^2.10.8",
+		"caniuse-lite": "^1.0.30001779",
+		"choices.js": "^11.2.1",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
 		"reactflow": "^11.11.4"
