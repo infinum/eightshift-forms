@@ -62,7 +62,7 @@ export default (_, argv) => {
 	return {
 		// Load all projects config from eightshift-frontend-libs.
 		...config,
-
+		devtool: argv.mode === 'production' ? 'source-map' : config.devtool,
 		output: {
 			// Load all output config from eightshift-frontend-libs.
 			...config.output,
