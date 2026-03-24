@@ -31,7 +31,6 @@ $ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifes
 $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
 $ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
-$ratingHideLabel = false;
 
 $ratingId = $ratingName . '-' . Helpers::getUnique();
 
@@ -98,26 +97,27 @@ $rating = '
 	' . $additionalContent . '
 ';
 
+$fieldOutput = [
+	'fieldContent' => $rating,
+	'fieldId' => $ratingId,
+	'fieldName' => $ratingName,
+	'fieldTwSelectorsData' => $ratingTwSelectorsData,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
+	'fieldIsRequired' => $ratingIsRequired,
+	'fieldDisabled' => !empty($ratingIsDisabled),
+	'fieldTypeCustom' => $ratingTypeCustom ?: 'rating', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $ratingTracking,
+	'fieldConditionalTags' => Helpers::render(
+		'conditional-tags',
+		Helpers::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => array_merge($ratingFieldAttrs, ['role' => 'radiogroup']),
+];
+
 echo Helpers::render(
 	'field',
 	array_merge(
-		Helpers::props('field', $attributes, [
-			'fieldContent' => $rating,
-			'fieldId' => $ratingId,
-			'fieldName' => $ratingName,
-			'fieldTwSelectorsData' => $ratingTwSelectorsData,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
-			'fieldIsRequired' => $ratingIsRequired,
-			'fieldDisabled' => !empty($ratingIsDisabled),
-			'fieldTypeCustom' => $ratingTypeCustom ?: 'rating', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $ratingTracking,
-			'fieldHideLabel' => $ratingHideLabel,
-			'fieldConditionalTags' => Helpers::render(
-				'conditional-tags',
-				Helpers::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => array_merge($ratingFieldAttrs, ['role' => 'radiogroup']),
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? ''

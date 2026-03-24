@@ -4,6 +4,57 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.15.2]
+
+### Fixed
+
+- Fixed reCAPTCHA Enterprise timeout errors being reported to Sentry by adding a client-side retry on first timeout, and gracefully showing a user-facing error on second failure instead of throwing.
+- Fixed IPv6 address anonymization incorrectly using `end()` (returns value) instead of `array_key_last()` (returns key), causing the last segment to not be replaced with `xxx`.
+- Fixed `array_pop()` in advanced condition logic evaluation not handling an empty stack, which could cause type-juggling issues with malformed condition strings.
+- Fixed stray blank lines before `return` statements in `executeFreeCaptcha` catch block introduced in previous commit.
+
+## [8.15.1]
+
+### Changed
+
+- Updated webpack production build configuration to generate source maps.
+- Updated `caniuse-lite`, `lint-staged`, and `webpack` dependencies to latest patch versions.
+
+## [8.15.0]
+
+### Added
+
+- Added `status:<value>` search syntax in forms listing to filter by post status (e.g. `status:draft`, `status:publish`), validated against registered post statuses.
+- Added `id:<value>` search syntax in forms listing to filter forms by post ID.
+
+### Removed
+
+- Removed hardcoded `draft` keyword search — superseded by `status:draft`.
+
+### Fixed
+
+- Fixed XSS vulnerability in `ResultOutputItemPart` shortcode where decrypted form submission data was output unescaped.
+- Fixed conditional tags incorrectly resetting radio field value when used in combination with multi-step forms.
+
+## [8.14.6]
+
+### Fixed
+
+- Input, date, phone, rating, and textarea components: separated `fieldHideLabel` into a conditional assignment so it is only passed when explicitly set to true, allowing the field component's default hide-label behavior to work correctly.
+- Removed unused `missingType.generics` PHPStan ignore rule.
+
+## [8.14.5]
+
+### Fixed
+
+- Country component: removed incorrectly passed `fieldHideLabel` prop that caused issues with the hide label behavior.
+- Security: fixed rate limit calculator to use a proper fallback value when the setting is not configured.
+- Security: fixed activity type comparison using correct camelCase key (`activityType`) when checking per-type rate limits.
+
+### Updated
+
+- Dependencies to the latest versions.
+
 ## [8.14.4]
 
 ### Fixed
@@ -1697,6 +1748,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[8.15.2]: https://github.com/infinum/eightshift-forms/compare/8.15.1...8.15.2
+[8.15.1]: https://github.com/infinum/eightshift-forms/compare/8.15.0...8.15.1
+[8.15.0]: https://github.com/infinum/eightshift-forms/compare/8.14.6...8.15.0
+[8.14.6]: https://github.com/infinum/eightshift-forms/compare/8.14.5...8.14.6
+[8.14.5]: https://github.com/infinum/eightshift-forms/compare/8.14.4...8.14.5
+[8.14.4]: https://github.com/infinum/eightshift-forms/compare/8.14.3...8.14.4
 [8.14.3]: https://github.com/infinum/eightshift-forms/compare/8.14.2...8.14.3
 [8.14.2]: https://github.com/infinum/eightshift-forms/compare/8.14.1...8.14.2
 [8.14.1]: https://github.com/infinum/eightshift-forms/compare/8.14.0...8.14.1

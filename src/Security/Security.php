@@ -55,6 +55,11 @@ class Security implements SecurityInterface
 			return true;
 		}
 
+		// Bailout if the form ID is not a valid form ID. Admin operations may not have a form ID.
+		if (!\is_numeric($formId) || (int)$formId <= 0) {
+			return true;
+		}
+
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
@@ -81,7 +86,7 @@ class Security implements SecurityInterface
 
 		// Check if the request count exceeds the rate limit.
 		$rateLimit = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
-		$rateLimitCalculator = SettingsHelpers::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
+		$rateLimitCalculator = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY, (string) self::RATE_LIMIT);
 
 		$calculatorTypeKey = SettingsCalculator::SETTINGS_TYPE_KEY;
 
@@ -96,7 +101,7 @@ class Security implements SecurityInterface
 		foreach ($aggregatedActivityByType as $aggregate) {
 			$sum += $aggregate['count'];
 
-			if ($aggregate['activity_type'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
+			if ($aggregate['activityType'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
 				return false;
 			}
 		}
@@ -165,7 +170,7 @@ class Security implements SecurityInterface
 				if (\filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
 					$output = \explode(':', $ip);
 					if ($output) {
-						$output[\end($output)] = 'xxx';
+						$output[\array_key_last($output)] = 'xxx';
 						return \implode(':', $output);
 					}
 				}

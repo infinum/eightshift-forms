@@ -58,7 +58,7 @@ class ResultOutputItemPart implements ServiceInterface
 		// Used only on success redirect page.
 		if ($resultOutputData['isRedirectPage']) {
 			$class = UtilsHelper::getStateSelector('resultOutputPart');
-			$outputValue = $resultOutputData['value'] ?? $content;
+			$outputValue = $resultOutputData['value'] ? \esc_html($resultOutputData['value']) : $content;
 			return "<span class='{$class}'>{$outputValue}</span>";
 		}
 

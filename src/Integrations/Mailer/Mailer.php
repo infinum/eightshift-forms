@@ -591,7 +591,7 @@ class Mailer implements MailerInterface
 				$currentOp = $token;
 			} else {
 				if ($currentOp === '&') {
-					$last = \array_pop($stack);
+					$last = \array_pop($stack) ?? false;
 					$stack[] = $last && $token;
 				} else {
 					$stack[] = $token;

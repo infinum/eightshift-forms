@@ -157,26 +157,32 @@ $phone = '
 	' . $additionalContent . '
 ';
 
+$fieldOutput = [
+	'fieldContent' => $phone,
+	'fieldId' => $phoneId,
+	'fieldName' => $phoneName,
+	'fieldTwSelectorsData' => $phoneTwSelectorsData,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
+	'fieldIsRequired' => $phoneIsRequired,
+	'fieldDisabled' => !empty($phoneIsDisabled),
+	'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $phoneTracking,
+	'fieldConditionalTags' => Helpers::render(
+		'conditional-tags',
+		Helpers::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => $phoneFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($phoneHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
 echo Helpers::render(
 	'field',
 	array_merge(
-		Helpers::props('field', $attributes, [
-			'fieldContent' => $phone,
-			'fieldId' => $phoneId,
-			'fieldName' => $phoneName,
-			'fieldTwSelectorsData' => $phoneTwSelectorsData,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
-			'fieldIsRequired' => $phoneIsRequired,
-			'fieldDisabled' => !empty($phoneIsDisabled),
-			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $phoneTracking,
-			'fieldHideLabel' => $phoneHideLabel,
-			'fieldConditionalTags' => Helpers::render(
-				'conditional-tags',
-				Helpers::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $phoneFieldAttrs,
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? ''

@@ -337,9 +337,20 @@ class FormAdminMenu extends AbstractAdminMenu
 			return $query;
 		}
 
-		if ($search === 'draft') {
-			$query['post_status'] = $search;
-			unset($query['s']);
+		if (\str_starts_with($search, 'status:')) {
+			$status = \substr($search, \strlen('status:'));
+			if ($status && \array_key_exists($status, \get_post_stati())) {
+				$query['post_status'] = $status;
+				unset($query['s']);
+			}
+		}
+
+		if (\str_starts_with($search, 'id:')) {
+			$id = (int) \substr($search, \strlen('id:'));
+			if ($id > 0) {
+				$query['p'] = $id;
+				unset($query['s']);
+			}
 		}
 
 		return $query;
@@ -748,7 +759,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$tableHead = [];
 				$tableContent = [];
 
-				foreach (\array_reverse($items) as $item) {
+				foreach ($items as $item) {
 					$itemId = $item['id'] ?? '';
 					$entryValues = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
@@ -817,7 +828,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$tableHead = [];
 				$tableContent = [];
 
-				foreach (\array_reverse($items) as $item) {
+				foreach ($items as $item) {
 					$itemId = $item['id'] ?? '';
 					$formId = $item['formId'] ?? '';
 

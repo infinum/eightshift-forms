@@ -163,27 +163,33 @@ if ($additionalContent) {
 	$input .= $additionalContent;
 }
 
+$fieldOutput = [
+	'fieldContent' => $input,
+	'fieldId' => $inputId,
+	'fieldName' => $inputName,
+	'fieldTwSelectorsData' => $inputTwSelectorsData,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType($inputType === 'range' ? 'range' : 'input'),
+	'fieldIsRequired' => $inputIsRequired,
+	'fieldDisabled' => !empty($inputIsDisabled),
+	'fieldUseError' => $inputType !== 'hidden',
+	'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $inputTracking,
+	'fieldConditionalTags' => Helpers::render(
+		'conditional-tags',
+		Helpers::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => $inputFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($inputHideLabel || $inputType === 'hidden') {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
 echo Helpers::render(
 	'field',
 	array_merge(
-		Helpers::props('field', $attributes, [
-			'fieldContent' => $input,
-			'fieldId' => $inputId,
-			'fieldName' => $inputName,
-			'fieldTwSelectorsData' => $inputTwSelectorsData,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType($inputType === 'range' ? 'range' : 'input'),
-			'fieldIsRequired' => $inputIsRequired,
-			'fieldDisabled' => !empty($inputIsDisabled),
-			'fieldUseError' => $inputType !== 'hidden',
-			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $inputTracking,
-			'fieldHideLabel' => $inputHideLabel || $inputType === 'hidden',
-			'fieldConditionalTags' => Helpers::render(
-				'conditional-tags',
-				Helpers::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $inputFieldAttrs,
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $inputType === 'range' ? 'range' : $manifest['componentName'] ?? '',
