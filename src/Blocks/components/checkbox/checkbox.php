@@ -47,7 +47,7 @@ $twClasses = FormsHelper::getTwSelectors($checkboxTwSelectorsData, ['checkbox'])
 $checkboxClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'checkbox', $componentClass),
 	Helpers::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($checkboxIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);

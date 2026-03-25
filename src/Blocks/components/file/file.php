@@ -42,7 +42,7 @@ $twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
 
 $fileClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';

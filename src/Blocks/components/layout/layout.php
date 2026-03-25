@@ -29,11 +29,7 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	class="esf:flex esf:flex-col esf:gap-20 esf:p-20 esf:rounded-md esf:bg-white esf:shadow-xs"
 	data-layout-type="<?php echo esc_attr($layoutType); ?>"
 	<?php
-	foreach ($additionalAttributes as $key => $value) {
-		if (!empty($key) && !empty($value)) {
-			echo wp_kses_post(" {$key}='" . $value . "'");
-		}
-	}
+	echo Helpers::getAttrsOutput($additionalAttributes);
 	?>>
 	<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>

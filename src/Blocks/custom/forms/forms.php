@@ -136,7 +136,6 @@ $formsClass = Helpers::clsx([
 		'loader',
 		Helpers::props('loader', $attributes, [
 			'loaderIsGeolocation' => true,
-			'loaderTwSelectorsData' => $twClassesData,
 		])
 	);
 	?>

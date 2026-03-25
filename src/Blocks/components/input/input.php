@@ -56,7 +56,7 @@ $twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range
 
 $inputClass = Helpers::clsx([
 	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 

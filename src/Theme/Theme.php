@@ -18,6 +18,35 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Theme implements ServiceInterface
 {
+	/**
+	 * Admin selectors.
+	 *
+	 * @var array<string, array<string>>
+	 */
+	public const THEME_ADMIN_SELECTORS = [
+		'input' => [
+			'esf:w-full!',
+			'esf:border!',
+			'esf:border-secondary-200!',
+			'esf:bg-white!',
+			'esf:p-10!',
+			'esf:rounded-md!',
+			'esf:text-sm!',
+			'esf:h-42!',
+			'esf:shadow-none!',
+			'esf:text-secondary-900!',
+			'esf:placeholder:text-secondary-400!',
+			'esf:focus:border-accent-600!',
+			'esf:focus:shadow-none!',
+			'esf:focus:outline-none!',
+		]
+	];
+
+	/**
+	 * Register the hooks.
+	 *
+	 * @return void
+	 */
 	public function register(): void
 	{
 		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectorsAdmin']), [$this, 'getBlockFormsTailwindSelectors']);
@@ -179,6 +208,24 @@ class Theme implements ServiceInterface
 						...$label,
 						'esf:cursor-pointer',
 
+						'esf:[.es-checkbox__label]:relative',
+						'esf:[.es-checkbox__label]:block',
+						'esf:[.es-checkbox__label]:pl-30',
+						'esf:[.es-checkbox__label]:min-h-20',
+						'esf:[.es-checkbox__label]:before:content-[\'\']',
+						'esf:[.es-checkbox__label]:before:absolute',
+						'esf:[.es-checkbox__label]:before:top-0',
+						'esf:[.es-checkbox__label]:before:start-0',
+						'esf:[.es-checkbox__label]:before:bg-white',
+						'esf:[.es-checkbox__label]:before:border-1',
+						'esf:[.es-checkbox__label]:before:border-secondary-200',
+						'esf:[.es-checkbox__label]:before:w-20',
+						'esf:[.es-checkbox__label]:before:h-20',
+						'esf:[.es-checkbox__label]:before:rounded-sm',
+						'esf:[.es-checkbox__label]:before:transition-colors',
+						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:bg-accent-600',
+						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:border-accent-600',
+
 						'esf:[.es-checkbox-toggle__label]:relative',
 						'esf:[.es-checkbox-toggle__label]:block',
 						'esf:[.es-checkbox-toggle__label]:w-full',
@@ -270,16 +317,18 @@ class Theme implements ServiceInterface
 			],
 			'loader' => [
 				'base' => [
+					'esf:group/loader',
 					'esf:hidden',
 					'esf:absolute',
 					'esf:inset-0',
-					'esf:w-full',
-					'esf:h-full',
+					'esf:w-screen',
+					'esf:h-screen',
+					'esf:z-99999',
 					'esf:[&.es-form-is-active]:block',
 				],
 				'parts' => [
 					'overlay' => [
-						'esf:absolute',
+						'esf:fixed',
 						'esf:inset-0',
 						'esf:w-full',
 						'esf:h-full',
@@ -296,20 +345,39 @@ class Theme implements ServiceInterface
 						'esf:-translate-x-1/2',
 						'esf:-translate-y-1/2',
 						'esf:z-20',
-						'esf:w-64',
-						'esf:h-64',
+						'esf:w-40',
+						'esf:h-40',
+						'esf:flex',
+						'esf:border-3',
+						'esf:border-x-accent-500',
+						'esf:border-y-transparent',
+						'esf:rounded-full',
 					],
 				],
 			],
 			'global-msg' => [
 				'base' => [
-					'esf:hidden',
-					'esf:text-white',
-					'esf:bg-accent-600',
-					'esf:p-20',
-					'esf:text-sm',
-					'esf:[&.es-form-is-active]:block',
-					'esf:[&[data-status=\'error\']]:bg-red-500',
+					'esf:fixed',
+					'esf:right-32',
+					'esf:bottom-32',
+					'esf:z-1',
+					'esf:max-w-288',
+					'esf:max-h-[80vh]',
+					'esf:overflow-x-hidden',
+
+					'esf:rounded-md',
+					'esf:px-16',
+					'esf:py-12',
+					'esf:opacity-0',
+					'esf:translate-x-32',
+
+					// 'esf:hidden',
+					'esf:[&.es-form-is-active]:translate-x-0',
+					'esf:[&.es-form-is-active]:opacity-100',
+					'esf:data-[status="error"]:bg-red-500/30',
+					'esf:data-[status="success"]:bg-accent-500/30',
+					'esf:data-[status="warning"]:bg-yellow-500/30',
+					'esf:data-[status="info"]:bg-blue-500/30',
 				],
 			],
 			'file' => [

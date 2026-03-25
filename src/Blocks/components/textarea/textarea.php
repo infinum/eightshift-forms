@@ -46,7 +46,7 @@ $twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea'])
 
 $textareaClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),
 	Helpers::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),

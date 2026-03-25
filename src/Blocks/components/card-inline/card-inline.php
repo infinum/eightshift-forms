@@ -27,7 +27,7 @@ $cardInlineUseDivider = Helpers::checkAttr('cardInlineUseDivider', $attributes, 
 
 $cardInlineClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($cardInlineLastItem, $componentClass, '', 'last'),
 	Helpers::selector($cardInlineInvalid, $componentClass, '', 'invalid'),
 	Helpers::selector($cardInlineIndented, $componentClass, '', 'indented'),
@@ -43,11 +43,7 @@ $cardInlineClass = Helpers::clsx([
 <div
 	class="<?php echo esc_attr($cardInlineClass); ?>"
 	<?php
-	foreach ($additionalAttributes as $key => $value) {
-		if (!(empty($key) || empty($value))) {
-			echo wp_kses_post(" {$key}='" . $value . "'");
-		}
-	}
+	echo Helpers::getAttrsOutput($additionalAttributes);
 	?>>
 	<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between">
 		<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:z-20">

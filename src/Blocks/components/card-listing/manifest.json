@@ -7,7 +7,7 @@
 		"cardListingTitle": {
 			"type": "string"
 		},
-		"cardListingTitleLink": {
+		"cardListingUrl": {
 			"type": "string"
 		},
 		"cardListingSubTitle": {
@@ -28,22 +28,6 @@
 		},
 		"cardListingId": {
 			"type": "string"
-		},
-		"cardListingLastItem": {
-			"type": "boolean",
-			"default": false
-		},
-		"cardListingIndented": {
-			"type": "boolean",
-			"default": false
-		},
-		"cardListingUseHover": {
-			"type": "boolean",
-			"default": false
-		},
-		"cardListingUseDivider": {
-			"type": "boolean",
-			"default": false
 		},
 		"cardListingInvalid": {
 			"type": "boolean",

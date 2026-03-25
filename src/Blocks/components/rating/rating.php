@@ -38,7 +38,7 @@ $twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
 
 $ratingClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
 ]);

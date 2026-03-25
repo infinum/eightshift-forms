@@ -43,7 +43,7 @@ foreach ($items as $key => $innerItems) { ?>
 						<a
 							href="<?php echo esc_url($url); ?>"
 							class="<?php echo esc_attr(Helpers::clsx([
-												'esf:flex esf:items-center esf:gap-8 esf:p-12 esf:py-8 esf:relative esf:no-underline esf:rounded-lg esf:text-secondary-600!',
+												'esf:flex esf:items-center esf:gap-8 esf:p-12 esf:py-8 esf:relative esf:no-underline esf:rounded-md esf:text-secondary-600!',
 												'esf:hover:text-white! esf:hover:bg-accent-700',
 												'esf:transition-color esf:duration-300',
 												$isActive

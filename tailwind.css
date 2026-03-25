@@ -20,6 +20,8 @@
 	--color-black: oklch(0% 0 0);
 	--color-white: oklch(100% 0 0);
 
+	--color-base-text: var(--esf-color-secondary-900);
+
 	--color-secondary-50: var(--esf-color-zinc-50);
 	--color-secondary-100: var(--esf-color-zinc-100);
 	--color-secondary-200: var(--esf-color-zinc-200);
@@ -43,6 +45,10 @@
 	--color-accent-800: var(--esf-color-teal-800);
 	--color-accent-900: var(--esf-color-teal-900);
 	--color-accent-950: var(--esf-color-teal-950);
+
+	--color-red-500: oklch(0.637 0.237 25.331);
+	--color-yellow-500: oklch(0.852 0.199 91.936);
+	--color-blue-500: oklch(0.616 0.177 224.953);
 
 	--color-link: var(--esf-color-accent-700);
 	--color-link-hover: var(--esf-color-accent-900);
@@ -72,14 +78,28 @@ body {
 	--esf-color-accent-800: var(--es-color-accent-800);
 	--esf-color-accent-900: var(--es-color-accent-900);
 	--esf-color-accent-950: var(--es-color-accent-950);
+
+	--esf-color-error: var(--es-color-error);
 }
 
 .esf-button-primary {
-	@apply esf:text-white! esf:bg-accent-700! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-900! esf:hover:border-accent-900! esf:active:text-white! esf:active:bg-accent-900! esf:active:border-accent-900!;
+	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-white! esf:bg-accent-700! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-900! esf:hover:border-accent-900! esf:active:text-white! esf:active:bg-accent-900! esf:active:border-accent-900! esf:transition-colors! esf:duration-300!;
+}
+
+.esf-button-primary-outline {
+	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-accent-700! esf:bg-transparent! esf:border! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-700! esf:hover:border-accent-700! esf:active:text-white! esf:active:bg-accent-700! esf:active:border-accent-700! esf:transition-colors! esf:duration-300!;
 }
 
 .esf-button-secondary-ghost {
-	@apply esf:inline-flex esf:p-10 esf:items-center esf:rounded-lg esf:gap-8 esf:text-secondary-600! esf:bg-transparent! esf:border! esf:border-transparent! esf:hover:bg-accent-300/10! esf:hover:border-accent-100! esf:transition-colors! esf:duration-300!;
+	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-secondary-600! esf:bg-transparent! esf:border! esf:border-transparent! esf:hover:bg-accent-600/10! esf:transition-colors! esf:duration-300!;
+}
+
+.esf-link-primary {
+	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:flex esf:items-center esf:gap-10 esf:text-accent-700! esf:hover:text-accent-900! esf:transition-colors! esf:duration-300!;
+}
+
+.esf-link-secondary {
+	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:flex esf:items-center esf:gap-10 esf:text-secondary-600! esf:hover:text-accent-700! esf:transition-colors! esf:duration-300!;
 }
 
 /* Error — hide empty error elements */
@@ -195,40 +215,6 @@ textarea.es-textarea__size--huge.es-textarea--limit-height {
 } */
 
 /* Loader spinner — CSS animation not expressible in Tailwind utilities */
-/* @keyframes esf-rotate {
-	100% {
-		transform: rotate(1turn);
-	}
-}
-
-.es-loader.es-form-is-active .es-loader__spinner {
-	animation: esf-rotate 1.5s infinite linear;
-}
-
-.es-loader__spinner {
-	display: grid;
-	border: 2px solid;
-	border-color: var(--esf-color-secondary-500, #71717a) transparent;
-	border-radius: 50%;
-}
-
-.es-loader__spinner::before,
-.es-loader__spinner::after {
-	content: '';
-	grid-area: 1/1;
-	margin: 0.3rem;
-	border: inherit;
-	border-radius: 50%;
-}
-
-.es-loader__spinner::before {
-	border-color: var(--esf-color-accent-500, #14b8a6) transparent;
-	animation: esf-rotate 0.5s infinite linear reverse;
-}
-
-.es-loader__spinner::after {
-	margin: 1rem;
-} */
 
 /* Rating stars — nth-selector loop not expressible in Tailwind utilities */
 /* .es-rating {

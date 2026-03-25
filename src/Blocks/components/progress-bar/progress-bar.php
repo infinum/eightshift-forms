@@ -36,7 +36,7 @@ $progressBarClass = Helpers::clsx([
 	Helpers::selector($progressBarMultiflowUse, $componentClass, '', 'multiflow'),
 	Helpers::selector(!$progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBar')),
 	Helpers::selector($progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBarMultiflow')),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 ?>

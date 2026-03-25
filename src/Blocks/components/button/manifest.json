@@ -1,0 +1,22 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "button",
+	"title": "Button",
+	"attributes": {
+		"buttonUrl": {
+			"type": "string"
+		},
+		"buttonLabel": {
+			"type": "string"
+		},
+		"buttonAttrs": {
+			"type": "object"
+		},
+		"buttonIcon": {
+			"type": "string"
+		},
+		"buttonIsDisabled": {
+			"type": "boolean"
+		}
+	}
+}

@@ -25,6 +25,10 @@ $adminListingPagination = Helpers::checkAttr('adminListingPagination', $attribut
 $adminListingTopItems = Helpers::checkAttr('adminListingTopItems', $attributes, $manifest);
 $adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $manifest);
 
+$additionalAttributes = [
+	UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([])
+];
+
 ?>
 
 <div class="esf:flex esf:flex-col esf:gap-15 esf:-ml-20 esf:p-40">
@@ -38,26 +42,45 @@ $adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $m
 	}
 	?>
 
-	<div class="esf:flex esf:flex-row esf:gap-15">
-		<div class="esf:bg-white esf:rounded-lg esf:flex-1">
+	<div class="esf:flex esf:flex-row esf:gap-15 <?php echo UtilsHelper::getStateSelectorAdmin('listingBulkItems'); ?>" <?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
+		<div class="esf:bg-white esf:rounded-md esf:flex-1">
+			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-secondary-200">
+				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
+					<?php
+					if (isset($adminListingTopItems['left'])) {
+						echo Helpers::ensureString($adminListingTopItems['left']);
+					}
+					?>
+				</div>
+				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
+					<?php
+					if (isset($adminListingTopItems['right'])) {
+						echo Helpers::ensureString($adminListingTopItems['right']);
+					}
+					?>
+				</div>
+			</div>
 			<?php
-			if ($adminListingShowNoItems) {
-				echo Helpers::ensureString($adminListingNoItems);
-			} else {
+			if ($adminListingShowNoItems) { ?>
+				<div class="esf:px-20 esf:py-60">
+					<?php echo Helpers::ensureString($adminListingNoItems); ?>
+				</div>
+			<?php } else { ?>
+				<?php
 				echo Helpers::ensureString($adminListingItems);
 				echo Helpers::render('pagination', [
 					'data' => $adminListingPagination,
 				], 'components', false, 'admin-listing/partials');
-			}
-			?>
+				?>
+			<?php } ?>
 		</div>
 
 		<div class="esf:max-w-sm">
-			<div class="esf:bg-white esf:rounded-lg esf:p-20">
+			<div class="esf:bg-white esf:rounded-md esf:p-20">
 				<?php
 				echo Helpers::render('highlighted-content', [
 					'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
+					'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="esf-link-primary" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
 					'highlightedContentIcon' => 'docsFormList',
 				]);
 				?>

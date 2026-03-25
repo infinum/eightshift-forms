@@ -48,7 +48,7 @@ $countryFieldLabel = $attributes[Helpers::getAttrKey('countryFieldLabel', $attri
 $countryClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($countrySingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 

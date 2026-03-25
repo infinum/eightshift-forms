@@ -29,8 +29,6 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	return;
 }
 
-$ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 esf:px-12 esf:rounded-lg esf:font-medium esf:text-accent-600 esf:bg-transparent esf:no-underline hover:esf:bg-accent-500/5 focus:esf:outline-none focus:esf:shadow-none focus-visible:esf:shadow-[0_0_0_1px_white,0_0_0_4px_color-mix(in_oklch,var(--color-accent-600)_30%,transparent)]';
-
 ?>
 
 <div class="esf:grid esf:[grid-cols-15rem_1fr] esf:[grid-template-areas:'notice_notice_notice'_'sidebar_main_main'] esf:gap-x-16">
@@ -50,12 +48,12 @@ $ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 e
 	<?php } ?>
 	<div class="esf:[grid-area:sidebar] esf:flex esf:flex-col esf:gap-24 esf:sticky esf:top-32 esf:self-start esf:py-24">
 		<div>
-			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="esf-button-secondary-ghost">
-				<?php
-				echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-				esc_html__('Forms', 'eightshift-forms');
-				?>
-			</a>
+			<?php echo Helpers::render('button', [
+				'buttonVariant' => 'button-secondary-ghost',
+				'buttonLabel' => esc_html__('Forms', 'eightshift-forms'),
+				'buttonIcon' => UtilsHelper::getUtilsIcons('arrowLeft'),
+				'buttonUrl' => $adminSettingsBackLink,
+			]); ?>
 		</div>
 
 		<?php
@@ -82,21 +80,19 @@ $ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 e
 
 					<?php if (!$adminSettingsIsGlobal) { ?>
 						<div class="esf:flex esf:items-center esf:gap-8">
-							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr($ctaLinkClass); ?>">
-								<?php
-								// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-								echo UtilsHelper::getUtilsIcons('edit'),
-								esc_html__('Edit form', 'eightshift-forms');
-								?>
-							</a>
+							<?php echo Helpers::render('button', [
+								'buttonVariant' => 'button-secondary-ghost',
+								'buttonLabel' => esc_html__('Edit form', 'eightshift-forms'),
+								'buttonIcon' => UtilsHelper::getUtilsIcons('edit'),
+								'buttonUrl' => $adminSettingsFormEditLink,
+							]); ?>
 
-							<a href="<?php echo esc_url($adminSettingsFormLocationsLink); ?>" class="<?php echo esc_attr($ctaLinkClass); ?>">
-								<?php
-								// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-								echo UtilsHelper::getUtilsIcons('location'),
-								esc_html__('Locations used', 'eightshift-forms');
-								?>
-							</a>
+							<?php echo Helpers::render('button', [
+								'buttonVariant' => 'button-secondary-ghost',
+								'buttonLabel' => esc_html__('Locations used', 'eightshift-forms'),
+								'buttonIcon' => UtilsHelper::getUtilsIcons('location'),
+								'buttonUrl' => $adminSettingsFormLocationsLink,
+							]); ?>
 						</div>
 					<?php } ?>
 				</div>

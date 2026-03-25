@@ -42,7 +42,7 @@ $selectFieldLabel = $attributes[Helpers::getAttrKey('selectFieldLabel', $attribu
 
 $selectClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'select'),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 

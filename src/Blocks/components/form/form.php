@@ -60,8 +60,8 @@ $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attrib
 
 $formClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'form', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-	Helpers::selector($customClassSelector, $customClassSelector),
+	$additionalClass,
+	$customClassSelector,
 	UtilsHelper::getStateSelector('form'),
 ]);
 

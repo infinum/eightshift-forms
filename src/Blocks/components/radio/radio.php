@@ -36,7 +36,7 @@ $twClasses = FormsHelper::getTwSelectors($radioTwSelectorsData, ['radio']);
 
 $radioClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'radio', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($radioIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($radioIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);

@@ -50,7 +50,7 @@ $twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
 
 $phoneClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 $phoneSelectClass = Helpers::clsx([

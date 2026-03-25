@@ -22,7 +22,7 @@ $twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg
 
 $globalMsgClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);
 

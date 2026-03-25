@@ -15,13 +15,13 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
-$loaderTwSelectorsData = Helpers::checkAttr('loaderTwSelectorsData', $attributes, $manifest);
+$loaderTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader']);
 
 $loaderClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'loader', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	UtilsHelper::getStateSelector('loader'),
 	Helpers::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),
 	Helpers::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),

@@ -45,7 +45,7 @@ $twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date']);
 
 $dateClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'date', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 if ($dateValue) {

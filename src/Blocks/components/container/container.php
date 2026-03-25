@@ -22,11 +22,7 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 
 <div
 	<?php
-	foreach ($additionalAttributes as $key => $value) {
-		if (!empty($key) && !empty($value)) {
-			echo wp_kses_post(" {$key}='" . $value . "'");
-		}
-	}
+	echo Helpers::getAttrsOutput($additionalAttributes);
 	?>>
 	<?php
 	// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped

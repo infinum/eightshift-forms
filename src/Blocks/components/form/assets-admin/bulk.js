@@ -60,16 +60,18 @@ export class Bulk {
 	async submit(target) {
 		const formData = new FormData();
 
-		const field = this.state.getFormFieldElementByChild(target);
-		const type = field?.getAttribute(this.state.getStateAttribute('bulkType'));
+		const type = target?.getAttribute(this.state.getStateAttribute('bulkType'));
 
 		// Can be fake to prevent submit and use button toggles for other things like export.
 		if (type === 'fake') {
 			return;
 		}
 
-		formData.append('type', field?.getAttribute(this.state.getStateAttribute('bulkType')));
-		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
+		formData.append('type', type);
+		formData.append(
+			'ids',
+			document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')),
+		);
 
 		this.utils.showLoader(this.FORM_ID);
 
@@ -90,10 +92,7 @@ export class Bulk {
 			const response = await fetch(this.state.getRestUrl('bulk'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-			} = parsedResponse;
+			const { message, status } = parsedResponse;
 
 			this.utils.hideLoader(this.FORM_ID);
 			this.utils.setGlobalMsg(this.FORM_ID, message, status);
@@ -105,7 +104,7 @@ export class Bulk {
 			}
 
 			this.hideGlobalMsg();
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -127,7 +126,7 @@ export class Bulk {
 		}
 	}
 
-	selectItem(formId, status=false) {
+	selectItem(formId, status = false) {
 		const itemsElement = document.querySelector(this.itemsSelector);
 		const items = itemsElement?.getAttribute(this.state.getStateAttribute('bulkItems'));
 
@@ -162,7 +161,7 @@ export class Bulk {
 	}
 
 	onGlobalMsgFocus = () => {
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 		}
 	};
