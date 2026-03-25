@@ -103,8 +103,9 @@ body {
 }
 
 /* Error — hide empty error elements */
-.es-error:empty {
-	display: none;
+.es-error:empty,
+.es-global-msg:empty {
+	@apply esf:hidden;
 }
 
 /* Textarea — dynamic height via CSS variables */

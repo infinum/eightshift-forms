@@ -253,6 +253,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								...($personName ? [
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => true,
 									],
 									[
@@ -316,6 +317,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => true,
 									],
 									[
@@ -373,6 +375,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									...($useLead ? [
 										[
 											'component' => 'divider',
+											'dividerSeparator' => true,
 											'dividerExtraVSpacing' => true,
 										],
 										[
@@ -390,6 +393,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										],
 										[
 											'component' => 'divider',
+											'dividerSeparator' => true,
 											'dividerExtraVSpacing' => true,
 										],
 										[
@@ -425,6 +429,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										],
 										[
 											'component' => 'divider',
+											'dividerSeparator' => true,
 											'dividerExtraVSpacing' => true,
 										],
 										[
@@ -481,6 +486,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									...($useOrganization ? [
 										[
 											'component' => 'divider',
+											'dividerSeparator' => true,
 											'dividerExtraVSpacing' => true,
 										],
 										[
@@ -582,6 +588,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 							] : [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -592,6 +599,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),

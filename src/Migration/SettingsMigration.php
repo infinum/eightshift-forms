@@ -129,6 +129,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'divider',
+						'dividerSeparator' => true,
 						'dividerExtraVSpacing' => true,
 					],
 					[
@@ -149,6 +150,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'divider',
+						'dividerSeparator' => true,
 						'dividerExtraVSpacing' => true,
 					],
 					[
@@ -169,6 +171,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'divider',
+						'dividerSeparator' => true,
 						'dividerExtraVSpacing' => true,
 					],
 					[

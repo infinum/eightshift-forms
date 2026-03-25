@@ -134,6 +134,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -147,6 +148,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -160,6 +162,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -179,6 +182,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -192,6 +196,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[

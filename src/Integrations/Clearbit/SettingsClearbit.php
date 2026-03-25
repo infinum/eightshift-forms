@@ -288,6 +288,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								$this->getSettingsGlobalMap(

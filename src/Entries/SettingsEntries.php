@@ -215,6 +215,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 							...($isUsed ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -235,6 +236,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -273,6 +275,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[

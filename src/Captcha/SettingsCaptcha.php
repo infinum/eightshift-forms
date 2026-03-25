@@ -200,6 +200,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -254,6 +255,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -271,6 +273,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -284,6 +287,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -330,6 +334,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[

@@ -276,6 +276,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -285,6 +286,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -305,6 +307,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							...(($customFields && !$this->jiraClient->isSelfHosted()) ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -415,6 +418,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							] : [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -425,6 +429,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
@@ -436,6 +441,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
@@ -447,6 +453,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -466,6 +473,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),

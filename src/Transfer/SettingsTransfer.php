@@ -143,6 +143,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'card-inline',
@@ -162,6 +163,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'card-inline',
@@ -183,6 +185,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									$this->getCptList(Forms::POST_TYPE_SLUG),
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'card-inline',
@@ -230,6 +233,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -249,6 +253,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[

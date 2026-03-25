@@ -240,6 +240,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -258,6 +259,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -277,6 +279,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -315,6 +318,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -383,6 +387,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -424,6 +429,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -487,6 +493,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[

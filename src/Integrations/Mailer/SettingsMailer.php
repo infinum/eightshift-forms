@@ -268,6 +268,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 							...($isUsed ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -324,6 +325,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -340,6 +342,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -373,6 +376,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -388,6 +392,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -418,6 +423,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -438,6 +444,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								...($isSenderUsed ? [
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -461,6 +468,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -477,6 +485,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[
@@ -492,6 +501,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => 'true',
 									],
 									[

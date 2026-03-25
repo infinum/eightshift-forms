@@ -128,6 +128,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							...($overrideGlobalSettingsCountry ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
@@ -209,6 +210,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -246,6 +248,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							...(!$disablePhoneCountryPicker ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[

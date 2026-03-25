@@ -359,6 +359,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							...($activityLogUse ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -414,6 +415,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								] : []),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -426,6 +428,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -483,6 +486,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 				[
 					'component' => 'divider',
+					'dividerSeparator' => true,
 					'dividerExtraVSpacing' => true,
 				],
 				[
