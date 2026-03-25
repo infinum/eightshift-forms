@@ -269,7 +269,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -326,7 +326,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -343,7 +343,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'textarea',
@@ -377,7 +377,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -393,7 +393,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -424,7 +424,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -445,7 +445,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => 'true',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'select',
@@ -469,7 +469,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => 'true',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'input',
@@ -486,7 +486,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => 'true',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'textarea',
@@ -502,7 +502,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => 'true',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'checkboxes',

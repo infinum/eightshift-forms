@@ -24,10 +24,10 @@ $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 foreach ($items as $key => $innerItems) { ?>
 	<div>
 		<div>
-			<div class="esf:px-8 esf:pb-8 esf:text-[0.85rem] esf:leading-[1.2] esf:tracking-[0.01em] esf:text-secondary-500">
+			<div class="esf:px-8 esf:pb-8 esf:text-sm esf:text-secondary-500">
 				<?php echo esc_html($data[$key]['labels']['title'] ?? ''); ?>
 			</div>
-			<ul class="esf:list-none esf:flex esf:flex-col esf:gap-5">
+			<ul class="esf:list-none esf:flex esf:flex-col esf:gap-2">
 				<?php foreach ($innerItems as $item) { ?>
 					<?php
 					$label = $item['label'] ?? '';

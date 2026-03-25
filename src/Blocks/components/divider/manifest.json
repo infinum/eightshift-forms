@@ -7,6 +7,10 @@
 		"dividerExtraVSpacing": {
 			"type": "boolean",
 			"default": false
+		},
+		"dividerSeparator": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

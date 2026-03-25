@@ -129,7 +129,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => 'true',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'select',

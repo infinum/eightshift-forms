@@ -234,7 +234,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => 'true',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'checkboxes',
@@ -254,7 +254,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => 'true',
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'file',

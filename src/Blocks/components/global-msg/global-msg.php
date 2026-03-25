@@ -16,7 +16,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $globalMsgAttrs = [];
 
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
-$globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attributes, $manifest);
+$globalMsgTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg']);
 
