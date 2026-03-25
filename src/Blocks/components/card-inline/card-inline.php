@@ -38,8 +38,6 @@ $cardInlineClass = Helpers::clsx([
 ?>
 
 <div
-	class="<?php echo esc_attr($cardInlineClass); ?>"
-
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
 		if (!(empty($key) || empty($value))) {
@@ -47,43 +45,37 @@ $cardInlineClass = Helpers::clsx([
 		}
 	}
 	?>>
-	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
+	<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between">
+		<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
 			<?php if ($cardInlineLeftContent) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__left"); ?>">
-					<?php echo wp_kses_post($cardInlineLeftContent); ?>
-				</div>
+				<?php echo wp_kses_post($cardInlineLeftContent); ?>
 			<?php } ?>
 
 			<?php if ($cardInlineIcon) { ?>
 				<?php if ($cardInlineTitleLink) { ?>
-					<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
+					<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="">
 						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 						?>
 					</a>
 				<?php } else { ?>
-					<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-						?>
-					</div>
+					<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					?>
 				<?php } ?>
 			<?php } ?>
 
-			<div class="<?php echo esc_attr("{$componentClass}__title-wrap"); ?>">
+			<div class="">
 				<?php if ($cardInlineTitle) { ?>
-					<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
-						<?php if ($cardInlineTitleLink) { ?>
-							<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
-								<?php echo wp_kses_post($cardInlineTitle); ?>
-							</a>
-						<?php } else { ?>
+					<?php if ($cardInlineTitleLink) { ?>
+						<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="">
 							<?php echo wp_kses_post($cardInlineTitle); ?>
-						<?php } ?>
-					</div>
+						</a>
+					<?php } else { ?>
+						<?php echo wp_kses_post($cardInlineTitle); ?>
+					<?php } ?>
 				<?php } ?>
 
 				<?php if ($cardInlineSubTitle) { ?>
-					<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
+					<div class="">
 						<?php echo wp_kses_post($cardInlineSubTitle); ?>
 					</div>
 				<?php } ?>
@@ -91,15 +83,13 @@ $cardInlineClass = Helpers::clsx([
 		</div>
 
 		<?php if ($cardInlineRightContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__right-wrap"); ?>">
+			<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
 				<?php echo wp_kses_post($cardInlineRightContent); ?>
 			</div>
 		<?php } ?>
 	</div>
 
 	<?php if ($cardInlineContent) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-			<?php echo wp_kses_post($cardInlineContent); ?>
-		</div>
+		<?php echo wp_kses_post($cardInlineContent); ?>
 	<?php } ?>
 </div>

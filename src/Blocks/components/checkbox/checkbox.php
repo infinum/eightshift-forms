@@ -36,7 +36,7 @@ $checkboxHelp = Helpers::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Helpers::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 $checkboxIcon = Helpers::checkAttr('checkboxIcon', $attributes, $manifest);
 $checkboxIsHidden = Helpers::checkAttr('checkboxIsHidden', $attributes, $manifest);
-$checkboxTwSelectorsData = Helpers::checkAttr('checkboxTwSelectorsData', $attributes, $manifest);
+$checkboxTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";

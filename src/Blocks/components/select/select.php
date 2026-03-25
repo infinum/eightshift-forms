@@ -33,7 +33,6 @@ $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder',
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
 $selectMinCount = Helpers::checkAttr('selectMinCount', $attributes, $manifest);
 $selectMaxCount = Helpers::checkAttr('selectMaxCount', $attributes, $manifest);
-$selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
 
@@ -114,7 +113,7 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectId,
 	'fieldName' => $selectName,
-	'fieldTwSelectorsData' => $selectTwSelectorsData,
+	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),

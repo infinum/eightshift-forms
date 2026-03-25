@@ -9,26 +9,28 @@
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifestTabs = Helpers::getComponent('tabs');
-$componentClass = $manifest['componentClass'] ?? '';
-
 $tabLabel = Helpers::checkAttr('tabLabel', $attributes, $manifest);
 $tabContent = Helpers::checkAttr('tabContent', $attributes, $manifest);
 $tabNoBg = Helpers::checkAttr('tabNoBg', $attributes, $manifest);
 
-$tabLabelClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass, 'label'),
-	UtilsHelper::getStateSelectorAdmin('tabsItem'),
-]);
-
-$tabContentClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass, 'content'),
-	Helpers::selector($tabNoBg, $componentClass, 'content', 'no-bg'),
-]);
-
 if (!$tabLabel || !$tabContent) {
 	return;
 }
+
+
+$tabLabelClass = Helpers::clsx([
+	UtilsHelper::getStateSelectorAdmin('tabsItem'),
+	'esf:order-1 esf:cursor-pointer esf:border-none esf:inline-flex esf:items-center esf:px-12 esf:py-8 esf:text-sm esf:font-medium esf:text-secondary-600 esf:rounded-lg esf:transition-[color,background-color,box-shadow] esf:duration-300',
+	'esf:hover:bg-secondary-100 esf:hover:text-secondary-900',
+	'[&:only-of-type]:esf:hidden',
+	'esf:aria-selected:text-white esf:aria-selected:bg-accent-600 ',
+]);
+
+$tabContentClass = Helpers::clsx([
+	'esf:order-[99] esf:basis-full esf:flex-col esf:gap-10 esf:text-sm esf:text-secondary-900 esf:flex',
+	!$tabNoBg ? 'esf:bg-white esf:border esf:border-secondary-200 esf:p-20 esf:rounded-md' : '',
+]);
+
 
 ?>
 
@@ -37,6 +39,6 @@ if (!$tabLabel || !$tabContent) {
 </button>
 
 <div class="<?php echo esc_attr($tabContentClass); ?>">
-	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>
 </div>

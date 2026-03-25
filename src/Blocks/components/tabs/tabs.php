@@ -9,16 +9,11 @@
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
-
 $tabsContent = Helpers::checkAttr('tabsContent', $attributes, $manifest);
 
 $tabsClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelectorAdmin('tabs'),
+	'esf:flex esf:flex-wrap esf:gap-x-2 esf:gap-y-10',
 ]);
 
 if (!$tabsContent) {

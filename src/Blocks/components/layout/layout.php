@@ -19,21 +19,14 @@ $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $layoutContent = Helpers::checkAttr('layoutContent', $attributes, $manifest);
-$layoutTag = Helpers::checkAttr('layoutTag', $attributes, $manifest);
 $layoutType = Helpers::checkAttr('layoutType', $attributes, $manifest);
-
-$layoutClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($blockClass, $blockClass, $selectorClass),
-	Helpers::selector($additionalClass, $additionalClass),
-]);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 
 ?>
 
-<<?php echo esc_attr($layoutTag); ?>
-	class="<?php echo esc_attr($layoutClass); ?>"
+<div
+	class="esf:flex esf:flex-col esf:gap-20 esf:p-20 esf:rounded-md esf:bg-white esf:shadow-xs"
 	data-layout-type="<?php echo esc_attr($layoutType); ?>"
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
@@ -42,8 +35,6 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 		}
 	}
 	?>>
-	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-		?>
-	</div>
-</<?php echo esc_attr($layoutTag); ?>>
+	<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
+</div>

@@ -5,3 +5,30 @@
 /* ES Utils styles */
 @import 'tailwindcss' prefix(esf);
 @import '../../../../tailwind.css';
+
+/* Tab component active states */
+/* .js-es-tabs-item.es-form-is-active {
+	color: var(--color-accent-600);
+	background-color: color-mix(in oklch, var(--color-accent-500) 5%, transparent);
+}
+
+.js-es-tabs-item.es-form-is-active + * {
+	display: flex;
+} */
+
+/* Admin settings page layout fixes */
+/* .eightshift-forms_page_es-settings-global,
+.toplevel_page_es-forms,
+.admin_page_es-settings {
+	& #wpbody-content {
+		padding-block-end: 0;
+
+		& > .notice {
+			display: none;
+		}
+	}
+
+	& #wpfooter {
+		display: none;
+	}
+} */

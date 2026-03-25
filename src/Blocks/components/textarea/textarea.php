@@ -34,7 +34,7 @@ $textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
-$textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
+$textareaTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $textareaId = $textareaName . '-' . Helpers::getUnique();
 

@@ -21,24 +21,9 @@ $introIsHighlightedImportant = Helpers::checkAttr('introIsHighlightedImportant',
 $introIsHeading = Helpers::checkAttr('introIsHeading', $attributes, $manifest);
 $introIcon = Helpers::checkAttr('introIcon', $attributes, $manifest);
 
-$introClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($introIsHighlighted && $componentClass, $componentClass, 'highlighted'),
-	Helpers::selector($introIsHighlightedImportant && $componentClass, $componentClass, 'highlighted', 'important'),
-	Helpers::selector($introIsHeading && $componentClass, $componentClass, '', 'heading'),
-	Helpers::selector($additionalClass, $additionalClass),
-	Helpers::selector($introTitleSize, $componentClass, 'size', $introTitleSize),
-	Helpers::selector($introIcon, $componentClass, '', 'with-icon'),
-]);
-
-$titleClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass, 'title'),
-	Helpers::selector($introTitleSize, $componentClass, 'title', $introTitleSize),
-]);
-
 ?>
 
-<div class="<?php echo esc_attr($introClass); ?>">
+<div class="esf:flex esf:flex-col esf:gap-5">
 	<?php
 	if ($introIsHighlightedImportant) {
 		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
@@ -52,19 +37,19 @@ $titleClass = Helpers::clsx([
 	?>
 
 	<?php if ($introTitle) { ?>
-		<div class="<?php echo esc_attr($titleClass); ?>">
+		<div class="esf:text-xl esf:font-medium">
 			<?php echo esc_html($introTitle); ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($introSubtitle) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
+		<div class="esf:text-sm esf:text-secondary-500">
 			<?php echo wp_kses_post($introSubtitle); ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($introHelp) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+		<div class="esf:text-secondary-400 esf:text-xs">
 			<?php echo wp_kses_post($introHelp); ?>
 		</div>
 	<?php } ?>

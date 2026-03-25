@@ -3,7 +3,6 @@ export class Tabs {
 		this.tabsSelector = options.tabsSelector;
 		this.tabSelector = options.tabSelector;
 
-		this.CLASS_ACTIVE = 'es-form-is-active';
 		this.CLASS_LOADED = 'es-form-is-loaded';
 	}
 
@@ -53,14 +52,14 @@ export class Tabs {
 
 		if (elements?.length) {
 			elements.forEach((item) => {
-				item?.classList?.remove(this.CLASS_ACTIVE);
+				item.setAttribute('aria-selected', 'false');
 			});
 		}
 	};
 
 	addActive = (element) => {
 		if (element) {
-			element?.classList?.add(this.CLASS_ACTIVE);
+			element.setAttribute('aria-selected', 'true');
 		}
 	};
 

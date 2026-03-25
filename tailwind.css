@@ -8,7 +8,6 @@
 @source '/*.php';
 @source '/es-tw-responsive-classes.txt';
 @source '/manifest.json';
-@source '/src/Blocks/assets/styles/safelist-tailwind.txt';
 
 @theme {
 	--spacing: 0.0625rem; /* 1px */
@@ -72,6 +71,7 @@ body {
 	--esf-color-accent-950: var(--es-color-accent-950);
 }
 
+/* 
 .esf-input {
 	@apply esf:w-full! esf:border! esf:border-secondary-200! esf:bg-secondary-100! esf:p-10! esf:rounded-md! esf:text-sm! esf:h-42! esf:shadow-none! esf:text-secondary-900! esf:placeholder:text-secondary-400! esf:focus:border-accent-600! esf:focus:shadow-none! esf:focus:outline-none!;
 }
@@ -111,4 +111,4 @@ body {
 
 .esf-fieldset-checked {
 	@apply esf:before:bg-accent-500! esf:before:border-accent-500!;
-}
+} */
