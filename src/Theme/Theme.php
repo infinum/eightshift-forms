@@ -47,44 +47,6 @@ class Theme implements ServiceInterface
 			'esf:focus:shadow-none!',
 			'esf:focus:outline-none!',
 		];
-		$hidden = ['esf:opacity-50!'];
-		$disabled = ['esf:bg-secondary-100! esf:text-secondary-400!'];
-		$readonly = ['esf:bg-secondary-100! esf:text-secondary-400!'];
-		$required = ['esf:bg-secondary-100! esf:text-secondary-400!'];
-
-		$fieldset = [
-			'esf:flex!',
-			'esf:flex-col!',
-			'esf:gap-10!',
-			'esf:border!',
-			'esf:border-secondary-200!',
-		];
-
-		$fieldsetItem = [
-			'esf:py-8!',
-			'esf:px-5!',
-		];
-
-		$fieldsetCheckbox = [
-			'esf:flex!',
-			'esf:flex-row!',
-			'esf:gap-10!',
-			'esf:items-center!',
-			'esf:before:content-[\'\']',
-			'esf:before:block!',
-			'esf:before:size-15!',
-			'esf:before:border!',
-			'esf:before:border-secondary-200!',
-		];
-
-		$fieldsetRadio = [
-			'esf:before:rounded-full!',
-		];
-
-		$fieldsetChecked = [
-			'esf:before:bg-accent-500!',
-			'esf:before:border-accent-500!',
-		];
 
 		$help = [
 			'esf:text-secondary-400 esf:text-xs',
@@ -92,201 +54,94 @@ class Theme implements ServiceInterface
 
 		$label = [
 			'esf:text-sm',
+			'esf:block',
+			'esf:mb-5',
+			'esf:p-0',
+			'esf:transition-colors',
+			'esf:duration-300',
 		];
 
-		// $placeholder = 'placeholder:esf:text-primary-500';
-		// $errorState = [
-		// 	'group-[.es-form-has-error]/field:esf:bg-tertiary-100',
-		// 	'group-[.es-form-has-error]/field:esf:border-tertiary-500',
-		// ];
-		// $baseFocus = 'focus:esf:outline-none';
-		// $activeState = 'group-[.es-form-is-active]/field:esf:border-secondary-600';
-
-		// // Checkbox/radio defaults.
-		// $cBoxLabel = 'esf:cursor-pointer esf:relative esf:block esf:pl-8';
-		// $cBoxMark = [
-		// 	'before:esf:bg-0 before:esf:bg-no-repeat',
-		// 	'before:esf:absolute before:esf:left-0 before:esf:top-0.5',
-		// 	'before:esf:bg-center',
-		// 	'before:esf:border before:esf:border-primary-300',
-		// 	'before:esf:w-5 before:esf:h-5',
-		// 	'before:esf:block',
-		// ];
-		// $cBoxFocus = [
-		// 	'peer-focus/checkbox:before:esf:outline',
-		// 	'peer-focus/checkbox:before:esf:outline-offset-1',
-		// 	'peer-focus/checkbox:before:esf:outline-1',
-		// 	'peer-focus/checkbox:before:esf:outline-secondary-600',
-		// ];
-		// $cBoxChecked = [
-		// 	'peer-checked/checkbox:before:esf:border-secondary-600',
-		// 	'peer-checked/checkbox:before:esf:bg-secondary-600',
-		// ];
-
-		// // Fake hide inputs so it can be focused on.
-		// $hideInput = 'esf:absolute esf:-z-10 esf:opacity-0';
-
 		return [
+			'forms' => [
+				'base' => [
+					'esf:[&.es-form-is-geolocation-loading]:min-h-100',
+					'esf:[&.es-form-is-geolocation-loading_.es-form]:hidden',
+					'esf:[&.es-form-is-geolocation-loading>.es-loader__geolocation]:block',
+				],
+			],
 			'form' => [
-				// 	'base' => [
-				// 		'esf:-ms-5 esf:-me-5',
-				// 		'esf:group/form'
-				// 	],
 				'parts' => [
 					'fields' => [
 						'group/field',
 						'esf:flex esf:flex-col esf:gap-20',
 					],
 				],
-				// ],
-				// 'loader' => [
-				// 	'base' => [
-				// 		'esf:hidden',
-				// 		'esf:absolute esf:top-0 esf:left-0',
-				// 		'esf:w-full esf:h-full',
-				// 		'esf:bg-white esf:bg-opacity-50',
-				// 		'esf:flex esf:justify-center esf:items-center',
-				// 		'[&.es-form-is-active]:esf:flex',
-				// 	],
-				// ],
-				// 'global-msg' => [
-				// 	'base' => [
-				// 		'esf:w-full',
-				// 		'esf:ps-5 esf:pe-5',
-				// 		'esf:text-sm',
-				// 		'[&.es-form-is-active]:esf:mb-6',
-				// 		'[&>div]:esf:bg-primary-50',
-				// 		'[&>div]:esf:border [&>div]:esf:border-primary-300',
-				// 		'[&>div]:esf:p-5',
-				// 		// '[&>div>div]:esf:font-bold [&>div>div]:esf:mb-1', // Title.
-				// 		'[&>div>div]:esf:hidden', // Title.
-				// 		'[&.es-form-has-error>div]:esf:bg-tertiary-50',
-				// 		'[&.es-form-has-error>div]:esf:border-tertiary-300',
-				// 	],
 			],
 			'field' => [
 				'base' => [
 					'esf:flex esf:flex-col esf:gap-10',
-					// ...$fieldset,
-					// 		'esf:group/field',
-					// 		'[&.es-form-is-disabled]:esf:opacity-50 [&.es-form-is-disabled]:esf:!cursor-not-allowed',
+					'esf:border-none',
+					'esf:mx-0',
+					'esf:p-0',
 				],
 				'parts' => [
-					'inner' => ['esf:flex esf:flex-col esf:gap-5'],
+					'inner' => ['esf:flex esf:flex-col esf:gap-5', 'esf:max-w-[850px]'],
 					'content-wrap' => [
 						'esf:flex esf:flex-col esf:gap-10',
 					],
 					'label' => [
 						...$label,
 					],
-					// 'label-inner' => [
-					// 	// 			'esf:group/label',
-					// 	'esf:text-primary-900 esf:text-sm esf:block',
-					// 	// 			'group-[.es-form-has-error]/field:esf:text-tertiary-500',
-					// 	// 			'group-[.es-form-is-disabled]/field:esf:opacity-40',
-					// ],
-					// 'after-content' => 'esf:flex esf:flex-col esf:gap-10',
-					// 			"group-[.es-field\\_\\_label--is-required]/label:after:esf:content-['*']",
-					// 			"group-[.es-field\\_\\_label--is-required]/label:after:esf:text-tertiary-600",
-					// 			"group-[.es-field\\_\\_label--is-required]/label:after:esf:text-xs",
-					// 		'after-content' => 'esf:text-primary-500 esf:text-xs esf:pt-2',
 					'help' => $help,
-					'error' => [
-						// 'esf:text-tertiary-500 esf:text-xs',
-					],
+					'error' => [],
 				],
 			],
 			'input' => [
 				'base' => [
 					...$input,
-					// 'esf:h-12',
-					// $placeholder,
-					// $baseFocus,
-					// ...$errorState,
-					// $activeState,
 				],
 			],
-			// 'date' => [
-			// 	'base' => [
-			// 		...$base,
-			// 		'esf:h-12',
-			// 		$placeholder,
-			// 		$baseFocus,
-			// 		...$errorState,
-			// 		$activeState,
-			// 	],
-			// ],
-			// 'range' => [
-			// 	'base' => [
-			// 		'esf:w-full esf:h-2.5',
-			// 		'esf:cursor-pointer esf:appearance-none',
-			// 		$baseFocus,
-			// 		$activeState,
-			// 		'esf:flex-auto',
-			// 		'esf:border esf:border-primary-300',
-			// 		'esf:bg-white',
-			// 	],
-			// 	'parts' => [
-			// 		'min' => 'esf:text-primary-500 esf:text-xs',
-			// 		'max' => 'esf:text-primary-500 esf:text-xs',
-			// 		'current' => 'esf:text-primary-400 esf:text-xs',
-			// 		'field-content-wrap' => [
-			// 			'esf:flex esf:flex-wrap esf:items-center esf:justify-between esf:gap-2',
-			// 		],
-			// 	],
-			// ],
-			// 'rating' => [
-			// 	'base' => [
-			// 		'esf:align-middle',
-			// 	],
-			// ],
-			// 'radios' => [
-			// 	'parts' => [
-			// 		'field-content-wrap' => [
-			// 			// Style horizontal.
-			// 			'group-[.es-field--radios-style-horizontal]/field:esf:flex',
-			// 			'group-[.es-field--radios-style-horizontal]/field:esf:flex-wrap',
-			// 			'group-[.es-field--radios-style-horizontal]/field:esf:items-center',
-			// 			'group-[.es-field--radios-style-horizontal]/field:[&>div]:esf:mb-0',
-			// 			'group-[.es-field--radios-style-horizontal]/field:[&>div]:esf:-mr-px',
-
-			// 			// Style vertical.
-			// 			'group-[.es-field--radios-style-vertical]/field:[&_label]:esf:flex',
-			// 			'group-[.es-field--radios-style-vertical]/field:esf:flex-wrap',
-			// 			'group-[.es-field--radios-style-vertical]/field:[&_label]:esf:justify-center',
-			// 			'group-[.es-field--radios-style-vertical]/field:[&>div]:esf:-mb-px',
-			// 		],
-			// 	]
-			// ],
-			// 'radio' => [
-			// 	'base' => [
-			// 		'esf:mb-2 last:esf:mb-0',
-			// 		'[&.es-form-is-disabled]:esf:opacity-40'
-			// 	],
-			// 	'parts' => [
-			// 		'input' => [
-			// 			'esf:peer/checkbox',
-			// 			$hideInput,
-			// 		],
-			// 		'label' => [
-			// 			$cBoxLabel,
-			// 			...$cBoxMark,
-			// 			...$cBoxChecked,
-			// 			...$cBoxFocus,
-			// 			'before:esf:rounded-full',
-			// 			'peer-checked/checkbox:before:esf:bg-66',
-
-			// 			// Style outline.
-			// 			'before:group-[.es-field--radios-style-outline]/field:esf:hidden',
-			// 			'group-[.es-field--radios-style-outline]/field:esf:border group-[.es-field--radios-style-outline]/field:esf:border-primary-300',
-			// 			'group-[.es-field--radios-style-outline]/field:esf:transition group-[.es-field--radios-style-outline]/field:esf:ease-out',
-			// 			'group-[.es-field--radios-style-outline]/field:esf:inline-flex',
-			// 			'group-[.es-field--radios-style-outline]/field:esf:py-2.5 group-[.es-field--radios-style-outline]/field:esf:px-5',
-			// 			'group-[.es-field--radios-style-outline]/field:hover:esf:bg-primary-100 group-[.es-field--radios-style-outline]/field:hover:esf:border-gradient-violet-dark',
-			// 			'group-[.es-field--radios-style-outline]/field:peer-checked/checkbox:esf:bg-primary-100 group-[.es-field--radios-style-outline]/field:peer-checked/checkbox:esf:border-gradient-violet-dark',
-			// 		],
-			// 	],
-			// ],
+			'textarea' => [
+				'base' => [
+					...$input,
+					'esf:min-h-200',
+					'esf:h-auto!',
+				],
+			],
+			'select' => [
+				'base' => [
+					...$input,
+				],
+			],
+			'country' => [
+				'base' => [
+					...$input,
+				],
+			],
+			'date' => [
+				'base' => [
+					...$input,
+				],
+			],
+			'phone' => [
+				'base' => [
+					...$input,
+				],
+				'parts' => [
+					'field-content-wrap' => [
+						'esf:grid',
+						'esf:gap-x-10',
+						'esf:grid-cols-[min(120px)_1fr]',
+					],
+				],
+			],
+			'error' => [
+				'base' => [
+					'esf:text-red-500',
+					'esf:text-xs',
+					'esf:pt-5',
+				],
+			],
 			'submit' => [
 				'base' => [
 					'esf:flex esf:justify-center esf:items-center esf:gap-5 esf:flex-row',
@@ -313,7 +168,7 @@ class Theme implements ServiceInterface
 			],
 			'checkbox' => [
 				'base' => [
-					'esf:[&.es-checkbox-toggle]:bg-transparent'
+					'esf:[&.es-checkbox-toggle]:bg-transparent',
 				],
 				'parts' => [
 					'input' => [
@@ -355,139 +210,307 @@ class Theme implements ServiceInterface
 					],
 					'help' => [
 						...$help,
-
-						'esf:[.es-checkbox-toggle__help]:max-w-lg',
+						'esf:[.es-checkbox-toggle\_\_help]:max-w-lg',
 					],
 				],
 			],
-			// 'file' => [
-			// 	'base' => [
-			// 		$baseFocus,
-			// 		$hideInput,
-			// 	],
-			// 	'parts' => [
-			// 		'button' => 'esf:order-2 esf:mr-1 esf:text-secondary-600 hover:esf:underline',
-			// 		'custom-wrap' => [
-			// 			'esf:w-full esf:cursor-pointer',
-			// 			'esf:text-primary-500 esf:text-sm esf:py-10 esf:bg-white',
-			// 			'esf:border esf:border-primary-400 esf:border-dotted',
-			// 			'esf:flex esf:flex-row esf:flex-wrap esf:justify-center',
-			// 			'group-[.dz-max-files-reached]/field:esf:opacity-50',
-			// 			$activeState,
-			// 			...$errorState,
-			// 		],
-			// 		'info' => 'esf:text-primary-500 esf:text-sm esf:order-3',
-			// 		'field' => [
-			// 			'[&_.dz-preview]:esf:flex [&_.dz-preview]:esf:flex-wrap [&_.dz-preview]:esf:items-center [&_.dz-preview]:esf:py-3 [&_.dz-preview]:esf:px-8 [&_.dz-preview]:esf:bg-primary-50 [&_.dz-preview]:esf:relative [&_.dz-preview]:esf:gap-2',
-			// 			'max-md:[&_.dz-preview]:esf:px-3',
-			// 			'[&_.dz-image]:esf:h-6 [&_.dz-image]:esf:w-6 [&_.dz-image]:esf:bg-center [&_.dz-image]:esf:bg-no-repeat [&_.dz-image]:esf:mr-4',
-			// 			'max-md:[&_.dz-image]:esf:hidden',
-			// 			'[&_.dz-details]:esf:flex [&_.dz-details]:esf:flex-col [&_.dz-details]:esf:overflow-hidden [&_.dz-details]:esf:pr-10',
-			// 			'[&_.dz-size]:esf:text-xs [&_.dz-size]:esf:text-primary-500 [&_.dz-size]:esf:order-2',
-			// 			'[&_.dz-filename]:esf:text-sm [&_.dz-filename]:esf:text-primary-900 [&_.dz-filename]:esf:order-1 [&_.dz-filename]:esf:truncate',
-			// 			'[&_.dz-remove]:esf:absolute [&_.dz-remove]:esf:right-8 [&_.dz-remove]:esf:top-3',
-			// 			'max-md:[&_.dz-remove]:esf:right-3',
-			// 			'[&_.dz-progress]:esf:h-1.5 [&_.dz-progress]:esf:bg-primary-200 [&_.dz-progress]:esf:order-3 [&_.dz-progress]:esf:w-full [&_.dz-progress]:esf:relative',
-			// 			'[&_.dz-preview.dz-success__.dz-progress]:esf:hidden',
-			// 			'[&_.dz-error-message]:esf:w-full [&_.dz-error-message]:esf:text-tertiary-500 [&_.dz-error-message]:esf:text-xs [&_.dz-error-message]:esf:order-4',
-			// 			'[&_.dz-upload]:esf:absolute [&_.dz-upload]:esf:top-0 [&_.dz-upload]:esf:left-0 [&_.dz-upload]:esf:h-full [&_.dz-upload]:esf:bg-secondary-600',
-			// 			'[&_img]:esf:hidden [&_.dz-success-mark]:esf:hidden [&_.dz-error-mark]:esf:hidden',
-			// 		],
-			// 		'field-error' => [
-			// 			'group-[.es-form-has-error]/field:esf:pb-2'
-			// 		],
-			// 	],
-			// ],
-			// 'phone' => [
-			// 	'base' => [
-			// 		...$base,
-			// 		$placeholder,
-			// 		$baseFocus,
-			// 		...$errorState,
-			// 		$activeState,
-			// 		'esf:h-12',
-			// 	],
-			// 	'parts' => [
-			// 		'field' => 'esf:group/phone',
-			// 		'field-content-wrap' => [
-			// 			'esf:flex',
-			// 			'[&>div]:esf:flex-none'
-			// 		],
-			// 	],
-			// ],
-			'textarea' => [
+			'radio' => [
 				'base' => [
-					...$input,
-					'esf:min-h-200',
-					// 		...$base,
-					// 		$placeholder,
-					// 		$baseFocus,
-					// 		...$errorState,
-					// 		$activeState,
+					'esf:[&.es-form-is-disabled]:opacity-50',
+				],
+				'parts' => [
+					'input' => [
+						'esf:peer/checkbox',
+						'esf:sr-only',
+					],
+					'content' => [
+						'esf:flex',
+						'esf:flex-row',
+						'esf:gap-10',
+						'esf:items-center',
+					],
+					'label' => [
+						...$label,
+						'esf:cursor-pointer',
+						'esf:flex',
+						'esf:flex-row',
+						'esf:gap-10',
+						'esf:items-center',
+						'esf:before:content-[\'\']',
+						'esf:before:block',
+						'esf:before:size-15',
+						'esf:before:shrink-0',
+						'esf:before:border',
+						'esf:before:border-secondary-200',
+						'esf:before:rounded-full',
+						'esf:peer-checked/checkbox:before:bg-accent-500!',
+						'esf:peer-checked/checkbox:before:border-accent-500!',
+					],
 				],
 			],
-			// 'step' => [
-			// 	'base' => '',
-			// 	'parts' => [
-			// 		'debug-details' => '',
-			// 		'inner' => [
-			// 			'esf:w-full',
-			// 			'esf:gap-y-6',
-			// 			'[&>.es-field]:esf:ps-5 [&>.es-field]:esf:pe-5',
-			// 		],
-			// 		'navigation-inner' => [
-			// 			'esf:flex esf:justify-between esf:items-center',
-			// 		],
-			// 		'navigation-prev' => '',
-			// 		'navigation-next' => [
-			// 			'esf:ml-auto',
-			// 		],
-			// 	],
-			// ],
-			// 'progress-bar' => [
-			// 	'base' => [
-			// 		'esf:w-full',
-			// 		'esf:flex esf:items-center',
-			// 		'esf:mb-3 esf:ps-5 esf:pe-5',
-			// 	],
-			// 	'parts' => [
-			// 		'item-inner' => '',
-			// 		'multiflow' => [
-			// 			'esf:relative',
-			// 			'esf:flex esf:justify-between',
-			// 			'esf:gap-2',
-			// 			'before:esf:border',
-			// 			'before:esf:z-10',
-			// 			'before:esf:w-11/12 before:esf:h-px',
-			// 			'before:esf:border-primary-300 before:esf:border-dashed',
-			// 			'before:esf:absolute before:esf:top-2.5 before:esf:left-w-3',
-
-			// 			'[&>div]:esf:relative',
-			// 			'[&>div]:esf:z-20',
-			// 			'[&>div]:esf:border',
-			// 			'[&>div]:esf:w-5 [&>div]:esf:h-5',
-			// 			'[&>div]:esf:border-primary-300 [&>div]:esf:bg-white',
-			// 			'[&>.es-form-is-filled]:esf:border-secondary-600 [&>.es-form-is-filled]:esf:bg-secondary-600',
-			// 		],
-			// 		'multistep' => [
-			// 			'esf:relative',
-			// 			'esf:flex esf:justify-between',
-			// 			'esf:gap-2',
-			// 			'before:esf:border',
-			// 			'before:esf:z-10',
-			// 			'before:esf:w-10/12 before:esf:h-px',
-			// 			'before:esf:border-primary-300 before:esf:border-dashed',
-			// 			'before:esf:absolute before:esf:top-5 before:esf:left-w-3',
-
-			// 			'[&>div]:esf:border [&>div]:esf:border-primary-300',
-			// 			'[&>div]:esf:py-2 [&>div]:esf:p-3',
-			// 			'[&>div]:esf:bg-white',
-			// 			'[&>div]:esf:z-20',
-			// 			'[&>div]:esf:relative',
-			// 			'[&>.es-form-is-active]:esf:text-white [&>.es-form-is-active]:esf:bg-secondary-600 [&>.es-form-is-active]:esf:border-secondary-600',
-			// 		],
-			// 	],
-			// ],
+			'radios' => [
+				'parts' => [
+					'field-content-wrap' => [
+						'esf:group-[.es-field--radios-style-horizontal]/field:flex',
+						'esf:group-[.es-field--radios-style-horizontal]/field:flex-wrap',
+						'esf:group-[.es-field--radios-style-horizontal]/field:items-center',
+						'esf:group-[.es-field--radios-style-horizontal]/field:gap-10',
+					],
+				],
+			],
+			'checkboxes' => [
+				'parts' => [
+					'field-content-wrap' => [
+						'esf:group-[.es-field--checkboxes-style-horizontal]/field:flex',
+						'esf:group-[.es-field--checkboxes-style-horizontal]/field:flex-wrap',
+						'esf:group-[.es-field--checkboxes-style-horizontal]/field:items-center',
+						'esf:group-[.es-field--checkboxes-style-horizontal]/field:gap-10',
+					],
+				],
+			],
+			'loader' => [
+				'base' => [
+					'esf:hidden',
+					'esf:absolute',
+					'esf:inset-0',
+					'esf:w-full',
+					'esf:h-full',
+					'esf:[&.es-form-is-active]:block',
+				],
+				'parts' => [
+					'overlay' => [
+						'esf:absolute',
+						'esf:inset-0',
+						'esf:w-full',
+						'esf:h-full',
+						'esf:bg-white',
+						'esf:opacity-50',
+						'esf:z-10',
+						'esf:transition-opacity',
+						'esf:duration-200',
+					],
+					'spinner' => [
+						'esf:absolute',
+						'esf:left-1/2',
+						'esf:top-1/2',
+						'esf:-translate-x-1/2',
+						'esf:-translate-y-1/2',
+						'esf:z-20',
+						'esf:w-64',
+						'esf:h-64',
+					],
+				],
+			],
+			'global-msg' => [
+				'base' => [
+					'esf:hidden',
+					'esf:text-white',
+					'esf:bg-accent-600',
+					'esf:p-20',
+					'esf:text-sm',
+					'esf:[&.es-form-is-active]:block',
+					'esf:[&[data-status=\'error\']]:bg-red-500',
+				],
+			],
+			'file' => [
+				'base' => [
+					'esf:focus:outline-none',
+					'esf:absolute',
+					'esf:-z-10',
+					'esf:opacity-0',
+				],
+				'parts' => [
+					'button' => [
+						'esf:order-2',
+						'esf:mr-5',
+						'esf:text-secondary-600',
+						'esf:hover:underline',
+					],
+					'custom-wrap' => [
+						'esf:w-full',
+						'esf:cursor-pointer',
+						'esf:text-secondary-500',
+						'esf:text-sm',
+						'esf:py-10',
+						'esf:bg-white',
+						'esf:border',
+						'esf:border-secondary-400',
+						'esf:border-dashed',
+						'esf:flex',
+						'esf:flex-row',
+						'esf:flex-wrap',
+						'esf:justify-center',
+						'esf:[&.dz-max-files-reached]:opacity-50',
+					],
+					'info' => [
+						'esf:text-secondary-500',
+						'esf:text-sm',
+						'esf:order-3',
+					],
+				],
+			],
+			'step' => [
+				'base' => [
+					'esf:hidden',
+					'esf:w-full',
+					'esf:[&.es-form-is-active]:block',
+				],
+				'parts' => [
+					'debug-details' => [
+						'esf:hidden',
+					],
+					'inner' => [
+						'esf:flex',
+						'esf:flex-wrap',
+						'esf:w-full',
+					],
+					'navigation' => [
+						'esf:flex',
+						'esf:items-center',
+						'esf:justify-between',
+						'esf:w-full',
+					],
+					'navigation-inner' => [
+						'esf:flex',
+						'esf:items-center',
+						'esf:justify-between',
+						'esf:w-full',
+					],
+					'navigation-next' => [
+						'esf:ml-auto',
+					],
+				],
+			],
+			'progress-bar' => [
+				'base' => [
+					'esf:w-full',
+					'esf:flex',
+					'esf:items-center',
+				],
+				'parts' => [
+					'item' => [
+						'esf:relative',
+						'esf:z-20',
+						'esf:border',
+						'esf:w-20',
+						'esf:h-20',
+						'esf:border-secondary-300',
+						'esf:bg-white',
+						'esf:rounded-full',
+						'esf:flex',
+						'esf:items-center',
+						'esf:justify-center',
+						'esf:text-xs',
+						'esf:text-secondary-500',
+						'esf:transition-colors',
+						'esf:[&.es-form-is-active]:border-accent-600',
+						'esf:[&.es-form-is-active]:bg-accent-600',
+						'esf:[&.es-form-is-active]:text-white',
+						'esf:[&.es-form-is-filled]:border-accent-600',
+						'esf:[&.es-form-is-filled]:bg-accent-600',
+						'esf:[&.es-form-is-filled]:text-white',
+					],
+					'item-inner' => [
+						'esf:text-xs',
+					],
+					'multistep' => [
+						'esf:relative',
+						'esf:flex',
+						'esf:justify-between',
+						'esf:gap-10',
+						'esf:w-full',
+						'esf:before:content-[\'\']',
+						'esf:before:border-t',
+						'esf:before:border-secondary-300',
+						'esf:before:border-dashed',
+						'esf:before:z-10',
+						'esf:before:absolute',
+						'esf:before:top-10',
+						'esf:before:left-0',
+						'esf:before:right-0',
+					],
+					'multiflow' => [
+						'esf:relative',
+						'esf:flex',
+						'esf:justify-between',
+						'esf:gap-10',
+						'esf:w-full',
+						'esf:before:content-[\'\']',
+						'esf:before:border-t',
+						'esf:before:border-secondary-300',
+						'esf:before:border-dashed',
+						'esf:before:z-10',
+						'esf:before:absolute',
+						'esf:before:top-10',
+						'esf:before:left-0',
+						'esf:before:right-0',
+					],
+				],
+			],
+			'range' => [
+				'base' => [
+					'esf:w-full',
+					'esf:cursor-pointer',
+					'esf:appearance-none',
+					'esf:h-5',
+					'esf:rounded-full',
+					'esf:bg-secondary-200',
+					'esf:focus:outline-none',
+				],
+				'parts' => [
+					'field-content-wrap' => [
+						'esf:flex',
+						'esf:flex-wrap',
+						'esf:items-center',
+						'esf:justify-between',
+						'esf:gap-5',
+					],
+					'min' => [
+						'esf:text-secondary-500',
+						'esf:text-xs',
+					],
+					'max' => [
+						'esf:text-secondary-500',
+						'esf:text-xs',
+					],
+					'current' => [
+						'esf:text-secondary-400',
+						'esf:text-xs',
+					],
+				],
+			],
+			'form-edit-actions' => [
+				'base' => [
+					'esf:flex',
+					'esf:items-center',
+					'esf:gap-5',
+				],
+				'parts' => [
+					'link' => [
+						'esf:text-secondary-400',
+						'esf:hover:text-accent-600',
+						'esf:transition-colors',
+						'esf:duration-200',
+						'esf:[&>svg]:w-20',
+						'esf:[&>svg]:h-20',
+					],
+				],
+			],
+			'rating' => [
+				'base' => [
+					'esf:inline-flex',
+					'esf:items-center',
+					'esf:relative',
+				],
+				'parts' => [
+					'star' => [
+						'esf:flex',
+						'esf:cursor-pointer',
+						'esf:[&_*]:select-none!',
+						'esf:[&_*]:pointer-events-none!',
+					],
+				],
+			],
 		];
 	}
 }

@@ -9,26 +9,16 @@
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$componentClass = $manifest['componentClass'] ?? '';
-$additionalNoticeClass = $attributes['additionalNoticeClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
-
 $noticeContent = Helpers::checkAttr('noticeContent', $attributes, $manifest);
-
-$noticeClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($selectorClass, $selectorClass, $componentClass),
-	Helpers::selector($additionalNoticeClass, $additionalNoticeClass),
-]);
 
 ?>
 
-<div class="<?php echo esc_attr($noticeClass); ?>">
-	<span class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-		<?php echo UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+<div class="esf:flex esf:items-center esf:gap-20 esf:bg-accent-600 esf:text-white esf:p-20 esf:text-lg esf:leading-relaxed">
+	<span class="esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-30 esf:[&>svg]:h-30">
+		<?php echo UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		?>
 	</span>
-	<span class="<?php echo esc_attr("{$componentClass}__text"); ?>">
+	<span class="esf:[&_a]:text-white esf:[&_a]:underline esf:[&_a]:decoration-dotted">
 		<?php echo wp_kses_post($noticeContent); ?>
 	</span>
 </div>

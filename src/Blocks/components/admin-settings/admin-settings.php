@@ -33,7 +33,7 @@ $ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 e
 
 ?>
 
-<div class="<?php echo esc_attr($componentClass); ?> esf:grid esf:[grid-template-columns:15rem_1fr] esf:[grid-template-areas:'notice_notice_notice'_'sidebar_main_main'] esf:gap-x-16">
+<div class="esf:grid esf:[grid-cols-15rem_1fr] esf:[grid-template-areas:'notice_notice_notice'_'sidebar_main_main'] esf:gap-x-16">
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="esf:[grid-area:notice]">
 			<?php
@@ -50,13 +50,11 @@ $ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 e
 	<?php } ?>
 	<div class="esf:[grid-area:sidebar] esf:flex esf:flex-col esf:gap-24 esf:sticky esf:top-32 esf:self-start esf:py-24">
 		<div>
-			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="esf:block esf:relative esf:w-fit esf:px-[0.45rem] esf:py-[0.4rem] esf:no-underline esf:text-secondary-600 esf:rounded-lg esf:transition-[color,background-color,box-shadow] esf:duration-300 hover:esf:text-secondary-600 hover:esf:bg-secondary-200 focus:esf:outline-none focus:esf:shadow-none">
-				<span class="esf:relative esf:z-[2] esf:flex esf:flex-row esf:items-center esf:text-xs esf:gap-8">
-					<?php
-					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-					esc_html__('Forms', 'eightshift-forms');
-					?>
-				</span>
+			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="esf-button-secondary-ghost">
+				<?php
+				echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+				esc_html__('Forms', 'eightshift-forms');
+				?>
 			</a>
 		</div>
 
@@ -77,8 +75,8 @@ $ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 e
 	<div class="esf:[grid-area:main]">
 		<div class="esf:h-full">
 			<div class="esf:pt-24 esf:px-32">
-				<div class="esf:flex esf:items-center esf:justify-between esf:min-h-[36px]">
-					<div class="esf:text-2xl esf:font-medium esf:min-h-[1.25rem] esf:leading-[1.2] esf:tracking-[-0.02em]">
+				<div class="esf:flex esf:items-center esf:justify-between esf:min-h-14">
+					<div class="esf:text-2xl esf:font-medium esf:min-h-20 esf:leading-6 esf:tracking-[-0.02em]">
 						<?php echo esc_html($adminSettingsPageTitle); ?>
 					</div>
 
@@ -109,7 +107,7 @@ $ctaLinkClass = 'esf:inline-flex esf:items-center esf:gap-8 esf:w-fit esf:py-8 e
 					</div>
 				<?php } ?>
 			</div>
-			<div class="esf:overflow-x-hidden esf:p-32 esf:h-full">
+			<div class="esf:overflow-x-hidden esf:p-32 esf:h-full esf:max-w-3xl">
 				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 				?>
 			</div>

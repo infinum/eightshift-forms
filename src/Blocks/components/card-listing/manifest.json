@@ -1,0 +1,53 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "card-listing",
+	"title": "Card Listing",
+	"componentClass": "es-card-listing",
+	"attributes": {
+		"cardListingTitle": {
+			"type": "string"
+		},
+		"cardListingTitleLink": {
+			"type": "string"
+		},
+		"cardListingSubTitle": {
+			"type": "string"
+		},
+		"cardListingContent": {
+			"type": "string"
+		},
+		"cardListingIcon": {
+			"type": "string"
+		},
+		"cardListingRightContent": {
+			"type": "string"
+		},
+		"cardListingUseCheckbox": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardListingId": {
+			"type": "string"
+		},
+		"cardListingLastItem": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardListingIndented": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardListingUseHover": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardListingUseDivider": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardListingInvalid": {
+			"type": "boolean",
+			"default": false
+		}
+	}
+}

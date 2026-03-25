@@ -16,14 +16,11 @@ if (!$containerUse) {
 
 $containerClass = Helpers::checkAttr('containerClass', $attributes, $manifest);
 $containerContent = Helpers::checkAttr('containerContent', $attributes, $manifest);
-$containerTag = Helpers::checkAttr('containerTag', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 ?>
 
-<<?php echo esc_attr($containerTag); ?>
-	class="<?php echo esc_attr($containerClass); ?>"
-
+<div
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
 		if (!empty($key) && !empty($value)) {
@@ -35,4 +32,4 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	echo $containerContent;
 	?>
-</<?php echo esc_attr($containerTag); ?>>
+</div>

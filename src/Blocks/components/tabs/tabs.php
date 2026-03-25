@@ -13,7 +13,7 @@ $tabsContent = Helpers::checkAttr('tabsContent', $attributes, $manifest);
 
 $tabsClass = Helpers::clsx([
 	UtilsHelper::getStateSelectorAdmin('tabs'),
-	'esf:flex esf:flex-wrap esf:gap-x-2 esf:gap-y-10',
+	'esf:flex esf:flex-col esf:gap-15',
 ]);
 
 if (!$tabsContent) {

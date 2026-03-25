@@ -13,7 +13,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalGroupClass = $attributes['additionalGroupClass'] ?? '';
 
 $groupLabel = Helpers::checkAttr('groupLabel', $attributes, $manifest);
-$groupSublabel = Helpers::checkAttr('groupSublabel', $attributes, $manifest);
+$groupSubLabel = Helpers::checkAttr('groupSubLabel', $attributes, $manifest);
 $groupContent = Helpers::checkAttr('groupContent', $attributes, $manifest);
 $groupName = Helpers::checkAttr('groupName', $attributes, $manifest);
 $groupSaveOneField = Helpers::checkAttr('groupSaveOneField', $attributes, $manifest);
@@ -26,6 +26,7 @@ $groupClass = Helpers::clsx([
 	Helpers::selector($additionalGroupClass, $additionalGroupClass),
 	Helpers::selector($groupStyle, $componentClass, '', $groupStyle),
 	UtilsHelper::getStateSelector('group'),
+	'esf:flex esf:flex-col esf:gap-10',
 ]);
 
 ?>
@@ -36,34 +37,34 @@ $groupClass = Helpers::clsx([
 	data-group-save-as-one-field="<?php echo esc_attr($groupSaveOneField); ?>">
 
 	<?php if ($groupLabel) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__label"); ?>">
-			<div class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+		<div class="esf:flex esf:flex-col esf:gap-2 esf:max-w-[850px]">
+			<div class="esf:text-sm esf:font-medium esf:text-secondary-900">
 				<?php echo esc_html($groupLabel); ?>
 			</div>
 
-			<?php if ($groupSublabel) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__sub-label"); ?>">
-					<?php echo esc_html($groupSublabel); ?>
+			<?php if ($groupSubLabel) { ?>
+				<div class="esf:text-xs esf:text-secondary-500">
+					<?php echo esc_html($groupSubLabel); ?>
 				</div>
 			<?php } ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($groupBeforeContent) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
+		<div class="esf:mb-24 esf:[&>*]:m-0">
 			<?php echo wp_kses_post($groupBeforeContent); ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($groupContent) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<div class="esf:max-w-[850px]">
+			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?>
 		</div>
 	<?php } ?>
 
 	<?php if ($groupHelp) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+		<div>
 			<?php echo wp_kses_post($groupHelp); ?>
 		</div>
 	<?php } ?>

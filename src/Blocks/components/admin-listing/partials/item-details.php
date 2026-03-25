@@ -23,7 +23,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 
 ?>
 <div
-	class="<?php echo esc_attr("{$sectionClass}__item-details {$selectorJsItem}") ?>"
+	class="<?php echo esc_attr("$selectorJsItem") ?> esf:flex esf:flex-col esf:gap-8"
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
 		if (!empty($key) && !empty($value)) {
@@ -46,7 +46,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			}
 
 			if ($status !== 'publish') {
-				$subtitle[] = '<span class="status-text">' . ucfirst($status) . '</span>';
+				$subtitle[] = '<span>' . ucfirst($status) . '</span>';
 			}
 
 			$itemTitle = get_the_title($id) ?: __('No title', 'eightshift-forms');

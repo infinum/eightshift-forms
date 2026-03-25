@@ -10,10 +10,6 @@
 		"containerContent": {
 			"type": "string"
 		},
-		"containerTag": {
-			"type": "string",
-			"default": "div"
-		},
 		"containerUse": {
 			"type": "boolean",
 			"default": true

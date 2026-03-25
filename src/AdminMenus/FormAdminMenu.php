@@ -718,14 +718,15 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$itemTitle = \get_the_title($itemId) ?: \__('No title', 'eightshift-forms');
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item)),
-						'cardInlineUseHover' => true,
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingTitleLink' => $editLink,
+						'cardListingSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item)),
+						'cardListingUseHover' => true,
+						'cardListingIcon' => UtilsHelper::getUtilsIcons('post'),
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 					]);
 				}
 				break;
@@ -736,14 +737,15 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$itemTitle = \get_the_title($itemId) ?: \__('No title', 'eightshift-forms');
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item, ['status'])),
-						'cardInlineUseHover' => true,
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingTitleLink' => $editLink,
+						'cardListingSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item, ['status'])),
+						'cardListingUseHover' => true,
+						'cardListingIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
@@ -878,14 +880,15 @@ class FormAdminMenu extends AbstractAdminMenu
 					// Translators: %s is the form ID.
 					$itemTitle = $item['title'] ?: \sprintf(\__('No Form title for ID %s', 'eightshift-forms'), $itemId);
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $item['editLink'] ?? '#',
-						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
-						'cardInlineUseHover' => true,
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingTitleLink' => $item['editLink'] ?? '#',
+						'cardListingSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
+						'cardListingIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardListingUseHover' => true,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
@@ -907,15 +910,16 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$isValid = $this->isIntegrationValid($item);
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
-						'cardInlineIcon' => $cardIcon,
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
-						'cardInlineInvalid' => !$isValid,
-						'cardInlineUseHover' => true,
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingTitleLink' => $editLink,
+						'cardListingSubTitle' => \implode(', ', $this->getSubtitle($item)),
+						'cardListingIcon' => $cardIcon,
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardListingInvalid' => !$isValid,
+						'cardListingUseHover' => true,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
 							UtilsHelper::getStateAttribute('bulkId') => $itemId,

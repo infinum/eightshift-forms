@@ -25,65 +25,83 @@ $adminListingPagination = Helpers::checkAttr('adminListingPagination', $attribut
 $adminListingTopItems = Helpers::checkAttr('adminListingTopItems', $attributes, $manifest);
 $adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $manifest);
 
-$help = Helpers::render('container', [
-	'containerContent' => Helpers::render('highlighted-content', [
-		'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
-		'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
-		'highlightedContentIcon' => 'docsFormList',
-	]),
-]);
-
 ?>
 
-<div class="<?php echo esc_attr($componentClass); ?>">
+<div class="esf:flex esf:flex-col esf:gap-15 esf:-ml-20 esf:p-40">
 	<?php
 	if ($adminListingPageTitle) {
 		echo Helpers::render('intro', [
 			'introTitle' => $adminListingPageTitle,
-			// Translators: %s is the number of forms.
 			'introSubtitle' => $adminListingPageSubTitle,
 			'introIsHeading' => true,
 		]);
 	}
 	?>
 
+	<div class="esf:flex esf:flex-row esf:gap-15">
+		<div class="esf:bg-white esf:rounded-lg esf:flex-1">
+			<?php
+			if ($adminListingShowNoItems) {
+				echo Helpers::ensureString($adminListingNoItems);
+			} else {
+				echo Helpers::ensureString($adminListingItems);
+				echo Helpers::render('pagination', [
+					'data' => $adminListingPagination,
+				], 'components', false, 'admin-listing/partials');
+			}
+			?>
+		</div>
+
+		<div class="esf:max-w-sm">
+			<div class="esf:bg-white esf:rounded-lg esf:p-20">
+				<?php
+				echo Helpers::render('highlighted-content', [
+					'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
+					'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
+					'highlightedContentIcon' => 'docsFormList',
+				]);
+				?>
+			</div>
+		</div>
+	</div>
+
 	<?php
-	echo Helpers::render('layout', [
-		'layoutType' => 'layout-v-stack-card-fullwidth',
-		'layoutContent' => Helpers::ensureString([
-			Helpers::render('container', [
-				'containerContent' => Helpers::ensureString([
-					Helpers::render('container', [
-						'containerUse' => $adminListingTopItems,
-						'containerClass' => "{$componentClass}__top-bar",
-						'containerContent' => Helpers::ensureString([
-							Helpers::render('container', [
-								'containerClass' => "{$componentClass}__top-bar-left",
-								'containerUse' => !empty($adminListingTopItems['left']),
-								'containerContent' => $adminListingTopItems['left'] ?? '',
-							]),
-							Helpers::render('container', [
-								'containerClass' => "{$componentClass}__top-bar-right",
-								'containerUse' => !empty($adminListingTopItems['right']),
-								'containerContent' => $adminListingTopItems['right'] ?? '',
-							]),
-						]),
-					]),
-					$adminListingShowNoItems ?
-						Helpers::ensureString($adminListingNoItems) :
-						Helpers::ensureString($adminListingItems),
-					Helpers::render('pagination', [
-						'data' => $adminListingPagination,
-					], 'components', false, 'admin-listing/partials'),
-				]),
-			]),
-			$help,
-		]),
-		'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingBulkItems'),
-		'additionalAttributes' => [
-			UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([]),
-		],
-	]);
+	// echo Helpers::render('layout', [
+	// 	'layoutType' => 'layout-v-stack-card-fullwidth',
+	// 	'layoutContent' => Helpers::ensureString([
+	// 		Helpers::render('container', [
+	// 			'containerContent' => Helpers::ensureString([
+	// 				// Helpers::render('container', [
+	// 				// 	'containerUse' => $adminListingTopItems,
+	// 				// 	'containerClass' => "esf:flex esf:items-center esf:justify-between esf:gap-8 esf:border-b esf:border-secondary-200 esf:-mx-24 esf:px-24 esf:pb-24",
+	// 				// 	'containerContent' => Helpers::ensureString([
+	// 				// 		Helpers::render('container', [
+	// 				// 			'containerClass' => "esf:flex esf:items-center esf:gap-5",
+	// 				// 			'containerUse' => !empty($adminListingTopItems['left']),
+	// 				// 			'containerContent' => $adminListingTopItems['left'] ?? '',
+	// 				// 		]),
+	// 				// 		Helpers::render('container', [
+	// 				// 			'containerClass' => "esf:flex esf:items-center esf:gap-5",
+	// 				// 			'containerUse' => !empty($adminListingTopItems['right']),
+	// 				// 			'containerContent' => $adminListingTopItems['right'] ?? '',
+	// 				// 		]),
+	// 				// 	]),
+	// 				// ]),
+	// 				// $adminListingShowNoItems ?
+	// 				// 	Helpers::ensureString($adminListingNoItems) :
+	// 				// 	Helpers::ensureString($adminListingItems),
+	// 				// Helpers::render('pagination', [
+	// 				// 	'data' => $adminListingPagination,
+	// 				// ], 'components', false, 'admin-listing/partials'),
+	// 			]),
+	// 		]),
+	// 		// $help,
+	// 	]),
+	// 	'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingBulkItems'),
+	// 	'additionalAttributes' => [
+	// 		UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([]),
+	// 	],
+	// ]);
 	?>
 </div>
 

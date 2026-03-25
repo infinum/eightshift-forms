@@ -6,16 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
-
-$spacerClass = Helpers::clsx([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-]);
-
 ?>
 
-<div class="<?php echo esc_attr($spacerClass); ?>"></div>
+<div class="esf:h-30 esf:block"></div>

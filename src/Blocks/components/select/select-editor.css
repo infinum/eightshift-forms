@@ -1,0 +1,168 @@
+/* Choices.js select — third-party library CSS not expressible in Tailwind utilities */
+div.es-select {
+	border-radius: 0.375rem;
+	margin: 0;
+	font-size: initial;
+}
+
+div.es-select.choices[data-type*='select-one'] .choices__inner {
+	padding: 0;
+}
+
+div.es-select.choices[data-type*='select-multiple'] .choices__inner {
+	padding-block: 0.625rem calc(0.625rem - 0.2344rem);
+	padding-inline: 0.625rem;
+}
+
+div.es-select.choices[data-type*='select-multiple'] .choices__inner .choices__input {
+	padding: 0;
+	margin: 0;
+}
+
+div.es-select.choices[data-type*='select-multiple'] .choices__inner .choices__input::placeholder {
+	color: var(--esf-color-secondary-400, #a1a1aa);
+}
+
+div.es-select .choices__inner {
+	font-size: initial;
+	border-radius: 0.375rem;
+	background-color: transparent;
+	block-size: auto;
+	border: 1px solid var(--esf-color-secondary-200, #e4e4e7);
+	padding: 0;
+	min-block-size: 2.625rem;
+	transition-property: border-color;
+	transition-timing-function: ease-in-out;
+	transition-duration: 0.3s;
+}
+
+div.es-select .choices__list--dropdown {
+	transition-property: border-color;
+	transition-timing-function: ease-in-out;
+	transition-duration: 0.3s;
+}
+
+div.es-select .choices__list--dropdown .choices__item {
+	font-size: initial;
+	padding: 0.625rem;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+div.es-select .choices__list--dropdown .choices__input {
+	border-block-end: 1px solid var(--esf-color-secondary-200, #e4e4e7);
+}
+
+div.es-select .choices__list--single {
+	min-block-size: 2.625rem;
+	padding-block: 0.625rem;
+	padding-inline: 0.625rem 1.875rem;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	font-size: initial;
+}
+
+div.es-select .choices__list--multiple .choices__item {
+	font-size: initial;
+}
+
+div.es-select .choices__input {
+	border-radius: 0;
+	border: none;
+	background: none;
+	font-size: initial;
+}
+
+div.es-select .choices__input:focus {
+	outline: none;
+	box-shadow: none;
+	border-color: var(--esf-color-accent-600, #0d9488);
+}
+
+div.es-select.is-focused .choices__inner {
+	border-color: var(--esf-color-accent-600, #0d9488);
+}
+
+div.es-select.is-open .choices__list--dropdown {
+	border-color: var(--esf-color-accent-600, #0d9488);
+}
+
+/* Input — admin focus ring and transition */
+input.es-input {
+	transition:
+		border-color 0.3s ease-in-out,
+		box-shadow 0.3s ease-in-out;
+}
+
+input.es-input:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
+input.es-input:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent);
+}
+
+/* Input with inline before/after content — focus ring propagation */
+.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible)
+	.es-field__after-content {
+	box-shadow: 0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent);
+	clip-path: inset(-100vw -100vw -100vw 0);
+}
+
+.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible)
+	.es-input {
+	clip-path: inset(-100vw 1px -100vw -100vw);
+}
+
+.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible)
+	.es-field__before-content {
+	box-shadow: 0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent);
+	clip-path: inset(-100vw 0 -100vw -100vw);
+}
+
+.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible)
+	.es-input {
+	clip-path: inset(-100vw -100vw -100vw 1px);
+}
+
+.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+	.es-field__after-content,
+.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+	.es-field__before-content {
+	box-shadow: 0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent);
+}
+
+.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+	.es-field__before-content {
+	clip-path: inset(-100vw 0 -100vw -100vw);
+}
+
+.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+	.es-field__after-content {
+	clip-path: inset(-100vw -100vw -100vw 0);
+}
+
+.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible) .es-input {
+	clip-path: inset(-100vw 1px -100vw 1px);
+}
+
+/* Choices.js select — admin overrides (border radius, font size, shadows) */
+div.es-select .choices__list--dropdown {
+	border-start-start-radius: 0;
+	border-start-end-radius: 0;
+	border-end-end-radius: 0.375rem;
+	border-end-start-radius: 0.375rem;
+	box-shadow:
+		0 4px 6px -1px oklch(0% 0 0 / 0.1),
+		0 2px 4px -2px oklch(0% 0 0 / 0.1);
+}
+
+div.es-select.is-open {
+	box-shadow:
+		0 4px 6px -1px oklch(0% 0 0 / 0.1),
+		0 2px 4px -2px oklch(0% 0 0 / 0.1);
+}
