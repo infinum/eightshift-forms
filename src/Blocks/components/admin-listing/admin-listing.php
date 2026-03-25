@@ -42,7 +42,7 @@ $additionalAttributes = [
 	}
 	?>
 
-	<div class="esf:flex esf:flex-row esf:gap-15 <?php echo UtilsHelper::getStateSelectorAdmin('listingBulkItems'); ?>" <?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
+	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo UtilsHelper::getStateSelectorAdmin('listingBulkItems'); ?>" <?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
 		<div class="esf:bg-white esf:rounded-md esf:flex-1">
 			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-secondary-200">
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
