@@ -27,7 +27,7 @@ class Theme implements ServiceInterface
 		'input' => [
 			'esf:w-full!',
 			'esf:border!',
-			'esf:border-secondary-200!',
+			'esf:border-border!',
 			'esf:bg-white!',
 			'esf:p-10!',
 			'esf:rounded-md!',
@@ -39,7 +39,18 @@ class Theme implements ServiceInterface
 			'esf:focus:border-accent-600!',
 			'esf:focus:shadow-none!',
 			'esf:focus:outline-none!',
-		]
+		],
+		'help' => [
+			'esf:text-secondary-400 esf:text-xs/17',
+			'esf:[&>code]:text-secondary-400! esf:[&>code]:text-xs/17! esf:[&>code]:m-0! esf:[&>code]:px-3! esf:[&>code]:py-1! esf:[&>code]:bg-secondary-100! esf:[&>code]:rounded-sm!',
+		],
+		'label' => [
+			'esf:text-sm',
+			'esf:block',
+			'esf:p-0',
+			'esf:transition-colors',
+			'esf:duration-300',
+		],
 	];
 
 	/**
@@ -59,36 +70,6 @@ class Theme implements ServiceInterface
 	 */
 	public function getBlockFormsTailwindSelectors(): array
 	{
-		// Input defaults.
-		$input = [
-			'esf:w-full!',
-			'esf:border!',
-			'esf:border-secondary-200!',
-			'esf:bg-white!',
-			'esf:p-10!',
-			'esf:rounded-md!',
-			'esf:text-sm!',
-			'esf:h-42!',
-			'esf:shadow-none!',
-			'esf:text-secondary-900!',
-			'esf:placeholder:text-secondary-400!',
-			'esf:focus:border-accent-600!',
-			'esf:focus:shadow-none!',
-			'esf:focus:outline-none!',
-		];
-
-		$help = [
-			'esf:text-secondary-400 esf:text-xs',
-		];
-
-		$label = [
-			'esf:text-sm',
-			'esf:block',
-			'esf:p-0',
-			'esf:transition-colors',
-			'esf:duration-300',
-		];
-
 		return [
 			'forms' => [
 				'base' => [
@@ -118,42 +99,42 @@ class Theme implements ServiceInterface
 						'esf:flex esf:flex-col esf:gap-10',
 					],
 					'label' => [
-						...$label,
+						...Theme::THEME_ADMIN_SELECTORS['label'],
 					],
-					'help' => $help,
+					'help' => Theme::THEME_ADMIN_SELECTORS['help'],
 					'error' => [],
 				],
 			],
 			'input' => [
 				'base' => [
-					...$input,
+					...Theme::THEME_ADMIN_SELECTORS['input'],
 				],
 			],
 			'textarea' => [
 				'base' => [
-					...$input,
+					...Theme::THEME_ADMIN_SELECTORS['input'],
 					'esf:min-h-200',
 					'esf:h-auto!',
 				],
 			],
 			'select' => [
 				'base' => [
-					...$input,
+					...Theme::THEME_ADMIN_SELECTORS['input'],
 				],
 			],
 			'country' => [
 				'base' => [
-					...$input,
+					...Theme::THEME_ADMIN_SELECTORS['input'],
 				],
 			],
 			'date' => [
 				'base' => [
-					...$input,
+					...Theme::THEME_ADMIN_SELECTORS['input'],
 				],
 			],
 			'phone' => [
 				'base' => [
-					...$input,
+					...Theme::THEME_ADMIN_SELECTORS['input'],
 				],
 				'parts' => [
 					'field-content-wrap' => [
@@ -172,26 +153,13 @@ class Theme implements ServiceInterface
 			],
 			'submit' => [
 				'base' => [
-					'esf:flex esf:justify-center esf:items-center esf:gap-5 esf:flex-row',
-					'esf:w-full',
-					'esf:p-10',
-					'esf:rounded-md',
-					'esf:text-sm!',
-					'esf:text-white',
-					'esf:bg-accent-600',
-					'esf:font-medium!',
-					'esf:transition-[background-color,color]',
-					'esf:duration-300',
-					'esf:ease-in-out',
-					'esf:hover:bg-accent-700',
-					'esf:hover:shadow-none',
-					'esf:hover:outline-none',
-					'esf:hover:cursor-pointer!',
-
-					// Ghost variant.
-					'esf:[&.es-submit--ghost]:bg-transparent',
-					'esf:[&.es-submit--ghost]:text-accent-700',
-					'esf:[&.es-submit--ghost]:hover:bg-accent-100',
+					'esf-button-primary',
+					'esf:w-fit',
+				],
+				'parts' => [
+					'field-content-wrap' => [
+						'esf:items-end',
+					],
 				],
 			],
 			'checkbox' => [
@@ -204,7 +172,7 @@ class Theme implements ServiceInterface
 						'esf:sr-only',
 					],
 					'label' => [
-						...$label,
+						...Theme::THEME_ADMIN_SELECTORS['label'],
 						'esf:cursor-pointer',
 
 						'esf:[.es-checkbox__label]:relative',
@@ -217,46 +185,47 @@ class Theme implements ServiceInterface
 						'esf:[.es-checkbox__label]:before:start-0',
 						'esf:[.es-checkbox__label]:before:bg-white',
 						'esf:[.es-checkbox__label]:before:border-1',
-						'esf:[.es-checkbox__label]:before:border-secondary-200',
+						'esf:[.es-checkbox__label]:before:border-border',
 						'esf:[.es-checkbox__label]:before:w-20',
 						'esf:[.es-checkbox__label]:before:h-20',
 						'esf:[.es-checkbox__label]:before:rounded-sm',
 						'esf:[.es-checkbox__label]:before:transition-colors',
-						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:bg-accent-600',
-						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:border-accent-600',
+						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:bg-accent',
+						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:border-accent',
 
 						'esf:[.es-checkbox-toggle__label]:relative',
 						'esf:[.es-checkbox-toggle__label]:block',
 						'esf:[.es-checkbox-toggle__label]:w-full',
 						'esf:[.es-checkbox-toggle__label]:pr-50',
+						'esf:[.es-checkbox-toggle__label]:min-h-24',
 						'esf:[.es-checkbox-toggle__label]:before:content-[\'\']',
 						'esf:[.es-checkbox-toggle__label]:before:absolute',
 						'esf:[.es-checkbox-toggle__label]:before:top-0',
 						'esf:[.es-checkbox-toggle__label]:before:end-0',
 						'esf:[.es-checkbox-toggle__label]:before:bg-white',
 						'esf:[.es-checkbox-toggle__label]:before:border-1',
-						'esf:[.es-checkbox-toggle__label]:before:border-secondary-200',
-						'esf:[.es-checkbox-toggle__label]:before:w-40',
-						'esf:[.es-checkbox-toggle__label]:before:h-20',
+						'esf:[.es-checkbox-toggle__label]:before:border-border',
+						'esf:[.es-checkbox-toggle__label]:before:w-44',
+						'esf:[.es-checkbox-toggle__label]:before:h-24',
 						'esf:[.es-checkbox-toggle__label]:before:rounded-full',
 						'esf:[.es-checkbox-toggle__label]:before:transition-colors',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:bg-accent-600',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:border-accent-600',
+						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:bg-accent',
+						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:border-accent',
 
 						'esf:[.es-checkbox-toggle__label]:after:content-[\'\']',
 						'esf:[.es-checkbox-toggle__label]:after:absolute',
 						'esf:[.es-checkbox-toggle__label]:after:top-[2px]',
 						'esf:[.es-checkbox-toggle__label]:after:end-[2px]',
 						'esf:[.es-checkbox-toggle__label]:after:rounded-full',
-						'esf:[.es-checkbox-toggle__label]:after:bg-accent-600',
-						'esf:[.es-checkbox-toggle__label]:after:h-16',
-						'esf:[.es-checkbox-toggle__label]:after:w-16',
+						'esf:[.es-checkbox-toggle__label]:after:bg-accent',
+						'esf:[.es-checkbox-toggle__label]:after:h-20',
+						'esf:[.es-checkbox-toggle__label]:after:w-20',
 						'esf:[.es-checkbox-toggle__label]:after:transition-all',
 						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:-translate-x-20',
 						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-white',
 					],
 					'help' => [
-						...$help,
+						...Theme::THEME_ADMIN_SELECTORS['help'],
 						'esf:[.es-checkbox-toggle\_\_help]:max-w-lg',
 					],
 				],
@@ -277,7 +246,7 @@ class Theme implements ServiceInterface
 						'esf:items-center',
 					],
 					'label' => [
-						...$label,
+						...Theme::THEME_ADMIN_SELECTORS['label'],
 						'esf:cursor-pointer',
 						'esf:flex',
 						'esf:flex-row',
@@ -374,10 +343,10 @@ class Theme implements ServiceInterface
 					// 'esf:hidden',
 					'esf:[&.es-form-is-active]:translate-x-0',
 					'esf:[&.es-form-is-active]:opacity-100',
-					'esf:data-[status="error"]:bg-red-500/30',
-					'esf:data-[status="success"]:bg-accent-500/30',
-					'esf:data-[status="warning"]:bg-yellow-500/30',
-					'esf:data-[status="info"]:bg-blue-500/30',
+					'esf:data-[status="error"]:bg-red-100 esf:data-[status="error"]:border-red-500 esf:data-[status="error"]:text-red-950',
+					'esf:data-[status="success"]:bg-green-100 esf:data-[status="success"]:border-green-500 esf:data-[status="success"]:text-green-950',
+					'esf:data-[status="warning"]:bg-yellow-100 esf:data-[status="warning"]:border-yellow-500 esf:data-[status="warning"]:text-yellow-950',
+					'esf:data-[status="info"]:bg-sky-100 esf:data-[status="info"]:border-sky-500 esf:data-[status="info"]:text-sky-950',
 				],
 			],
 			'file' => [
@@ -397,7 +366,7 @@ class Theme implements ServiceInterface
 					'custom-wrap' => [
 						'esf:w-full',
 						'esf:cursor-pointer',
-						'esf:text-secondary-500',
+						'esf:text-gray-500',
 						'esf:text-sm',
 						'esf:py-10',
 						'esf:bg-white',
@@ -411,7 +380,7 @@ class Theme implements ServiceInterface
 						'esf:[&.dz-max-files-reached]:opacity-50',
 					],
 					'info' => [
-						'esf:text-secondary-500',
+						'esf:text-gray-500',
 						'esf:text-sm',
 						'esf:order-3',
 					],
@@ -469,7 +438,7 @@ class Theme implements ServiceInterface
 						'esf:items-center',
 						'esf:justify-center',
 						'esf:text-xs',
-						'esf:text-secondary-500',
+						'esf:text-gray-500',
 						'esf:transition-colors',
 						'esf:[&.es-form-is-active]:border-accent-600',
 						'esf:[&.es-form-is-active]:bg-accent-600',
@@ -534,11 +503,11 @@ class Theme implements ServiceInterface
 						'esf:gap-5',
 					],
 					'min' => [
-						'esf:text-secondary-500',
+						'esf:text-gray-500',
 						'esf:text-xs',
 					],
 					'max' => [
-						'esf:text-secondary-500',
+						'esf:text-gray-500',
 						'esf:text-xs',
 					],
 					'current' => [

@@ -10,10 +10,6 @@
 		"layoutType": {
 			"type": "string",
 			"default": "layout-grid-3"
-		},
-		"layoutUse": {
-			"type": "boolean",
-			"default": true
 		}
 	}
 }

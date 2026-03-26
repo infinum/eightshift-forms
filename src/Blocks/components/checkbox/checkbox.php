@@ -29,7 +29,6 @@ $checkboxTracking = Helpers::checkAttr('checkboxTracking', $attributes, $manifes
 $checkboxSingleSubmit = Helpers::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
 $checkboxAttrs = Helpers::checkAttr('checkboxAttrs', $attributes, $manifest);
 $checkboxAsToggle = Helpers::checkAttr('checkboxAsToggle', $attributes, $manifest);
-$checkboxAsToggleSize = Helpers::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
 $checkboxHideLabelText = Helpers::checkAttr('checkboxHideLabelText', $attributes, $manifest);
 $checkboxHideLabel = Helpers::checkAttr('checkboxHideLabel', $attributes, $manifest);
 $checkboxHelp = Helpers::checkAttr('checkboxHelp', $attributes, $manifest);
@@ -46,7 +45,6 @@ $twClasses = FormsHelper::getTwSelectors($checkboxTwSelectorsData, ['checkbox'])
 
 $checkboxClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'checkbox', $componentClass),
-	Helpers::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	$additionalClass,
 	Helpers::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($checkboxIsHidden, UtilsHelper::getStateSelector('isHidden')),

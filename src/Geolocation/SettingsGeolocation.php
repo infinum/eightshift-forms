@@ -125,17 +125,15 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 				],
 			],
 			(\is_plugin_active('cloudflare/cloudflare.php') && !SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) ? [
-				'component' => 'intro',
+				'component' => 'notice',
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('
+				'noticeContent' => \sprintf(\__('
 					<b>Geolocation is not working due to Cloudflare plugin</b>
 					<p>
 						We have detected that you are using the Cloudflare plugin.
 						Please turn on the Cloudflare feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
 					</p>
 				', 'eightshift-forms'), GeneralHelpers::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
 			] : [],
 		];
 	}

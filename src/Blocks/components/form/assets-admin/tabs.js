@@ -34,7 +34,7 @@ export class Tabs {
 		const btnClass = details[0]?.getAttribute('data-btn-class') ?? '';
 
 		const nav = document.createElement('div');
-		nav.className = `${this.navClass} esf:hidden esf:md:flex esf:flex-wrap esf:gap-x-15 esf:gap-y-10`;
+		nav.className = `${this.navClass} esf:hidden esf:md:flex esf:flex-wrap esf:gap-x-20 esf:gap-y-10`;
 
 		details.forEach((detail) => {
 			const label = detail.querySelector('summary')?.textContent?.trim() ?? '';

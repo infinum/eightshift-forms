@@ -43,7 +43,7 @@ $groupClass = Helpers::clsx([
 			</div>
 
 			<?php if ($groupSubLabel) { ?>
-				<div class="esf:text-xs esf:text-secondary-500">
+				<div class="esf:text-xs esf:text-gray-500">
 					<?php echo esc_html($groupSubLabel); ?>
 				</div>
 			<?php } ?>

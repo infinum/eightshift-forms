@@ -17,10 +17,8 @@
 
 	--color-*: initial;
 
-	--color-black: oklch(0% 0 0);
-	--color-white: oklch(100% 0 0);
-
-	--color-base-text: var(--esf-color-secondary-900);
+	--color-black: #181818;
+	--color-white: #ffffff;
 
 	--color-secondary-50: var(--esf-color-zinc-50);
 	--color-secondary-100: var(--esf-color-zinc-100);
@@ -46,16 +44,58 @@
 	--color-accent-900: var(--esf-color-teal-900);
 	--color-accent-950: var(--esf-color-teal-950);
 
-	--color-red-500: oklch(0.637 0.237 25.331);
-	--color-yellow-500: oklch(0.852 0.199 91.936);
-	--color-blue-500: oklch(0.616 0.177 224.953);
+	/* --color-link: var(--esf-color-accent-700);
+	--color-link-hover: var(--esf-color-accent-900); */
 
-	--color-link: var(--esf-color-accent-700);
-	--color-link-hover: var(--esf-color-accent-900);
+	--color-accent: #29a3a3;
+
+	--color-accent-05: #29a3a30d;
+	--color-accent-10: #29a3a31a;
+	--color-accent-30: #29a3a333;
+	--color-accent-50: #29a3a380;
+
+	--color-accent-dark: #218282;
+
+	--color-border: #dedede;
+
+	--color-yellow-100: #fef3c7;
+	--color-yellow-500: #eab308;
+	--color-yellow-950: #451a03;
+
+	--color-sky-50: #f0f9ff;
+	--color-sky-100: #e0f2fe;
+	--color-sky-200: #bae6fd;
+	--color-sky-500: #0ea5e9;
+	--color-sky-950: #082f49;
+
+	--color-gray-50: #f9fafb;
+	--color-gray-100: #f3f4f6;
+	--color-gray-200: #e5e7eb;
+	--color-gray-300: #d1d5db;
+	--color-gray-400: #9ca3af;
+	--color-gray-500: #6b7280;
+	--color-gray-600: #4b5563;
+	--color-gray-950: #030712;
+
+	--color-red-50: #fef2f2;
+
+	--color-red-100: #fee2e2;
+	--color-red-200: #fecaca;
+	--color-red-500: #ef4444;
+	--color-red-400: #f87171;
+	--color-red-600: #dc2626;
+	--color-red-800: #991b1b;
+	--color-red-950: #450a0a;
+
+	--color-green-50: #f0fdf4;
+	--color-green-100: #dcfce7;
+	--color-green-200: #bbf7d0;
+	--color-green-500: #22c55e;
+	--color-green-950: #052e16;
 }
 
 body {
-	--esf-color-secondary-50: var(--es-color-secondary-50);
+	/* --esf-color-secondary-50: var(--es-color-secondary-50);
 	--esf-color-secondary-100: var(--es-color-secondary-100);
 	--esf-color-secondary-200: var(--es-color-secondary-200);
 	--esf-color-secondary-300: var(--es-color-secondary-300);
@@ -79,27 +119,51 @@ body {
 	--esf-color-accent-900: var(--es-color-accent-900);
 	--esf-color-accent-950: var(--es-color-accent-950);
 
-	--esf-color-error: var(--es-color-error);
+	--esf-color-error: var(--es-color-error); */
 }
 
 .esf-button-primary {
-	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-white! esf:bg-accent-700! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-900! esf:hover:border-accent-900! esf:active:text-white! esf:active:bg-accent-900! esf:active:border-accent-900! esf:transition-colors! esf:duration-300!;
+	@apply esf:text-white! esf:bg-accent! esf:border-accent!;
+	@apply esf:hover:text-white! esf:hover:bg-accent-dark! esf:hover:border-accent-dark!;
+	@apply esf:active:text-white! esf:active:bg-accent-dark! esf:active:border-accent-dark!;
+	@apply esf:[&.is-active]:text-white! esf:[&.is-active]:bg-accent-dark! esf:[&.is-active]:border-accent-dark!;
+	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
 }
 
 .esf-button-primary-outline {
-	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-accent-700! esf:bg-transparent! esf:border! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-700! esf:hover:border-accent-700! esf:active:text-white! esf:active:bg-accent-700! esf:active:border-accent-700! esf:transition-colors! esf:duration-300!;
+	@apply esf:text-accent! esf:bg-transparent! esf:border! esf:border-accent!;
+	@apply esf:hover:text-white! esf:hover:bg-accent-dark! esf:hover:border-accent-dark!;
+	@apply esf:active:text-white! esf:active:bg-accent-dark! esf:active:border-accent-dark!;
+	@apply esf:[&.is-active]:text-white! esf:[&.is-active]:bg-accent-dark! esf:[&.is-active]:border-accent-dark!;
+	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
+}
+
+.esf-button-primary-ghost {
+	@apply esf:text-accent! esf:bg-transparent! esf:border! esf:border-transparent!;
+	@apply esf:hover:bg-accent-30!;
+	@apply esf:active:bg-accent-30!;
+	@apply esf:[&.is-active]:bg-accent-30!;
+	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
 }
 
 .esf-button-secondary-ghost {
-	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-secondary-600! esf:bg-transparent! esf:border! esf:border-transparent! esf:hover:bg-accent-600/10! esf:transition-colors! esf:duration-300!;
+	@apply esf:text-inherit! esf:bg-transparent! esf:border! esf:border-transparent!;
+	@apply esf:hover:bg-accent-30!;
+	@apply esf:active:bg-accent-30!;
+	@apply esf:[&.is-active]:bg-accent-30!;
+	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
 }
 
-.esf-link-primary {
-	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:flex esf:items-center esf:gap-10 esf:text-accent-700! esf:hover:text-accent-900! esf:transition-colors! esf:duration-300!;
+.esf-button-primary-basic {
+	@apply esf:text-inherit! esf:bg-transparent! esf:border! esf:border-transparent!;
+	@apply esf:hover:text-accent!;
+	@apply esf:active:text-accent!;
+	@apply esf:[&.is-active]:text-accent!;
+	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:items-center esf:gap-10 esf:transition-colors! esf:duration-300!;
 }
 
-.esf-link-secondary {
-	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:flex esf:items-center esf:gap-10 esf:text-secondary-600! esf:hover:text-accent-700! esf:transition-colors! esf:duration-300!;
+.esf-is-filter-applied {
+	@apply esf:text-secondary-400 esf:text-xs/17! esf:[&>code]:text-secondary-400! esf:[&>code]:text-xs/17! esf:[&>code]:m-0! esf:[&>code]:px-3! esf:[&>code]:py-1! esf:[&>code]:bg-secondary-100! esf:[&>code]:rounded-sm!;
 }
 
 /* Error — hide empty error elements */
@@ -303,40 +367,7 @@ legend .es-field__label-inner {
 .es-field--fifty-fifty-horizontal .es-field__content-wrap {
 	flex-grow: 1;
 }
-
-.es-field--inline-before-after-content .es-field__content {
-	display: flex;
-	align-items: center;
-}
-
-.es-field--inline-before-after-content .es-field__content-wrap {
-	flex-grow: 1;
-}
-
-.es-field--inline-before-after-content .es-field__before-content,
-.es-field--inline-before-after-content .es-field__after-content {
-	flex-shrink: 0;
-	padding: 0.3125rem;
-	border: 1px solid var(--esf-color-secondary-200, #e4e4e7);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background-color: var(--esf-color-secondary-50, #fafafa);
-	color: var(--esf-color-secondary-500, #71717a);
-	block-size: 2.625rem;
-	transition: border-color 0.3s ease-in-out;
-}
-
-.es-field--inline-before-after-content .es-field__before-content {
-	border-start-start-radius: 0.375rem;
-	border-end-start-radius: 0.375rem;
-	margin-inline-end: -2px;
-}
-
-.es-field--inline-before-after-content .es-field__after-content {
-	border-start-end-radius: 0.375rem;
-	border-end-end-radius: 0.375rem;
-} */
+	*/
 
 /* Card inline — pseudo-element hover overlay and modifier effects */
 /* .es-card-inline::before {

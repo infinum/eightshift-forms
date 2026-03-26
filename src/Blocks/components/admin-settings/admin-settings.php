@@ -46,15 +46,14 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		</div>
 	<?php } ?>
 	<div class="esf:flex esf:max-w-3xs esf:w-full esf:flex-col esf:gap-24 esf:sticky esf:self-start">
-		<?php echo Helpers::render('button', [
-			'buttonVariant' => 'button-secondary-ghost',
+		<?php
+		echo Helpers::render('button', [
+			'buttonVariant' => 'secondaryGhost',
 			'buttonLabel' => esc_html__('Forms', 'eightshift-forms'),
 			'buttonIcon' => UtilsHelper::getUtilsIcons('arrowLeft'),
 			'buttonUrl' => $adminSettingsBackLink,
-		]); ?>
+		]);
 
-		<?php
-		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo Helpers::render(
 			'sidebar-section',
 			[
@@ -76,14 +75,14 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			<?php if (!$adminSettingsIsGlobal) { ?>
 				<div class="esf:flex esf:items-center esf:gap-8">
 					<?php echo Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'secondaryGhost',
 						'buttonLabel' => esc_html__('Edit form', 'eightshift-forms'),
 						'buttonIcon' => UtilsHelper::getUtilsIcons('edit'),
 						'buttonUrl' => $adminSettingsFormEditLink,
 					]); ?>
 
 					<?php echo Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'secondaryGhost',
 						'buttonLabel' => esc_html__('Locations used', 'eightshift-forms'),
 						'buttonIcon' => UtilsHelper::getUtilsIcons('location'),
 						'buttonUrl' => $adminSettingsFormLocationsLink,

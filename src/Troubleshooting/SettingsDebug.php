@@ -113,10 +113,8 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 						'tabLabel' => \__('Debug', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
-								'introIsHighlighted' => true,
-								'introIsHighlightedImportant' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
 							],
 							[
 								'component' => 'checkboxes',

@@ -75,11 +75,10 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				'cardInlineIcon' => $labels['icon'] ?? '',
 				'cardInlineRightContent' => [
 					$checked ? [
-						'component' => 'submit',
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getSettingsGlobalPageUrl($key),
-						'submitValue' => \__('Edit', 'eightshift-forms'),
+						'component' => 'button',
+						'buttonVariant' => 'primaryGhost',
+						'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($key),
+						'buttonLabel' => \__('Edit', 'eightshift-forms'),
 					] : [],
 					[
 						'component' => 'checkboxes',
@@ -92,7 +91,6 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 								'checkboxValue' => $use,
 								'checkboxSingleSubmit' => true,
 								'checkboxAsToggle' => true,
-								'checkboxAsToggleSize' => 'medium',
 							],
 						],
 					],
@@ -114,11 +112,10 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						'introTitle' => $data[$key]['labels']['title'] ?? '',
-						'introIsHeading' => false,
-						'introTitleSize' => 'small',
 					],
 					...$value,
 				],
+				'additionalClass' => 'esf:gap-5!',
 				'layoutType' => 'layout-v-stack-clean',
 			];
 		}

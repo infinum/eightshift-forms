@@ -15,6 +15,9 @@
 		"buttonIcon": {
 			"type": "string"
 		},
+		"buttonIconSize": {
+			"type": "string"
+		},
 		"buttonIsDisabled": {
 			"type": "boolean"
 		}

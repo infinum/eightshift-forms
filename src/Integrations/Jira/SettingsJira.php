@@ -300,7 +300,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 										'checkboxIsChecked' => $manualMapParams,
 										'checkboxValue' => self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
@@ -410,10 +409,8 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
@@ -467,7 +464,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 											'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 											'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
 											'checkboxAsToggle' => true,
-											'checkboxAsToggleSize' => 'medium',
 										],
 									],
 								],

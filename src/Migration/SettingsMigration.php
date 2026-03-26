@@ -102,10 +102,8 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
-				'introSubtitle' => \__('Backup the database before running a migration and clear all cache. <br /> The process is not reversible.', 'eightshift-forms'),
+				'component' => 'notice',
+				'noticeContent' => \__('Backup the database before running a migration and clear all cache. <br /> The process is not reversible.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'layout',

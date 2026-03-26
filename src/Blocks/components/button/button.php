@@ -17,6 +17,7 @@ $buttonVariant = Helpers::checkAttr('buttonVariant', $attributes, $manifest);
 $buttonLabel = Helpers::checkAttr('buttonLabel', $attributes, $manifest);
 $buttonAttrs = Helpers::checkAttr('buttonAttrs', $attributes, $manifest);
 $buttonIcon = Helpers::checkAttr('buttonIcon', $attributes, $manifest);
+$buttonIconSize = Helpers::checkAttr('buttonIconSize', $attributes, $manifest);
 $buttonIsDisabled = Helpers::checkAttr('buttonIsDisabled', $attributes, $manifest);
 
 if (!$buttonLabel) {
@@ -37,22 +38,35 @@ if ($buttonIsDisabled) {
 }
 
 switch ($buttonVariant) {
-	case 'button-primary-outline':
+	case 'primaryOutline':
 		$buttonClass = 'esf-button-primary-outline';
 		break;
-	case 'button-secondary-ghost':
-		$buttonClass = 'esf-button-secondary-ghost';
+	case 'primaryGhost':
+		$buttonClass = 'esf-button-primary-ghost';
 		break;
-	case 'link-secondary':
-		$buttonClass = 'esf-link-secondary';
+	case 'primaryBasic':
+		$buttonClass = 'esf-button-primary-basic';
+		break;
+	case 'secondaryGhost':
+		$buttonClass = 'esf-button-secondary-ghost';
 		break;
 	default:
 		$buttonClass = 'esf-button-primary';
 		break;
 }
 
+switch ($buttonIconSize) {
+	case 'small':
+		$buttonIconSizeClass = 'esf:shrink-0 esf:[&>svg]:w-20 esf:[&>svg]:h-20';
+		break;
+	default:
+		$buttonIconSizeClass = 'esf:shrink-0 esf:[&>svg]:w-24 esf:[&>svg]:h-24';
+		break;
+}
+
 $class = Helpers::clsx([
 	$buttonClass,
+	$buttonIconSizeClass,
 	$additionalClass,
 ]);
 

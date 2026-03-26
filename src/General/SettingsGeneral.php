@@ -177,7 +177,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputFieldHelp' => \sprintf(\__('
 									After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.<br /><br />
 									If you need to include some of the submitted data, use template tags (e.g. <code>{field-name}</code>).<br />
-									<details class="is-filter-applied">
+									<details class="esf-is-filter-applied">
 										<summary>Available tags</summary>
 										<ul>
 											%1$s
@@ -433,15 +433,13 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'dividerExtraVSpacing' => true,
 							],
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('This option may create a large number of request to your server.<br /> Use with caution!', 'eightshift-forms'),
-								'introIsHighlighted' => true,
-								'introIsHighlightedImportant' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('This option may create a large number of request to your server.<br /> Use with caution!', 'eightshift-forms'),
 							],
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Once submitted the form will not be reset to the original state.', 'eightshift-forms'),
-								'introIsHighlighted' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('Once submitted the form will not be reset to the original state.', 'eightshift-forms'),
+								'noticeType' => 'info',
 							],
 							[
 								'component' => 'intro',

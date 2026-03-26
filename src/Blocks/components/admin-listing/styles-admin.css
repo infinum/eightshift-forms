@@ -3,7 +3,7 @@
 
 @layer esf {
 	.esf-pagination {
-		@apply esf:border-t esf:border-secondary-200 esf:px-10 esf:py-20;
+		@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
 
 		& ul {
 			@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0!;

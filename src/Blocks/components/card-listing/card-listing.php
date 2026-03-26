@@ -44,7 +44,7 @@ $classes = Helpers::clsx([
 
 			<div class="esf:flex esf:flex-col esf:gap-2">
 				<?php echo Helpers::render('button', [
-					'buttonVariant' => 'link-secondary',
+					'buttonVariant' => 'primaryBasic',
 					'buttonLabel' => $cardListingTitle,
 					'buttonIcon' => $cardListingIcon,
 					'buttonUrl' => $cardListingUrl,

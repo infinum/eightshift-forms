@@ -481,7 +481,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$left = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonUrl' => GeneralHelpers::getListingPageUrl(),
 						'buttonLabel' => \__('Back', 'eightshift-forms'),
 						'buttonIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
@@ -492,7 +492,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Delete', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -501,7 +501,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 					]),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -513,7 +513,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 				$right = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-primary-outline',
+						'buttonVariant' => 'primaryOutline',
 						'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_TRASH, '', Config::SLUG_ADMIN_LISTING_RESULTS),
 						'buttonLabel' => \__('Trashed', 'eightshift-forms'),
 					]),
@@ -522,6 +522,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'buttonUrl' => GeneralHelpers::getNewFormPageUrl(Result::POST_TYPE_SLUG),
 						'buttonLabel' => \__('Create', 'eightshift-forms'),
 						'buttonIcon' => UtilsHelper::getUtilsIcons('addHighContrast'),
+						'buttonIconSize' => 'small',
 					]),
 				];
 				break;
@@ -529,7 +530,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Delete', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -538,7 +539,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 					]),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -550,7 +551,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 				$right = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Export to CSV', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => "{$exportSelector} {$bulkSelector}",
@@ -566,7 +567,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Delete', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -575,7 +576,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 					]),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -587,7 +588,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 				$right = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Export to CSV', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => "{$exportSelector} {$bulkSelector}",
@@ -604,7 +605,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$left = [
 						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonLabel' => \__('Restore', 'eightshift-forms'),
 							'buttonIsDisabled' => true,
 							'additionalClass' => $bulkSelector,
@@ -617,7 +618,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$left = [
 						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonLabel' => \__('Restore', 'eightshift-forms'),
 							'buttonIsDisabled' => true,
 							'additionalClass' => $bulkSelector,
@@ -645,7 +646,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Delete', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -654,7 +655,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 					]),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Sync', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -663,7 +664,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 					]),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
 						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
@@ -675,7 +676,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 				$right = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryOutline',
 						'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_TRASH),
 						'buttonLabel' => \__('Trashed', 'eightshift-forms'),
 					]),
@@ -683,7 +684,8 @@ class FormAdminMenu extends AbstractAdminMenu
 						'buttonVariant' => 'button-primary',
 						'buttonUrl' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
 						'buttonLabel' => \__('Create', 'eightshift-forms'),
-						'buttonIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
+						'buttonIcon' => UtilsHelper::getUtilsIcons('addHighContrast'),
+						'buttonIconSize' => 'small',
 					]),
 				];
 				break;
@@ -845,7 +847,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$tableContent[$itemId]['createdAt'] = $item['createdAt'] ?? '';
 					$tableHead['submit'] = \__('Submit', 'eightshift-forms');
 					$tableContent[$itemId]['submit'] = Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Submit', 'eightshift-forms'),
 						'additionalClass' => "{$manualSubmitTrigger}",
 						'buttonAttrs' => [
@@ -1034,14 +1036,14 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [
 					...($viewLink ? [
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonUrl' => $viewLink,
 							'buttonLabel' => \__('View', 'eightshift-forms'),
 						])
 					] : []),
 					...($editLink ? [
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonUrl' => $editLink,
 							'buttonLabel' => \__('Edit', 'eightshift-forms'),
 						])
@@ -1051,7 +1053,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Locations', 'eightshift-forms'),
 						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('locationsId') => $formId,
@@ -1060,7 +1062,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 					]),
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonUrl' => $editLink,
 						'buttonLabel' => \__('Edit', 'eightshift-forms'),
 					]),
@@ -1074,7 +1076,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				if ($parent === '') {
 					$output = [
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonLabel' => \__('Locations', 'eightshift-forms'),
 							'buttonAttrs' => [
 								UtilsHelper::getStateAttribute('locationsId') => $formId,
@@ -1084,12 +1086,12 @@ class FormAdminMenu extends AbstractAdminMenu
 						]),
 						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 							Helpers::render('button', [
-								'buttonVariant' => 'button-secondary-ghost',
+								'buttonVariant' => 'primaryGhost',
 								'buttonUrl' => $item['entriesLink'] ?? '',
 								'buttonLabel' => \__('Entries', 'eightshift-forms'),
 							]) : null,
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonUrl' => $item['settingsLink'] ?? '',
 							'buttonLabel' => \__('Settings', 'eightshift-forms'),
 						]),
@@ -1099,7 +1101,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			default:
 				$output = [
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonLabel' => \__('Locations', 'eightshift-forms'),
 						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('locationsId') => $formId,
@@ -1109,12 +1111,12 @@ class FormAdminMenu extends AbstractAdminMenu
 					]),
 					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonUrl' => $item['entriesLink'] ?? '',
 							'buttonLabel' => \__('Entries', 'eightshift-forms'),
 						]) : null,
 					Helpers::render('button', [
-						'buttonVariant' => 'button-secondary-ghost',
+						'buttonVariant' => 'primaryGhost',
 						'buttonUrl' => $item['settingsLink'] ?? '',
 						'buttonLabel' => \__('Settings', 'eightshift-forms'),
 					]),

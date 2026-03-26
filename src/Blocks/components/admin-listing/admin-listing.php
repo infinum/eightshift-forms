@@ -37,14 +37,13 @@ $additionalAttributes = [
 		echo Helpers::render('intro', [
 			'introTitle' => $adminListingPageTitle,
 			'introSubtitle' => $adminListingPageSubTitle,
-			'introIsHeading' => true,
 		]);
 	}
 	?>
 
 	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo UtilsHelper::getStateSelectorAdmin('listingBulkItems'); ?>" <?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
 		<div class="esf:bg-white esf:rounded-md esf:flex-1">
-			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-secondary-200">
+			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-border">
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
 					<?php
 					if (isset($adminListingTopItems['left'])) {
@@ -87,45 +86,6 @@ $additionalAttributes = [
 			</div>
 		</div>
 	</div>
-
-	<?php
-	// echo Helpers::render('layout', [
-	// 	'layoutType' => 'layout-v-stack-card-fullwidth',
-	// 	'layoutContent' => Helpers::ensureString([
-	// 		Helpers::render('container', [
-	// 			'containerContent' => Helpers::ensureString([
-	// 				// Helpers::render('container', [
-	// 				// 	'containerUse' => $adminListingTopItems,
-	// 				// 	'containerClass' => "esf:flex esf:items-center esf:justify-between esf:gap-8 esf:border-b esf:border-secondary-200 esf:-mx-24 esf:px-24 esf:pb-24",
-	// 				// 	'containerContent' => Helpers::ensureString([
-	// 				// 		Helpers::render('container', [
-	// 				// 			'containerClass' => "esf:flex esf:items-center esf:gap-5",
-	// 				// 			'containerUse' => !empty($adminListingTopItems['left']),
-	// 				// 			'containerContent' => $adminListingTopItems['left'] ?? '',
-	// 				// 		]),
-	// 				// 		Helpers::render('container', [
-	// 				// 			'containerClass' => "esf:flex esf:items-center esf:gap-5",
-	// 				// 			'containerUse' => !empty($adminListingTopItems['right']),
-	// 				// 			'containerContent' => $adminListingTopItems['right'] ?? '',
-	// 				// 		]),
-	// 				// 	]),
-	// 				// ]),
-	// 				// $adminListingShowNoItems ?
-	// 				// 	Helpers::ensureString($adminListingNoItems) :
-	// 				// 	Helpers::ensureString($adminListingItems),
-	// 				// Helpers::render('pagination', [
-	// 				// 	'data' => $adminListingPagination,
-	// 				// ], 'components', false, 'admin-listing/partials'),
-	// 			]),
-	// 		]),
-	// 		// $help,
-	// 	]),
-	// 	'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingBulkItems'),
-	// 	'additionalAttributes' => [
-	// 		UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([]),
-	// 	],
-	// ]);
-	?>
 </div>
 
 <?php

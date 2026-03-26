@@ -55,15 +55,15 @@ export const FieldEditor = (attributes) => {
 					dangerouslySetInnerHTML={{ __html: fieldLabel }}
 				/>
 			)}
-			{fieldBeforeContent && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldBeforeContent}</div>}
+			{fieldBeforeContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldBeforeContent}</div>}
 
 			<div className='esf:relative!'>
 				{fieldContent} <StatusFieldOutput components={[fieldHidden && <StatusIconHidden />, ...statusSlog]} />
 			</div>
 
-			{fieldSuffixContent && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldSuffixContent}</div>}
-			{fieldAfterContent && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldAfterContent}</div>}
-			{fieldHelp && <div className='esf:text-xs! esf:text-secondary-500!'>{fieldHelp}</div>}
+			{fieldSuffixContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldSuffixContent}</div>}
+			{fieldAfterContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldAfterContent}</div>}
+			{fieldHelp && <div className='esf:text-xs! esf:text-gray-500!'>{fieldHelp}</div>}
 		</div>
 	);
 };

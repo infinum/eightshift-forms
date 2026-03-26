@@ -53,21 +53,21 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 				'cardListingRightContent' => Helpers::ensureString([
 					...($viewLink ? [
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonUrl' => $viewLink,
 							'buttonLabel' => __('View', 'eightshift-forms'),
 						]),
 					] : []),
 					...($editLink ? [
 						Helpers::render('button', [
-							'buttonVariant' => 'button-secondary-ghost',
+							'buttonVariant' => 'primaryGhost',
 							'buttonUrl' => $editLink,
 							'buttonLabel' => __('Edit', 'eightshift-forms'),
 						]),
 					] : []),
 				]),
 				'additionalClass' => Helpers::clsx([
-					'esf:pl-10 esf:ml-30 esf:border-l esf:border-secondary-200',
+					'esf:pl-10 esf:ml-30 esf:border-l esf:border-border',
 				]),
 			]);
 		}
@@ -75,7 +75,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 		echo Helpers::render('card-listing', [
 			'cardListingSubTitle' => $emptyContent,
 			'additionalClass' => Helpers::clsx([
-				'esf:pl-10 esf:ml-30 esf:border-l esf:border-secondary-200',
+				'esf:pl-10 esf:ml-30 esf:border-l esf:border-border',
 			]),
 		]);
 	}

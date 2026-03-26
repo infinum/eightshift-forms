@@ -197,7 +197,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 										'checkboxValue' => self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								]
 							],
