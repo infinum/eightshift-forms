@@ -31,7 +31,7 @@ $fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
-$fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
+$fileTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $fileId = $fileName . '-' . Helpers::getUnique();
 
@@ -40,9 +40,9 @@ $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes,
 
 $twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
 
-$fileClass = Helpers::classnames([
+$fileClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';

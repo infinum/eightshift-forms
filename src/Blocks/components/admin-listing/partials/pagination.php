@@ -29,6 +29,6 @@ $output = paginate_links([
 ]);
 ?>
 
-<div class="es-pagination">
+<div class="esf-pagination">
 	<?php echo wp_kses_post($output); ?>
 </div>

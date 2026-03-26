@@ -1,0 +1,12 @@
+esf:col-span-1!
+esf:col-span-2!
+esf:col-span-3!
+esf:col-span-4!
+esf:col-span-5!
+esf:col-span-6!
+esf:col-span-7!
+esf:col-span-8!
+esf:col-span-9!
+esf:col-span-10!
+esf:col-span-11!
+esf:col-span-12!

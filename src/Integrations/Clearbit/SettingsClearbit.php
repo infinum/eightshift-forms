@@ -197,7 +197,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 										'checkboxValue' => self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								]
 							],
@@ -288,6 +287,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								$this->getSettingsGlobalMap(

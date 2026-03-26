@@ -30,9 +30,8 @@ export class Export {
 	async submit(target) {
 		const formData = new FormData();
 
-		const field = this.state.getFormFieldElementByChild(target);
-		const formId = field?.getAttribute(this.state.getStateAttribute('formId'));
-		const type = field?.getAttribute(this.state.getStateAttribute('exportType'));
+		const formId = target.getAttribute(this.state.getStateAttribute('formId'));
+		const type = target.getAttribute(this.state.getStateAttribute('exportType'));
 
 		formData.append('formId', formId);
 		formData.append('type', type);

@@ -30,15 +30,15 @@ $ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);
 $ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifest);
 $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
-$ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
+$ratingTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $ratingId = $ratingName . '-' . Helpers::getUnique();
 
 $twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
 
-$ratingClass = Helpers::classnames([
+$ratingClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
 ]);

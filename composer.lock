@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a26b6d3ad806e2a1dd55ec1bf7d842d",
+    "content-hash": "5cc937ae8dbb97c5a588ce5e89da3f64",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -64,16 +64,16 @@
         },
         {
             "name": "infinum/eightshift-libs",
-            "version": "11.0.4",
+            "version": "12.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "5f284b1c327b39ff94f3e64c7ae1c2ba5ba02982"
+                "reference": "353a83cca85fd2c61c2585ce2d1f1511e0cdc018"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/5f284b1c327b39ff94f3e64c7ae1c2ba5ba02982",
-                "reference": "5f284b1c327b39ff94f3e64c7ae1c2ba5ba02982",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/353a83cca85fd2c61c2585ce2d1f1511e0cdc018",
+                "reference": "353a83cca85fd2c61c2585ce2d1f1511e0cdc018",
                 "shasum": ""
             },
             "require": {
@@ -85,13 +85,13 @@
                 "php-di/php-di": "^7.1.1"
             },
             "require-dev": {
-                "brain/monkey": "^2.6.2",
+                "brain/monkey": "^2.7.0",
                 "dealerdirect/phpcodesniffer-composer-installer": "1.2.0",
-                "infinum/eightshift-coding-standards": "^3.0.0",
+                "infinum/eightshift-coding-standards": "^3.0.1",
                 "mockery/mockery": "^1.6.12",
                 "php-parallel-lint/php-parallel-lint": "^v1.4.0",
-                "php-stubs/wordpress-stubs": "6.9.0",
-                "phpunit/phpunit": "^12.5.0",
+                "php-stubs/wordpress-stubs": "6.9.1",
+                "phpunit/phpunit": "^12.5.14",
                 "szepeviktor/phpstan-wordpress": "2.0.3",
                 "wp-cli/wp-cli": "2.12.0"
             },
@@ -131,7 +131,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2025-12-05T13:59:56+00:00"
+            "time": "2026-03-24T12:15:38+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -1080,11 +1080,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.40",
+            "version": "2.1.42",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
-                "reference": "9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1279e1ce86ba768f0780c9d889852b4e02ff40d0",
+                "reference": "1279e1ce86ba768f0780c9d889852b4e02ff40d0",
                 "shasum": ""
             },
             "require": {
@@ -1129,7 +1129,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-23T15:04:35+00:00"
+            "time": "2026-03-17T14:58:32+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -1511,16 +1511,16 @@
         },
         {
             "name": "wp-cli/php-cli-tools",
-            "version": "v0.12.7",
+            "version": "v0.12.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/php-cli-tools.git",
-                "reference": "5cc6ef2e93cfcd939813eb420ae23bc116d9be2a"
+                "reference": "9cbf9946ebe3462005b642de69ccd65753981517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/5cc6ef2e93cfcd939813eb420ae23bc116d9be2a",
-                "reference": "5cc6ef2e93cfcd939813eb420ae23bc116d9be2a",
+                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/9cbf9946ebe3462005b642de69ccd65753981517",
+                "reference": "9cbf9946ebe3462005b642de69ccd65753981517",
                 "shasum": ""
             },
             "require": {
@@ -1568,9 +1568,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wp-cli/php-cli-tools/issues",
-                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.7"
+                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.8"
             },
-            "time": "2026-01-20T20:31:49+00:00"
+            "time": "2026-03-16T15:18:29+00:00"
         },
         {
             "name": "wp-cli/wp-cli",

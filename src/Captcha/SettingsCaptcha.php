@@ -200,6 +200,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -254,6 +255,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -271,6 +273,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -284,6 +287,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -299,7 +303,6 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 										'checkboxHelp' => \__('By default, Captcha is only loaded on pages that contain forms. However, with this option, you can load Captcha on every page.', 'eightshift-forms'),
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
@@ -330,6 +333,7 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[

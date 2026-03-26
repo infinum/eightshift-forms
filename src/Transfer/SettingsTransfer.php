@@ -143,6 +143,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'card-inline',
@@ -162,6 +163,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'card-inline',
@@ -183,6 +185,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									$this->getCptList(Forms::POST_TYPE_SLUG),
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'card-inline',
@@ -222,15 +225,13 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										<span>By default, imported forms will <strong>not override</strong> existing forms. This can be changed with the toggle below. In case slugs are the same, a new form will be created.</span>', 'eightshift-forms'),
 									],
 									[
-										'component' => 'intro',
-										'introIsHighlighted' => true,
-										'introIsHighlightedImportant' => true,
-										'introTitleSize' => 'small',
-										'introSubtitle' => \__('Backup your database before running any imports.<br />This process is not reversible.', 'eightshift-forms'),
+										'component' => 'notice',
+										'noticeContent' => \__('Backup your database before running any imports.<br />This process is not reversible.', 'eightshift-forms'),
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'checkboxes',
@@ -241,7 +242,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'component' => 'checkbox',
 												'checkboxValue' => 'override',
 												'checkboxAsToggle' => true,
-												'checkboxAsToggleSize' => 'medium',
 												'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
 												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transferExisting'),
 											],
@@ -249,7 +249,8 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
+										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'file',

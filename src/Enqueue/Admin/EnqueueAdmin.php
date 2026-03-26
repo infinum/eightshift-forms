@@ -42,7 +42,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 			return;
 		}
 
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminStyles'], 9990);
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
 	}
 

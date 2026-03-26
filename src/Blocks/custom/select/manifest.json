@@ -5,7 +5,7 @@
 	"description" : "An item selection field",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-select"
+		"src": "select"
 	},
 	"keywords": [
 		"select"
