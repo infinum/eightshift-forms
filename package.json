@@ -1,6 +1,6 @@
 {
 	"name": "@eightshift/eightshift-forms",
-	"version": "1.0.0",
+	"version": "8.16.0",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
 	"authors": [
 		{
@@ -45,8 +45,8 @@
 		"@tailwindcss/postcss": "^4.2.1",
 		"@tailwindcss/typography": "^0.5.19",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.8",
-		"caniuse-lite": "^1.0.30001779",
+		"baseline-browser-mapping": "^2.10.10",
+		"caniuse-lite": "^1.0.30001780",
 		"choices.js": "^11.2.1",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
