@@ -34,15 +34,15 @@ class Theme implements ServiceInterface
 			'esf:text-sm!',
 			'esf:h-42!',
 			'esf:shadow-none!',
-			'esf:text-secondary-900!',
-			'esf:placeholder:text-secondary-400!',
-			'esf:focus:border-accent-600!',
+			'esf:text-black!',
+			'esf:placeholder:text-gray-400!',
+			'esf:focus:border-accent!',
 			'esf:focus:shadow-none!',
 			'esf:focus:outline-none!',
 		],
 		'help' => [
-			'esf:text-secondary-400 esf:text-xs/17',
-			'esf:[&>code]:text-secondary-400! esf:[&>code]:text-xs/17! esf:[&>code]:m-0! esf:[&>code]:px-3! esf:[&>code]:py-1! esf:[&>code]:bg-secondary-100! esf:[&>code]:rounded-sm!',
+			'esf:text-gray-400 esf:text-xs/17',
+			'esf:[&>code]:text-gray-400! esf:[&>code]:text-xs/17! esf:[&>code]:m-0! esf:[&>code]:px-3! esf:[&>code]:py-1! esf:[&>code]:bg-gray-100! esf:[&>code]:rounded-sm!',
 		],
 		'label' => [
 			'esf:text-sm',
@@ -333,6 +333,7 @@ class Theme implements ServiceInterface
 					'esf:max-w-288',
 					'esf:max-h-[80vh]',
 					'esf:overflow-x-hidden',
+					'esf:border',
 
 					'esf:rounded-md',
 					'esf:px-16',

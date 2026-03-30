@@ -1152,7 +1152,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			]),
 			...(isset($include['search']) ? [
 				Helpers::render('input', [
-					'fieldSkip' => true,
+					// 'fieldSkip' => true,
 					'inputName' => 'search',
 					'inputPlaceholder' => \__('Search', 'eightshift-forms'),
 					'additionalClass' => "$searchSelector esf:max-w-3xs!",

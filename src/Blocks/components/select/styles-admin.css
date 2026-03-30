@@ -1,0 +1,165 @@
+/* @import 'choices.js/public/assets/styles/choices.min.css'; */
+
+@import 'tailwindcss' prefix(esf);
+@reference '../../../../tailwind.css';
+
+@layer esf {
+	/* Choices.js select — third-party library CSS not expressible in Tailwind utilities */
+	div.es-select {
+		@apply esf:rounded-md;
+		/* @apply esf:m-0; */
+		@apply esf:text-sm;
+	}
+
+	div.es-select.choices[data-type*='select-one'] .choices__inner {
+		/* @apply esf:p-0; */
+	}
+
+	div.es-select.choices[data-type*='select-multiple'] .choices__inner {
+		/* @apply esf:py-10 esf:px-10; */
+	}
+
+	div.es-select.choices[data-type*='select-multiple'] .choices__inner .choices__input {
+		/* @apply esf:p-0;
+		@apply esf:m-0; */
+	}
+
+	div.es-select.choices[data-type*='select-multiple'] .choices__inner .choices__input::placeholder {
+		@apply esf:text-gray-400;
+	}
+
+	div.es-select .choices__inner {
+		@apply esf:text-sm;
+		@apply esf:rounded-md;
+		@apply esf:bg-transparent;
+		/* @apply esf:block-size-auto; */
+		@apply esf:border;
+		@apply esf:border-border;
+		/* @apply esf:p-0; */
+		/* @apply esf:min-block-size-42; */
+		@apply esf:transition-colors esf:duration-300;
+	}
+
+	div.es-select .choices__list--dropdown {
+		@apply esf:transition-colors esf:duration-300;
+	}
+
+	div.es-select .choices__list--dropdown .choices__item {
+		@apply esf:text-sm;
+		@apply esf:p-10;
+		@apply esf:flex esf:items-center esf:flex-wrap;
+	}
+
+	div.es-select .choices__list--dropdown .choices__input {
+		@apply esf:border-b;
+		@apply esf:border-border;
+	}
+
+	div.es-select .choices__list--single {
+		@apply esf:min-h-42;
+		@apply esf:py-10;
+		@apply esf:px-10;
+		@apply esf:pr-42;
+		@apply esf:flex esf:items-center esf:flex-wrap;
+		@apply esf:text-sm;
+	}
+
+	div.es-select .choices__list--multiple .choices__item {
+		@apply esf:text-sm;
+	}
+
+	div.es-select .choices__input {
+		@apply esf:rounded-none;
+		@apply esf:border-none;
+		@apply esf:bg-none;
+		@apply esf:text-sm;
+	}
+
+	div.es-select .choices__input:focus {
+		@apply esf:outline-none;
+		/* @apply esf:box-shadow-none; */
+		@apply esf:border-accent;
+	}
+
+	div.es-select.is-focused .choices__inner {
+		@apply esf:border-accent;
+	}
+
+	div.es-select.is-open .choices__list--dropdown {
+		@apply esf:border-accent;
+	}
+
+	/* Input — admin focus ring and transition */
+	input.es-input {
+		@apply esf:transition-colors esf:duration-300;
+	}
+
+	input.es-input:focus:not(:focus-visible) {
+		@apply esf:outline-none!;
+		/* @apply esf:box-shadow-none!; */
+	}
+
+	input.es-input:focus-visible {
+		@apply esf:outline-none!;
+		/* @apply esf:box-shadow-none!; */
+		/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!; */
+	}
+
+	/* Input with inline before/after content — focus ring propagation */
+	.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible)
+		.es-field__after-content {
+		/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!;
+		@apply esf:clip-path-inset-100vw -100vw -100vw 0; */
+	}
+
+	.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible)
+		.es-input {
+		/* @apply esf:clip-path-inset-100vw 1px -100vw -100vw; */
+	}
+
+	.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible)
+		.es-field__before-content {
+		/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!;
+		@apply esf:clip-path-inset-100vw 0 -100vw -100vw; */
+	}
+
+	.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible)
+		.es-input {
+		/* @apply esf:clip-path-inset-100vw -100vw -100vw 1px; */
+	}
+
+	.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+		.es-field__after-content,
+	.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+		.es-field__before-content {
+		/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!; */
+	}
+
+	.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+		.es-field__before-content {
+		/* @apply esf:clip-path-inset-100vw 0 -100vw -100vw; */
+	}
+
+	.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+		.es-field__after-content {
+		/* @apply esf:clip-path-inset-100vw -100vw -100vw 0; */
+	}
+
+	.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
+		.es-input {
+		/* @apply esf:clip-path-inset-100vw 1px -100vw 1px; */
+	}
+
+	/* Choices.js select — admin overrides (border radius, font size, shadows) */
+	div.es-select .choices__list--dropdown {
+		/* @apply esf:border-start-start-radius-0;
+		@apply esf:border-start-end-radius-0;
+		@apply esf:border-end-end-radius-0.375rem;
+		@apply esf:border-end-start-radius-0.375rem; */
+		/* @apply esf:box-shadow-0 4px 6px -1px oklch(0% 0 0 / 0.1), 0 2px 4px -2px oklch(0% 0 0 / 0.1); */
+	}
+
+	div.es-select.is-open {
+		/* @apply esf:box-shadow-0 4px 6px -1px oklch(0% 0 0 / 0.1), 0 2px 4px -2px oklch(0% 0 0 / 0.1); */
+	}
+}
