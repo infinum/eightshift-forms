@@ -94,10 +94,8 @@ final class SettingsOutputHelpers
 	public static function getDataMappedIntegrationMissingFields(): array
 	{
 		return [
-			'component' => 'intro',
-			'introSubtitle' => \__("Your form is missing form fields, please edit your form before making integration connection!", 'eightshift-forms'),
-			'introIsHighlighted' => true,
-			'introIsHighlightedImportant' => true,
+			'component' => 'notice',
+			'noticeContent' => \__("Your form is missing form fields, please edit your form before making integration connection!", 'eightshift-forms'),
 		];
 	}
 
@@ -256,7 +254,7 @@ final class SettingsOutputHelpers
 		if ($constantName) {
 			// translators: %s will be replaced with global variable name.
 			$helpOutput .= \sprintf(\__('
-				<details class="is-filter-applied">
+				<details class="esf-is-filter-applied">
 					<summary>Available global variables</summary>
 					<ul>
 						<li>%s</li>
@@ -266,7 +264,7 @@ final class SettingsOutputHelpers
 				</details>', 'eightshift-forms'), $constantName);
 
 			if ($isConstantValueUsed) {
-				$helpOutput = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
+				$helpOutput = '<span class="esf-is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
 			}
 		}
 
@@ -337,10 +335,8 @@ final class SettingsOutputHelpers
 					]
 				],
 				$allowIsChecked ? [
-					'component' => 'intro',
-					'introSubtitle' => \__('Make sure you turn off the Oauth connection when the connection is created or it will turn off automatically after 5 minutes if your Cron events are set correctly. ', 'eightshift-forms'),
-					'introIsHighlighted' => true,
-					'introIsHighlightedImportant' => true,
+					'component' => 'notice',
+					'noticeContent' => \__('Make sure you turn off the Oauth connection when the connection is created or it will turn off automatically after 5 minutes if your Cron events are set correctly. ', 'eightshift-forms'),
 				] : [],
 				[
 					'component' => 'card-inline',
@@ -385,7 +381,7 @@ final class SettingsOutputHelpers
 		// translators: %s will be replaced with form field names.
 		return \sprintf(\__('
 			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
-			<details class="is-filter-applied">
+			<details class="esf-is-filter-applied">
 				<summary>Available tags</summary>
 				<ul>
 					%s
@@ -410,7 +406,7 @@ final class SettingsOutputHelpers
 
 		// translators: %s will be replaced with integration response tags.
 		return \sprintf(\__('
-			<details class="is-filter-applied">
+			<details class="esf-is-filter-applied">
 				<summary>Response tags</summary>
 				<ul>
 					%s

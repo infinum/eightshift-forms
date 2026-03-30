@@ -12,7 +12,7 @@ export class Locations {
 
 	init() {
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
-			element.addEventListener('click', this.onClick, {once: true});
+			element.addEventListener('click', this.onClick, { once: true });
 		});
 	}
 
@@ -23,12 +23,10 @@ export class Locations {
 	};
 
 	async submit(target) {
-		const field = this.state.getFormFieldElementByChild(target);
-
 		const formData = new FormData();
 
-		formData.append('id', field.getAttribute(this.state.getStateAttribute('locationsId')));
-		formData.append('type', field.getAttribute(this.state.getStateAttribute('locationsType')));
+		formData.append('id', target.getAttribute(this.state.getStateAttribute('locationsId')));
+		formData.append('type', target.getAttribute(this.state.getStateAttribute('locationsType')));
 		this.utils.showLoader(this.FORM_ID);
 
 		// Populate body data.
@@ -48,24 +46,23 @@ export class Locations {
 			const response = await fetch(this.state.getRestUrl('locations'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				status,
-				data,
-			} = parsedResponse;
+			const { status, data } = parsedResponse;
 
 			this.utils.hideLoader(this.FORM_ID);
 
 			if (status === 'success') {
 				target.classList.add(this.state.getStateSelector('isHidden'));
-				target.closest(this.itemSelector).insertAdjacentHTML('afterend', data[this.state.getStateResponseOutputKey('adminLocations')]);
+				target
+					.closest(this.itemSelector)
+					.insertAdjacentHTML('afterend', data[this.state.getStateResponseOutputKey('adminLocations')]);
 				target.remove();
 			}
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(this.FORM_ID, 'adminLocations', name, message));
 		}
-	};
+	}
 }

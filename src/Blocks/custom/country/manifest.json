@@ -5,7 +5,7 @@
 	"description" : "Country selection field",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-country"
+		"src": "country"
 	},
 	"keywords": [
 		"country"

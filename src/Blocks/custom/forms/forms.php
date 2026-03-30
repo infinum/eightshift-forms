@@ -88,7 +88,7 @@ if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 $twClassesData = FormsHelper::getTwSelectorsData($attributes);
 $twClasses = FormsHelper::getTwSelectors($twClassesData, ['forms']);
 
-$formsClass = Helpers::classnames([
+$formsClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'forms', $blockClass),
 	UtilsHelper::getStateSelector('forms'),
 	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
@@ -136,7 +136,6 @@ $formsClass = Helpers::classnames([
 		'loader',
 		Helpers::props('loader', $attributes, [
 			'loaderIsGeolocation' => true,
-			'loaderTwSelectorsData' => $twClassesData,
 		])
 	);
 	?>

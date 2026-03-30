@@ -1080,11 +1080,19 @@
         },
         {
             "name": "phpstan/phpstan",
+<<<<<<< HEAD
+            "version": "2.1.42",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1279e1ce86ba768f0780c9d889852b4e02ff40d0",
+                "reference": "1279e1ce86ba768f0780c9d889852b4e02ff40d0",
+=======
             "version": "2.1.44",
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4a88c083c668b2c364a425c9b3171b2d9ea5d218",
                 "reference": "4a88c083c668b2c364a425c9b3171b2d9ea5d218",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -1129,7 +1137,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2026-03-17T14:58:32+00:00"
+=======
             "time": "2026-03-25T17:34:21+00:00"
+>>>>>>> main
         },
         {
             "name": "slevomat/coding-standard",
@@ -1511,6 +1523,18 @@
         },
         {
             "name": "wp-cli/php-cli-tools",
+<<<<<<< HEAD
+            "version": "v0.12.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wp-cli/php-cli-tools.git",
+                "reference": "9cbf9946ebe3462005b642de69ccd65753981517"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/9cbf9946ebe3462005b642de69ccd65753981517",
+                "reference": "9cbf9946ebe3462005b642de69ccd65753981517",
+=======
             "version": "v0.12.9",
             "source": {
                 "type": "git",
@@ -1521,6 +1545,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/c3d25138ce46a66647ec0dc9b17bf300338494aa",
                 "reference": "c3d25138ce46a66647ec0dc9b17bf300338494aa",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -1568,9 +1593,15 @@
             ],
             "support": {
                 "issues": "https://github.com/wp-cli/php-cli-tools/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.8"
+            },
+            "time": "2026-03-16T15:18:29+00:00"
+=======
                 "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.9"
             },
             "time": "2026-03-29T11:12:54+00:00"
+>>>>>>> main
         },
         {
             "name": "wp-cli/wp-cli",

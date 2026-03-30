@@ -103,16 +103,12 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			SettingsOutputHelpers::getMiscDisclaimer(\__('WPML', 'eightshift-forms')),
 			[
-				'component' => 'intro',
-				'introSubtitle' => \__('All po/mo translation files were translated using AI. Please check the translations and correct and if you find any issues, please contact us.', 'eightshift-forms'),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
+				'component' => 'notice',
+				'noticeContent' => \__('All po/mo translation files were translated using AI. Please check the translations and correct and if you find any issues, please contact us.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'intro',
-				'introSubtitle' => \__('In order for Eightshift Forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
+				'component' => 'notice',
+				'noticeContent' => \__('In order for Eightshift Forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',

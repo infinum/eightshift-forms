@@ -1,0 +1,27 @@
+@import 'tailwindcss' prefix(esf);
+@reference '../../../../tailwind.css';
+
+@layer esf {
+	.es-field--inline-before-after-content .es-field__content {
+		@apply esf:flex esf:items-center;
+	}
+
+	.es-field--inline-before-after-content .es-field__content-wrap {
+		@apply esf:flex-grow-1;
+	}
+
+	.es-field--inline-before-after-content .es-field__after-content {
+		@apply esf:px-10;
+		@apply esf:flex esf:items-center esf:justify-center;
+		@apply esf:border esf:border-border;
+		@apply esf:border-border;
+		@apply esf:bg-gray-50;
+		@apply esf:h-42;
+		@apply esf:transition-colors esf:duration-300;
+	}
+
+	.es-field--inline-before-after-content .es-field__after-content {
+		@apply esf:rounded-e-sm;
+		@apply esf:-mx-5;
+	}
+}

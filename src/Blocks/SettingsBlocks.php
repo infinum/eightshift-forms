@@ -121,14 +121,14 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'checkboxValue' => self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...($overrideGlobalSettingsCountry ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'select',
@@ -158,7 +158,6 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
@@ -209,6 +208,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -246,6 +246,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							...(!$disablePhoneCountryPicker ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[

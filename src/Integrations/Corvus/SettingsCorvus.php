@@ -228,6 +228,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -483,6 +484,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -503,6 +505,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -684,6 +687,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							...($storeIds ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								...$this->getApiKeysSettings($storeIds),

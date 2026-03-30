@@ -138,14 +138,13 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements SettingGl
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -156,6 +155,7 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),

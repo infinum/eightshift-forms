@@ -9,31 +9,23 @@
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
-
 $highlightedContentTitle = Helpers::checkAttr('highlightedContentTitle', $attributes, $manifest);
 $highlightedContentSubtitle = Helpers::checkAttr('highlightedContentSubtitle', $attributes, $manifest);
 $highlightedContentIcon = Helpers::checkAttr('highlightedContentIcon', $attributes, $manifest);
 
-$highlightedContentClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-]);
-
 ?>
 
-<div class="<?php echo esc_attr($highlightedContentClass); ?>">
-	<?php echo $highlightedContentIcon ? UtilsHelper::getUtilsIcons($highlightedContentIcon) : UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+<div class="esf:flex esf:items-center esf:justify-center esf:min-h-224 esf:flex-col esf:gap-8 esf:text-center esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-accent-600">
+	<?php echo $highlightedContentIcon ? UtilsHelper::getUtilsIcons($highlightedContentIcon) : UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>
 
-	<p class="<?php echo esc_attr("{$componentClass}__title"); ?>">
+	<div class="esf:text-secondary-950 esf:text-base esf:tracking-wide">
 		<?php echo esc_html($highlightedContentTitle); ?>
-	</p>
+	</div>
 
 	<?php if ($highlightedContentSubtitle) { ?>
-		<p class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
+		<div class="esf:text-xs esf:leading-snug esf:text-gray-500 esf:flex esf:items-center esf:flex-col esf:[&_a]:text-accent-600 esf:[&_a]:underline esf:[&_a]:decoration-dotted">
 			<?php echo wp_kses_post($highlightedContentSubtitle); ?>
-		</p>
+		</div>
 	<?php } ?>
 </div>

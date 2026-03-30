@@ -33,7 +33,7 @@ $dateOutputFormat = Helpers::checkAttr('dateOutputFormat', $attributes, $manifes
 $dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
 $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
 $dateMode = Helpers::checkAttr('dateMode', $attributes, $manifest);
-$dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $manifest);
+$dateTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $dateId = $dateName . '-' . Helpers::getUnique();
 
@@ -43,9 +43,9 @@ $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes,
 
 $twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date']);
 
-$dateClass = Helpers::classnames([
+$dateClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'date', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 if ($dateValue) {

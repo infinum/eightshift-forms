@@ -85,7 +85,7 @@ $twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
 	$selectorClass,
 ]);
 
-$fieldClass = Helpers::classnames([
+$fieldClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'field', $componentClass),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field', "{$componentClass}--{$selectorClass}"),
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
@@ -99,48 +99,48 @@ $fieldClass = Helpers::classnames([
 	...$fieldStyleOutput,
 ]);
 
-$labelClass = Helpers::classnames([
+$labelClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 ]);
 
-$labelInnerClass = Helpers::classnames([
+$labelInnerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
 ]);
 
-$innerClass = Helpers::classnames([
+$innerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-inner'),
 ]);
 
-$contentClass = Helpers::classnames([
+$contentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content'),
 ]);
 
-$beforeContentClass = Helpers::classnames([
+$beforeContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-before-content'),
 ]);
 
-$suffixContentClass = Helpers::classnames([
+$suffixContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'suffix-content', "{$componentClass}__suffix-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-suffix-content'),
 ]);
 
-$afterContentClass = Helpers::classnames([
+$afterContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-after-content'),
 ]);
 
-$helpClass = Helpers::classnames([
+$helpClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-help'),
 ]);
 
-$contentWrapClass = Helpers::classnames([
+$contentWrapClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
@@ -260,7 +260,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 				Helpers::props('error', $attributes, [
 					'errorId' => $fieldId,
 					'selectorClass' => $componentClass,
-					'additionalClass' => Helpers::classnames([
+					'additionalClass' => Helpers::clsx([
 						FormsHelper::getTwPart($twClasses, 'field', 'error'),
 						FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
 					]),

@@ -268,6 +268,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[

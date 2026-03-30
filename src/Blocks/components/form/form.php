@@ -58,10 +58,10 @@ $formAttrs = Helpers::checkAttr('formAttrs', $attributes, $manifest);
 $customClassSelectorFilterName = HooksHelpers::getFilterName(['block', 'form', 'customClassSelector']);
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
-$formClass = Helpers::classnames([
+$formClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'form', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-	Helpers::selector($customClassSelector, $customClassSelector),
+	$additionalClass,
+	$customClassSelector,
 	UtilsHelper::getStateSelector('form'),
 ]);
 
@@ -150,23 +150,18 @@ $formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_en
 			Helpers::props('formEditActions', $attributes, [
 				'formPostId' => $formPostId,
 				'formHasSteps' => $formHasSteps,
-				'formEditActionsTwSelectorsData' => $twClassesData,
 			])
 		);
 	}
 
 	echo Helpers::render(
 		'global-msg',
-		Helpers::props('globalMsg', $attributes, [
-			'globalMsgTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('globalMsg', $attributes)
 	);
 
 	echo Helpers::render(
 		'progress-bar',
-		Helpers::props('progressBar', $attributes, [
-			'progressBarTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('progressBar', $attributes)
 	);
 	?>
 
@@ -181,9 +176,7 @@ $formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_en
 	<?php
 	echo Helpers::render(
 		'loader',
-		Helpers::props('loader', $attributes, [
-			'loaderTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('loader', $attributes)
 	);
 	?>
 </form>

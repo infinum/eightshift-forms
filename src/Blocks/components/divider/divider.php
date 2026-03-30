@@ -12,15 +12,12 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $dividerExtraVSpacing = Helpers::checkAttr('dividerExtraVSpacing', $attributes, $manifest);
-$dividerNoSpacing = Helpers::checkAttr('dividerNoSpacing', $attributes, $manifest);
-$dividerNoDivider = Helpers::checkAttr('dividerNoDivider', $attributes, $manifest);
+$dividerSeparator = Helpers::checkAttr('dividerSeparator', $attributes, $manifest);
 
-$dividerClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-	Helpers::selector($dividerExtraVSpacing, $componentClass, '', 'extra-v-spacing'),
-	Helpers::selector($dividerNoSpacing, $componentClass, '', 'no-spacing'),
-	Helpers::selector($dividerNoDivider, $componentClass, '', 'no-divider'),
+$dividerClass = Helpers::clsx([
+	'esf:border-t esf:border-border',
+	$dividerExtraVSpacing ? 'esf:my-10' : '',
+	$dividerSeparator ? 'esf:-mx-24' : '',
 ]);
 ?>
 

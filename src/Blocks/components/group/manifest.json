@@ -14,7 +14,7 @@
 		"groupLabel": {
 			"type": "string"
 		},
-		"groupSublabel": {
+		"groupSubLabel": {
 			"type": "string"
 		},
 		"groupHelp": {

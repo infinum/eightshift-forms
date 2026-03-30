@@ -7,29 +7,10 @@
 		"introTitle": {
 			"type": "string"
 		},
-		"introTitleSize": {
-			"type": "string",
-			"default": "default"
-		},
 		"introSubtitle": {
 			"type": "string"
 		},
 		"introHelp": {
-			"type": "string"
-		},
-		"introIsHighlighted": {
-			"type": "boolean",
-			"default": false
-		},
-		"introIsHighlightedImportant": {
-			"type": "boolean",
-			"default": false
-		},
-		"introIsHeading": {
-			"type": "boolean",
-			"default": false
-		},
-		"introIcon": {
 			"type": "string"
 		}
 	}

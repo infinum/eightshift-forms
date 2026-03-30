@@ -2,14 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "checkboxes",
 	"title": "Checkboxes",
-	"description" : "Group of checkboxes",
+	"description": "Group of checkboxes",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-checkboxes"
+		"src": "checkboxes"
 	},
-	"keywords": [
-		"checkboxes"
-	],
+	"keywords": ["checkboxes"],
 	"hasInnerBlocks": true,
 	"components": {
 		"checkboxes": "checkboxes"

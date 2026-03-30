@@ -178,6 +178,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 							...($useEvents ? [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								[
@@ -211,6 +212,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								...(($eventsEmailFieldValue && $eventsEventNameValue) ? [
 									[
 										'component' => 'divider',
+										'dividerSeparator' => true,
 										'dividerExtraVSpacing' => true,
 									],
 									[
@@ -308,14 +310,13 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -326,6 +327,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
@@ -336,6 +338,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),

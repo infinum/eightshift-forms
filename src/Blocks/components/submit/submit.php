@@ -27,7 +27,7 @@ $submitButtonComponent = Helpers::checkAttr('submitButtonComponent', $attributes
 $submitButtonAsLink = Helpers::checkAttr('submitButtonAsLink', $attributes, $manifest);
 $submitButtonAsLinkUrl = Helpers::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
 $submitButtonTwParent = Helpers::checkAttr('submitButtonTwParent', $attributes, $manifest);
-$submitTwSelectorsData = Helpers::checkAttr('submitTwSelectorsData', $attributes, $manifest);
+$submitTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($submitTwSelectorsData, [$submitButtonTwParent]);
 

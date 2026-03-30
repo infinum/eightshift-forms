@@ -1,6 +1,7 @@
 /* global grecaptcha */
 
-import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
+import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
+import { debounce } from '@eightshift/ui-components/utilities';
 import selectManifest from './../../select/manifest.json';
 import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm } from './state-init';
 
@@ -60,7 +61,11 @@ export class Form {
 	initOnlyForms() {
 		if (this.state.getStateConfigIsAdmin()) {
 			// If is admin do normal init.
-			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0');
+			this.initOnlyFormsInner(
+				document
+					.querySelector(this.state.getStateSelector('form', true))
+					?.getAttribute(this.state.getStateAttribute('formId')) || '0',
+			);
 		} else {
 			// Find all forms elements.
 			const forms = document.querySelectorAll(this.state.getStateSelector('forms', true));
@@ -77,7 +82,10 @@ export class Form {
 					// If forms element have geolocation data attribute, init geolocation via ajax.
 					this.initGeolocationForm(formsItems);
 				} else {
-					const formId = formsItems?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
+					const formId =
+						formsItems
+							?.querySelector(this.state.getStateSelector('form', true))
+							?.getAttribute(this.state.getStateAttribute('formId')) || '0';
 
 					// Bailout if 0 as formId === 0 can only be used in admin.
 					if (formId === '0') {
@@ -100,7 +108,10 @@ export class Form {
 	async initGeolocationForm(formsElement) {
 		// If you have geolocation configured on the form but global setting is turned off. Return first form.
 		if (!this.state.getStateGeolocationIsUsed()) {
-			const formId = formsElement?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
+			const formId =
+				formsElement
+					?.querySelector(this.state.getStateSelector('form', true))
+					?.getAttribute(this.state.getStateAttribute('formId')) || '0';
 
 			this.initOnlyFormsInner(formId);
 
@@ -145,7 +156,10 @@ export class Form {
 
 			// Loop all form elements and remove all except the one we need.
 			[...forms].forEach((form) => {
-				if (form.getAttribute(this.state.getStateAttribute('formFid')) !== parsedResponseData?.[this.state.getStateResponseOutputKey('geoId')]) {
+				if (
+					form.getAttribute(this.state.getStateAttribute('formFid')) !==
+					parsedResponseData?.[this.state.getStateResponseOutputKey('geoId')]
+				) {
 					// Remove all forms except the one we got from ajax.
 					form.remove();
 				} else {
@@ -159,8 +173,7 @@ export class Form {
 
 			// Remove loading class from forms element.
 			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
-
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -211,7 +224,10 @@ export class Form {
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
 		// Select.
-		[...this.state.getStateElementByTypeField('select', formId), ...this.state.getStateElementByTypeField('country', formId)].forEach((select) => {
+		[
+			...this.state.getStateElementByTypeField('select', formId),
+			...this.state.getStateElementByTypeField('country', formId),
+		].forEach((select) => {
 			this.setupSelectField(formId, select.name);
 		});
 
@@ -236,7 +252,10 @@ export class Form {
 		});
 
 		// Date.
-		[...this.state.getStateElementByTypeField('date', formId), ...this.state.getStateElementByTypeField('dateTime', formId)].forEach((date) => {
+		[
+			...this.state.getStateElementByTypeField('date', formId),
+			...this.state.getStateElementByTypeField('dateTime', formId),
+		].forEach((date) => {
 			this.setupDateField(formId, date.name);
 		});
 
@@ -343,7 +362,7 @@ export class Form {
 			this.CONTROLLER = null;
 
 			return parsedResponse;
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -397,7 +416,7 @@ export class Form {
 			this.steps.formStepSubmit(formId, parsedResponse);
 			this.steps.formStepSubmitAfter(formId, parsedResponse);
 			this.state.setStateFormIsProcessing(false, formId);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -476,7 +495,11 @@ export class Form {
 				}
 
 				// This will be changed in the next release.
-				if (Boolean(this.state.getStateFormElement(formId)?.getAttribute(this.state.getStateAttribute('formHideOnSuccess')))) {
+				if (
+					Boolean(
+						this.state.getStateFormElement(formId)?.getAttribute(this.state.getStateAttribute('formHideOnSuccess')),
+					)
+				) {
 					this.state.getStateFormElement(formId).classList.add(this.state.getStateSelector('isHidden'));
 				}
 
@@ -615,7 +638,7 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch ({name, message}) {
+			} catch ({ name, message }) {
 				if (name === 'AbortError') {
 					return;
 				}
@@ -664,7 +687,7 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch ({name, message}) {
+			} catch ({ name, message }) {
 				if (name === 'AbortError') {
 					return;
 				}
@@ -885,7 +908,10 @@ export class Form {
 					const fieldset = field.closest('fieldset');
 
 					// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
-					if (fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'checkbox' || fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio') {
+					if (
+						fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'checkbox' ||
+						fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio'
+					) {
 						if (value !== '') {
 							fieldsetOtherOutput.push({
 								name,
@@ -958,7 +984,9 @@ export class Form {
 	 */
 	getFormDataGroup(formId) {
 		const output = [];
-		const groups = this.state.getStateFormElement(formId).querySelectorAll(`${this.state.getStateSelector('group', true)}`);
+		const groups = this.state
+			.getStateFormElement(formId)
+			.querySelectorAll(`${this.state.getStateSelector('group', true)}`);
 
 		// Check if we are saving group items in one key.
 		if (!groups.length) {
@@ -1023,13 +1051,16 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataStep(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('steps'),
-				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
-				custom: this.state.getStateFormStepsCurrent(formId),
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('steps'),
+					value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
+					custom: this.state.getStateFormStepsCurrent(formId),
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1040,32 +1071,35 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCommon(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('formId'),
-				value: this.state.getStateFormFid(formId),
-			},
-			{
-				name: this.state.getStateParam('postId'),
-				value: this.state.getStateFormPostId(formId),
-			},
-			{
-				name: this.state.getStateParam('type'),
-				value: this.state.getStateFormType(formId),
-			},
-			{
-				name: this.state.getStateParam('action'),
-				value: this.state.getStateFormAction(formId) ?? '',
-			},
-			{
-				name: this.state.getStateParam('actionExternal'),
-				value: this.state.getStateFormActionExternal(formId) ?? '',
-			},
-			{
-				name: this.state.getStateParam('secureData'),
-				value: this.state.getStateFormSecureData(formId) ?? '',
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('formId'),
+					value: this.state.getStateFormFid(formId),
+				},
+				{
+					name: this.state.getStateParam('postId'),
+					value: this.state.getStateFormPostId(formId),
+				},
+				{
+					name: this.state.getStateParam('type'),
+					value: this.state.getStateFormType(formId),
+				},
+				{
+					name: this.state.getStateParam('action'),
+					value: this.state.getStateFormAction(formId) ?? '',
+				},
+				{
+					name: this.state.getStateParam('actionExternal'),
+					value: this.state.getStateFormActionExternal(formId) ?? '',
+				},
+				{
+					name: this.state.getStateParam('secureData'),
+					value: this.state.getStateFormSecureData(formId) ?? '',
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1083,12 +1117,15 @@ export class Form {
 		const data = this.enrichment.getLocalStorage(this.state.getStateEnrichmentStorageName());
 
 		if (data) {
-			this.utils.buildFormDataItems([
-				{
-					name: this.state.getStateParam('storage'),
-					value: data,
-				},
-			], this.FORM_DATA);
+			this.utils.buildFormDataItems(
+				[
+					{
+						name: this.state.getStateParam('storage'),
+						value: data,
+					},
+				],
+				this.FORM_DATA,
+			);
 		}
 	}
 
@@ -1100,12 +1137,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataAdmin(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('settingsType'),
-				value: this.state.getStateFormTypeSettings(formId),
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('settingsType'),
+					value: this.state.getStateFormTypeSettings(formId),
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1149,12 +1189,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCaptcha(data) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('captcha'),
-				value: data,
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('captcha'),
+					value: data,
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1183,7 +1226,8 @@ export class Form {
 
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && this.state.getStateElementTypeCustom(name, formId) === 'number')
+			(this.state.getStateFormConfigUseSingleSubmit(formId) &&
+				this.state.getStateElementTypeCustom(name, formId) === 'number')
 		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
@@ -1214,7 +1258,10 @@ export class Form {
 
 		this.utils.setRangeCurrentValue(formId, name);
 
-		if ((this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) || this.state.getStateFormConfigUseSingleSubmit(formId)) {
+		if (
+			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
+			this.state.getStateFormConfigUseSingleSubmit(formId)
+		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
@@ -1568,20 +1615,27 @@ export class Form {
 					const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
 					// Output errors if there are any.
-					if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
-						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					if (
+						typeof response?.data?.[validationOutputKey] !== 'undefined' &&
+						Object.keys(response?.data?.[validationOutputKey])?.length > 0
+					) {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML =
+							response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
 					}
 
 					field?.classList?.add(this.state.getStateSelector('isFilled'));
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch ({name, message}) {
-					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+				} catch ({ name, message }) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML =
+						this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);
 
-					throw new Error(`API response returned an error. Function used: "fileUploadSuccess" with error: "${name}" and a message: "${message}" for form id: "${formId}"`);
+					throw new Error(
+						`API response returned an error. Function used: "fileUploadSuccess" with error: "${name}" and a message: "${message}" for form id: "${formId}"`,
+					);
 				}
 			});
 
@@ -1592,8 +1646,12 @@ export class Form {
 					const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
 					// Output errors if there are any.
-					if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
-						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					if (
+						typeof response?.data?.[validationOutputKey] !== 'undefined' &&
+						Object.keys(response?.data?.[validationOutputKey])?.length > 0
+					) {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML =
+							response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
 					} else {
 						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.message;
 					}
@@ -1602,12 +1660,15 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch ({name, message}) {
-					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+				} catch ({ name, message }) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML =
+						this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);
 
-					throw new Error(`API response returned an error. Function used: "fileUploadError" with error: "${name}" and a message: "${message}" for form id: "${formId}"`);
+					throw new Error(
+						`API response returned an error. Function used: "fileUploadError" with error: "${name}" and a message: "${message}" for form id: "${formId}"`,
+					);
 				}
 			});
 
@@ -1640,7 +1701,10 @@ export class Form {
 			this.state.getStateFormElement(formId)?.removeEventListener('submit', this.onFormSubmitEvent);
 
 			// Select.
-			[...this.state.getStateElementByTypeField('select', formId), ...this.state.getStateElementByTypeField('country', formId)].forEach((select) => {
+			[
+				...this.state.getStateElementByTypeField('select', formId),
+				...this.state.getStateElementByTypeField('country', formId),
+			].forEach((select) => {
 				const choices = this.state.getStateElementCustom(select.name, formId);
 
 				choices?.passedElement?.element?.removeEventListener('change', this.onSelectChangeEvent);
@@ -1697,7 +1761,10 @@ export class Form {
 			});
 
 			// Date.
-			[...this.state.getStateElementByTypeField('date', formId), ...this.state.getStateElementByTypeField('dateTime', formId)].forEach((date) => {
+			[
+				...this.state.getStateElementByTypeField('date', formId),
+				...this.state.getStateElementByTypeField('dateTime', formId),
+			].forEach((date) => {
 				this.state.getStateElementCustom(date.name, formId)?.destroy();
 			});
 
@@ -1812,7 +1879,10 @@ export class Form {
 					this.utils.showLoader(formId);
 
 					const filterFinal = {
-						[this.FILTER_SKIP_FIELDS]: [...this.steps.getIgnoreFields(formId), ...this.conditionalTags.getIgnoreFields(formId)],
+						[this.FILTER_SKIP_FIELDS]: [
+							...this.steps.getIgnoreFields(formId),
+							...this.conditionalTags.getIgnoreFields(formId),
+						],
 						[this.FILTER_IS_STEPS_FINAL_SUBMIT]: true,
 					};
 
@@ -1895,7 +1965,28 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		if (this.state.getStateElementTypeCustom(name, formId) === 'number') {
-			const allowedKeys = ['Backspace', 'Enter', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-', 'Tab', 'Delete'];
+			const allowedKeys = [
+				'Backspace',
+				'Enter',
+				'ArrowUp',
+				'ArrowDown',
+				'ArrowLeft',
+				'ArrowRight',
+				'0',
+				'1',
+				'2',
+				'3',
+				'4',
+				'5',
+				'6',
+				'7',
+				'8',
+				'9',
+				'.',
+				'-',
+				'Tab',
+				'Delete',
+			];
 
 			// Prevent the default action if the key is not allowed
 			if (!allowedKeys.includes(event.key)) {
@@ -1919,7 +2010,9 @@ export class Form {
 
 		this.state.setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], event.target, formId);
 
-		const options = [...custom?.passedElement?.element?.selectedOptions].map((option) => option?.value).filter((option) => option !== '');
+		const options = [...custom?.passedElement?.element?.selectedOptions]
+			.map((option) => option?.value)
+			.filter((option) => option !== '');
 
 		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'phone':
@@ -1976,7 +2069,7 @@ export class Form {
 			custom?.showDropdown();
 		}
 
-		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {	
+		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {
 			this.utils.scrollAction(field);
 		}
 
@@ -2031,7 +2124,11 @@ export class Form {
 		if (
 			!this.state.getStateConfigIsAdmin() &&
 			this.state.getStateFormConfigUseSingleSubmit(formId) &&
-			(typeCustom === 'range' || typeCustom === 'number' || typeCustom === 'checkbox' || typeCustom === 'radio' || typeCustom === 'rating')
+			(typeCustom === 'range' ||
+				typeCustom === 'number' ||
+				typeCustom === 'checkbox' ||
+				typeCustom === 'radio' ||
+				typeCustom === 'rating')
 		) {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);

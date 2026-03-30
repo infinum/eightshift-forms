@@ -172,14 +172,13 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
@@ -190,6 +189,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
@@ -200,6 +200,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
+									'dividerSeparator' => true,
 									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
@@ -228,6 +229,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[
@@ -265,9 +267,8 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							'tabLabel' => \__('Geolocation Tags', 'eightshift-forms'),
 							'tabContent' => [
 								[
-									'component' => 'intro',
-									'introSubtitle' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
-									'introIsHighlighted' => true,
+									'component' => 'notice',
+									'noticeContent' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
 								],
 								[
 									'component' => 'textarea',
@@ -308,6 +309,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							[
 								'component' => 'divider',
+								'dividerSeparator' => true,
 								'dividerExtraVSpacing' => true,
 							],
 							[

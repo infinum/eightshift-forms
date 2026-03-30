@@ -1,0 +1,24 @@
+@import 'tailwindcss' prefix(esf);
+@reference '../../../../tailwind.css';
+
+@layer esf {
+	.esf-pagination {
+		@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
+
+		& ul {
+			@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0!;
+		}
+
+		& li {
+			@apply esf:m-0!;
+		}
+
+		& a {
+			@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-accent-700! esf:bg-transparent! esf:border! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-700! esf:hover:border-accent-700! esf:active:text-white! esf:active:bg-accent-700! esf:active:border-accent-700! esf:transition-colors! esf:duration-300!;
+		}
+
+		& span.current {
+			@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:text-white! esf:bg-accent-700! esf:border-accent-700! esf:hover:text-white! esf:hover:bg-accent-900! esf:hover:border-accent-900! esf:active:text-white! esf:active:bg-accent-900! esf:active:border-accent-900! esf:transition-colors! esf:duration-300!;
+		}
+	}
+}

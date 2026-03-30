@@ -44,7 +44,7 @@ $inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes
 $inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
 $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
 $inputRangeUseCustomField = Helpers::checkAttr('inputRangeUseCustomField', $attributes, $manifest);
-$inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
+$inputTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $inputId = $inputName . '-' . Helpers::getUnique();
 
@@ -56,7 +56,7 @@ $twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range
 
 $inputClass = Helpers::clsx([
 	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 

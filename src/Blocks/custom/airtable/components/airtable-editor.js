@@ -1,31 +1,17 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
+import manifest from '../manifest.json';
 
-export const AirtableEditor = ({
-	attributes,
-	setAttributes,
-	itemIdKey,
-	innerIdKey,
-	clientId,
-}) => {
-	const manifest = select(STORE_NAME).getBlock('airtable');
-
-	const {
-		blockClass,
-	} = attributes;
-
+export const AirtableEditor = ({ attributes, setAttributes, itemIdKey, innerIdKey, clientId }) => {
 	return (
-		<div className={blockClass}>
-			<IntegrationsEditor
-				clientId={clientId}
-				itemId={checkAttr(itemIdKey, attributes, manifest)}
-				innerId={checkAttr(innerIdKey, attributes, manifest)}
-				useInnerId={true}
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-		</div>
+		<IntegrationsEditor
+			clientId={clientId}
+			itemId={checkAttr(itemIdKey, attributes, manifest)}
+			innerId={checkAttr(innerIdKey, attributes, manifest)}
+			useInnerId={true}
+			attributes={attributes}
+			setAttributes={setAttributes}
+		/>
 	);
 };
