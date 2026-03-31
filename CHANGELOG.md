@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.0.0]
+
+### Updated
+
+- Updated dependencies.
+- Minimum PHP version is now 8.4.
+
 ## [8.16.0]
 
 ### Changed
@@ -1755,6 +1762,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.0.0]: https://github.com/infinum/eightshift-forms/compare/8.16.0...9.0.0
 [8.16.0]: https://github.com/infinum/eightshift-forms/compare/8.15.2...8.16.0
 [8.15.2]: https://github.com/infinum/eightshift-forms/compare/8.15.1...8.15.2
 [8.15.1]: https://github.com/infinum/eightshift-forms/compare/8.15.0...8.15.1
