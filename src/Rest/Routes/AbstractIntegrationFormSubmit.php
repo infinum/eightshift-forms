@@ -498,6 +498,9 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		// Set validation submit once.
 		$this->getValidator()->setValidationSubmitOnce($formId);
 
+		// Action: fires after a successful integration form submission.
+		\do_action(HooksHelpers::getActionName(['integrations', $type, 'submitSuccess']), $formDetails, $formId);
+
 		return [
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success", $formId),
 			AbstractBaseRoute::R_DEBUG => [

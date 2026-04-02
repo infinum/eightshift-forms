@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.0]
+
+### Added
+
+- Added `do_action` hooks that fire on successful form submission, one per integration type (e.g. `eightshift_forms_integrations_mailchimp_submit_success`) and one for custom/no-integration forms (`eightshift_forms_integrations_custom_submit_success`). Both pass `$formDetails` and `$formId` as arguments.
+
 ## [9.0.0]
 
 ### Updated
@@ -1762,6 +1768,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.0]: https://github.com/infinum/eightshift-forms/compare/9.0.0...9.1.0
 [9.0.0]: https://github.com/infinum/eightshift-forms/compare/8.16.0...9.0.0
 [8.16.0]: https://github.com/infinum/eightshift-forms/compare/8.15.2...8.16.0
 [8.15.2]: https://github.com/infinum/eightshift-forms/compare/8.15.1...8.15.2

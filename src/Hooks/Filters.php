@@ -354,6 +354,62 @@ final class Filters
 				'twoToThreeLocale',
 				'clearbit',
 			],
+			'integrations' => [
+				SettingsMailer::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsMailchimp::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsGreenhouse::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsHubspot::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsMailerlite::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsGoodbits::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsAirtable::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsMoments::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsWorkable::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsTalentlyft::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsJira::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsCorvus::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsPaycek::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsPipedrive::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsCalculator::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsNationbuilder::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				'custom' => [
+					'submitSuccess',
+				],
+			],
 		];
 	}
 
