@@ -592,6 +592,11 @@ class NationbuilderClient implements NationbuilderClientInterface
 				$value = \implode(', ', $value);
 			}
 
+			// Sanitize to prevent HTML injection into NationBuilder fields.
+			if (\is_string($value)) {
+				$value = \wp_strip_all_tags($value);
+			}
+
 			if (isset($this->getCustomFields()[$mapParam])) {
 				$output['custom_values'][$mapParam] = $value;
 			} else {
