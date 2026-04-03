@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.1]
+
+### Fixed
+
+- Sanitized NationBuilder field values with `wp_strip_all_tags` to prevent HTML injection.
+
 ## [9.1.0]
 
 ### Added
@@ -1768,6 +1774,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.1]: https://github.com/infinum/eightshift-forms/compare/9.1.0...9.1.1
 [9.1.0]: https://github.com/infinum/eightshift-forms/compare/9.0.0...9.1.0
 [9.0.0]: https://github.com/infinum/eightshift-forms/compare/8.16.0...9.0.0
 [8.16.0]: https://github.com/infinum/eightshift-forms/compare/8.15.2...8.16.0
