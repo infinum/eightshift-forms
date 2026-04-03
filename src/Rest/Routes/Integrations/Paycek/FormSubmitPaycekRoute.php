@@ -19,6 +19,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\ValidationFailedException;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -148,6 +149,8 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		}
 
 		$params = $this->setRealOrderNumber($params, $successAdditionalData, $formId);
+
+		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
