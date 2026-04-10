@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.2]
+
+### Fixed
+
+- Fixed conditional tags being lost when converting between block types (checkboxes, radios, select) using the "show as" option. Both field-level and inner-item conditional tags are now correctly preserved across all conversion directions.
+
 ## [9.1.1]
 
 ### Fixed
@@ -1774,6 +1780,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.2]: https://github.com/infinum/eightshift-forms/compare/9.1.1...9.1.2
 [9.1.1]: https://github.com/infinum/eightshift-forms/compare/9.1.0...9.1.1
 [9.1.0]: https://github.com/infinum/eightshift-forms/compare/9.0.0...9.1.0
 [9.0.0]: https://github.com/infinum/eightshift-forms/compare/8.16.0...9.0.0
