@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\FriendlyCaptcha\FriendlyCaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
@@ -51,6 +52,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param FriendlyCaptchaInterface $friendlyCaptcha Inject Friendly Captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign methods.
@@ -60,6 +62,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
+		FriendlyCaptchaInterface $friendlyCaptcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ActiveCampaignClientInterface $activeCampaignClient
@@ -68,6 +71,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
+		$this->friendlyCaptcha = $friendlyCaptcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->activeCampaignClient = $activeCampaignClient;

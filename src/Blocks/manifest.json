@@ -594,6 +594,7 @@
 			"hubspotPageUrl": "es-form-hubspot-page-url",
 			"mailchimpTags": "es-form-mailchimp-tags",
 			"captcha": "es-form-captcha",
+			"friendlyCaptcha": "es-form-friendly-captcha",
 			"direct": "es-form-direct",
 			"itemId": "es-form-item-id",
 			"innerId": "es-form-inner-id",
