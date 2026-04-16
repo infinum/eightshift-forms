@@ -589,6 +589,28 @@ export class Form {
 	}
 
 	/**
+	 * Run form with Friendly Captcha validation.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
+	runFormFriendlyCaptcha(formId, filter = {}) {
+		if (!this.state.getStateFriendlyCaptchaIsUsed()) {
+			return;
+		}
+
+		const token = window[prefix]?.friendlyCaptcha?.getResponse() ?? '';
+
+		this.setFormDataFriendlyCaptcha({
+			token,
+		});
+
+		this.formSubmit(formId, filter);
+	}
+
+	/**
 	 * Execute enterprise captcha.
 	 *
 	 * @param {string} actionName Action name.
@@ -1154,6 +1176,22 @@ export class Form {
 		this.utils.buildFormDataItems([
 			{
 				name: this.state.getStateParam('captcha'),
+				value: data,
+			},
+		], this.FORM_DATA);
+	}
+
+	/**
+	 * Set form data object for all forms - friendly captcha.
+	 *
+	 * @param {object} data Friendly Captcha data.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataFriendlyCaptcha(data) {
+		this.utils.buildFormDataItems([
+			{
+				name: this.state.getStateParam('friendlyCaptcha'),
 				value: data,
 			},
 		], this.FORM_DATA);
@@ -1820,6 +1858,8 @@ export class Form {
 
 					if (this.state.getStateCaptchaIsUsed()) {
 						this.runFormCaptcha(formId, filterFinal);
+					} else if (this.state.getStateFriendlyCaptchaIsUsed()) {
+						this.runFormFriendlyCaptcha(formId, filterFinal);
 					} else {
 						this.formSubmit(formId, filterFinal);
 					}
@@ -1835,6 +1875,8 @@ export class Form {
 
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId, filterNormal);
+			} else if (this.state.getStateFriendlyCaptchaIsUsed()) {
+				this.runFormFriendlyCaptcha(formId, filterNormal);
 			} else {
 				this.formSubmit(formId, filterNormal);
 			}
@@ -1954,6 +1996,8 @@ export class Form {
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);
+			} else if (this.state.getStateFriendlyCaptchaIsUsed()) {
+				this.runFormFriendlyCaptcha(formId);
 			} else {
 				this.formSubmit(formId);
 			}
@@ -1978,7 +2022,7 @@ export class Form {
 			custom?.showDropdown();
 		}
 
-		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {	
+		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {
 			this.utils.scrollAction(field);
 		}
 
@@ -2037,6 +2081,8 @@ export class Form {
 		) {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);
+			} else if (this.state.getStateFriendlyCaptchaIsUsed()) {
+				this.runFormFriendlyCaptcha(formId);
 			} else {
 				this.formSubmit(formId);
 			}
@@ -2083,6 +2129,8 @@ export class Form {
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);
+			} else if (this.state.getStateFriendlyCaptchaIsUsed()) {
+				this.runFormFriendlyCaptcha(formId);
 			} else {
 				this.formSubmit(formId);
 			}
@@ -2192,6 +2240,12 @@ export class Form {
 			},
 			setFormDataCaptcha: (data) => {
 				this.setFormDataCaptcha(data);
+			},
+			setFormDataFriendlyCaptcha: (data) => {
+				this.setFormDataFriendlyCaptcha(data);
+			},
+			runFormFriendlyCaptcha: (formId, filter = {}) => {
+				this.runFormFriendlyCaptcha(formId, filter);
 			},
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);

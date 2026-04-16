@@ -31,6 +31,7 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\FriendlyCaptcha\SettingsFriendlyCaptcha;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -166,6 +167,7 @@ final class Filters
 				'dependency' => [
 					'admin',
 					'captcha',
+					'friendlyCaptcha',
 					'blocksEditor',
 					'blocksFrontend',
 				],
@@ -427,6 +429,10 @@ final class Filters
 			SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY,
+
+			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_KEY,
+			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY,
+			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_API_KEY,
 
 			SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
 

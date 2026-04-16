@@ -24,6 +24,13 @@ domReady(() => {
 		});
 	}
 
+	// Load Friendly Captcha if used.
+	if (state.getStateFriendlyCaptchaIsUsed()) {
+		import('./friendly-captcha').then(({ FriendlyCaptcha }) => {
+			new FriendlyCaptcha(utils).init();
+		});
+	}
+
 	if (!state.getStateSettingsFormDisableAutoInit()) {
 		if (document.querySelectorAll(state.getStateSelector('form', true))?.length) {
 			import('./form').then(({ Form }) => {
