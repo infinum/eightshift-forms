@@ -107,6 +107,7 @@ export const StateEnum = {
 
 	FRIENDLY_CAPTCHA: 'friendlyCaptcha',
 	FRIENDLY_CAPTCHA_SITE_KEY: 'siteKey',
+	FRIENDLY_CAPTCHA_ENDPOINT: 'endpoint',
 
 	ENRICHMENT: 'enrichment',
 	ENRICHMENT_FORM_PREFILL: 'formPrefill',
@@ -278,6 +279,7 @@ export function setStateInitial() {
 
 	if (friendlyCaptcha.isUsed) {
 		setState([StateEnum.FRIENDLY_CAPTCHA_SITE_KEY], friendlyCaptcha.siteKey, StateEnum.FRIENDLY_CAPTCHA);
+		setState([StateEnum.FRIENDLY_CAPTCHA_ENDPOINT], friendlyCaptcha.endpoint, StateEnum.FRIENDLY_CAPTCHA);
 	}
 
 	// Geolocation.

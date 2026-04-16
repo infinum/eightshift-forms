@@ -54,6 +54,7 @@ export class FriendlyCaptcha {
 			element: container,
 			sitekey: siteKey,
 			startMode: 'auto',
+			apiEndpoint: this.state.getStateFriendlyCaptchaEndpoint(),
 		});
 	}
 

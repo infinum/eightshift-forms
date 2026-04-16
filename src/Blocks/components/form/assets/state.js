@@ -441,6 +441,9 @@ export class State {
 	getStateFriendlyCaptchaSiteKey = () => {
 		return getState([StateEnum.FRIENDLY_CAPTCHA_SITE_KEY], StateEnum.FRIENDLY_CAPTCHA);
 	};
+	getStateFriendlyCaptchaEndpoint = () => {
+		return getState([StateEnum.FRIENDLY_CAPTCHA_ENDPOINT], StateEnum.FRIENDLY_CAPTCHA);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Geolocation getters.
