@@ -156,8 +156,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [
-					'title' => \__('Spam prevention', 'eightshift-forms'),
-					'desc' => \__('Prevent misuse of your forms by adding Google ReCaptcha.', 'eightshift-forms'),
+					'title' => \__('Google reCAPTCHA', 'eightshift-forms'),
+					'desc' => \__('Prevent misuse of your forms by adding Google reCAPTCHA.', 'eightshift-forms'),
 					'externalLink' => 'https://www.google.com/recaptcha/about/',
 				],
 			],

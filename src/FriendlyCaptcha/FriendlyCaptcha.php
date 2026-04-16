@@ -81,7 +81,7 @@ class FriendlyCaptcha implements FriendlyCaptchaInterface
 		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getFriendlyCaptchaApiKey(), SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_API_KEY);
 
 		$apiResponse = \wp_remote_post(
-			'https://global.frcapi.com/api/v2/captcha/siteverify',
+			SettingsFriendlyCaptcha::getEndpointUrl(),
 			[
 				'headers' => [
 					'Content-Type' => 'application/json; charset=utf-8',

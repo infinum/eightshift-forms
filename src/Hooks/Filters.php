@@ -433,6 +433,7 @@ final class Filters
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_KEY,
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY,
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_API_KEY,
+			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY,
 
 			SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
 

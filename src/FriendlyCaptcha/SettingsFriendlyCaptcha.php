@@ -54,6 +54,17 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 	public const SETTINGS_FRIENDLY_CAPTCHA_API_KEY = 'friendly-captcha-api-key';
 
 	/**
+	 * Friendly Captcha use EU endpoint key.
+	 */
+	public const SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY = 'friendly-captcha-use-eu-endpoint';
+
+	/**
+	 * Friendly Captcha API endpoint URLs.
+	 */
+	public const FRIENDLY_CAPTCHA_ENDPOINT_GLOBAL_URL = 'https://global.frcapi.com/api/v2/captcha/siteverify';
+	public const FRIENDLY_CAPTCHA_ENDPOINT_EU_URL = 'https://eu.frcapi.com/api/v2/captcha/siteverify';
+
+	/**
 	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
@@ -156,6 +167,26 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 								'ES_FRIENDLY_CAPTCHA_API_KEY',
 								\__('API key', 'eightshift-forms'),
 							),
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
+								// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+								'checkboxesFieldHelp' => \__('The EU endpoint is hosted in Germany and ensures visitor data never leaves the EU.<br />Requires a Friendly Captcha Advanced or Enterprise plan.', 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use EU endpoint', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
+										'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
 						],
 					],
 					[
@@ -179,5 +210,25 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 				],
 			],
 		];
+	}
+
+	/**
+	 * Get the selected endpoint value.
+	 *
+	 * @return string
+	 */
+	public static function getEndpoint(): string
+	{
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY) ? 'eu' : 'global';
+	}
+
+	/**
+	 * Get the siteverify URL for the selected endpoint.
+	 *
+	 * @return string
+	 */
+	public static function getEndpointUrl(): string
+	{
+		return self::getEndpoint() === 'eu' ? self::FRIENDLY_CAPTCHA_ENDPOINT_EU_URL : self::FRIENDLY_CAPTCHA_ENDPOINT_GLOBAL_URL;
 	}
 }

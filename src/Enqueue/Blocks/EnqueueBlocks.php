@@ -356,6 +356,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					Variables::getFriendlyCaptchaSiteKey(),
 					SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY
 				),
+				'endpoint' => SettingsFriendlyCaptcha::getEndpoint(),
 			];
 		} else {
 			$output['friendlyCaptcha'] = [
