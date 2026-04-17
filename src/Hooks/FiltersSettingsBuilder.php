@@ -56,6 +56,7 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\FriendlyCaptcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -155,9 +156,19 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [
-					'title' => \__('Spam prevention', 'eightshift-forms'),
-					'desc' => \__('Prevent misuse of your forms by adding Google ReCaptcha.', 'eightshift-forms'),
+					'title' => \__('Google reCAPTCHA', 'eightshift-forms'),
+					'desc' => \__('Prevent misuse of your forms by adding Google reCAPTCHA.', 'eightshift-forms'),
 					'externalLink' => 'https://www.google.com/recaptcha/about/',
+				],
+			],
+			SettingsFriendlyCaptcha::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'use' => SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_KEY,
+				'labels' => [
+					'title' => \__('Friendly Captcha', 'eightshift-forms'),
+					'desc' => \__('Privacy-focused spam prevention using Friendly Captcha.', 'eightshift-forms'),
+					'externalLink' => 'https://friendlycaptcha.com/',
 				],
 			],
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [

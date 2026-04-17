@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\FriendlyCaptcha\FriendlyCaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
@@ -50,6 +51,7 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param FriendlyCaptchaInterface $friendlyCaptcha Inject Friendly Captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ClientInterface $goodbitsClient Inject goodbitsClient methods.
@@ -59,6 +61,7 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
+		FriendlyCaptchaInterface $friendlyCaptcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ClientInterface $goodbitsClient
@@ -67,6 +70,7 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
+		$this->friendlyCaptcha = $friendlyCaptcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->goodbitsClient = $goodbitsClient;

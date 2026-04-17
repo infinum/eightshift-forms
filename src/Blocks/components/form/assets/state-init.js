@@ -105,6 +105,10 @@ export const StateEnum = {
 	CAPTCHA_LOAD_ON_INIT: 'loadOnInit',
 	CAPTCHA_HIDE_BADGE: 'hideBadge',
 
+	FRIENDLY_CAPTCHA: 'friendlyCaptcha',
+	FRIENDLY_CAPTCHA_SITE_KEY: 'siteKey',
+	FRIENDLY_CAPTCHA_ENDPOINT: 'endpoint',
+
 	ENRICHMENT: 'enrichment',
 	ENRICHMENT_FORM_PREFILL: 'formPrefill',
 	ENRICHMENT_EXPIRATION: 'expiration',
@@ -178,6 +182,7 @@ export function setStateInitial() {
 	window[prefix].state = {
 		[StateEnum.FORMS]: [],
 		[StateEnum.CAPTCHA]: {},
+		[StateEnum.FRIENDLY_CAPTCHA]: {},
 		[StateEnum.ENRICHMENT]: {},
 		[StateEnum.GEOLOCATION]: {},
 		[StateEnum.SETTINGS]: {},
@@ -266,6 +271,15 @@ export function setStateInitial() {
 		setState([StateEnum.CAPTCHA_INIT_ACTION], captcha.initAction, StateEnum.CAPTCHA);
 		setState([StateEnum.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), StateEnum.CAPTCHA);
 		setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
+	}
+
+	// Friendly Captcha.
+	const friendlyCaptcha = esFormsLocalization.friendlyCaptcha ?? {};
+	setState([StateEnum.IS_USED], Boolean(friendlyCaptcha.isUsed), StateEnum.FRIENDLY_CAPTCHA);
+
+	if (friendlyCaptcha.isUsed) {
+		setState([StateEnum.FRIENDLY_CAPTCHA_SITE_KEY], friendlyCaptcha.siteKey, StateEnum.FRIENDLY_CAPTCHA);
+		setState([StateEnum.FRIENDLY_CAPTCHA_ENDPOINT], friendlyCaptcha.endpoint, StateEnum.FRIENDLY_CAPTCHA);
 	}
 
 	// Geolocation.

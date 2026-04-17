@@ -20,6 +20,8 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
+use EightshiftForms\Enqueue\FriendlyCaptcha\EnqueueFriendlyCaptcha;
+use EightshiftForms\FriendlyCaptcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\FiltersOutputMock;
@@ -346,6 +348,22 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			];
 		}
 
+		// Check if Friendly Captcha data is set and valid.
+		if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			$output['friendlyCaptcha'] = [
+				'isUsed' => true,
+				'siteKey' => SettingsHelpers::getOptionWithConstant(
+					Variables::getFriendlyCaptchaSiteKey(),
+					SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY
+				),
+				'endpoint' => SettingsFriendlyCaptcha::getEndpoint(),
+			];
+		} else {
+			$output['friendlyCaptcha'] = [
+				'isUsed' => false,
+			];
+		}
+
 		$output['isAdmin'] = false;
 
 		if (\is_user_logged_in()) {
@@ -364,20 +382,20 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getFrontendScriptDependencies(): array
 	{
-		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [];
-		}
+		$output = [];
 
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksFrontend']);
-		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
-			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+			$output = \apply_filters($scriptsDependency, []);
 		}
 
-		return [
-			"{$this->getAssetsPrefix()}-" . EnqueueCaptcha::CAPTCHA_ENQUEUE_HANDLE,
-			...$scriptsDependencyOutput,
-		];
+		if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			$output[] = "{$this->getAssetsPrefix()}-" . EnqueueFriendlyCaptcha::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
+		} elseif (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			$output[] = "{$this->getAssetsPrefix()}-" . EnqueueCaptcha::CAPTCHA_ENQUEUE_HANDLE;
+		}
+
+		return $output;
 	}
 }

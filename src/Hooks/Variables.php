@@ -116,6 +116,26 @@ class Variables
 	}
 
 	/**
+	 * Get Friendly Captcha site key.
+	 *
+	 * @return string
+	 */
+	public static function getFriendlyCaptchaSiteKey()
+	{
+		return \defined('ES_FRIENDLY_CAPTCHA_SITE_KEY') ? \ES_FRIENDLY_CAPTCHA_SITE_KEY : '';
+	}
+
+	/**
+	 * Get Friendly Captcha API key.
+	 *
+	 * @return string
+	 */
+	public static function getFriendlyCaptchaApiKey()
+	{
+		return \defined('ES_FRIENDLY_CAPTCHA_API_KEY') ? \ES_FRIENDLY_CAPTCHA_API_KEY : '';
+	}
+
+	/**
 	 * Get forms geolocation ip. Default: empty.
 	 *
 	 * @return string

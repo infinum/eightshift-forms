@@ -12,6 +12,8 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\FriendlyCaptcha\FriendlyCaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\FriendlyCaptcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Exception\BadRequestException;
@@ -76,6 +78,13 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected $captcha;
 
 	/**
+	 * Instance variable of FriendlyCaptchaInterface data.
+	 *
+	 * @var FriendlyCaptchaInterface
+	 */
+	protected $friendlyCaptcha;
+
+	/**
 	 * Instance variable of enrichment data.
 	 *
 	 * @var EnrichmentInterface
@@ -89,6 +98,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param FriendlyCaptchaInterface $friendlyCaptcha Inject Friendly Captcha methods.
 	 * @param MailerInterface $mailer Inject mailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 */
@@ -97,6 +107,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
+		FriendlyCaptchaInterface $friendlyCaptcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment
 	) {
@@ -104,6 +115,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
+		$this->friendlyCaptcha = $friendlyCaptcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 	}
@@ -225,12 +237,19 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			// Validate captcha.
 			if ($this->shouldCheckCaptcha()) {
-				$this->getCaptcha()->check(
-					$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
-					$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
-					$formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? false,
-					$formDetails
-				);
+				if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$this->getFriendlyCaptcha()->check(
+						$formDetails[Config::FD_FRIENDLY_CAPTCHA]['token'] ?? '',
+						$formDetails
+					);
+				} else {
+					$this->getCaptcha()->check(
+						$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
+						$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
+						$formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? false,
+						$formDetails
+					);
+				}
 			}
 
 			// Map enrichment data.
@@ -753,6 +772,16 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
+	 * Returns Friendly Captcha class.
+	 *
+	 * @return FriendlyCaptchaInterface
+	 */
+	protected function getFriendlyCaptcha()
+	{
+		return $this->friendlyCaptcha;
+	}
+
+	/**
 	 * Returns enrichment class.
 	 *
 	 * @return EnrichmentInterface
@@ -1195,6 +1224,9 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		// Get form captcha from params.
 		$output[Config::FD_CAPTCHA] = $params[Config::FD_CAPTCHA] ?? [];
 
+		// Get form Friendly Captcha from params.
+		$output[Config::FD_FRIENDLY_CAPTCHA] = $params[Config::FD_FRIENDLY_CAPTCHA] ?? [];
+
 		// Get form post Id from params.
 		$output[Config::FD_POST_ID] = $params[Config::FD_POST_ID] ?? '';
 
@@ -1271,6 +1303,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					break;
 				case UtilsHelper::getStateParam('captcha'):
 					$output[Config::FD_CAPTCHA] = $value['value'];
+					$output[Config::FD_PARAMS][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('friendlyCaptcha'):
+					$output[Config::FD_FRIENDLY_CAPTCHA] = $value['value'];
 					$output[Config::FD_PARAMS][$key] = $value;
 					break;
 				case UtilsHelper::getStateParam('actionExternal'):

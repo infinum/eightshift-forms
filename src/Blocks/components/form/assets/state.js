@@ -432,6 +432,20 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
+	// Friendly Captcha getters.
+	////////////////////////////////////////////////////////////////
+
+	getStateFriendlyCaptchaIsUsed = () => {
+		return getState([StateEnum.IS_USED], StateEnum.FRIENDLY_CAPTCHA);
+	};
+	getStateFriendlyCaptchaSiteKey = () => {
+		return getState([StateEnum.FRIENDLY_CAPTCHA_SITE_KEY], StateEnum.FRIENDLY_CAPTCHA);
+	};
+	getStateFriendlyCaptchaEndpoint = () => {
+		return getState([StateEnum.FRIENDLY_CAPTCHA_ENDPOINT], StateEnum.FRIENDLY_CAPTCHA);
+	};
+
+	////////////////////////////////////////////////////////////////
 	// Geolocation getters.
 	////////////////////////////////////////////////////////////////
 

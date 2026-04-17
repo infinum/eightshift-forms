@@ -97,6 +97,12 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS = 'captchaSuccess';
 	public const SETTINGS_FALLBACK_FLAG_CAPTCHA_DEBUG_SKIP_CHECK = 'captchaDebugSkipCheck';
 
+	public const SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_FEATURE_DISABLED = 'friendlyCaptchaFeatureDisabled';
+	public const SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_MISSING_TOKEN = 'friendlyCaptchaRequestMissingToken';
+	public const SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_WP_ERROR = 'friendlyCaptchaRequestWpError';
+	public const SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR = 'friendlyCaptchaOutputError';
+	public const SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_SUCCESS = 'friendlyCaptchaSuccess';
+
 	public const SETTINGS_FALLBACK_FLAG_GEOLOCATION_FEATURE_DISABLED = 'geolocationFeatureDisabled';
 	public const SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA = 'geolocationMalformedDecryptData';
 	public const SETTINGS_FALLBACK_FLAG_GEOLOCATION_DETECTION_FAILED = 'geolocationDetectionFailed';
