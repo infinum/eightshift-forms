@@ -78,7 +78,7 @@ class EnqueueFriendlyCaptcha extends AbstractEnqueueTheme
 
 		\wp_register_script(
 			$handle,
-			'https://cdn.jsdelivr.net/npm/@friendlycaptcha/sdk@0.1.12/site.min.js',
+			'https://cdn.jsdelivr.net/npm/@friendlycaptcha/sdk@0.2.0/site.min.js',
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
