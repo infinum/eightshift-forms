@@ -3,14 +3,14 @@
 /**
  * The Theme/Frontend Enqueue specific functionality - Friendly Captcha.
  *
- * @package EightshiftForms\Enqueue\FriendlyCaptcha
+ * @package EightshiftForms\Enqueue\Captcha
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Enqueue\FriendlyCaptcha;
+namespace EightshiftForms\Enqueue\Captcha;
 
-use EightshiftForms\FriendlyCaptcha\SettingsFriendlyCaptcha;
+use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;

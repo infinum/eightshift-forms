@@ -16,12 +16,13 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptchaProvider;
+use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
-use EightshiftForms\Enqueue\FriendlyCaptcha\EnqueueFriendlyCaptcha;
-use EightshiftForms\FriendlyCaptcha\SettingsFriendlyCaptcha;
+use EightshiftForms\Enqueue\Captcha\EnqueueFriendlyCaptcha;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\FiltersOutputMock;
@@ -390,8 +391,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output = \apply_filters($scriptsDependency, []);
 		}
 
-		if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			$output[] = "{$this->getAssetsPrefix()}-" . EnqueueFriendlyCaptcha::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
+		if (SettingsCaptchaProvider::getActiveProvider() === SettingsCaptchaProvider::PROVIDER_FRIENDLY) {
+			if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+				$output[] = "{$this->getAssetsPrefix()}-" . EnqueueFriendlyCaptcha::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
+			}
 		} elseif (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output[] = "{$this->getAssetsPrefix()}-" . EnqueueCaptcha::CAPTCHA_ENQUEUE_HANDLE;
 		}

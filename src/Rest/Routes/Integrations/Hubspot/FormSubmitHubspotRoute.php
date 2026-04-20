@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\FriendlyCaptcha\FriendlyCaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
@@ -59,7 +58,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param FriendlyCaptchaInterface $friendlyCaptcha Inject Friendly Captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param HubspotClientInterface $hubspotClient Inject hubspotClient methods.
@@ -70,7 +68,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		FriendlyCaptchaInterface $friendlyCaptcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		HubspotClientInterface $hubspotClient,
@@ -80,7 +77,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-		$this->friendlyCaptcha = $friendlyCaptcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->hubspotClient = $hubspotClient;

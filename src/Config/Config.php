@@ -465,7 +465,6 @@ class Config
 	public const FD_ACTION_EXTERNAL = 'actionExternal';
 	public const FD_API_STEPS = 'apiSteps';
 	public const FD_CAPTCHA = 'captcha';
-	public const FD_FRIENDLY_CAPTCHA = 'friendlyCaptcha';
 	public const FD_STORAGE = 'storage';
 	public const FD_IS_VALID = 'isValid';
 	public const FD_IS_API_VALID = 'isApiValid';
