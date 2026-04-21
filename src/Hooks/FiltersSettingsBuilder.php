@@ -156,7 +156,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [
-					'title' => \__('Captcha', 'eightshift-forms'),
+					'title' => \__('Spam prevention', 'eightshift-forms'),
 					'desc' => \__('Prevent misuse of your forms by adding a captcha provider.', 'eightshift-forms'),
 				],
 			],
