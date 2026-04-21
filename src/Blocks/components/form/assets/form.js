@@ -1182,7 +1182,7 @@ export class Form {
 	}
 
 	/**
-	 * Set form data object for all forms - friendly captcha.
+	 * Set form data object for all forms - Friendly Captcha.
 	 *
 	 * @param {object} data Friendly Captcha data.
 	 *
