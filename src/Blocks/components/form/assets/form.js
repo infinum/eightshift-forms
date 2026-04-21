@@ -596,18 +596,23 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	runFormFriendlyCaptcha(formId, filter = {}) {
+	async runFormFriendlyCaptcha(formId, filter = {}) {
 		if (!this.state.getStateFriendlyCaptchaIsUsed()) {
 			return;
 		}
 
-		const token = window[prefix]?.friendlyCaptcha?.getResponse() ?? '';
+		const widget = window[prefix]?.friendlyCaptcha;
+		const token = widget?.getResponse() ?? '';
 
 		this.setFormDataFriendlyCaptcha({
 			token,
 		});
 
-		this.formSubmit(formId, filter);
+		await this.formSubmit(formId, filter);
+
+		// Reset the widget after every server response so a fresh single-use
+		// token is ready for the next submission attempt.
+		widget?.reset();
 	}
 
 	/**

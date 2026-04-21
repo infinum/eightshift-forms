@@ -67,6 +67,15 @@ export class FriendlyCaptcha {
 		return this.widget?.getResponse() ?? '';
 	}
 
+	/**
+	 * Reset the widget so it generates a fresh token.
+	 *
+	 * @returns {void}
+	 */
+	reset() {
+		this.widget?.reset();
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -92,6 +101,9 @@ export class FriendlyCaptcha {
 			},
 			getResponse: () => {
 				return this.getResponse();
+			},
+			reset: () => {
+				this.reset();
 			},
 		};
 	}
