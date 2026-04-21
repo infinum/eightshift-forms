@@ -34,7 +34,6 @@ jobs:
         with:
           PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
           NODE_VERSION: ${{ matrix.node }}
-          USE_BUN: true
 
       - name: Set cache
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main

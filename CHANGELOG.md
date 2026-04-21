@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.4]
+
+### Changed
+
+- Updated `eightshift-libs` dependency from `^12.1.0` to `^12.3.3`.
+- Updated `eightshift-coding-standards` from `3.0.1` to `3.1.0`.
+- Updated JS dependencies: `@playwright/test` to `^1.59.1`, `webpack` to `^5.106.1`, `baseline-browser-mapping` to `^2.10.18`, and `caniuse-lite` to `^1.0.30001787`.
+- Removed `USE_BUN` flag from the bundle artifact workflow.
+
 ## [9.1.3]
 
 ### Added
@@ -1786,6 +1795,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.4]: https://github.com/infinum/eightshift-forms/compare/9.1.3...9.1.4
 [9.1.3]: https://github.com/infinum/eightshift-forms/compare/9.1.2...9.1.3
 [9.1.2]: https://github.com/infinum/eightshift-forms/compare/9.1.1...9.1.2
 [9.1.1]: https://github.com/infinum/eightshift-forms/compare/9.1.0...9.1.1
