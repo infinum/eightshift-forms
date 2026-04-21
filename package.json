@@ -25,6 +25,7 @@
 		"lint": "eslint",
 		"start": "webpack --watch --mode development",
 		"build": "webpack --mode production",
+		"build:sourcemaps": "webpack --mode production --env sourcemaps",
 		"prepare": "husky",
 		"test:e2e:playground": "npx @wp-playground/cli@latest server --auto-mount --blueprint=./tests/e2e/playground/playground.json",
 		"test:e2e": "playwright test",

@@ -35,7 +35,6 @@ jobs:
         with:
           PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
           NODE_VERSION: ${{ matrix.node }}
-          USE_BUN: true
 
       - name: Set cache
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
@@ -63,5 +62,52 @@ jobs:
         with:
           repo_token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
           file: release.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+
+  release-sourcemaps:
+    name: Create release with sourcemaps
+    runs-on: ubuntu-latest
+    needs: bundle
+    steps:
+      - name: Install plugin
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+          NODE_VERSION: ${{ matrix.node }}
+          BUILD_SOURCEMAPS: true
+
+      - name: Clear previous cache
+        working-directory: 'wp-content/plugins/eightshift-forms'
+        shell: bash
+        run: |
+          rm -rf eightshift
+
+      - name: Set cache
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+
+      - name: Post install cleanup - plugin
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+
+      - name: Setup correct folder/file permissions
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+
+      - name: Zip Plugin
+        shell: bash
+        run: |
+          cd wp-content/plugins
+          zip -rq ../../release-sourcemaps.zip eightshift-forms
+
+      - name: Upload zip to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          file: release-sourcemaps.zip
           tag: ${{ github.ref }}
           overwrite: true
