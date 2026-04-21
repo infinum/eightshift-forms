@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.3]
+
+### Added
+
+- Added sourcemaps to the release as a separate artifact.
+
 ## [9.1.2]
 
 ### Fixed
@@ -1780,6 +1786,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.3]: https://github.com/infinum/eightshift-forms/compare/9.1.2...9.1.3
 [9.1.2]: https://github.com/infinum/eightshift-forms/compare/9.1.1...9.1.2
 [9.1.1]: https://github.com/infinum/eightshift-forms/compare/9.1.0...9.1.1
 [9.1.0]: https://github.com/infinum/eightshift-forms/compare/9.0.0...9.1.0

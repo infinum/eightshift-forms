@@ -7,17 +7,12 @@ const path = require('path');
  * Please referer to Eightshift-libs wiki for details.
  */
 module.exports = (env, argv) => {
-
 	const projectConfig = {
 		config: {
 			projectDir: __dirname, // Current project directory absolute path.
 			projectPath: 'wp-content/plugins/eightshift-forms', // Project path relative to project root.
 		},
-		overrides: [
-			'application',
-			'applicationAdmin',
-			'applicationBlocks',
-		],
+		overrides: ['application', 'applicationAdmin', 'applicationBlocks'],
 	};
 
 	// Generate Webpack config for this project using options object.
@@ -27,7 +22,7 @@ module.exports = (env, argv) => {
 		// Load all projects config from eightshift-frontend-libs.
 		...project,
 
-		...(argv.mode === 'production' && { devtool: 'source-map' }),
+		...(env?.sourcemaps && { devtool: 'source-map' }),
 
 		output: {
 			// Load all output config from eightshift-frontend-libs.
