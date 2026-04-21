@@ -36,9 +36,9 @@
 		"wp-cli/wp-cli": "2.12.0"
 	},
 	"require": {
-		"php": ">=8.4",
+		"php": ">=8.3",
 		"erusev/parsedown": "^1.8.0",
-		"infinum/eightshift-libs": "^12.3.3"
+		"infinum/eightshift-libs": "^11.0.4"
 	},
 	"autoload": {
 		"psr-4": {
