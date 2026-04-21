@@ -43,18 +43,18 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param CaptchaInterface $captchaDispatcher Inject captcha methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		CaptchaInterface $captcha
+		CaptchaInterface $captchaDispatcher
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->captcha = $captcha;
+		$this->captcha = $captchaDispatcher;
 	}
 
 	/**

@@ -88,7 +88,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param CaptchaInterface $captchaDispatcher Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 */
@@ -96,14 +96,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		CaptchaInterface $captcha,
+		CaptchaInterface $captchaDispatcher,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->captcha = $captcha;
+		$this->captcha = $captchaDispatcher;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 	}

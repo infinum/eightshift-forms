@@ -49,7 +49,7 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param CaptchaInterface $captchaDispatcher Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ClientInterface $talentlyftClient Inject talentlyftClient methods.
@@ -58,7 +58,7 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		CaptchaInterface $captcha,
+		CaptchaInterface $captchaDispatcher,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ClientInterface $talentlyftClient
@@ -66,7 +66,7 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->captcha = $captcha;
+		$this->captcha = $captchaDispatcher;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->talentlyftClient = $talentlyftClient;
