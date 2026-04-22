@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds Captcha check.
+ * Runtime captcha dispatcher — delegates to the active provider.
  *
  * @package EightshiftForms\Captcha
  */
@@ -10,381 +10,58 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
-use EightshiftForms\Config\Config;
-use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Exception\BadRequestException;
-use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
-use WP_Error;
 
 /**
  * Captcha class.
+ *
+ * Resolved by autowiring whenever a consumer type-hints `CaptchaInterface $captcha`.
+ * Delegates to whichever provider is currently active.
  */
 class Captcha implements CaptchaInterface
 {
 	/**
-	 * Invalid-reason values from Google that are recoverable by a fresh token.
-	 */
-	private const ENTERPRISE_RETRY_REASONS = ['BROWSER_ERROR', 'EXPIRED', 'DUPE', 'TIMEOUT_OR_DUPLICATE'];
-
-	/**
-	 * Error codes from the free siteverify endpoint that are recoverable by a fresh token.
-	 */
-	private const FREE_RETRY_REASONS = ['browser-error', 'timeout-or-duplicate'];
-
-	/**
-	 * Instance variable of LabelsInterface data.
+	 * Google reCAPTCHA provider.
 	 *
-	 * @var LabelsInterface
+	 * @var Recaptcha
 	 */
-	protected $labels;
+	private Recaptcha $recaptcha;
 
 	/**
-	 * Instance variable of SecurityInterface data.
+	 * Friendly Captcha provider.
 	 *
-	 * @var SecurityInterface
+	 * @var FriendlyCaptcha
 	 */
-	protected $security;
+	private FriendlyCaptcha $friendlyCaptcha;
 
 	/**
-	 * Create a new instance that injects classes
+	 * Constructor.
 	 *
-	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param SecurityInterface $security Inject security methods (for user IP resolution).
+	 * @param Recaptcha $recaptcha Google reCAPTCHA provider.
+	 * @param FriendlyCaptcha $friendlyCaptcha Friendly Captcha provider.
 	 */
-	public function __construct(LabelsInterface $labels, SecurityInterface $security)
+	public function __construct(Recaptcha $recaptcha, FriendlyCaptcha $friendlyCaptcha)
 	{
-		$this->labels = $labels;
-		$this->security = $security;
+		$this->recaptcha = $recaptcha;
+		$this->friendlyCaptcha = $friendlyCaptcha;
 	}
 
 	/**
-	 * Check captcha request.
+	 * Delegate to the active captcha provider.
 	 *
 	 * @param string $token Token from frontend.
 	 * @param string $action Action to check.
 	 * @param boolean $isEnterprise Type of captcha.
 	 * @param array<string, mixed> $formDetails Form details.
 	 *
-	 * @throws BadRequestException If captcha is not valid.
-	 *
 	 * @return array<mixed>
 	 */
 	public function check(string $token, string $action, bool $isEnterprise, array $formDetails = []): array
 	{
-		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
-				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
-				],
-			];
+		if (SettingsCaptcha::getActiveProvider() === SettingsCaptcha::PROVIDER_FRIENDLY) {
+			return $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails);
 		}
 
-		$isRetry = (bool) ($formDetails[Config::FD_CAPTCHA]['isRetry'] ?? false);
-
-		$debug = [
-			'token' => $token,
-			'action' => $action,
-			'isEnterprise' => $isEnterprise,
-			'isRetry' => $isRetry,
-			'formDetails' => $formDetails,
-		];
-
-		if (!$token) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaBadRequest'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				]
-			);
-			// phpcs:enable
-		}
-
-		if ($isEnterprise) {
-			$response = $this->onEnterprise($token, $action);
-		} else {
-			$response = $this->onFree($token);
-		}
-
-		// Generic error msg from WP.
-		if (\is_wp_error($response)) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('submitWpError'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				]
-			);
-			// phpcs:enable
-		}
-
-		// Get body from the response.
-		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
-
-		if ($isEnterprise) {
-			return $this->getEnterpriseOutput($responseBody, $action, $debug, $isRetry);
-		}
-
-		return $this->getFreeOutput($responseBody, $action, $debug, $isRetry);
-	}
-
-	/**
-	 * Get Enterprise response from api.
-	 *
-	 * @param string $token Token for captcha.
-	 * @param string $action Action name.
-	 *
-	 * @return array<mixed>|WP_Error
-	 */
-	private function onEnterprise(string $token, string $action): array|WP_Error
-	{
-		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
-		$projectIdKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
-
-		$event = [
-			'siteKey' => $siteKey,
-			'token' => $token,
-			'expectedAction' => $action,
-		];
-
-		// Google recommends sending userAgent and userIpAddress to improve detection.
-		$userAgent = $this->security->getUserAgent();
-		if ($userAgent !== '') {
-			$event['userAgent'] = $userAgent;
-		}
-
-		$userIp = $this->security->getIpAddress();
-		if ($userIp !== '') {
-			$event['userIpAddress'] = $userIp;
-		}
-
-		return \wp_remote_post(
-			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
-			[
-				'headers' => [
-					'Content-Type' => 'application/json; charset=utf-8',
-					'Referer' => \site_url(),
-				],
-				'data_format' => 'body',
-				'body' => \wp_json_encode([
-					'event' => $event,
-				]),
-			]
-		);
-	}
-
-	/**
-	 * Get Enterprise response from api.
-	 *
-	 * @param string $token Token for captcha.
-	 *
-	 * @return array<mixed>|WP_Error
-	 */
-	private function onFree(string $token): array|WP_Error
-	{
-		$secretKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
-
-		return \wp_remote_post(
-			"https://www.google.com/recaptcha/api/siteverify",
-			[
-				'body' => [
-					'secret' => $secretKey,
-					'response' => $token,
-				],
-			]
-		);
-	}
-
-	/**
-	 * Get enterprise output.
-	 *
-	 * @param array<mixed> $responseBody Response body from API.
-	 * @param string $action Action name.
-	 * @param array<mixed> $debug Debug data.
-	 * @param bool $isRetry Whether this request is itself a client retry.
-	 *
-	 * @throws BadRequestException If captcha is not valid.
-	 *
-	 * @return mixed
-	 */
-	private function getEnterpriseOutput(array $responseBody, string $action, array $debug, bool $isRetry)
-	{
-		$debug = \array_merge($debug, [
-			'responseBody' => $responseBody,
-			'action' => $action,
-		]);
-
-		if (!isset($responseBody['tokenProperties']['valid']) || !$responseBody['tokenProperties']['valid']) {
-			$errorCode = $responseBody['tokenProperties']['invalidReason'] ?? '';
-
-			$debug['invalidReason'] = $errorCode;
-
-			$retry = \in_array($errorCode, self::ENTERPRISE_RETRY_REASONS, true);
-
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				],
-				[
-					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
-					UtilsHelper::getStateResponseOutputKey('captchaSkipLogging') => $retry && !$isRetry,
-				]
-			);
-			// phpcs:enable
-		}
-
-		// If response is error.
-		if (!isset($responseBody['riskAnalysis']['score'])) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				]
-			);
-			// phpcs:enable
-		}
-
-		return $this->validate(
-			$responseBody,
-			$action,
-			$responseBody['tokenProperties']['action'] ?? '',
-			$responseBody['riskAnalysis']['score'] ?? 0.0,
-			$debug
-		);
-	}
-
-	/**
-	 * Get free output.
-	 *
-	 * @param array<mixed> $responseBody Response body from API.
-	 * @param string $action Action name.
-	 * @param array<mixed> $debug Debug data.
-	 * @param bool $isRetry Whether this request is itself a client retry.
-	 *
-	 * @throws BadRequestException If captcha is not valid.
-	 *
-	 * @return mixed
-	 */
-	private function getFreeOutput(array $responseBody, string $action, array $debug, bool $isRetry)
-	{
-		$debug = \array_merge($debug, [
-			'responseBody' => $responseBody,
-			'action' => $action,
-		]);
-
-		// If response is error.
-		if (!isset($responseBody['score'])) {
-			$errorCodes = $responseBody['error-codes'] ?? [];
-
-			$debug['errorCodes'] = $errorCodes;
-
-			$retry = (bool) \array_intersect(self::FREE_RETRY_REASONS, $errorCodes);
-
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FREE_OUTPUT_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				],
-				[
-					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
-					UtilsHelper::getStateResponseOutputKey('captchaSkipLogging') => $retry && !$isRetry,
-				]
-			);
-			// phpcs:enable
-		}
-
-		return $this->validate(
-			$responseBody,
-			$action,
-			$responseBody['action'] ?? '',
-			$responseBody['score'] ?? 0.0,
-			$debug
-		);
-	}
-
-	/**
-	 * Validate and return if issue.
-	 *
-	 * @param mixed $responseBody Response body from API.
-	 * @param string $action Action name.
-	 * @param string $actionResponse Action response from API.
-	 * @param float $score Score value Score value from API.
-	 * @param array<mixed> $debug Debug data.
-	 *
-	 * @throws BadRequestException If captcha is not valid.
-	 *
-	 * @return mixed
-	 */
-	private function validate(
-		$responseBody,
-		string $action,
-		string $actionResponse,
-		float $score,
-		array $debug
-	) {
-		$debug = \array_merge($debug, [
-			'responseBody' => $responseBody,
-			'action' => $action,
-			'actionResponse' => $actionResponse,
-			'score' => $score,
-		]);
-
-		// Bailout if action is not correct.
-		if ($actionResponse !== $action) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaWrongAction'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_WRONG_ACTION,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				]
-			);
-			// phpcs:enable
-		}
-
-		$setScore = SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Bailout on spam.
-		if (\floatval($score) < \floatval($setScore)) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('captchaScoreSpam'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SCORE_SPAM,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				],
-				[
-					UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => true,
-				]
-			);
-			// phpcs:enable
-		}
-
-		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
-			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
-				AbstractBaseRoute::R_DEBUG => $debug,
-			],
-			AbstractBaseRoute::R_DATA => [
-				UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => false,
-			],
-		];
+		return $this->recaptcha->check($token, $action, $isEnterprise, $formDetails);
 	}
 }
+

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Captcha\SettingsCaptchaProvider;
+use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -43,18 +43,18 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captchaDispatcher Inject captcha methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		CaptchaInterface $captchaDispatcher
+		CaptchaInterface $captcha
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->captcha = $captchaDispatcher;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -67,7 +67,7 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	 */
 	public function register(): void
 	{
-		if (SettingsCaptchaProvider::getActiveProvider() !== SettingsCaptchaProvider::PROVIDER_GOOGLE) {
+		if (SettingsCaptcha::getActiveProvider() !== SettingsCaptcha::PROVIDER_GOOGLE) {
 			return;
 		}
 

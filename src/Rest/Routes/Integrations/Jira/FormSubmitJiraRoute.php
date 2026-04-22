@@ -49,7 +49,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captchaDispatcher Inject captcha methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param JiraClientInterface $jiraClient Inject jiraClient methods.
@@ -58,7 +58,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		CaptchaInterface $captchaDispatcher,
+		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		JiraClientInterface $jiraClient
@@ -66,7 +66,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->captcha = $captchaDispatcher;
+		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->jiraClient = $jiraClient;

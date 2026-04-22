@@ -56,7 +56,6 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Captcha\SettingsCaptchaProvider;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -152,7 +151,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				],
 			],
 			'captcha' => [
-				'settingsGlobal' => SettingsCaptchaProvider::FILTER_SETTINGS_GLOBAL_NAME,
+				'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [

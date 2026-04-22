@@ -32,6 +32,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
+use EightshiftForms\Captcha\SettingsRecaptcha;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -424,11 +425,12 @@ final class Filters
 	{
 		return [
 			SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
-			SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY,
-			SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY,
-			SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY,
-			SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
-			SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY,
+			SettingsCaptcha::SETTINGS_CAPTCHA_PROVIDER_KEY,
+			SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY,
+			SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY,
+			SettingsRecaptcha::SETTINGS_CAPTCHA_SECRET_KEY,
+			SettingsRecaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
+			SettingsRecaptcha::SETTINGS_CAPTCHA_API_KEY,
 
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_KEY,
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY,

@@ -98,7 +98,7 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (SettingsCaptchaProvider::getActiveProvider() !== SettingsCaptchaProvider::PROVIDER_FRIENDLY) {
+		if (SettingsCaptcha::getActiveProvider() !== SettingsCaptcha::PROVIDER_FRIENDLY) {
 			return false;
 		}
 
@@ -116,7 +116,7 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 	 * Get global settings array for building settings page.
 	 *
 	 * Retained for BC in case the `FILTER_SETTINGS_GLOBAL_NAME` filter is still
-	 * consulted; the menu entry is now handled by `SettingsCaptchaProvider`.
+	 * consulted; the menu entry is now handled by `SettingsCaptcha`.
 	 *
 	 * @return array<int, array<mixed>>
 	 */
@@ -137,7 +137,7 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 
 	/**
 	 * Tab definitions for the Friendly Captcha provider, composed into the
-	 * merged captcha page by `SettingsCaptchaProvider`.
+	 * merged captcha page by `SettingsCaptcha`.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
