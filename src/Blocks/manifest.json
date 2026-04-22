@@ -716,6 +716,7 @@
 			"incrementId": "incrementId",
 			"captchaIsSpam": "captchaIsSpam",
 			"captchaRetry": "captchaRetry",
+			"captchaSkipLogging": "captchaSkipLogging",
 			"captchaResponse": "captchaResponse",
 			"geolocationCountries": "countries",
 			"editorIntegrationItems": "integrationItems",

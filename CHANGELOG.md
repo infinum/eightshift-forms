@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.6]
+
+### Changed
+
+- Troubleshooting emails are no longer sent for recoverable first-attempt reCAPTCHA failures (those that already set `captchaRetry = true`). When logging is enabled, an email is still sent if the client retry also fails, so genuine dead-ends remain visible. Applies to both the Enterprise and free v3 paths.
+
 ## [9.1.5]
 
 ### Fixed
@@ -1807,6 +1813,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.6]: https://github.com/infinum/eightshift-forms/compare/9.1.5...9.1.6
 [9.1.5]: https://github.com/infinum/eightshift-forms/compare/9.1.4...9.1.5
 [9.1.4]: https://github.com/infinum/eightshift-forms/compare/9.1.3...9.1.4
 [9.1.3]: https://github.com/infinum/eightshift-forms/compare/9.1.2...9.1.3
