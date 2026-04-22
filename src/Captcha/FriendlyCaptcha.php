@@ -11,12 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Exception\BadRequestException;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use WP_Error;
 
 /**
  * FriendlyCaptcha class.
@@ -24,16 +23,22 @@ use WP_Error;
 class FriendlyCaptcha implements CaptchaInterface
 {
 	/**
-	 * Labels service.
+	 * Friendly Captcha API endpoint URLs.
+	 */
+	public const FRIENDLY_CAPTCHA_ENDPOINT_GLOBAL_URL = 'https://global.frcapi.com/api/v2/captcha/siteverify';
+	public const FRIENDLY_CAPTCHA_ENDPOINT_EU_URL = 'https://eu.frcapi.com/api/v2/captcha/siteverify';
+
+	/**
+	 * Instance variable of LabelsInterface data.
 	 *
 	 * @var LabelsInterface
 	 */
-	private $labels;
+	protected $labels;
 
 	/**
-	 * Constructor.
+	 * Create a new instance that injects classes
 	 *
-	 * @param LabelsInterface $labels Labels service.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 */
 	public function __construct(LabelsInterface $labels)
 	{
@@ -47,16 +52,23 @@ class FriendlyCaptcha implements CaptchaInterface
 	 * accepted only for interface compatibility with Google reCAPTCHA.
 	 *
 	 * @param string $token Token from frontend.
-	 * @param string $action Action to check (unused).
-	 * @param boolean $isEnterprise Type of captcha (unused).
+	 * @param string $action Action to check.
+	 * @param boolean $isEnterprise Type of captcha.
 	 * @param array<string, mixed> $formDetails Form details.
+	 *
+	 * @throws BadRequestException If captcha is not valid.
 	 *
 	 * @return array<mixed>
 	 */
 	public function check(string $token, string $action, bool $isEnterprise, array $formDetails = []): array
 	{
 		if (!\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return $this->buildSuccess(SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_FEATURE_DISABLED, []);
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_FEATURE_DISABLED,
+				],
+			];
 		}
 
 		$debug = [
@@ -65,52 +77,22 @@ class FriendlyCaptcha implements CaptchaInterface
 		];
 
 		if (!$token) {
-			$this->throwError(
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaBadRequest'),
-				SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_MISSING_TOKEN,
-				$debug
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_MISSING_TOKEN,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
 			);
+			// phpcs:enable
 		}
 
-		$response = $this->remoteCall($token);
-
-		if (\is_wp_error($response)) {
-			$this->throwError(
-				$this->labels->getLabel('submitWpError'),
-				SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_WP_ERROR,
-				$debug
-			);
-		}
-
-		$body = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
-
-		$debug['responseBody'] = $body;
-
-		if (empty($body['success'])) {
-			$this->throwError(
-				$this->labels->getLabel('friendlyCaptchaError'),
-				SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR,
-				$debug
-			);
-		}
-
-		return $this->buildSuccess(SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_SUCCESS, $debug);
-	}
-
-	/**
-	 * Make the remote verification call to Friendly Captcha.
-	 *
-	 * @param string $token Verification token from the frontend widget.
-	 *
-	 * @return array<mixed>|WP_Error
-	 */
-	private function remoteCall(string $token): array|WP_Error
-	{
 		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getFriendlyCaptchaSiteKey(), SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY);
 		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getFriendlyCaptchaApiKey(), SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_API_KEY);
 
-		return \wp_remote_post(
-			SettingsFriendlyCaptcha::getEndpointUrl(),
+		$response = \wp_remote_post(
+			self::getEndpointUrl(),
 			[
 				'headers' => [
 					'Content-Type' => 'application/json; charset=utf-8',
@@ -123,57 +105,62 @@ class FriendlyCaptcha implements CaptchaInterface
 				]),
 			]
 		);
-	}
 
-	/**
-	 * Build the success response envelope.
-	 *
-	 * @param string $flag Fallback flag constant.
-	 * @param array<mixed> $debug Debug payload.
-	 * @param array<string, mixed> $data Extra R_DATA payload.
-	 *
-	 * @return array<mixed>
-	 */
-	private function buildSuccess(string $flag, array $debug, array $data = []): array
-	{
-		$output = [
+		// Generic error msg from WP.
+		if (\is_wp_error($response)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('submitWpError'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+
+		$debug['responseBody'] = $responseBody;
+
+		if (empty($responseBody['success'])) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('friendlyCaptchaError'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => $flag,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_SUCCESS,
 				AbstractBaseRoute::R_DEBUG => $debug,
 			],
 		];
-
-		if ($data) {
-			$output[AbstractBaseRoute::R_DATA] = $data;
-		}
-
-		return $output;
 	}
 
 	/**
-	 * Throw a BadRequestException with the project's debug envelope.
+	 * Get the selected endpoint value.
 	 *
-	 * @param string $message Localized error message.
-	 * @param string $flag Fallback flag constant.
-	 * @param array<mixed> $debug Debug payload.
-	 * @param array<string, mixed> $extraData Optional extra data.
-	 *
-	 * @throws BadRequestException Always.
-	 *
-	 * @return void
+	 * @return string
 	 */
-	private function throwError(string $message, string $flag, array $debug, array $extraData = []): void
+	public static function getEndpoint(): string
 	{
-		// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-		throw new BadRequestException(
-			$message,
-			[
-				AbstractBaseRoute::R_DEBUG_KEY => $flag,
-				AbstractBaseRoute::R_DEBUG => $debug,
-			],
-			$extraData
-		);
-		// phpcs:enable
+		return SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY) ? 'eu' : 'global';
+	}
+
+	/**
+	 * Get the siteverify URL for the selected endpoint.
+	 *
+	 * @return string
+	 */
+	public static function getEndpointUrl(): string
+	{
+		return self::getEndpoint() === 'eu' ? self::FRIENDLY_CAPTCHA_ENDPOINT_EU_URL : self::FRIENDLY_CAPTCHA_ENDPOINT_GLOBAL_URL;
 	}
 }

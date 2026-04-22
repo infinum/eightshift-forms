@@ -1278,10 +1278,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$output[Config::FD_CAPTCHA] = $value['value'];
 					$output[Config::FD_PARAMS][$key] = $value;
 					break;
-				case UtilsHelper::getStateParam('friendlyCaptcha'):
-					$output[Config::FD_CAPTCHA] = $value['value'];
-					$output[Config::FD_PARAMS][$key] = $value;
-					break;
 				case UtilsHelper::getStateParam('actionExternal'):
 					$output[Config::FD_ACTION_EXTERNAL] = $value['value'];
 					$output[Config::FD_PARAMS][$key] = $value;

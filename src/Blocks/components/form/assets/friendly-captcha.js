@@ -1,6 +1,6 @@
 /* global frcaptcha */
 
-import { prefix, setStateWindow } from './state-init';
+import { StateEnum, prefix, setStateWindow } from './state-init';
 
 /**
  * FriendlyCaptcha class.
@@ -11,6 +11,8 @@ export class FriendlyCaptcha {
 		this.utils = utils;
 		/** @type {import('./state').State} */
 		this.state = this.utils.getState();
+
+		this.widget = null;
 
 		// Set all public methods.
 		this.publicMethods();
@@ -26,7 +28,11 @@ export class FriendlyCaptcha {
 	 * @returns {void}
 	 */
 	init() {
-		if (!this.state.getStateFriendlyCaptchaIsUsed()) {
+		if (!this.state.getStateCaptchaIsUsed()) {
+			return;
+		}
+
+		if (this.state.getStateCaptchaType() !== StateEnum.CAPTCHA_TYPE_FRIENDLY) {
 			return;
 		}
 
@@ -39,11 +45,11 @@ export class FriendlyCaptcha {
 	 * @returns {void}
 	 */
 	initWidget() {
-		const siteKey = this.state.getStateFriendlyCaptchaSiteKey();
-
 		if (typeof frcaptcha === 'undefined') {
 			return;
 		}
+
+		const siteKey = this.state.getStateCaptchaSiteKey();
 
 		// Create a hidden container for the widget.
 		const container = document.createElement('div');
@@ -54,26 +60,8 @@ export class FriendlyCaptcha {
 			element: container,
 			sitekey: siteKey,
 			startMode: 'auto',
-			apiEndpoint: this.state.getStateFriendlyCaptchaEndpoint(),
+			apiEndpoint: this.state.getStateCaptchaEndpoint(),
 		});
-	}
-
-	/**
-	 * Get the current response token from the widget.
-	 *
-	 * @returns {string} The solution token.
-	 */
-	getResponse() {
-		return this.widget?.getResponse() ?? '';
-	}
-
-	/**
-	 * Reset the widget so it generates a fresh token.
-	 *
-	 * @returns {void}
-	 */
-	reset() {
-		this.widget?.reset();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -99,11 +87,9 @@ export class FriendlyCaptcha {
 			initWidget: () => {
 				this.initWidget();
 			},
-			getResponse: () => {
-				return this.getResponse();
-			},
+			getResponse: () => this.widget?.getResponse() ?? '',
 			reset: () => {
-				this.reset();
+				this.widget?.reset();
 			},
 		};
 	}

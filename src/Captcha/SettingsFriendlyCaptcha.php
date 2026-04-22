@@ -38,11 +38,6 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 	public const SETTINGS_TYPE_KEY = 'friendly-captcha';
 
 	/**
-	 * Friendly Captcha Use key.
-	 */
-	public const SETTINGS_FRIENDLY_CAPTCHA_USE_KEY = 'friendly-captcha-use';
-
-	/**
 	 * Friendly Captcha site key.
 	 */
 	public const SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY = 'friendly-captcha-site-key';
@@ -56,12 +51,6 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 	 * Friendly Captcha use EU endpoint key.
 	 */
 	public const SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY = 'friendly-captcha-use-eu-endpoint';
-
-	/**
-	 * Friendly Captcha API endpoint URLs.
-	 */
-	public const FRIENDLY_CAPTCHA_ENDPOINT_GLOBAL_URL = 'https://global.frcapi.com/api/v2/captcha/siteverify';
-	public const FRIENDLY_CAPTCHA_ENDPOINT_EU_URL = 'https://eu.frcapi.com/api/v2/captcha/siteverify';
 
 	/**
 	 * Instance variable for labels data.
@@ -206,25 +195,5 @@ class SettingsFriendlyCaptcha implements SettingGlobalInterface, ServiceInterfac
 				],
 			],
 		];
-	}
-
-	/**
-	 * Get the selected endpoint value.
-	 *
-	 * @return string
-	 */
-	public static function getEndpoint(): string
-	{
-		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY) ? 'eu' : 'global';
-	}
-
-	/**
-	 * Get the siteverify URL for the selected endpoint.
-	 *
-	 * @return string
-	 */
-	public static function getEndpointUrl(): string
-	{
-		return self::getEndpoint() === 'eu' ? self::FRIENDLY_CAPTCHA_ENDPOINT_EU_URL : self::FRIENDLY_CAPTCHA_ENDPOINT_GLOBAL_URL;
 	}
 }

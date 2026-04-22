@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -55,23 +54,6 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-	}
-
-	/**
-	 * Register the route only when Google reCAPTCHA is the active provider.
-	 *
-	 * Friendly Captcha solves entirely in the browser and has no pre-submission
-	 * verification endpoint — exposing this route for it would misroute tokens.
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		if (SettingsCaptcha::getActiveProvider() !== SettingsCaptcha::PROVIDER_GOOGLE) {
-			return;
-		}
-
-		parent::register();
 	}
 
 	/**

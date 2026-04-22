@@ -35,7 +35,7 @@ class SettingsRecaptcha implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'captcha';
+	public const SETTINGS_TYPE_KEY = 'recaptcha';
 
 	/**
 	 * Google reCaptcha site key.

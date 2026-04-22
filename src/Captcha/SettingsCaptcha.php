@@ -33,6 +33,11 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_captcha';
 
 	/**
+	 * Settings key.
+	 */
+	public const SETTINGS_TYPE_KEY = 'captcha';
+
+	/**
 	 * Master use key (shared across all providers).
 	 */
 	public const SETTINGS_CAPTCHA_USE_KEY = 'captcha-use';

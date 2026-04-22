@@ -150,7 +150,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'title' => \__('Advanced', 'eightshift-forms'),
 				],
 			],
-			'captcha' => [
+			SettingsCaptcha::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,

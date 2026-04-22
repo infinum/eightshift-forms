@@ -430,19 +430,11 @@ export class State {
 	getStateCaptchaHideBadge = () => {
 		return getState([StateEnum.CAPTCHA_HIDE_BADGE], StateEnum.CAPTCHA);
 	};
-
-	////////////////////////////////////////////////////////////////
-	// Friendly Captcha getters.
-	////////////////////////////////////////////////////////////////
-
-	getStateFriendlyCaptchaIsUsed = () => {
-		return getState([StateEnum.IS_USED], StateEnum.FRIENDLY_CAPTCHA);
+	getStateCaptchaType = () => {
+		return getState([StateEnum.CAPTCHA_TYPE], StateEnum.CAPTCHA);
 	};
-	getStateFriendlyCaptchaSiteKey = () => {
-		return getState([StateEnum.FRIENDLY_CAPTCHA_SITE_KEY], StateEnum.FRIENDLY_CAPTCHA);
-	};
-	getStateFriendlyCaptchaEndpoint = () => {
-		return getState([StateEnum.FRIENDLY_CAPTCHA_ENDPOINT], StateEnum.FRIENDLY_CAPTCHA);
+	getStateCaptchaEndpoint = () => {
+		return getState([StateEnum.CAPTCHA_ENDPOINT], StateEnum.CAPTCHA);
 	};
 
 	////////////////////////////////////////////////////////////////

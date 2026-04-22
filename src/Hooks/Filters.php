@@ -432,7 +432,6 @@ final class Filters
 			SettingsRecaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
 			SettingsRecaptcha::SETTINGS_CAPTCHA_API_KEY,
 
-			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_KEY,
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY,
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_API_KEY,
 			SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY,
