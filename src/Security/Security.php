@@ -180,4 +180,15 @@ class Security implements SecurityInterface
 				return $ip;
 		}
 	}
+
+	/**
+	 * Get sanitized user agent string from the current request.
+	 *
+	 * @return string
+	 */
+	public function getUserAgent(): string
+	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
+	}
 }

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.5]
+
+### Fixed
+
+- Fixed reCAPTCHA Enterprise failing hard on recoverable `invalidReason` values. `EXPIRED`, `DUPE`, and `TIMEOUT_OR_DUPLICATE` now trigger a fresh-token client retry alongside the existing `BROWSER_ERROR` retry, resolving the common failure where candidates on slow connections exceeded the 2-minute token TTL during large resume uploads.
+- Fixed the free reCAPTCHA v3 path treating `timeout-or-duplicate` as fatal; it now retries on both `browser-error` and `timeout-or-duplicate` for consistency with the Enterprise path.
+
+### Changed
+
+- Added Google-recommended `userAgent` and `userIpAddress` fields to the reCAPTCHA Enterprise assessment request body to improve fraud detection. The IP is resolved via the plugin's existing Cloudflare/CloudFront-aware helper.
+- Surfaced `invalidReason` (Enterprise) and `error-codes` (free v3) at the top of the captcha error debug payload so they are visible in the activity log without having to dig into the raw API response body.
+
 ## [9.1.4]
 
 ### Changed
@@ -1795,6 +1807,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.5]: https://github.com/infinum/eightshift-forms/compare/9.1.4...9.1.5
 [9.1.4]: https://github.com/infinum/eightshift-forms/compare/9.1.3...9.1.4
 [9.1.3]: https://github.com/infinum/eightshift-forms/compare/9.1.2...9.1.3
 [9.1.2]: https://github.com/infinum/eightshift-forms/compare/9.1.1...9.1.2
