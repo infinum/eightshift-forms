@@ -33,4 +33,11 @@ interface SecurityInterface
 	 * @return string
 	 */
 	public function getIpAddress(string $secureType = 'none'): string;
+
+	/**
+	 * Get sanitized user agent string from the current request.
+	 *
+	 * @return string
+	 */
+	public function getUserAgent(): string;
 }

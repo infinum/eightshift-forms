@@ -153,8 +153,7 @@ class Captcha implements CaptchaInterface
 		];
 
 		// Google recommends sending userAgent and userIpAddress to improve detection.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
+		$userAgent = $this->security->getUserAgent();
 		if ($userAgent !== '') {
 			$event['userAgent'] = $userAgent;
 		}
