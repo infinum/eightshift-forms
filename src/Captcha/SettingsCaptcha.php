@@ -96,6 +96,10 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Build the merged settings page.
 	 *
+	 * Lays the page out Corvus-style: a flat tab bar with the provider select
+	 * as the driver field at the top of the first tab, and downstream tabs
+	 * conditionally present based on the active provider.
+	 *
 	 * @return array<int, array<mixed>>
 	 */
 	public function getSettingsGlobalData(): array
@@ -106,47 +110,70 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 
 		$provider = self::getActiveProvider();
 
-		$output = [
-			SettingsOutputHelpers::getIntro('captcha'),
-			[
-				'component' => 'select',
-				'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_PROVIDER_KEY),
-				'selectFieldLabel' => \__('Provider', 'eightshift-forms'),
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'selectFieldHelp' => \__('Pick which captcha service validates submissions. Switching the provider reloads the fields below.', 'eightshift-forms'),
-				'selectSingleSubmit' => true,
-				'selectContent' => [
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => \__('Google reCAPTCHA', 'eightshift-forms'),
-						'selectOptionValue' => self::PROVIDER_GOOGLE,
-						'selectOptionIsSelected' => $provider === self::PROVIDER_GOOGLE,
-					],
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => \__('Friendly Captcha', 'eightshift-forms'),
-						'selectOptionValue' => self::PROVIDER_FRIENDLY,
-						'selectOptionIsSelected' => $provider === self::PROVIDER_FRIENDLY,
-					],
+		$providerSelect = [
+			'component' => 'select',
+			'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_PROVIDER_KEY),
+			'selectFieldLabel' => \__('Provider', 'eightshift-forms'),
+			// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+			'selectFieldHelp' => \__('Pick which captcha service validates submissions. Switching the provider reloads the fields below.', 'eightshift-forms'),
+			'selectSingleSubmit' => true,
+			'selectContent' => [
+				[
+					'component' => 'select-option',
+					'selectOptionLabel' => \__('Google reCAPTCHA', 'eightshift-forms'),
+					'selectOptionValue' => self::PROVIDER_GOOGLE,
+					'selectOptionIsSelected' => $provider === self::PROVIDER_GOOGLE,
 				],
-			],
-			[
-				'component' => 'divider',
-				'dividerExtraVSpacing' => true,
+				[
+					'component' => 'select-option',
+					'selectOptionLabel' => \__('Friendly Captcha', 'eightshift-forms'),
+					'selectOptionValue' => self::PROVIDER_FRIENDLY,
+					'selectOptionIsSelected' => $provider === self::PROVIDER_FRIENDLY,
+				],
 			],
 		];
 
-		$providerTabs = $provider === self::PROVIDER_FRIENDLY
-			? SettingsFriendlyCaptcha::getProviderTabs()
-			: SettingsRecaptcha::getProviderTabs();
+		$divider = [
+			'component' => 'divider',
+			'dividerExtraVSpacing' => true,
+		];
 
-		if ($providerTabs) {
-			$output[] = [
+		$providerGeneralContent = $provider === self::PROVIDER_FRIENDLY
+			? SettingsFriendlyCaptcha::getGeneralContent()
+			: SettingsRecaptcha::getGeneralContent();
+
+		$providerHelpContent = $provider === self::PROVIDER_FRIENDLY
+			? SettingsFriendlyCaptcha::getHelpContent()
+			: SettingsRecaptcha::getHelpContent();
+
+		return [
+			SettingsOutputHelpers::getIntro('captcha'),
+			[
 				'component' => 'tabs',
-				'tabsContent' => $providerTabs,
-			];
-		}
-
-		return $output;
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Settings', 'eightshift-forms'),
+						'tabContent' => [
+							$providerSelect,
+							$divider,
+							...$providerGeneralContent,
+						],
+					],
+					...($provider === self::PROVIDER_GOOGLE ? [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Advanced', 'eightshift-forms'),
+							'tabContent' => SettingsRecaptcha::getAdvancedContent(),
+						],
+					] : []),
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Help', 'eightshift-forms'),
+						'tabContent' => $providerHelpContent,
+					],
+				],
+			],
+		];
 	}
 }
