@@ -415,6 +415,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	protected function shouldLogActivity(array $return): bool
 	{
+		$data = $return[AbstractBaseRoute::R_DATA] ?? [];
+		if (!empty($data[UtilsHelper::getStateResponseOutputKey('captchaSkipLogging')])) {
+			return false;
+		}
+
 		return \apply_filters(
 			SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME,
 			false,

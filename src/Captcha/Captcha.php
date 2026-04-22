@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Exception\BadRequestException;
@@ -84,10 +85,13 @@ class Captcha implements CaptchaInterface
 			];
 		}
 
+		$isRetry = (bool) ($formDetails[Config::FD_CAPTCHA]['isRetry'] ?? false);
+
 		$debug = [
 			'token' => $token,
 			'action' => $action,
 			'isEnterprise' => $isEnterprise,
+			'isRetry' => $isRetry,
 			'formDetails' => $formDetails,
 		];
 
@@ -126,10 +130,10 @@ class Captcha implements CaptchaInterface
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 
 		if ($isEnterprise) {
-			return $this->getEnterpriseOutput($responseBody, $action, $debug);
+			return $this->getEnterpriseOutput($responseBody, $action, $debug, $isRetry);
 		}
 
-		return $this->getFreeOutput($responseBody, $action, $debug);
+		return $this->getFreeOutput($responseBody, $action, $debug, $isRetry);
 	}
 
 	/**
@@ -206,12 +210,13 @@ class Captcha implements CaptchaInterface
 	 * @param array<mixed> $responseBody Response body from API.
 	 * @param string $action Action name.
 	 * @param array<mixed> $debug Debug data.
+	 * @param bool $isRetry Whether this request is itself a client retry.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
 	 *
 	 * @return mixed
 	 */
-	private function getEnterpriseOutput(array $responseBody, string $action, array $debug)
+	private function getEnterpriseOutput(array $responseBody, string $action, array $debug, bool $isRetry)
 	{
 		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
@@ -234,6 +239,7 @@ class Captcha implements CaptchaInterface
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
+					UtilsHelper::getStateResponseOutputKey('captchaSkipLogging') => $retry && !$isRetry,
 				]
 			);
 			// phpcs:enable
@@ -267,12 +273,13 @@ class Captcha implements CaptchaInterface
 	 * @param array<mixed> $responseBody Response body from API.
 	 * @param string $action Action name.
 	 * @param array<mixed> $debug Debug data.
+	 * @param bool $isRetry Whether this request is itself a client retry.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
 	 *
 	 * @return mixed
 	 */
-	private function getFreeOutput(array $responseBody, string $action, array $debug)
+	private function getFreeOutput(array $responseBody, string $action, array $debug, bool $isRetry)
 	{
 		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
@@ -296,6 +303,7 @@ class Captcha implements CaptchaInterface
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
+					UtilsHelper::getStateResponseOutputKey('captchaSkipLogging') => $retry && !$isRetry,
 				]
 			);
 			// phpcs:enable
