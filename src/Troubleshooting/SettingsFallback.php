@@ -97,6 +97,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS = 'captchaSuccess';
 	public const SETTINGS_FALLBACK_FLAG_CAPTCHA_DEBUG_SKIP_CHECK = 'captchaDebugSkipCheck';
 
+	public const SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR = 'friendlyCaptchaOutputError';
+
 	public const SETTINGS_FALLBACK_FLAG_GEOLOCATION_FEATURE_DISABLED = 'geolocationFeatureDisabled';
 	public const SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA = 'geolocationMalformedDecryptData';
 	public const SETTINGS_FALLBACK_FLAG_GEOLOCATION_DETECTION_FAILED = 'geolocationDetectionFailed';
@@ -552,6 +554,10 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			],
 			self::SETTINGS_FALLBACK_FLAG_CAPTCHA_DEBUG_SKIP_CHECK => [
 				'label' => \__('Captcha debug skip check is active.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR => [
+				'label' => \__('Friendly Captcha returned an error response.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 

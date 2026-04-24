@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The Theme/Frontend Enqueue specific functionality - Captcha.
+ * The Theme/Frontend Enqueue specific functionality - Friendly Captcha.
  *
  * @package EightshiftForms\Enqueue\Captcha
  */
@@ -10,34 +10,32 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Captcha;
 
-use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Captcha\SettingsRecaptcha;
+use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class EnqueueCaptcha
+ * Class EnqueueFriendlyCaptcha
  */
-class EnqueueCaptcha extends AbstractEnqueueTheme
+class EnqueueFriendlyCaptcha extends AbstractEnqueueTheme
 {
 	/**
-	 * Captcha enqueue handle.
+	 * Friendly Captcha enqueue handle.
 	 *
 	 * @var string
 	 */
-	public const CAPTCHA_ENQUEUE_HANDLE = 'captcha';
+	public const FRIENDLY_CAPTCHA_ENQUEUE_HANDLE = 'friendly-captcha';
 
 	/**
-	 * Register all the hooks
+	 * Register all the hooks.
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsFriendlyCaptcha']);
 	}
 
 	/**
@@ -47,11 +45,11 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 	 */
 	protected function getFrontendScriptDependencies(): array
 	{
-		if (!\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+		if (!\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [];
 		}
 
-		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'captcha']);
+		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'friendlyCaptcha']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -62,35 +60,25 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 	}
 
 	/**
-	 * Method that returns frontend script for captcha if settings are correct.
+	 * Method that returns frontend script for Friendly Captcha if settings are correct.
 	 *
 	 * @return void
 	 */
-	public function enqueueScriptsCaptcha(): void
+	public function enqueueScriptsFriendlyCaptcha(): void
 	{
-		// Check if Captcha data is set and valid.
-		$isSettingsGlobalValid = \apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		// Check if Friendly Captcha data is set and valid.
+		$isSettingsGlobalValid = \apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsGlobalValid) {
 			return;
 		}
 
-		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
-
-		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-
-		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
-
-		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
-
-		if ($isEnterprise) {
-			$url = "https://www.google.com/recaptcha/enterprise.js?render={$siteKey}";
-		}
+		$handle = "{$this->getAssetsPrefix()}-" . self::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
 
 		\wp_register_script(
 			$handle,
-			$url,
+			'https://cdn.jsdelivr.net/npm/@friendlycaptcha/sdk@0.2.0/site.min.js',
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
@@ -101,10 +89,7 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 	/**
 	 * Load script 'defer' or 'async'.
 	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
-	 *
 	 * @return string Whether to enqueue the script normally, with defer or async.
-	 * Default value: normal
 	 */
 	protected function scriptStrategy(): string
 	{

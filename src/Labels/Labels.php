@@ -425,6 +425,9 @@ class Labels implements LabelsInterface
 			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
 			'captchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
 			'captchaSuccess' => \__('Success', 'eightshift-forms'),
+			'friendlyCaptchaBadRequest' => \__('Spam prevention system encountered an error. Friendly Captcha request is invalid or malformed.', 'eightshift-forms'),
+			'friendlyCaptchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
+			'friendlyCaptchaSuccess' => \__('Success', 'eightshift-forms'),
 		];
 	}
 

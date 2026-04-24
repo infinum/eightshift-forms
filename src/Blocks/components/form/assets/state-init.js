@@ -98,12 +98,17 @@ export const StateEnum = {
 	SETTINGS_FORM_MISCONFIGURED_MSG: 'formMisconfigured',
 
 	CAPTCHA: 'captcha',
+	CAPTCHA_TYPE: 'type',
 	CAPTCHA_SITE_KEY: 'site_key',
 	CAPTCHA_IS_ENTERPRISE: 'isEnterprise',
 	CAPTCHA_SUBMIT_ACTION: 'submitAction',
 	CAPTCHA_INIT_ACTION: 'initAction',
 	CAPTCHA_LOAD_ON_INIT: 'loadOnInit',
 	CAPTCHA_HIDE_BADGE: 'hideBadge',
+	CAPTCHA_ENDPOINT: 'endpoint',
+
+	CAPTCHA_TYPE_GOOGLE: 'google',
+	CAPTCHA_TYPE_FRIENDLY: 'friendly',
 
 	ENRICHMENT: 'enrichment',
 	ENRICHMENT_FORM_PREFILL: 'formPrefill',
@@ -255,17 +260,26 @@ export function setStateInitial() {
 	setState([StateEnum.SETTINGS_FORM_CAPTCHA_ERROR_MSG], esFormsLocalization.formCaptchaErrorMsg ?? '', StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_MISCONFIGURED_MSG], esFormsLocalization.formMisconfigured ?? '', StateEnum.SETTINGS);
 
-	// Captcha.
+	// Captcha — single payload discriminated by `type`.
 	const captcha = esFormsLocalization.captcha ?? {};
 	setState([StateEnum.IS_USED], Boolean(captcha.isUsed), StateEnum.CAPTCHA);
 
 	if (captcha.isUsed) {
+		setState([StateEnum.CAPTCHA_TYPE], captcha.type, StateEnum.CAPTCHA);
 		setState([StateEnum.CAPTCHA_SITE_KEY], captcha.siteKey, StateEnum.CAPTCHA);
-		setState([StateEnum.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), StateEnum.CAPTCHA);
-		setState([StateEnum.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, StateEnum.CAPTCHA);
-		setState([StateEnum.CAPTCHA_INIT_ACTION], captcha.initAction, StateEnum.CAPTCHA);
-		setState([StateEnum.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), StateEnum.CAPTCHA);
-		setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
+
+		switch (captcha.type) {
+			case StateEnum.CAPTCHA_TYPE_FRIENDLY:
+				setState([StateEnum.CAPTCHA_ENDPOINT], captcha.endpoint, StateEnum.CAPTCHA);
+				break;
+			default:
+				setState([StateEnum.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_INIT_ACTION], captcha.initAction, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
+				break;
+		}
 	}
 
 	// Geolocation.

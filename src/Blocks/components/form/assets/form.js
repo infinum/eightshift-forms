@@ -573,8 +573,25 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	runFormCaptcha(formId, filter = {}) {
+	async runFormCaptcha(formId, filter = {}) {
 		if (!this.state.getStateCaptchaIsUsed()) {
+			return;
+		}
+
+		if (this.state.getStateCaptchaType() === StateEnum.CAPTCHA_TYPE_FRIENDLY) {
+			const widget = window[prefix]?.friendlyCaptcha;
+			const token = widget?.getResponse() ?? '';
+
+			this.setFormDataCaptcha({
+				token,
+			});
+
+			await this.formSubmit(formId, filter);
+
+			// Reset the widget after every server response so a fresh single-use
+			// token is ready for the next submission attempt.
+			widget?.reset();
+
 			return;
 		}
 
@@ -1978,7 +1995,7 @@ export class Form {
 			custom?.showDropdown();
 		}
 
-		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {	
+		if (!this.state.getStateSettingsDisableScrollToFieldOnFocus()) {
 			this.utils.scrollAction(field);
 		}
 
