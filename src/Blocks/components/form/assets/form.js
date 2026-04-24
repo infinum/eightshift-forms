@@ -1970,10 +1970,10 @@ export class Form {
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			if (this.state.getStateCaptchaIsUsed()) {
-					this.runFormCaptcha(formId);
-				} else {
-					this.formSubmit(formId);
-				}
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 
@@ -2053,10 +2053,10 @@ export class Form {
 			(typeCustom === 'range' || typeCustom === 'number' || typeCustom === 'checkbox' || typeCustom === 'radio' || typeCustom === 'rating')
 		) {
 			if (this.state.getStateCaptchaIsUsed()) {
-					this.runFormCaptcha(formId);
-				} else {
-					this.formSubmit(formId);
-				}
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 
@@ -2099,10 +2099,10 @@ export class Form {
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			if (this.state.getStateCaptchaIsUsed()) {
-					this.runFormCaptcha(formId);
-				} else {
-					this.formSubmit(formId);
-				}
+				this.runFormCaptcha(formId);
+			} else {
+				this.formSubmit(formId);
+			}
 		}
 	};
 

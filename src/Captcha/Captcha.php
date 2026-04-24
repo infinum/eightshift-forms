@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
-
 /**
  * Captcha class.
  *
@@ -57,11 +56,11 @@ class Captcha implements CaptchaInterface
 	 */
 	public function check(string $token, string $action, bool $isEnterprise, array $formDetails = []): array
 	{
-		if (SettingsCaptcha::getActiveProvider() === SettingsCaptcha::PROVIDER_FRIENDLY) {
-			return $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails);
+		switch (SettingsCaptcha::getActiveProvider()) {
+			case SettingsCaptcha::PROVIDER_FRIENDLY:
+				return $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails);
+			default:
+				return $this->recaptcha->check($token, $action, $isEnterprise, $formDetails);
 		}
-
-		return $this->recaptcha->check($token, $action, $isEnterprise, $formDetails);
 	}
 }
-

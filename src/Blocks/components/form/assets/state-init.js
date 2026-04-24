@@ -268,14 +268,17 @@ export function setStateInitial() {
 		setState([StateEnum.CAPTCHA_TYPE], captcha.type, StateEnum.CAPTCHA);
 		setState([StateEnum.CAPTCHA_SITE_KEY], captcha.siteKey, StateEnum.CAPTCHA);
 
-		if (captcha.type === StateEnum.CAPTCHA_TYPE_FRIENDLY) {
-			setState([StateEnum.CAPTCHA_ENDPOINT], captcha.endpoint, StateEnum.CAPTCHA);
-		} else {
-			setState([StateEnum.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), StateEnum.CAPTCHA);
-			setState([StateEnum.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, StateEnum.CAPTCHA);
-			setState([StateEnum.CAPTCHA_INIT_ACTION], captcha.initAction, StateEnum.CAPTCHA);
-			setState([StateEnum.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), StateEnum.CAPTCHA);
-			setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
+		switch (captcha.type) {
+			case StateEnum.CAPTCHA_TYPE_FRIENDLY:
+				setState([StateEnum.CAPTCHA_ENDPOINT], captcha.endpoint, StateEnum.CAPTCHA);
+				break;
+			default:
+				setState([StateEnum.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_INIT_ACTION], captcha.initAction, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
+				break;
 		}
 	}
 

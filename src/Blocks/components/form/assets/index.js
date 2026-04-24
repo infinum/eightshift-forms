@@ -18,18 +18,21 @@ const state = utils.getState();
 
 domReady(() => {
 	if (state.getStateCaptchaIsUsed()) {
-		if (state.getStateCaptchaType() === StateEnum.CAPTCHA_TYPE_FRIENDLY) {
-			// Friendly Captcha renders its widget inside the form, so only load
-			// it on pages that actually contain one.
-			if (document.querySelectorAll(state.getStateSelector('form', true))?.length) {
-				import('./friendly-captcha').then(({ FriendlyCaptcha }) => {
-					new FriendlyCaptcha(utils).init();
+		switch (state.getStateCaptchaType()) {
+			case StateEnum.CAPTCHA_TYPE_FRIENDLY:
+				// Friendly Captcha renders its widget inside the form, so only load
+				// it on pages that actually contain one.
+				if (document.querySelectorAll(state.getStateSelector('form', true))?.length) {
+					import('./friendly-captcha').then(({ FriendlyCaptcha }) => {
+						new FriendlyCaptcha(utils).init();
+					});
+				}
+				break;
+			default:
+				import('./captcha').then(({ Captcha }) => {
+					new Captcha(utils).init();
 				});
-			}
-		} else {
-			import('./captcha').then(({ Captcha }) => {
-				new Captcha(utils).init();
-			});
+				break;
 		}
 	}
 
