@@ -66,7 +66,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_FEATURE_DISABLED,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
 				],
 			];
 		}
@@ -81,7 +81,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaBadRequest'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_MISSING_TOKEN,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -112,7 +112,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('submitWpError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_REQUEST_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -138,7 +138,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
 				AbstractBaseRoute::R_DEBUG => $debug,
 			],
 		];
