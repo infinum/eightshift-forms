@@ -136,11 +136,21 @@ class FriendlyCaptcha implements CaptchaInterface
 
 		$responseCode = (int) \wp_remote_retrieve_response_code($response);
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
-		$errorCode = (string) ($responseBody['error']['error_code'] ?? $responseBody['error_code'] ?? '');
+		$errorCode = (string) ($responseBody['errors'][0]['error_code'] ?? '');
 
 		$debug['responseCode'] = $responseCode;
 		$debug['responseBody'] = $responseBody;
 		$debug['errorCode'] = $errorCode;
+
+		if (!empty($responseBody['success'])) {
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				],
+			];
+		}
 
 		// Auth issues — bad/missing API key. Status 401/403 or specific error codes.
 		if (\in_array($responseCode, [401, 403], true) || \in_array($errorCode, self::ERROR_CODES_AUTH, true)) {
@@ -208,25 +218,15 @@ class FriendlyCaptcha implements CaptchaInterface
 		}
 
 		// Generic catch-all for any other unsuccessful response.
-		if (empty($responseBody['success'])) {
-			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaError'),
-				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
-				]
-			);
-			// phpcs:enable
-		}
-
-		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
-			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
+		// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+		throw new BadRequestException(
+			$this->labels->getLabel('friendlyCaptchaError'),
+			[
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR,
 				AbstractBaseRoute::R_DEBUG => $debug,
-			],
-		];
+			]
+		);
+		// phpcs:enable
 	}
 
 	/**
