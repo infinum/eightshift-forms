@@ -29,6 +29,21 @@ class FriendlyCaptcha implements CaptchaInterface
 	public const FRIENDLY_CAPTCHA_ENDPOINT_EU_URL = 'https://eu.frcapi.com/api/v2/captcha/siteverify';
 
 	/**
+	 * Friendly Captcha siteverify error codes that indicate a missing or invalid API key.
+	 */
+	private const ERROR_CODES_AUTH = ['secret_missing', 'secret_invalid', 'auth_invalid', 'auth_required'];
+
+	/**
+	 * Friendly Captcha siteverify error codes that indicate a malformed request.
+	 */
+	private const ERROR_CODES_BAD_REQUEST = ['bad_request', 'solution_missing', 'sitekey_invalid', 'sitekey_missing'];
+
+	/**
+	 * Friendly Captcha siteverify error codes recoverable by a fresh widget solution.
+	 */
+	private const ERROR_CODES_TIMEOUT_OR_DUPLICATE = ['solution_timeout_or_duplicate', 'solution_expired', 'solution_already_used'];
+
+	/**
 	 * Instance variable of LabelsInterface data.
 	 *
 	 * @var LabelsInterface
@@ -119,10 +134,80 @@ class FriendlyCaptcha implements CaptchaInterface
 			// phpcs:enable
 		}
 
+		$responseCode = (int) \wp_remote_retrieve_response_code($response);
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
+		$errorCode = (string) ($responseBody['error']['error_code'] ?? $responseBody['error_code'] ?? '');
 
+		$debug['responseCode'] = $responseCode;
 		$debug['responseBody'] = $responseBody;
+		$debug['errorCode'] = $errorCode;
 
+		// Auth issues — bad/missing API key. Status 401/403 or specific error codes.
+		if (\in_array($responseCode, [401, 403], true) || \in_array($errorCode, self::ERROR_CODES_AUTH, true)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('friendlyCaptchaAuthError'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_AUTH_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		// Malformed request rejected by Friendly Captcha (sitekey/payload issue).
+		if (\in_array($errorCode, self::ERROR_CODES_BAD_REQUEST, true)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('friendlyCaptchaBadRequest'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_BAD_REQUEST,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		// Solution expired or replayed — recoverable by requesting a fresh widget solution.
+		if (\in_array($errorCode, self::ERROR_CODES_TIMEOUT_OR_DUPLICATE, true)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('friendlyCaptchaTimeoutOrDuplicate'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_TIMEOUT_OR_DUPLICATE,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		// Solution failed validation — likely a bot or tampered token.
+		if ($errorCode === 'solution_invalid') {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('friendlyCaptchaInvalidSolution'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_INVALID_SOLUTION,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		// Non-success HTTP status with no recognised error code (e.g. 5xx).
+		if ($responseCode < 200 || $responseCode >= 300) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new BadRequestException(
+				$this->labels->getLabel('friendlyCaptchaHttpError'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_HTTP_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
+			);
+			// phpcs:enable
+		}
+
+		// Generic catch-all for any other unsuccessful response.
 		if (empty($responseBody['success'])) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(

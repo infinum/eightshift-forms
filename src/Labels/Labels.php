@@ -428,6 +428,10 @@ class Labels implements LabelsInterface
 			'friendlyCaptchaBadRequest' => \__('Spam prevention system encountered an error. Friendly Captcha request is invalid or malformed.', 'eightshift-forms'),
 			'friendlyCaptchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
 			'friendlyCaptchaSuccess' => \__('Success', 'eightshift-forms'),
+			'friendlyCaptchaAuthError' => \__('Spam prevention system is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'friendlyCaptchaInvalidSolution' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
+			'friendlyCaptchaTimeoutOrDuplicate' => \__('Spam prevention check timed out or was reused. Please try again.', 'eightshift-forms'),
+			'friendlyCaptchaHttpError' => \__('Spam prevention service is currently unavailable. Please try again in a moment.', 'eightshift-forms'),
 		];
 	}
 
