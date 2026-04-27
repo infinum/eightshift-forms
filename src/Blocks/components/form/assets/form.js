@@ -631,6 +631,7 @@ export class Form {
 					token,
 					isEnterprise: true,
 					action: actionName,
+					isRetry: retry,
 				});
 
 				const response = await this.formSubmit(formId, filter);
@@ -680,6 +681,7 @@ export class Form {
 					token,
 					isEnterprise: false,
 					action: actionName,
+					isRetry: retry,
 				});
 
 				const response = await this.formSubmit(formId, filter);

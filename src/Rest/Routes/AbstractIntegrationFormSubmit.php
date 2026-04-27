@@ -415,6 +415,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	protected function shouldLogActivity(array $return): bool
 	{
+		$data = $return[AbstractBaseRoute::R_DATA] ?? [];
+		if (!empty($data[UtilsHelper::getStateResponseOutputKey('captchaSkipLogging')])) {
+			return false;
+		}
+
 		return \apply_filters(
 			SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME,
 			false,
@@ -497,6 +502,9 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		// Set validation submit once.
 		$this->getValidator()->setValidationSubmitOnce($formId);
+
+		// Action: fires after a successful integration form submission.
+		\do_action(HooksHelpers::getActionName(['integrations', $type, 'submitSuccess']), $formDetails, $formId);
 
 		return [
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success", $formId),

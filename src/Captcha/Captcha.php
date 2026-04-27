@@ -10,12 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use WP_Error;
 
@@ -25,6 +27,16 @@ use WP_Error;
 class Captcha implements CaptchaInterface
 {
 	/**
+	 * Invalid-reason values from Google that are recoverable by a fresh token.
+	 */
+	private const ENTERPRISE_RETRY_REASONS = ['BROWSER_ERROR', 'EXPIRED', 'DUPE', 'TIMEOUT_OR_DUPLICATE'];
+
+	/**
+	 * Error codes from the free siteverify endpoint that are recoverable by a fresh token.
+	 */
+	private const FREE_RETRY_REASONS = ['browser-error', 'timeout-or-duplicate'];
+
+	/**
 	 * Instance variable of LabelsInterface data.
 	 *
 	 * @var LabelsInterface
@@ -32,13 +44,22 @@ class Captcha implements CaptchaInterface
 	protected $labels;
 
 	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param SecurityInterface $security Inject security methods (for user IP resolution).
 	 */
-	public function __construct(LabelsInterface $labels)
+	public function __construct(LabelsInterface $labels, SecurityInterface $security)
 	{
 		$this->labels = $labels;
+		$this->security = $security;
 	}
 
 	/**
@@ -64,10 +85,13 @@ class Captcha implements CaptchaInterface
 			];
 		}
 
+		$isRetry = (bool) ($formDetails[Config::FD_CAPTCHA]['isRetry'] ?? false);
+
 		$debug = [
 			'token' => $token,
 			'action' => $action,
 			'isEnterprise' => $isEnterprise,
+			'isRetry' => $isRetry,
 			'formDetails' => $formDetails,
 		];
 
@@ -106,10 +130,10 @@ class Captcha implements CaptchaInterface
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 
 		if ($isEnterprise) {
-			return $this->getEnterpriseOutput($responseBody, $action, $debug);
+			return $this->getEnterpriseOutput($responseBody, $action, $debug, $isRetry);
 		}
 
-		return $this->getFreeOutput($responseBody, $action, $debug);
+		return $this->getFreeOutput($responseBody, $action, $debug, $isRetry);
 	}
 
 	/**
@@ -126,6 +150,23 @@ class Captcha implements CaptchaInterface
 		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
 		$projectIdKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
+		$event = [
+			'siteKey' => $siteKey,
+			'token' => $token,
+			'expectedAction' => $action,
+		];
+
+		// Google recommends sending userAgent and userIpAddress to improve detection.
+		$userAgent = $this->security->getUserAgent();
+		if ($userAgent !== '') {
+			$event['userAgent'] = $userAgent;
+		}
+
+		$userIp = $this->security->getIpAddress();
+		if ($userIp !== '') {
+			$event['userIpAddress'] = $userIp;
+		}
+
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
 			[
@@ -135,11 +176,7 @@ class Captcha implements CaptchaInterface
 				],
 				'data_format' => 'body',
 				'body' => \wp_json_encode([
-					'event' => [
-						'siteKey' => $siteKey,
-						'token' => $token,
-						'expectedAction' => $action
-					]
+					'event' => $event,
 				]),
 			]
 		);
@@ -173,12 +210,13 @@ class Captcha implements CaptchaInterface
 	 * @param array<mixed> $responseBody Response body from API.
 	 * @param string $action Action name.
 	 * @param array<mixed> $debug Debug data.
+	 * @param bool $isRetry Whether this request is itself a client retry.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
 	 *
 	 * @return mixed
 	 */
-	private function getEnterpriseOutput(array $responseBody, string $action, array $debug)
+	private function getEnterpriseOutput(array $responseBody, string $action, array $debug, bool $isRetry)
 	{
 		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
@@ -188,11 +226,9 @@ class Captcha implements CaptchaInterface
 		if (!isset($responseBody['tokenProperties']['valid']) || !$responseBody['tokenProperties']['valid']) {
 			$errorCode = $responseBody['tokenProperties']['invalidReason'] ?? '';
 
-			$retry = false;
+			$debug['invalidReason'] = $errorCode;
 
-			if ($errorCode === 'BROWSER_ERROR') {
-				$retry = true;
-			}
+			$retry = \in_array($errorCode, self::ENTERPRISE_RETRY_REASONS, true);
 
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
@@ -203,6 +239,7 @@ class Captcha implements CaptchaInterface
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
+					UtilsHelper::getStateResponseOutputKey('captchaSkipLogging') => $retry && !$isRetry,
 				]
 			);
 			// phpcs:enable
@@ -236,12 +273,13 @@ class Captcha implements CaptchaInterface
 	 * @param array<mixed> $responseBody Response body from API.
 	 * @param string $action Action name.
 	 * @param array<mixed> $debug Debug data.
+	 * @param bool $isRetry Whether this request is itself a client retry.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
 	 *
 	 * @return mixed
 	 */
-	private function getFreeOutput(array $responseBody, string $action, array $debug)
+	private function getFreeOutput(array $responseBody, string $action, array $debug, bool $isRetry)
 	{
 		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
@@ -250,13 +288,11 @@ class Captcha implements CaptchaInterface
 
 		// If response is error.
 		if (!isset($responseBody['score'])) {
-			$errorCode = isset($responseBody['error-codes']) ? \array_flip($responseBody['error-codes']) : [];
+			$errorCodes = $responseBody['error-codes'] ?? [];
 
-			$retry = false;
+			$debug['errorCodes'] = $errorCodes;
 
-			if (isset($errorCode['browser-error'])) {
-				$retry = true;
-			}
+			$retry = (bool) \array_intersect(self::FREE_RETRY_REASONS, $errorCodes);
 
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
@@ -267,6 +303,7 @@ class Captcha implements CaptchaInterface
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
+					UtilsHelper::getStateResponseOutputKey('captchaSkipLogging') => $retry && !$isRetry,
 				]
 			);
 			// phpcs:enable

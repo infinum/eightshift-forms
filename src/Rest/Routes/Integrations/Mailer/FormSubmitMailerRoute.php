@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
@@ -93,6 +94,8 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 
 		// Set validation submit once.
 		$this->getValidator()->setValidationSubmitOnce($formId);
+
+		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return \array_merge(
 			$return,

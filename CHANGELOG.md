@@ -4,6 +4,64 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.6]
+
+### Changed
+
+- Troubleshooting emails are no longer sent for recoverable first-attempt reCAPTCHA failures (those that already set `captchaRetry = true`). When logging is enabled, an email is still sent if the client retry also fails, so genuine dead-ends remain visible. Applies to both the Enterprise and free v3 paths.
+
+## [9.1.5]
+
+### Fixed
+
+- Fixed reCAPTCHA Enterprise failing hard on recoverable `invalidReason` values. `EXPIRED`, `DUPE`, and `TIMEOUT_OR_DUPLICATE` now trigger a fresh-token client retry alongside the existing `BROWSER_ERROR` retry, resolving the common failure where candidates on slow connections exceeded the 2-minute token TTL during large resume uploads.
+- Fixed the free reCAPTCHA v3 path treating `timeout-or-duplicate` as fatal; it now retries on both `browser-error` and `timeout-or-duplicate` for consistency with the Enterprise path.
+
+### Changed
+
+- Added Google-recommended `userAgent` and `userIpAddress` fields to the reCAPTCHA Enterprise assessment request body to improve fraud detection. The IP is resolved via the plugin's existing Cloudflare/CloudFront-aware helper.
+- Surfaced `invalidReason` (Enterprise) and `error-codes` (free v3) at the top of the captcha error debug payload so they are visible in the activity log without having to dig into the raw API response body.
+
+## [9.1.4]
+
+### Changed
+
+- Updated `eightshift-libs` dependency from `^12.1.0` to `^12.3.3`.
+- Updated `eightshift-coding-standards` from `3.0.1` to `3.1.0`.
+- Updated JS dependencies: `@playwright/test` to `^1.59.1`, `webpack` to `^5.106.1`, `baseline-browser-mapping` to `^2.10.18`, and `caniuse-lite` to `^1.0.30001787`.
+- Removed `USE_BUN` flag from the bundle artifact workflow.
+
+## [9.1.3]
+
+### Added
+
+- Added sourcemaps to the release as a separate artifact.
+
+## [9.1.2]
+
+### Fixed
+
+- Fixed conditional tags being lost when converting between block types (checkboxes, radios, select) using the "show as" option. Both field-level and inner-item conditional tags are now correctly preserved across all conversion directions.
+
+## [9.1.1]
+
+### Fixed
+
+- Sanitized NationBuilder field values with `wp_strip_all_tags` to prevent HTML injection.
+
+## [9.1.0]
+
+### Added
+
+- Added `do_action` hooks that fire on successful form submission, one per integration type (e.g. `eightshift_forms_integrations_mailchimp_submit_success`) and one for custom/no-integration forms (`eightshift_forms_integrations_custom_submit_success`). Both pass `$formDetails` and `$formId` as arguments.
+
+## [9.0.0]
+
+### Updated
+
+- Updated dependencies.
+- Minimum PHP version is now 8.4.
+
 ## [8.16.0]
 
 ### Changed
@@ -1755,6 +1813,14 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.1.6]: https://github.com/infinum/eightshift-forms/compare/9.1.5...9.1.6
+[9.1.5]: https://github.com/infinum/eightshift-forms/compare/9.1.4...9.1.5
+[9.1.4]: https://github.com/infinum/eightshift-forms/compare/9.1.3...9.1.4
+[9.1.3]: https://github.com/infinum/eightshift-forms/compare/9.1.2...9.1.3
+[9.1.2]: https://github.com/infinum/eightshift-forms/compare/9.1.1...9.1.2
+[9.1.1]: https://github.com/infinum/eightshift-forms/compare/9.1.0...9.1.1
+[9.1.0]: https://github.com/infinum/eightshift-forms/compare/9.0.0...9.1.0
+[9.0.0]: https://github.com/infinum/eightshift-forms/compare/8.16.0...9.0.0
 [8.16.0]: https://github.com/infinum/eightshift-forms/compare/8.15.2...8.16.0
 [8.15.2]: https://github.com/infinum/eightshift-forms/compare/8.15.1...8.15.2
 [8.15.1]: https://github.com/infinum/eightshift-forms/compare/8.15.0...8.15.1

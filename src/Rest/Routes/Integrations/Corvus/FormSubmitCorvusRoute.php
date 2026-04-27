@@ -17,6 +17,7 @@ use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\ValidationFailedException;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -163,6 +164,8 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 				)
 			);
 		}
+
+		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),

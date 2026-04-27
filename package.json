@@ -1,6 +1,6 @@
 {
 	"name": "@eightshift/eightshift-forms",
-	"version": "8.16.0",
+	"version": "9.1.6",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
 	"authors": [
 		{
@@ -25,6 +25,7 @@
 		"lint": "eslint",
 		"start": "webpack --watch --mode development",
 		"build": "webpack --mode production",
+		"build:sourcemaps": "webpack --mode production --env sourcemaps",
 		"prepare": "husky",
 		"test:e2e:playground": "npx @wp-playground/cli@latest server --auto-mount --blueprint=./tests/e2e/playground/playground.json",
 		"test:e2e": "playwright test",
@@ -33,9 +34,9 @@
 		"test:e2e:report:pdf": "node tests/e2e/helpers/generate-pdf-report.js"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.58.2",
+		"@playwright/test": "^1.59.1",
 		"husky": "^9.1.7",
-		"webpack": "^5.105.4",
+		"webpack": "^5.106.1",
 		"webpack-cli": "^6.0.1",
 		"lint-staged": "^16.4.0"
 	},
@@ -45,8 +46,8 @@
 		"@tailwindcss/postcss": "^4.2.1",
 		"@tailwindcss/typography": "^0.5.19",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.10",
-		"caniuse-lite": "^1.0.30001780",
+		"baseline-browser-mapping": "^2.10.18",
+		"caniuse-lite": "^1.0.30001787",
 		"choices.js": "^11.2.1",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",

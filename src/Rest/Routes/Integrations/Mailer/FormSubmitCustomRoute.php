@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
@@ -104,6 +105,8 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 			// Set validation submit once.
 			$this->getValidator()->setValidationSubmitOnce($formId);
 
+			\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
+
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccessRedirect'),
 				AbstractBaseRoute::R_DEBUG => [
@@ -168,6 +171,9 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 
 		// Set validation submit once.
 		$this->getValidator()->setValidationSubmitOnce($formId);
+
+		// Action: fires after a successful custom form submission.
+		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccess', $formId),

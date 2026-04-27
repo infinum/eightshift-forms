@@ -208,7 +208,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				'php' => \phpversion(),
 				'wp' => \get_bloginfo('version'),
 				'url' => \get_bloginfo('url'),
-				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+				'userAgent' => $this->getSecurity()->getUserAgent(),
 				'time' => \wp_date('Y-m-d H:i:s'),
 				'requestUrl' => Helpers::getCurrentUrl(),
 			],

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cc937ae8dbb97c5a588ce5e89da3f64",
+    "content-hash": "bbe044fb189d5be61d320797a08413a1",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -64,23 +64,23 @@
         },
         {
             "name": "infinum/eightshift-libs",
-            "version": "12.0.0",
+            "version": "12.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "353a83cca85fd2c61c2585ce2d1f1511e0cdc018"
+                "reference": "6ecf6f11b2c101d8507dff2ae46d14ce17a35d63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/353a83cca85fd2c61c2585ce2d1f1511e0cdc018",
-                "reference": "353a83cca85fd2c61c2585ce2d1f1511e0cdc018",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/6ecf6f11b2c101d8507dff2ae46d14ce17a35d63",
+                "reference": "6ecf6f11b2c101d8507dff2ae46d14ce17a35d63",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
-                "php": ">=8.3",
+                "php": ">=8.4",
                 "php-di/invoker": "^2.3.7",
                 "php-di/php-di": "^7.1.1"
             },
@@ -131,20 +131,20 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2026-03-24T12:15:38+00:00"
+            "time": "2026-04-09T11:53:03+00:00"
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v2.0.10",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "870fc81d2f879903dfc5b60bf8a0f94a1609e669"
+                "reference": "a6abb4e54f6fcd3138120b9ad497f0bd146f9919"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/870fc81d2f879903dfc5b60bf8a0f94a1609e669",
-                "reference": "870fc81d2f879903dfc5b60bf8a0f94a1609e669",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/a6abb4e54f6fcd3138120b9ad497f0bd146f9919",
+                "reference": "a6abb4e54f6fcd3138120b9ad497f0bd146f9919",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +192,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2026-02-20T19:59:49+00:00"
+            "time": "2026-04-14T13:33:34+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -475,16 +475,16 @@
         },
         {
             "name": "infinum/eightshift-coding-standards",
-            "version": "3.0.1",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-coding-standards.git",
-                "reference": "47c15871c65c0fe9c739676a93dbc481ac250821"
+                "reference": "61100763a98362dfb73d23fdb1fc353aee123d24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-coding-standards/zipball/47c15871c65c0fe9c739676a93dbc481ac250821",
-                "reference": "47c15871c65c0fe9c739676a93dbc481ac250821",
+                "url": "https://api.github.com/repos/infinum/eightshift-coding-standards/zipball/61100763a98362dfb73d23fdb1fc353aee123d24",
+                "reference": "61100763a98362dfb73d23fdb1fc353aee123d24",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +528,7 @@
                 "issues": "https://github.com/infinum/eightshift-coding-standards/issues",
                 "source": "https://github.com/infinum/eightshift-coding-standards"
             },
-            "time": "2026-02-26T08:49:55+00:00"
+            "time": "2026-04-08T08:28:58+00:00"
         },
         {
             "name": "php-parallel-lint/php-parallel-lint",
@@ -1080,19 +1080,11 @@
         },
         {
             "name": "phpstan/phpstan",
-<<<<<<< HEAD
-            "version": "2.1.42",
+            "version": "2.1.51",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1279e1ce86ba768f0780c9d889852b4e02ff40d0",
-                "reference": "1279e1ce86ba768f0780c9d889852b4e02ff40d0",
-=======
-            "version": "2.1.44",
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4a88c083c668b2c364a425c9b3171b2d9ea5d218",
-                "reference": "4a88c083c668b2c364a425c9b3171b2d9ea5d218",
->>>>>>> main
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dc3b523c45e714c70de2ac5113b958223b55dc59",
+                "reference": "dc3b523c45e714c70de2ac5113b958223b55dc59",
                 "shasum": ""
             },
             "require": {
@@ -1137,11 +1129,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2026-03-17T14:58:32+00:00"
-=======
-            "time": "2026-03-25T17:34:21+00:00"
->>>>>>> main
+            "time": "2026-04-21T18:22:01+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -1289,16 +1277,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v8.0.6",
+            "version": "v8.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "441404f09a54de6d1bd6ad219e088cdf4c91f97c"
+                "reference": "8da41214757b87d97f181e3d14a4179286151007"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/441404f09a54de6d1bd6ad219e088cdf4c91f97c",
-                "reference": "441404f09a54de6d1bd6ad219e088cdf4c91f97c",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/8da41214757b87d97f181e3d14a4179286151007",
+                "reference": "8da41214757b87d97f181e3d14a4179286151007",
                 "shasum": ""
             },
             "require": {
@@ -1333,7 +1321,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v8.0.6"
+                "source": "https://github.com/symfony/finder/tree/v8.0.8"
             },
             "funding": [
                 {
@@ -1353,7 +1341,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-29T09:41:02+00:00"
+            "time": "2026-03-30T15:14:47+00:00"
         },
         {
             "name": "szepeviktor/phpstan-wordpress",
@@ -1523,18 +1511,6 @@
         },
         {
             "name": "wp-cli/php-cli-tools",
-<<<<<<< HEAD
-            "version": "v0.12.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wp-cli/php-cli-tools.git",
-                "reference": "9cbf9946ebe3462005b642de69ccd65753981517"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/9cbf9946ebe3462005b642de69ccd65753981517",
-                "reference": "9cbf9946ebe3462005b642de69ccd65753981517",
-=======
             "version": "v0.12.9",
             "source": {
                 "type": "git",
@@ -1545,7 +1521,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/c3d25138ce46a66647ec0dc9b17bf300338494aa",
                 "reference": "c3d25138ce46a66647ec0dc9b17bf300338494aa",
->>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -1593,15 +1568,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wp-cli/php-cli-tools/issues",
-<<<<<<< HEAD
-                "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.8"
-            },
-            "time": "2026-03-16T15:18:29+00:00"
-=======
                 "source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.9"
             },
             "time": "2026-03-29T11:12:54+00:00"
->>>>>>> main
         },
         {
             "name": "wp-cli/wp-cli",
@@ -1745,7 +1714,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.3"
+        "php": ">=8.4"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
