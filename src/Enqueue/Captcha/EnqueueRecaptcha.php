@@ -19,9 +19,9 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class EnqueueCaptcha
+ * Class EnqueueRecaptcha
  */
-class EnqueueCaptcha extends AbstractEnqueueTheme
+class EnqueueRecaptcha extends AbstractEnqueueTheme
 {
 	/**
 	 * Captcha enqueue handle.

@@ -22,7 +22,7 @@ use EightshiftForms\Captcha\SettingsRecaptcha;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
+use EightshiftForms\Enqueue\Captcha\EnqueueRecaptcha;
 use EightshiftForms\Enqueue\Captcha\EnqueueFriendlyCaptcha;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
@@ -395,12 +395,17 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output = \apply_filters($scriptsDependency, []);
 		}
 
-		if (SettingsCaptcha::getActiveProvider() === SettingsCaptcha::PROVIDER_FRIENDLY) {
-			if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-				$output[] = "{$this->getAssetsPrefix()}-" . EnqueueFriendlyCaptcha::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
-			}
-		} elseif (\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			$output[] = "{$this->getAssetsPrefix()}-" . EnqueueCaptcha::CAPTCHA_ENQUEUE_HANDLE;
+		switch (SettingsCaptcha::getActiveProvider()) {
+			case SettingsCaptcha::PROVIDER_FRIENDLY:
+				if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$output[] = "{$this->getAssetsPrefix()}-" . EnqueueFriendlyCaptcha::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
+				}
+				break;
+			default:
+				if (\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$output[] = "{$this->getAssetsPrefix()}-" . EnqueueRecaptcha::CAPTCHA_ENQUEUE_HANDLE;
+				}
+				break;
 		}
 
 		return $output;

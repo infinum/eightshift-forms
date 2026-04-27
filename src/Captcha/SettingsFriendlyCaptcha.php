@@ -163,8 +163,8 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 					\sprintf(\__('Visit the <a href="%s" target="_blank" rel="noopener noreferrer">Friendly Captcha dashboard</a>.', 'eightshift-forms'), 'https://app.friendlycaptcha.eu/dashboard'),
 					\__('Create a new application and copy the <strong>Site key</strong>.', 'eightshift-forms'),
 					\__('Go to <strong>API Keys</strong> and create a new API key.', 'eightshift-forms'),
-					\__('Copy both keys into the fields under the General tab or use the global constants.', 'eightshift-forms'),
-					\__('In the Friendly Captcha dashboard, set the widget mode to <strong>Non-interactive</strong> for an invisible captcha experience.', 'eightshift-forms'),
+					\__('Copy both keys into the fields under the Settings tab or use the global constants.', 'eightshift-forms'),
+					\__('In the Friendly Captcha dashboard, open your application settings, go to the <strong>Protection</strong> tab, and set the <strong>Widget Mode</strong> to <strong>Smart</strong>.', 'eightshift-forms'),
 				],
 			],
 		];
