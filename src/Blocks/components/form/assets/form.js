@@ -578,30 +578,29 @@ export class Form {
 			return;
 		}
 
-		if (this.state.getStateCaptchaType() === StateEnum.CAPTCHA_TYPE_FRIENDLY) {
-			const widget = window[prefix]?.friendlyCaptcha;
-			const token = widget?.getResponse() ?? '';
+		switch (this.state.getStateCaptchaType()) {
+			case StateEnum.CAPTCHA_TYPE_FRIENDLY: {
+				const widget = window[prefix]?.friendlyCaptcha;
+				const token = widget?.getResponse() ?? '';
 
-			this.setFormDataCaptcha({
-				token,
-			});
+				this.setFormDataCaptcha({
+					token,
+				});
 
-			await this.formSubmit(formId, filter);
+				await this.formSubmit(formId, filter);
+				break;
+			}
+			default: {
+				const actionName = this.state.getStateCaptchaSubmitAction();
+				const siteKey = this.state.getStateCaptchaSiteKey();
 
-			// Reset the widget after every server response so a fresh single-use
-			// token is ready for the next submission attempt.
-			widget?.reset();
-
-			return;
-		}
-
-		const actionName = this.state.getStateCaptchaSubmitAction();
-		const siteKey = this.state.getStateCaptchaSiteKey();
-
-		if (this.state.getStateCaptchaIsEnterprise()) {
-			this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
-		} else {
-			this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
+				if (this.state.getStateCaptchaIsEnterprise()) {
+					this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
+				} else {
+					this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
+				}
+				break;
+			}
 		}
 	}
 

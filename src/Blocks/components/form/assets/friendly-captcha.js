@@ -36,7 +36,23 @@ export class FriendlyCaptcha {
 			return;
 		}
 
+		if (!this.state.getStateCaptchaLoadOnInit() && !document.querySelectorAll(this.state.getStateSelector('form', true))?.length) {
+			return;
+		}
+
 		this.initWidget();
+		this.initResetOnSubmit();
+	}
+
+	/**
+	 * Reset widget after each form submission so a fresh token is ready for the next attempt.
+	 *
+	 * @returns {void}
+	 */
+	initResetOnSubmit() {
+		window.addEventListener(this.state.getStateEvent('afterFormSubmit'), () => {
+			this.widget?.reset();
+		});
 	}
 
 	/**
@@ -86,6 +102,9 @@ export class FriendlyCaptcha {
 			},
 			initWidget: () => {
 				this.initWidget();
+			},
+			initResetOnSubmit: () => {
+				this.initResetOnSubmit();
 			},
 			getResponse: () => this.widget?.getResponse() ?? '',
 			reset: () => {

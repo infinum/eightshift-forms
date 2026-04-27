@@ -348,6 +348,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 							SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY
 						),
 						'endpoint' => FriendlyCaptcha::getEndpoint(),
+						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
 					];
 					break;
 				default:

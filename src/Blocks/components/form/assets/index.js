@@ -20,13 +20,9 @@ domReady(() => {
 	if (state.getStateCaptchaIsUsed()) {
 		switch (state.getStateCaptchaType()) {
 			case StateEnum.CAPTCHA_TYPE_FRIENDLY:
-				// Friendly Captcha renders its widget inside the form, so only load
-				// it on pages that actually contain one.
-				if (document.querySelectorAll(state.getStateSelector('form', true))?.length) {
-					import('./friendly-captcha').then(({ FriendlyCaptcha }) => {
-						new FriendlyCaptcha(utils).init();
-					});
-				}
+				import('./friendly-captcha').then(({ FriendlyCaptcha }) => {
+					new FriendlyCaptcha(utils).init();
+				});
 				break;
 			default:
 				import('./captcha').then(({ Captcha }) => {

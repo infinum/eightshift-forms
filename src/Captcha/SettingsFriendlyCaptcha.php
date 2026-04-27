@@ -52,6 +52,11 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	public const SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY = 'friendly-captcha-use-eu-endpoint';
 
 	/**
+	 * Friendly Captcha load on init (global load) key.
+	 */
+	public const SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY = 'friendly-captcha-load-on-init';
+
+	/**
 	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
@@ -141,6 +146,27 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 						'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
 						'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY,
 						'checkboxAsToggle' => true,
+					],
+				],
+			],
+			[
+				'component' => 'divider',
+				'dividerExtraVSpacing' => true,
+			],
+			[
+				'component' => 'checkboxes',
+				'checkboxesFieldHideLabel' => true,
+				'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+				'checkboxesContent' => [
+					[
+						'component' => 'checkbox',
+						'checkboxLabel' => \__('Load widget on website load', 'eightshift-forms'),
+						'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+						'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY,
+						'checkboxHelp' => \__('By default, the widget is only loaded on pages that contain forms. Enable this to load it on every page.', 'eightshift-forms'),
+						'checkboxSingleSubmit' => true,
+						'checkboxAsToggle' => true,
+						'checkboxAsToggleSize' => 'medium',
 					],
 				],
 			],
