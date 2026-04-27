@@ -152,7 +152,6 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyActiveCampaign(),
@@ -163,7 +162,6 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUrlActiveCampaign(),
@@ -174,7 +172,6 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

@@ -7,6 +7,10 @@
 		"introTitle": {
 			"type": "string"
 		},
+		"introTitleType": {
+			"type": "string",
+			"default": "default"
+		},
 		"introSubtitle": {
 			"type": "string"
 		},

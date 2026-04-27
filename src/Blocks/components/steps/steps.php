@@ -25,10 +25,8 @@ if (!$stepsContent) {
 
 	<ul class="esf-steps-list esf:flex esf:flex-col esf:gap-8 esf:m-0 esf:p-0 esf:list-none">
 		<?php foreach ($stepsContent as $step) { ?>
-			<li class="esf-steps-item esf:flex esf:items-baseline esf:gap-8 esf:m-0 esf:p-0 esf:text-xs esf:leading-relaxed esf:text-gray-500 esf:[&_a]:text-accent-600 esf:[&_a]:underline esf:[&_a]:decoration-dotted">
-				<span>
-					<?php echo wp_kses_post($step); ?>
-				</span>
+			<li class="esf-steps-item esf:flex-wrap esf:gap-5 esf:flex esf:items-baseline esf:m-0! esf:p-0! esf:text-xs esf:leading-relaxed esf:text-gray-500 esf:[&_a]:text-accent! esf:[&_a]:underline! esf:[&_a]:hover:text-accent-dark! esf:[&_a]:transition-colors! esf:[&_a]:duration-300!">
+				<?php echo wp_kses_post($step); ?>
 			</li>
 		<?php } ?>
 	</ul>

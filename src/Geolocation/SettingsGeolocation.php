@@ -97,14 +97,13 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 						'component' => 'intro',
 						// translators: %s will be replaced with the link.
 						'introSubtitle' => \sprintf(\__("
-							<p>By default geolocation uses <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> MaxMind ID database</a> to get users location.</p>
-							<p>With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.</p>
+							By default geolocation uses <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> MaxMind ID database</a> to get users location.<br/><br/>
+							With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.
 						", 'eightshift-forms'), 'https://www.maxmind.com', 'https://eightshift.com/forms/features/geolocation'),
 					],
 					[
 						'component' => 'divider',
 						'dividerSeparator' => true,
-						'dividerExtraVSpacing' => true,
 					],
 					[
 						'component' => 'checkboxes',

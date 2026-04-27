@@ -7,9 +7,13 @@
 		"layoutContent": {
 			"type": "string"
 		},
+		"layoutWithBg": {
+			"type": "boolean",
+			"default": true
+		},
 		"layoutType": {
 			"type": "string",
-			"default": "layout-grid-3"
+			"default": "layout-grid-full"
 		}
 	}
 }

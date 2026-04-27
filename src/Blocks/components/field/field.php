@@ -52,7 +52,6 @@ $fieldAttrsLabel = Helpers::checkAttr('fieldAttrsLabel', $attributes, $manifest)
 $fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
 $fieldInlineBeforeAfterContent = Helpers::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
-$fieldIsFiftyFiftyHorizontal = Helpers::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
 $fieldTypeCustom = Helpers::checkAttr('fieldTypeCustom', $attributes, $manifest);
 $fieldTracking = Helpers::checkAttr('fieldTracking', $attributes, $manifest);
 $fieldTypeInternal = Helpers::checkAttr('fieldTypeInternal', $attributes, $manifest);
@@ -95,7 +94,6 @@ $fieldClass = Helpers::clsx([
 	UtilsHelper::getStateSelector('field'),
 	Helpers::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
 	Helpers::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
-	Helpers::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,
 ]);
 

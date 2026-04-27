@@ -47,7 +47,7 @@ const esTwResponsiveCompiler = () => ({
  * We are loading mostly used configuration but you can always override or turn off the default setup and provide your own.
  * Please referer to Eightshift-libs wiki for details.
  */
-export default (_, argv) => {
+export default (env, argv) => {
 	const projectConfig = {
 		config: {
 			projectDir: __dirname, // Current project directory absolute path.

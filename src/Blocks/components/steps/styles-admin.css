@@ -1,0 +1,23 @@
+@import 'tailwindcss' prefix(esf);
+@reference '../../../../tailwind.css';
+
+@layer esf {
+	.esf-steps-list {
+		counter-reset: esf-steps;
+	}
+
+	.esf-steps-item {
+		counter-increment: esf-steps;
+	}
+
+	.esf-steps-item::before {
+		content: counter(esf-steps);
+		@apply esf:text-sm/tight;
+		@apply esf:rounded-full;
+		@apply esf:text-accent;
+		@apply esf:border-accent esf:border;
+		@apply esf:w-[26px] esf:h-[26px];
+		@apply esf:mr-5;
+		@apply esf:flex esf:justify-center esf:items-center esf:shrink-0;
+	}
+}

@@ -254,7 +254,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'intro',
@@ -318,7 +317,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'intro',
@@ -376,7 +374,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										[
 											'component' => 'divider',
 											'dividerSeparator' => true,
-											'dividerExtraVSpacing' => true,
 										],
 										[
 											'component' => 'intro',
@@ -394,7 +391,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										[
 											'component' => 'divider',
 											'dividerSeparator' => true,
-											'dividerExtraVSpacing' => true,
 										],
 										[
 											'component' => 'intro',
@@ -430,7 +426,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										[
 											'component' => 'divider',
 											'dividerSeparator' => true,
-											'dividerExtraVSpacing' => true,
 										],
 										[
 											'component' => 'intro',
@@ -487,7 +482,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										[
 											'component' => 'divider',
 											'dividerSeparator' => true,
-											'dividerExtraVSpacing' => true,
 										],
 										[
 											'component' => 'intro',
@@ -587,7 +581,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyPipedrive(),
@@ -598,7 +591,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

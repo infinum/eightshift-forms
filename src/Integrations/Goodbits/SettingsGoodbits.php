@@ -145,7 +145,6 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyGoodbits(),
@@ -156,7 +155,6 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

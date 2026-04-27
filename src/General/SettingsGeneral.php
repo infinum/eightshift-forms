@@ -241,7 +241,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'textarea',
@@ -260,7 +259,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'textarea',
@@ -280,7 +278,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'textarea',
@@ -319,7 +316,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'checkboxes',
@@ -388,7 +384,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'select',
@@ -430,7 +425,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'notice',
@@ -492,7 +486,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'layout',

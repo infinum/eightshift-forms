@@ -59,7 +59,7 @@ final class FiltersOutputMock
 				$settings .= '<ul>';
 				foreach ($filterData as $key => $value) {
 					$settingsValue = \implode(', ', $value);
-					$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+					$settings .= "<li>{$key} : {$settingsValue}</li>";
 				}
 				$settings .= '</ul>';
 				$filterUsed = true;

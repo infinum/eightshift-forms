@@ -94,8 +94,9 @@
 	--color-green-950: #052e16;
 }
 
-body {
-	/* --esf-color-secondary-50: var(--es-color-secondary-50);
+@layer components {
+	body {
+		/* --esf-color-secondary-50: var(--es-color-secondary-50);
 	--esf-color-secondary-100: var(--es-color-secondary-100);
 	--esf-color-secondary-200: var(--es-color-secondary-200);
 	--esf-color-secondary-300: var(--es-color-secondary-300);
@@ -120,60 +121,64 @@ body {
 	--esf-color-accent-950: var(--es-color-accent-950);
 
 	--esf-color-error: var(--es-color-error); */
-}
+	}
 
-.esf-button-primary {
-	@apply esf:text-white! esf:bg-accent! esf:border-accent!;
-	@apply esf:hover:text-white! esf:hover:bg-accent-dark! esf:hover:border-accent-dark!;
-	@apply esf:active:text-white! esf:active:bg-accent-dark! esf:active:border-accent-dark!;
-	@apply esf:[&.is-active]:text-white! esf:[&.is-active]:bg-accent-dark! esf:[&.is-active]:border-accent-dark!;
-	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
-}
+	.esf-button-primary {
+		@apply esf:text-white! esf:bg-accent! esf:border-accent!;
+		@apply esf:hover:text-white! esf:hover:bg-accent-dark! esf:hover:border-accent-dark!;
+		@apply esf:active:text-white! esf:active:bg-accent-dark! esf:active:border-accent-dark!;
+		@apply esf:[&.is-active]:text-white! esf:[&.is-active]:bg-accent-dark! esf:[&.is-active]:border-accent-dark!;
+		@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
+	}
 
-.esf-button-primary-outline {
-	@apply esf:text-accent! esf:bg-transparent! esf:border! esf:border-accent!;
-	@apply esf:hover:text-white! esf:hover:bg-accent-dark! esf:hover:border-accent-dark!;
-	@apply esf:active:text-white! esf:active:bg-accent-dark! esf:active:border-accent-dark!;
-	@apply esf:[&.is-active]:text-white! esf:[&.is-active]:bg-accent-dark! esf:[&.is-active]:border-accent-dark!;
-	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
-}
+	.esf-button-primary-outline {
+		@apply esf:text-accent! esf:bg-transparent! esf:border! esf:border-accent!;
+		@apply esf:hover:text-white! esf:hover:bg-accent-dark! esf:hover:border-accent-dark!;
+		@apply esf:active:text-white! esf:active:bg-accent-dark! esf:active:border-accent-dark!;
+		@apply esf:[&.is-active]:text-white! esf:[&.is-active]:bg-accent-dark! esf:[&.is-active]:border-accent-dark!;
+		@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
+	}
 
-.esf-button-primary-ghost {
-	@apply esf:text-accent! esf:bg-transparent! esf:border! esf:border-transparent!;
-	@apply esf:hover:bg-accent-30!;
-	@apply esf:active:bg-accent-30!;
-	@apply esf:[&.is-active]:bg-accent-30!;
-	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
-}
+	.esf-button-primary-ghost {
+		@apply esf:text-accent! esf:bg-transparent! esf:border! esf:border-transparent!;
+		@apply esf:hover:bg-accent-30!;
+		@apply esf:active:bg-accent-30!;
+		@apply esf:[&.is-active]:bg-accent-30!;
+		@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
+	}
 
-.esf-button-secondary-ghost {
-	@apply esf:text-inherit! esf:bg-transparent! esf:border! esf:border-transparent!;
-	@apply esf:hover:bg-accent-30!;
-	@apply esf:active:bg-accent-30!;
-	@apply esf:[&.is-active]:bg-accent-30!;
-	@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
-}
+	.esf-button-secondary-ghost {
+		@apply esf:text-inherit! esf:bg-transparent! esf:border! esf:border-transparent!;
+		@apply esf:hover:bg-accent-30!;
+		@apply esf:active:bg-accent-30!;
+		@apply esf:[&.is-active]:bg-accent-30!;
+		@apply esf:text-sm! esf:font-medium! esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors! esf:duration-300!;
+	}
 
-.esf-button-primary-basic {
-	@apply esf:text-inherit! esf:bg-transparent! esf:border! esf:border-transparent!;
-	@apply esf:hover:text-accent!;
-	@apply esf:active:text-accent!;
-	@apply esf:[&.is-active]:text-accent!;
-	@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:items-center esf:gap-10 esf:transition-colors! esf:duration-300!;
-}
+	.esf-button-primary-basic {
+		@apply esf:text-inherit! esf:bg-transparent! esf:border! esf:border-transparent!;
+		@apply esf:hover:text-accent!;
+		@apply esf:active:text-accent!;
+		@apply esf:[&.is-active]:text-accent!;
+		@apply esf:text-nowrap esf:cursor-pointer! esf:no-underline esf:inline-flex esf:items-center esf:gap-10 esf:transition-colors! esf:duration-300!;
+	}
 
-.esf-is-filter-applied {
-	@apply esf:text-secondary-400 esf:text-xs/17! esf:[&>code]:text-secondary-400! esf:[&>code]:text-xs/17! esf:[&>code]:m-0! esf:[&>code]:px-3! esf:[&>code]:py-1! esf:[&>code]:bg-secondary-100! esf:[&>code]:rounded-sm!;
-}
+	.esf-is-filter-applied {
+		@apply esf:bg-accent-10 esf:text-accent;
+		@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
+		@apply esf:mt-5;
 
-/* Error — hide empty error elements */
-.es-error:empty,
-.es-global-msg:empty {
-	@apply esf:hidden;
-}
+		@apply esf:[&_ul]:mt-5! esf:[&_ul]:text-gray-400;
+	}
 
-/* Textarea — dynamic height via CSS variables */
-/* textarea.es-textarea {
+	/* Error — hide empty error elements */
+	.es-error:empty,
+	.es-global-msg:empty {
+		@apply esf:hidden;
+	}
+
+	/* Textarea — dynamic height via CSS variables */
+	/* textarea.es-textarea {
 	--textarea-size: 3;
 	--textarea-size-max: initial;
 	min-block-size: calc(2.625rem * var(--textarea-size));
@@ -186,7 +191,7 @@ textarea.es-textarea--limit-height {
 	max-block-size: calc(2.625rem * var(--textarea-size-max)) !important;
 } */
 
-/* textarea.es-textarea__size--big {
+	/* textarea.es-textarea__size--big {
 	--textarea-size: 8;
 }
 
@@ -202,12 +207,12 @@ textarea.es-textarea__size--huge.es-textarea--limit-height {
 	--textarea-size-max: 16;
 } */
 
-/* textarea.es-textarea--monospace {
+	/* textarea.es-textarea--monospace {
 	font-family: monospace;
 } */
 
-/* Submit — admin context overrides (compact, fit-content width) */
-/* .es-admin-settings a.es-submit,
+	/* Submit — admin context overrides (compact, fit-content width) */
+	/* .es-admin-settings a.es-submit,
 .es-admin-settings button.es-submit,
 .es-admin-listing a.es-submit,
 .es-admin-listing button.es-submit {
@@ -255,8 +260,8 @@ textarea.es-textarea__size--huge.es-textarea--limit-height {
 	height: 1.875rem;
 } */
 
-/* Steps component — CSS counter not expressible in Tailwind utilities */
-/* .esf-steps-list {
+	/* Steps component — CSS counter not expressible in Tailwind utilities */
+	/* .esf-steps-list {
 	counter-reset: esf-steps;
 }
 
@@ -279,10 +284,10 @@ textarea.es-textarea__size--huge.es-textarea--limit-height {
 	flex-shrink: 0;
 } */
 
-/* Loader spinner — CSS animation not expressible in Tailwind utilities */
+	/* Loader spinner — CSS animation not expressible in Tailwind utilities */
 
-/* Rating stars — nth-selector loop not expressible in Tailwind utilities */
-/* .es-rating {
+	/* Rating stars — nth-selector loop not expressible in Tailwind utilities */
+	/* .es-rating {
 	--esf-rating-icon-color: var(--esf-color-secondary-300, #d4d4d8);
 	--esf-rating-icon-active-color: oklch(79.5% 0.184 86.047);
 }
@@ -325,8 +330,8 @@ textarea.es-textarea__size--huge.es-textarea--limit-height {
 	fill: var(--esf-rating-icon-color);
 } */
 
-/* Field — required asterisk and modifier layouts */
-/* .es-field__label--is-required::after {
+	/* Field — required asterisk and modifier layouts */
+	/* .es-field__label--is-required::after {
 	content: '*';
 	font-size: 0.75rem;
 	color: var(--esf-color-red-500, #ef4444);
@@ -369,8 +374,8 @@ legend .es-field__label-inner {
 }
 	*/
 
-/* Card inline — pseudo-element hover overlay and modifier effects */
-/* .es-card-inline::before {
+	/* Card inline — pseudo-element hover overlay and modifier effects */
+	/* .es-card-inline::before {
 	background-color: var(--esf-color-secondary-50, #fafafa);
 	border-radius: 0.5rem;
 	content: '';
@@ -415,14 +420,14 @@ legend .es-field__label-inner {
 	opacity: 1;
 } */
 
-/* Group component — --default-listing modifier grid */
-/* .es-group--default-listing > .es-group__content {
+	/* Group component — --default-listing modifier grid */
+	/* .es-group--default-listing > .es-group__content {
 	display: grid;
 	row-gap: 0.9375rem;
 } */
 
-/* Admin top menu bar — WP admin bar item */
-/* #wpadminbar #wp-admin-bar-es-forms > a {
+	/* Admin top menu bar — WP admin bar item */
+	/* #wpadminbar #wp-admin-bar-es-forms > a {
 	display: flex;
 	align-items: center;
 }
@@ -433,8 +438,8 @@ legend .es-field__label-inner {
 	vertical-align: middle;
 } */
 
-/* Admin settings — data-attribute selectors for submit button visibility */
-/* .es-admin-settings .es-form[data-settings-type='cache'] .es-submit--global,
+	/* Admin settings — data-attribute selectors for submit button visibility */
+	/* .es-admin-settings .es-form[data-settings-type='cache'] .es-submit--global,
 .es-admin-settings .es-form[data-settings-type='location'] .es-submit--global,
 .es-admin-settings .es-form[data-settings-type='dashboard'] .es-submit--global,
 .es-admin-settings .es-form[data-settings-type='debug'] .es-submit--global,
@@ -449,8 +454,8 @@ legend .es-field__label-inner {
 	display: none;
 } */
 
-/* Global message — admin toast notification style (overrides frontend banner) */
-/* .es-admin-listing__form .es-global-msg {
+	/* Global message — admin toast notification style (overrides frontend banner) */
+	/* .es-admin-listing__form .es-global-msg {
 	position: fixed;
 	right: 2rem;
 	inset-block-end: 2rem;
@@ -495,13 +500,13 @@ legend .es-field__label-inner {
 	color: oklch(26.6% 0.065 152.93);
 } */
 
-/* Loader — admin overlay background */
-/* .es-admin-listing .es-loader::after {
+	/* Loader — admin overlay background */
+	/* .es-admin-listing .es-loader::after {
 	background-color: #f0f0f1;
 } */
 
-/* Admin listing — loader fixed positioning in admin context */
-/* .es-admin-listing__form .es-loader {
+	/* Admin listing — loader fixed positioning in admin context */
+	/* .es-admin-listing__form .es-loader {
 	z-index: 10;
 }
 
@@ -511,3 +516,4 @@ legend .es-field__label-inner {
 	inset-inline: auto 1.25rem;
 	transform: none;
 } */
+}

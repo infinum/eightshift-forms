@@ -179,7 +179,6 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyWorkable(),
@@ -190,7 +189,6 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getSubdomainWorkable(),
@@ -201,7 +199,6 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -230,7 +227,6 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'select',
@@ -310,7 +306,6 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'steps',

@@ -116,7 +116,6 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 					...$value,
 				],
 				'additionalClass' => 'esf:gap-5!',
-				'layoutType' => 'layout-v-stack-clean',
 			];
 		}
 

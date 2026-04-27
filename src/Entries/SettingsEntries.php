@@ -207,7 +207,6 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -228,7 +227,6 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -267,7 +265,6 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -340,7 +337,6 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 							],
 							[
 								'component' => 'layout',
-								'layoutType' => 'layout-v-stack-clean',
 								'layoutContent' => [
 									[
 										'component' => 'card-inline',

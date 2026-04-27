@@ -29,21 +29,25 @@ $classes = Helpers::clsx([
 <div
 	class="<?php echo esc_attr($classes); ?>"
 	<?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
-	<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
+	<div class="esf:flex esf:flex-col esf:gap-10">
 		<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
 			<?php if ($cardInlineIcon) { ?>
 				<div class="esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-24 esf:[&>svg]:h-24">
 					<?php echo $cardInlineIcon; ?>
 				</div>
 			<?php } ?>
-			<?php echo $cardInlineTitle; ?>
+			<div class="esf:flex esf:flex-col esf:gap-2">
+				<?php echo $cardInlineTitle; ?>
+
+				<?php if ($cardInlineSubTitle) { ?>
+					<div class="esf:text-gray-400 esf:text-xs">
+						<?php echo wp_kses_post($cardInlineSubTitle); ?>
+					</div>
+				<?php } ?>
+			</div>
 		</div>
 
-		<?php if ($cardInlineSubTitle) { ?>
-			<div class="esf:text-secondary-400 esf:text-xs esf:flex esf:gap-5 esf:items-center">
-				<?php echo wp_kses_post($cardInlineSubTitle); ?>
-			</div>
-		<?php } ?>
+
 	</div>
 
 	<?php if ($cardInlineRightContent) { ?>

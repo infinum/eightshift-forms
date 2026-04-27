@@ -87,7 +87,6 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
@@ -100,17 +99,18 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 								You can find more details on how to enable it <a href='%1\$s' rel='noopener noreferrer' target='_blank'>here</a>.
 							</p>
 						", 'eightshift-forms'), 'https://developers.cloudflare.com/support/network/configuring-ip-geolocation/'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Security', 'eightshift-forms'),
 						'introSubtitle' => \__("When using Cloudflare, the user's IP address is masked and replaced with the IP address of the Cloudflare server. This ensures proper functionality.", 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],

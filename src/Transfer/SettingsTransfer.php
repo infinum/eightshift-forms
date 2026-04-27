@@ -119,7 +119,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						'tabContent' => [
 							[
 								'component' => 'layout',
-								'layoutType' => 'layout-v-stack',
 								'layoutContent' => [
 									[
 										'component' => 'intro',
@@ -215,7 +214,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						'tabContent' => [
 							[
 								'component' => 'layout',
-								'layoutType' => 'layout-v-stack',
 								'layoutContent' => [
 									[
 										'component' => 'intro',
@@ -231,7 +229,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'checkboxes',
@@ -250,7 +247,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'file',

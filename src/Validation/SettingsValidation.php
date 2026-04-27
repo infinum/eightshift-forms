@@ -216,7 +216,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 		foreach ($this->labels->getLabels() as $type => $labels) {
 			$output = [
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
@@ -269,7 +268,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'textarea',
@@ -294,7 +292,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Messages', 'eightshift-forms'),
-						'tabNoBg' => true,
+						'tabWithBg' => false,
 						'tabContent' => $messagesOutput,
 					],
 				]

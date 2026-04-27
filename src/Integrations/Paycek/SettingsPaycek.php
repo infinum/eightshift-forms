@@ -219,7 +219,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'input',
@@ -254,7 +253,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'divider',
 								'dividerSeparator' => true,
-								'dividerExtraVSpacing' => true,
 							],
 							[
 								'component' => 'checkboxes',

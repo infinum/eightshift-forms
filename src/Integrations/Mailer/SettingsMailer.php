@@ -269,7 +269,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -326,7 +325,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -343,7 +341,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'textarea',
@@ -377,7 +374,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -393,7 +389,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -424,7 +419,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -445,7 +439,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'select',
@@ -469,7 +462,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'input',
@@ -486,7 +478,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'textarea',
@@ -502,7 +493,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'divider',
 										'dividerSeparator' => true,
-										'dividerExtraVSpacing' => true,
 									],
 									[
 										'component' => 'checkboxes',
@@ -548,7 +538,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 				'layoutContent' => [
 					[
 						'component' => 'intro',
-						'introSubtitle' => \__('Mailer uses the built-in WordPress mailing system.<br /><br />If using an external mailing service, configure it manually or through a plugin.', 'eightshift-forms'),
+						'introSubtitle' => \__('Mailer uses the built-in WordPress mailing system.<br />If using an external mailing service, configure it manually or through a plugin.', 'eightshift-forms'),
 					],
 				],
 			],

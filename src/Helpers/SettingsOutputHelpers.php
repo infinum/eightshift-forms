@@ -110,13 +110,13 @@ final class SettingsOutputHelpers
 	{
 		return [
 			'component' => 'layout',
-			'layoutType' => 'layout-v-stack-card',
 			'layoutContent' => [
 				[
 					'component' => 'intro',
 					'introTitle' => \__('Disclaimer', 'eightshift-forms'),
 					// translators: %s will be replaced with the type of disclaimer.
 					'introSubtitle' => \sprintf(\__("Eightshift Forms doesn't configure the %s or any other third-party tools. However, enabling this feature adds necessary configurations in the backend for everything to function correctly.", 'eightshift-forms'), \esc_html($type)),
+					'introTitleType' => 'medium',
 				],
 			],
 		];

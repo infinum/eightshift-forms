@@ -145,7 +145,6 @@ class SettingsAirtable extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyAirtable(),
@@ -156,7 +155,6 @@ class SettingsAirtable extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

@@ -145,7 +145,6 @@ class SettingsMailerlite extends AbstractSettingsIntegrations implements Setting
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyMailerlite(),
@@ -156,7 +155,6 @@ class SettingsMailerlite extends AbstractSettingsIntegrations implements Setting
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

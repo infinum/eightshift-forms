@@ -297,7 +297,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
@@ -360,11 +359,9 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'layout',
-									'layoutType' => 'layout-v-stack-clean',
 									'layoutContent' => [
 										[
 											'component' => 'card-inline',
@@ -416,7 +413,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'input',
@@ -429,7 +425,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'select',
@@ -487,7 +482,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				[
 					'component' => 'divider',
 					'dividerSeparator' => true,
-					'dividerExtraVSpacing' => true,
 				],
 				[
 					'component' => 'input',
@@ -1050,7 +1044,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'component' => 'checkbox',
 				'checkboxLabel' => $key,
 				// translators: %1$s will be replaced with the flag label. %2$s will be replaced with the recommended text.
-				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="info-strong">Recommended.</strong>', 'eightshift-forms') : '')),
+				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="esf:text-accent esf:font-medium">Recommended.</strong>', 'eightshift-forms') : '')),
 				'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($key, self::SETTINGS_FALLBACK_FLAGS_KEY),
 				'checkboxValue' => $key,
 				'checkboxAsToggle' => true,
