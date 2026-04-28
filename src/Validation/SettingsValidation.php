@@ -272,7 +272,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.

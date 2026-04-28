@@ -667,7 +667,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
-								'textareaIsMonospace' => true,
 								'textareaIsRequired' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Store IDs', 'eightshift-forms'),

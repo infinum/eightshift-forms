@@ -10,7 +10,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $introTitle = Helpers::checkAttr('introTitle', $attributes, $manifest);
 $introSubtitle = Helpers::checkAttr('introSubtitle', $attributes, $manifest);
-$introHelp = Helpers::checkAttr('introHelp', $attributes, $manifest);
 $introTitleType = Helpers::checkAttr('introTitleType', $attributes, $manifest);
 
 $introTitleClass = Helpers::clsx([
@@ -18,6 +17,13 @@ $introTitleClass = Helpers::clsx([
 	$introTitleType === 'default' ? 'esf:text-xl' : '',
 	$introTitleType === 'medium' ? 'esf:text-base' : '',
 	$introTitleType === 'small' ? 'esf:text-sm esf:font-normal' : '',
+]);
+
+$introSubtitleClass = Helpers::clsx([
+	'esf:text-sm esf:text-gray-500',
+	'esf:[&_a]:text-accent esf:[&_a]:underline esf:[&_a]:hover:text-accent-dark esf:[&_a]:transition-colors esf:[&_a]:duration-300',
+	'esf:[&_ul]:list-disc esf:[&_ul]:list-inside esf:[&_ul]:m-0 esf:[&_ul]:mt-5 esf:[&_ul]:p-0 esf:[&_ul]:gap-5 esf:[&_ul]:flex esf:[&_ul]:flex-col',
+	'esf:[&_li]:m-0',
 ]);
 
 ?>
@@ -30,14 +36,8 @@ $introTitleClass = Helpers::clsx([
 	<?php } ?>
 
 	<?php if ($introSubtitle) { ?>
-		<div class="esf:text-sm esf:text-gray-500 esf:[&_a]:text-accent! esf:[&_a]:underline! esf:[&_a]:hover:text-accent-dark! esf:[&_a]:transition-colors! esf:[&_a]:duration-300!">
+		<div class="<?php echo $introSubtitleClass; ?>">
 			<?php echo wp_kses_post($introSubtitle); ?>
-		</div>
-	<?php } ?>
-
-	<?php if ($introHelp) { ?>
-		<div class="esf:text-secondary-400 esf:text-xs">
-			<?php echo wp_kses_post($introHelp); ?>
 		</div>
 	<?php } ?>
 </div>

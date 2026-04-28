@@ -1,8 +1,5 @@
 @import 'tailwindcss' prefix(esf);
-@reference '../../../../tailwind.css';
 
-@layer esf {
-	.es-loader.es-form-is-active .es-loader__spinner {
-		@apply esf:animate-spin esf:duration-500;
-	}
+.es-loader.es-form-is-active .es-loader__spinner {
+	@apply esf:animate-spin esf:duration-500;
 }

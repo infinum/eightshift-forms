@@ -280,8 +280,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('All fields will be outputted in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES])),
+								'introSubtitle' => sprintf(\__('All fields will be outputted in the Jira issue description field using table layout but you can also map individual custom field. %s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES]))),
 							],
 							[
 								'component' => 'divider',

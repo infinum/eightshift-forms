@@ -343,11 +343,10 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 										'cardInlineTitle' => \__('View all entries in database', 'eightshift-forms'),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitVariant' => 'ghost',
-												'submitButtonAsLink' => true,
-												'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES),
-												'submitValue' => \__('View all entries', 'eightshift-forms'),
+												'component' => 'button',
+												'buttonVariant' => 'primaryGhost',
+												'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES),
+												'buttonLabel' => \__('View all entries', 'eightshift-forms'),
 											],
 										],
 									],

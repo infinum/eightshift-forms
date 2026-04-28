@@ -13,9 +13,6 @@
 		},
 		"introSubtitle": {
 			"type": "string"
-		},
-		"introHelp": {
-			"type": "string"
 		}
 	}
 }

@@ -217,8 +217,6 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'country',
 								'textareaValue' => \wp_json_encode($this->countries->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
-								'textareaSize' => 'huge',
-								'textareaLimitHeight' => true,
 							],
 						],
 					],

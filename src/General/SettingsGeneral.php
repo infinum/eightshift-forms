@@ -195,7 +195,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_VARIATION_KEY),
 								// translators: %s will be replaced with forms field name and filter output copy.
@@ -245,7 +244,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be list example keys.
@@ -263,7 +261,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on successful submit', 'eightshift-forms'),
 								// translators: %s will be list example keys.
@@ -282,7 +279,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on error', 'eightshift-forms'),
 								// translators: %s will be list example keys.
@@ -489,7 +485,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'layout',
-								'layoutType' => 'layout-v-stack',
 								'layoutContent' => [
 									[
 										'component' => 'card-inline',
@@ -497,10 +492,10 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 										'cardInlineTitle' => \sprintf(\__('Current increment: %s', 'eightshift-forms'), FormsHelper::getIncrement($formId)),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitValue' => \__('Reset', 'eightshift-forms'),
-												'submitVariant' => 'ghost',
-												'submitAttrs' => [
+												'component' => 'button',
+												'buttonLabel' => \__('Reset', 'eightshift-forms'),
+												'buttonVariant' => 'primaryGhost',
+												'buttonAttrs' => [
 													UtilsHelper::getStateAttribute('formId') => $formId,
 												],
 												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),

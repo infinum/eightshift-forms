@@ -303,11 +303,10 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 						'cardInlineTitle' => \__('View all activity logs in database', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitVariant' => 'ghost',
-								'submitButtonAsLink' => true,
-								'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS, $formId),
-								'submitValue' => \__('View', 'eightshift-forms'),
+								'component' => 'button',
+								'buttonVariant' => 'primaryGhost',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS, $formId),
+								'buttonLabel' => \__('View', 'eightshift-forms'),
 							],
 						],
 					],
@@ -368,11 +367,10 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 											'cardInlineTitle' => \__('View all activity logs in database', 'eightshift-forms'),
 											'cardInlineRightContent' => [
 												[
-													'component' => 'submit',
-													'submitVariant' => 'ghost',
-													'submitButtonAsLink' => true,
-													'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
-													'submitValue' => \__('View all activity logs', 'eightshift-forms'),
+													'component' => 'button',
+													'buttonVariant' => 'primaryGhost',
+													'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
+													'buttonLabel' => \__('View all activity logs', 'eightshift-forms'),
 												],
 											],
 										],

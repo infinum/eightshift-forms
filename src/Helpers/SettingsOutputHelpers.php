@@ -288,13 +288,13 @@ final class SettingsOutputHelpers
 	public static function getTestApiConnection(string $key): array
 	{
 		return [
-			'component' => 'submit',
-			'submitValue' => \__('Test API connection', 'eightshift-forms'),
-			'submitVariant' => 'outline',
-			'submitAttrs' => [
+			'component' => 'button',
+			'buttonLabel' => \__('Test API connection', 'eightshift-forms'),
+			'buttonVariant' => 'primaryOutline',
+			'buttonAttrs' => [
 				UtilsHelper::getStateAttribute('testApiType') => $key,
 			],
-			'additionalClass' => UtilsHelper::getStateSelectorAdmin('testApi') . ' es-submit--api-test',
+			'additionalClass' => UtilsHelper::getStateSelectorAdmin('testApi'),
 		];
 	}
 
@@ -316,7 +316,6 @@ final class SettingsOutputHelpers
 
 		return [
 			'component' => 'layout',
-			'layoutType' => 'layout-v-stack-clean-full',
 			'layoutContent' => [
 				[
 					'component' => 'checkboxes',
@@ -344,12 +343,11 @@ final class SettingsOutputHelpers
 					'cardInlineSubTitle' => $token ? \__('Oauth connected.', 'eightshift-forms') : \__('Oauth connection required!', 'eightshift-forms'),
 					'cardInlineRightContent' => [
 						[
-							'component' => 'submit',
-							'submitValue' => \__('Oauth Connect', 'eightshift-forms'),
-							'submitVariant' => $token ? 'success' : 'error',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $url,
-							'submitIsDisabled' => $allowIsChecked ? false : true,
+							'component' => 'button',
+							'buttonLabel' => \__('Oauth Connect', 'eightshift-forms'),
+							'buttonVariant' => $token ? 'primary' : 'primaryOutline',
+							'buttonUrl' => $url,
+							'buttonIsDisabled' => $allowIsChecked ? false : true,
 						],
 					],
 				],

@@ -30,7 +30,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 ?>
 
-<div class="esf:flex esf:flex-row esf:gap-30 esf:-ml-20 esf:p-40">
+<div class="esf-main-container esf:css-reset esf:flex esf:flex-row esf:gap-30 esf:-ml-20 esf:p-40 esf:bg-gray-50 esf:min-h-screen">
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="esf:flex esf:flex-col esf:gap-16">
 			<?php
@@ -67,7 +67,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		?>
 	</div>
 	<div class="esf:flex esf:flex-col esf:h-full esf:gap-15 esf:flex-1">
-		<div class="esf:flex esf:items-center esf:justify-between esf:min-h-14">
+		<div class="esf:flex esf:items-center esf:justify-between esf:min-h-14 esf:px-5">
 			<div class="esf:text-2xl esf:font-medium">
 				<?php echo esc_html($adminSettingsPageTitle); ?>
 			</div>
@@ -90,7 +90,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				</div>
 			<?php } ?>
 		</div>
-		<div class="esf:overflow-x-hidden esf:h-full esf:max-w-xl">
+		<div class="esf:overflow-x-hidden esf:h-full esf:max-w-xl esf:px-5 esf:pb-5">
 			<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?>
 		</div>

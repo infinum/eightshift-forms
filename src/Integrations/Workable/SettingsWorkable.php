@@ -269,7 +269,6 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								[
 									'component' => 'textarea',
 									'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY),
-									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Geolocation tags', 'eightshift-forms'),
 									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("

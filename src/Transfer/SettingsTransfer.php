@@ -130,10 +130,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardInlineIcon' => UtilsHelper::getUtilsIcons('settings'),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitValue' => \__('Export', 'eightshift-forms'),
-												'submitVariant' => 'outline',
-												'submitAttrs' => [
+												'component' => 'button',
+												'buttonLabel' => \__('Export', 'eightshift-forms'),
+												'buttonVariant' => 'primaryOutline',
+												'buttonAttrs' => [
 													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 												],
 												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
@@ -150,10 +150,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitValue' => \__('Export', 'eightshift-forms'),
-												'submitVariant' => 'outline',
-												'submitAttrs' => [
+												'component' => 'button',
+												'buttonLabel' => \__('Export', 'eightshift-forms'),
+												'buttonVariant' => 'primaryOutline',
+												'buttonAttrs' => [
 													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_ALL,
 												],
 												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
@@ -170,10 +170,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardInlineIcon' => UtilsHelper::getUtilsIcons('form'),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitValue' => \__('Export selected', 'eightshift-forms'),
-												'submitVariant' => 'outline',
-												'submitAttrs' => [
+												'component' => 'button',
+												'buttonLabel' => \__('Export selected', 'eightshift-forms'),
+												'buttonVariant' => 'primaryOutline',
+												'buttonAttrs' => [
 													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_FORMS,
 													UtilsHelper::getStateAttribute('migrationExportItems') => '',
 												],
@@ -192,10 +192,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardInlineIcon' => UtilsHelper::getUtilsIcons('form'),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitValue' => \__('Export selected', 'eightshift-forms'),
-												'submitVariant' => 'outline',
-												'submitAttrs' => [
+												'component' => 'button',
+												'buttonLabel' => \__('Export selected', 'eightshift-forms'),
+												'buttonVariant' => 'primaryOutline',
+												'buttonAttrs' => [
 													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_RESULT_OUTPUTS,
 													UtilsHelper::getStateAttribute('migrationExportItems') => '',
 												],
@@ -257,10 +257,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'additionalClass' => UtilsHelper::getStateSelectorAdmin('transferUpload'),
 									],
 									[
-										'component' => 'submit',
-										'submitValue' => \__('Import JSON', 'eightshift-forms'),
-										'submitVariant' => 'outline',
-										'submitAttrs' => [
+										'component' => 'button',
+										'buttonLabel' => \__('Import JSON', 'eightshift-forms'),
+										'buttonVariant' => 'primaryOutline',
+										'buttonAttrs' => [
 											UtilsHelper::getStateAttribute('migrationType') => self::TYPE_IMPORT,
 										],
 										'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),

@@ -8,7 +8,7 @@ export const SubmitEditor = (attributes) => {
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 
 	const submitComponent = (
-		<button className='esf:w-full! esf:p-10! esf:rounded-md! esf:text-sm! esf:text-white! esf:bg-accent-600! esf:font-bold! esf:focus:border-accent-600! esf:focus:shadow-none! esf:focus:outline-none!'>
+		<button className='esf:w-full esf:p-10 esf:rounded-md esf:text-sm esf:text-white esf:bg-accent-600 esf:font-bold'>
 			{submitValue}
 		</button>
 	);

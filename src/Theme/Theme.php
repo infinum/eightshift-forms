@@ -25,30 +25,30 @@ class Theme implements ServiceInterface
 	 */
 	public const THEME_ADMIN_SELECTORS = [
 		'input' => [
-			'esf:w-full!',
-			'esf:border!',
-			'esf:border-border!',
-			'esf:bg-white!',
-			'esf:p-10!',
-			'esf:rounded-md!',
-			'esf:text-sm!',
-			'esf:h-42!',
-			'esf:shadow-none!',
-			'esf:text-black!',
-			'esf:placeholder:text-gray-400!',
-			'esf:focus:border-accent!',
-			'esf:focus:shadow-none!',
-			'esf:focus:outline-none!',
-			'esf:disabled:bg-gray-100!',
-			'esf:disabled:text-gray-400!',
+			'esf:w-full',
+			'esf:border',
+			'esf:border-border',
+			'esf:bg-white',
+			'esf:p-10',
+			'esf:rounded-md',
+			'esf:text-sm',
+			'esf:h-42',
+			'esf:shadow-none',
+			'esf:text-black',
+			'esf:placeholder:text-gray-400',
+			'esf:disabled:bg-gray-100',
+			'esf:disabled:text-gray-400',
+			'esf:read-only:bg-gray-100',
+			'esf:read-only:text-gray-600',
+			'esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none'
 		],
 		'help' => [
 			'esf:text-gray-400 esf:text-xs/17',
 			'esf:mt-5',
-			'esf:[&_code]:text-gray-400! esf:[&_code]:text-xs/17! esf:[&_code]:m-0! esf:[&_code]:px-3! esf:[&_code]:py-1! esf:[&_code]:bg-gray-100!',
-			'esf:[&_a]:text-accent! esf:[&_a]:underline! esf:[&_a]:hover:text-accent-dark! esf:[&_a]:transition-colors! esf:[&_a]:duration-300!',
-			'esf:[&_ul]:list-disc! esf:[&_ul]:list-inside! esf:[&_ul]:m-0! esf:[&_ul]:p-0! esf:[&_ul]:gap-5! esf:[&_ul]:flex! esf:[&_ul]:flex-col',
-			'esf:[&_li]:m-0!',
+			'esf:[&_code]:text-gray-400 esf:[&_code]:text-xs/17 esf:[&_code]:m-0 esf:[&_code]:px-3 esf:[&_code]:py-1 esf:[&_code]:bg-gray-100',
+			'esf:[&_a]:text-accent esf:[&_a]:underline esf:[&_a]:hover:text-accent-dark esf:[&_a]:transition-colors esf:[&_a]:duration-300',
+			'esf:[&_ul]:list-disc esf:[&_ul]:list-inside esf:[&_ul]:m-0 esf:[&_ul]:p-0 esf:[&_ul]:gap-5 esf:[&_ul]:flex esf:[&_ul]:flex-col',
+			'esf:[&_li]:m-0',
 		],
 		'label' => [
 			'esf:text-sm',
@@ -120,7 +120,7 @@ class Theme implements ServiceInterface
 				'base' => [
 					...Theme::THEME_ADMIN_SELECTORS['input'],
 					'esf:min-h-200',
-					'esf:h-auto!',
+					'esf:h-auto',
 				],
 			],
 			'select' => [
@@ -160,7 +160,6 @@ class Theme implements ServiceInterface
 			'submit' => [
 				'base' => [
 					'esf-button-primary',
-					'esf:w-fit',
 				],
 				'parts' => [
 					'field-content-wrap' => [
@@ -223,14 +222,15 @@ class Theme implements ServiceInterface
 						'esf:[.es-checkbox-toggle__label]:after:top-[3px]',
 						'esf:[.es-checkbox-toggle__label]:after:end-[24px]',
 						'esf:[.es-checkbox-toggle__label]:after:rounded-full',
-						'esf:[.es-checkbox-toggle__label]:after:bg-accent',
+						'esf:[.es-checkbox-toggle__label]:after:bg-gray-300',
 						'esf:[.es-checkbox-toggle__label]:after:h-16',
 						'esf:[.es-checkbox-toggle__label]:after:w-16',
 						'esf:[.es-checkbox-toggle__label]:after:transition-all',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:-translate-x-20',
+						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:translate-x-21',
 						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-white',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:end-[3px]',
 						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:transition-all',
+						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:duration-300',
+						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-accent',
 					],
 					'help' => [
 						...Theme::THEME_ADMIN_SELECTORS['help'],
@@ -267,8 +267,8 @@ class Theme implements ServiceInterface
 						'esf:before:border',
 						'esf:before:border-secondary-200',
 						'esf:before:rounded-full',
-						'esf:peer-checked/checkbox:before:bg-accent-500!',
-						'esf:peer-checked/checkbox:before:border-accent-500!',
+						'esf:peer-checked/checkbox:before:bg-accent-500',
+						'esf:peer-checked/checkbox:before:border-accent-500',
 					],
 				],
 			],
@@ -284,6 +284,9 @@ class Theme implements ServiceInterface
 			],
 			'checkboxes' => [
 				'parts' => [
+					'field-label' => [
+						'esf:font-semibold',
+					],
 					'field-content-wrap' => [
 						'esf:group-[.es-field--checkboxes-style-horizontal]/field:flex',
 						'esf:group-[.es-field--checkboxes-style-horizontal]/field:flex-wrap',
@@ -360,7 +363,6 @@ class Theme implements ServiceInterface
 			],
 			'file' => [
 				'base' => [
-					'esf:focus:outline-none',
 					'esf:absolute',
 					'esf:-z-10',
 					'esf:opacity-0',
@@ -501,7 +503,6 @@ class Theme implements ServiceInterface
 					'esf:h-5',
 					'esf:rounded-full',
 					'esf:bg-secondary-200',
-					'esf:focus:outline-none',
 				],
 				'parts' => [
 					'field-content-wrap' => [
@@ -552,8 +553,8 @@ class Theme implements ServiceInterface
 					'star' => [
 						'esf:flex',
 						'esf:cursor-pointer',
-						'esf:[&_*]:select-none!',
-						'esf:[&_*]:pointer-events-none!',
+						'esf:[&_*]:select-none',
+						'esf:[&_*]:pointer-events-none',
 					],
 				],
 			],

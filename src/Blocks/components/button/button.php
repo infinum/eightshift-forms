@@ -68,6 +68,7 @@ $class = Helpers::clsx([
 	$buttonClass,
 	$buttonIconSizeClass,
 	$additionalClass,
+	'esf:w-fit',
 ]);
 
 ?>

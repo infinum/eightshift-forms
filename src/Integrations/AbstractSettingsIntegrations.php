@@ -49,7 +49,6 @@ abstract class AbstractSettingsIntegrations
 			[
 				'component' => 'textarea',
 				'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
-				'textareaIsMonospace' => true,
 				'textareaSaveAsJson' => true,
 				'textareaName' => SettingsHelpers::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
 				'textareaFieldHelp' => \sprintf(

@@ -288,7 +288,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									'component' => 'textarea',
 									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_KEY),
 									'textareaFieldLabel' => \__('Recipient e-mail advanced', 'eightshift-forms'),
-									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Specify additional emails based on field values.<br />
@@ -534,7 +533,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',

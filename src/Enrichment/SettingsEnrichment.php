@@ -167,7 +167,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment parameters', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('
@@ -206,6 +205,8 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								function ($item) {
 									return [
 										'component' => 'layout',
+										'layoutType' => 'layout-grid-half',
+										'layoutWithBg' => false,
 										'layoutContent' => [
 											[
 												'component' => 'intro',
@@ -215,12 +216,10 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 											[
 												'component' => 'input',
 												'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-												'fieldHideLabel' => true,
+												'inputFieldHideLabel' => true,
 												'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 											],
 										],
-										'layoutType' => 'layout-grid-half',
-										'layoutWithBg' => false,
 									];
 								},
 								$enrichment['settingsFields'] ?? []
@@ -304,7 +303,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment smart parameters', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('

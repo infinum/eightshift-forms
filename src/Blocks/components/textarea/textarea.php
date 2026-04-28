@@ -26,12 +26,9 @@ $textareaIsReadOnly = Helpers::checkAttr('textareaIsReadOnly', $attributes, $man
 $textareaIsRequired = Helpers::checkAttr('textareaIsRequired', $attributes, $manifest);
 $textareaTracking = Helpers::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaAttrs = Helpers::checkAttr('textareaAttrs', $attributes, $manifest);
-$textareaIsMonospace = Helpers::checkAttr('textareaIsMonospace', $attributes, $manifest);
 $textareaSaveAsJson = Helpers::checkAttr('textareaSaveAsJson', $attributes, $manifest);
 $textareaTypeCustom = Helpers::checkAttr('textareaTypeCustom', $attributes, $manifest);
 $textareaFieldAttrs = Helpers::checkAttr('textareaFieldAttrs', $attributes, $manifest);
-$textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
-$textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
 $textareaTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
@@ -47,9 +44,6 @@ $twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea'])
 $textareaClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
 	$additionalClass,
-	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
-	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),
-	Helpers::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
 ]);
 
 if ($textareaSaveAsJson) {
