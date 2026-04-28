@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { icons } from '@eightshift/ui-components/icons';
+import { a11yWarning, checkSquare, cursorDisabled, hide, options, tools } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
@@ -25,7 +25,7 @@ export const SelectOptionOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -51,19 +51,19 @@ export const SelectOptionOptions = (attributes) => {
 			{selectOptionLabel === '' && (
 				<Notice
 					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
-					icon={icons.a11yWarning}
+					icon={a11yWarning}
 					type='warning'
 				/>
 			)}
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.checkSquare}
+				icon={checkSquare}
 				label={__('Selected', 'eightshift-forms')}
 				checked={selectOptionIsSelected}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
@@ -74,7 +74,7 @@ export const SelectOptionOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={selectOptionIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
@@ -85,7 +85,7 @@ export const SelectOptionOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.hide}
+				icon={hide}
 				label={__('Hidden', 'eightshift-forms')}
 				checked={selectOptionIsHidden}
 				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })}

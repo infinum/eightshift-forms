@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { icons } from '@eightshift/ui-components/icons';
+import { form } from '@eightshift/ui-components/icons';
 import { Button } from '@eightshift/ui-components';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
 import { camelCase } from '@eightshift/ui-components/utilities';
@@ -17,7 +17,7 @@ export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 		<>
 			{!hasInnerBlocks && (
 				<Placeholder
-					icon={icons.form}
+					icon={form}
 					label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
 				>
 					<h4>{__('What type is your new form?', 'eightshift-forms')}</h4>

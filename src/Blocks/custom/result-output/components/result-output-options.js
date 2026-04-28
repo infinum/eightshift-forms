@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AsyncSelect, ContainerPanel } from '@eightshift/ui-components';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';
-import { icons } from '@eightshift/ui-components/icons';
+import { visibilityAlt } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
 
 export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptions, resultSelectOptions }) => {
@@ -64,7 +64,7 @@ export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptio
 			/>
 
 			<IconToggle
-				icon={icons.visibilityAlt}
+				icon={visibilityAlt}
 				label={__('Hide by default', 'eightshift-forms')}
 				help={__('Hide result output block by default. It will be shown only on form success.', 'eightshift-forms')}
 				checked={resultOutputHide}

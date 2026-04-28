@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { externalLink, gears, id, options, tag, tools } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
 
 export const FormOptions = (attributes) => {
@@ -17,11 +17,11 @@ export const FormOptions = (attributes) => {
 		<>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<InputField
-				icon={icons.tag}
+				icon={tag}
 				label={__('Form name', 'eightshift-forms')}
 				help={__(
 					'Used as a name attribute for form element Useful if you want to add additional code style for the form.',
@@ -33,12 +33,12 @@ export const FormOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.gears}
+				icon={gears}
 				label={__('Custom action', 'eightshift-forms')}
 				value={formAction}
 				help={__('Custom form action that will process form data.', 'eightshift-forms')}
@@ -46,7 +46,7 @@ export const FormOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.externalLink}
+				icon={externalLink}
 				label={__('Process form externally', 'eightshift-forms')}
 				checked={formActionExternal}
 				help={__(
@@ -57,7 +57,7 @@ export const FormOptions = (attributes) => {
 			/>
 
 			<InputField
-				icon={icons.id}
+				icon={id}
 				label={__('Unique identifier', 'eightshift-forms')}
 				value={formId}
 				onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}

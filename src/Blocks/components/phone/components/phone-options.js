@@ -5,7 +5,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, fieldValue, googleTagManager, migrationAlt, options, order, readOnly, regex, search, titleGeneric, tools, visible } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,
@@ -48,7 +48,7 @@ export const PhoneOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -69,7 +69,7 @@ export const PhoneOptions = (attributes) => {
 
 			<ContainerGroup>
 				<Toggle
-					icon={icons.fieldPlaceholder}
+					icon={fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={phoneUseLabelAsPlaceholder}
 					onChange={(value) => {
@@ -96,12 +96,12 @@ export const PhoneOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.fieldValue}
+				icon={fieldValue}
 				label={__('Initial value', 'eightshift-forms')}
 				placeholder={__('Enter initial value', 'eightshift-forms')}
 				type='number'
@@ -113,7 +113,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<InputField
-				icon={icons.titleGeneric}
+				icon={titleGeneric}
 				label={__('Dropdown initial value', 'eightshift-forms')}
 				placeholder={__('Enter dropdown initial value', 'eightshift-forms')}
 				value={phoneSelectValue}
@@ -132,7 +132,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.readOnly}
+				icon={readOnly}
 				label={__('Read-only', 'eightshift-forms')}
 				checked={phoneIsReadOnly}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneIsReadOnly', attributes, manifest)]: value })}
@@ -140,7 +140,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={phoneIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneIsDisabled', attributes, manifest)]: value })}
@@ -148,7 +148,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.order}
+				icon={order}
 				label={__('Only numbers', 'eightshift-forms')}
 				checked={phoneIsNumber}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneIsNumber', attributes, manifest)]: value })}
@@ -156,7 +156,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.search}
+				icon={search}
 				label={__('Search', 'eightshift-forms')}
 				checked={phoneUseSearch}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneUseSearch', attributes, manifest)]: value })}
@@ -164,7 +164,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.visible}
+				icon={visible}
 				label={__('View type', 'eightshift-forms')}
 				help={__('Select the type of view for the phone field.', 'eightshift-forms')}
 				options={[
@@ -189,7 +189,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.migrationAlt}
+				icon={migrationAlt}
 				value={phoneValueType}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneValueType', attributes, manifest)]: value })}
 				label={__('Output value type', 'eightshift-forms')}
@@ -209,12 +209,12 @@ export const PhoneOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={phoneIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('phoneIsRequired', attributes, manifest)]: value })}
@@ -222,7 +222,7 @@ export const PhoneOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.regex}
+				icon={regex}
 				label={__('Match pattern', 'eightshift-forms')}
 				options={phoneValidationPatternOptions}
 				value={phoneValidationPattern}
@@ -234,12 +234,12 @@ export const PhoneOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={phoneTracking}

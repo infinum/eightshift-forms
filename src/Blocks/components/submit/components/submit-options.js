@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, cursorDisabled, googleTagManager, options, titleGeneric, tools } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
@@ -19,11 +19,11 @@ export const SubmitOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<InputField
-				icon={icons.titleGeneric}
+				icon={titleGeneric}
 				label={__('Button label', 'eightshift-forms')}
 				value={submitValue}
 				onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
@@ -38,7 +38,7 @@ export const SubmitOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
@@ -49,7 +49,7 @@ export const SubmitOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={submitIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
@@ -58,11 +58,11 @@ export const SubmitOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={submitTracking}

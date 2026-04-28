@@ -14,7 +14,7 @@ import {
 	ContainerGroup,
 	Modal,
 } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { add, clipboard, data, dummySpacer, edit, formAlt, loopMode, reset, swap, tools, trash, warning } from '@eightshift/ui-components/icons';
 import {
 	updateIntegrationBlocks,
 	resetInnerBlocks,
@@ -84,7 +84,7 @@ export const IntegrationsOptions = ({
 			<Modal
 				title={
 					<RichLabel
-						icon={icons.clipboard}
+						icon={clipboard}
 						label={__('Sync report', 'eightshift-forms')}
 					/>
 				}
@@ -95,13 +95,13 @@ export const IntegrationsOptions = ({
 			>
 				<ContainerGroup
 					showIf={added.length > 0}
-					icon={icons.add}
+					icon={add}
 					label={__('Added fields', 'eightshift-forms')}
 				>
 					<div>
 						{added.map((item, i) => (
 							<RichLabel
-								icon={icons.dummySpacer}
+								icon={dummySpacer}
 								label={item}
 								key={i}
 							/>
@@ -111,13 +111,13 @@ export const IntegrationsOptions = ({
 
 				<ContainerGroup
 					showIf={removed.length > 0}
-					icon={icons.trash}
+					icon={trash}
 					label={__('Removed fields', 'eightshift-forms')}
 				>
 					<div>
 						{removed.map((item, i) => (
 							<RichLabel
-								icon={icons.dummySpacer}
+								icon={dummySpacer}
 								label={item}
 								key={i}
 							/>
@@ -127,13 +127,13 @@ export const IntegrationsOptions = ({
 
 				<ContainerGroup
 					showIf={replaced.length > 0}
-					icon={icons.swap}
+					icon={swap}
 					label={__('Replaced fields', 'eightshift-forms')}
 				>
 					<div>
 						{replaced.map((item, i) => (
 							<RichLabel
-								icon={icons.dummySpacer}
+								icon={dummySpacer}
 								label={item}
 								key={i}
 							/>
@@ -143,13 +143,13 @@ export const IntegrationsOptions = ({
 
 				<ContainerGroup
 					showIf={changed.length > 0}
-					icon={icons.edit}
+					icon={edit}
 					label={__('Updated field attributes', 'eightshift-forms')}
 				>
 					<div>
 						{changed.map((item, i) => (
 							<RichLabel
-								icon={icons.dummySpacer}
+								icon={dummySpacer}
 								label={
 									<span key={i}>
 										<code>{Object.keys(item)[0]}</code>: {Object.values(item)[0].join(', ')}
@@ -175,11 +175,11 @@ export const IntegrationsOptions = ({
 				</BaseControl>
 
 				<ContainerGroup
-					icon={icons.tools}
+					icon={tools}
 					label={__('Integration options', 'eightshift-forms')}
 				>
 					<Select
-						icon={icons.formAlt}
+						icon={formAlt}
 						label={__('Select a form to display', 'eightshift-forms')}
 						help={
 							!(innerIdKey && itemId) &&
@@ -242,7 +242,7 @@ export const IntegrationsOptions = ({
 								)}
 							>
 								<Button
-									icon={icons.loopMode}
+									icon={loopMode}
 									onClick={() => {
 										// Sync integration blocks.
 										syncIntegrationBlocks(clientId, postId).then((val) => {
@@ -288,7 +288,7 @@ export const IntegrationsOptions = ({
 								)}
 							>
 								<Button
-									icon={icons.data}
+									icon={data}
 									onClick={() => {
 										// Sync integration blocks.
 										clearTransientCache(block).then((msg) =>
@@ -306,7 +306,7 @@ export const IntegrationsOptions = ({
 				</ContainerGroup>
 
 				<ContainerGroup
-					icon={icons.warning}
+					icon={warning}
 					label={__('Danger zone', 'eightshift-forms')}
 				>
 					<BaseControl
@@ -316,7 +316,7 @@ export const IntegrationsOptions = ({
 						)}
 					>
 						<Button
-							icon={icons.reset}
+							icon={reset}
 							onClick={() => {
 								// Reset block to original state.
 								resetInnerBlocks(clientId, true);

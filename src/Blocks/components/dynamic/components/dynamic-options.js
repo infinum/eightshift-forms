@@ -9,7 +9,7 @@ import {
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
 import { ContainerPanel, InputField, Toggle, ContainerGroup } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldRequired, files, googleTagManager, options, tools } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -30,7 +30,7 @@ export const DynamicOptions = (attributes) => {
 	return (
 		<ContainerPanel title={title}>
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Deactivated', 'eightshift-forms')}
 				help={__('All dynamic fields are deactivated by default.', 'eightshift-forms')}
 				checked={dynamicIsDeactivated}
@@ -41,7 +41,7 @@ export const DynamicOptions = (attributes) => {
 			{!dynamicIsDeactivated && (
 				<>
 					<ContainerGroup
-						icon={icons.options}
+						icon={options}
 						label={__('General', 'eightshift-forms')}
 					>
 						<NameField
@@ -68,7 +68,7 @@ export const DynamicOptions = (attributes) => {
 					/>
 
 					<ContainerGroup
-						icon={icons.tools}
+						icon={tools}
 						label={__('Advanced', 'eightshift-forms')}
 					>
 						<FieldOptionsVisibility
@@ -79,7 +79,7 @@ export const DynamicOptions = (attributes) => {
 
 						{dynamicType === 'select' && (
 							<Toggle
-								icon={icons.files}
+								icon={files}
 								label={__('Allow multi selection', 'eightshift-forms')}
 								checked={dynamicIsMultiple}
 								onChange={(value) => {
@@ -94,11 +94,11 @@ export const DynamicOptions = (attributes) => {
 					</ContainerGroup>
 
 					<ContainerGroup
-						icon={icons.checks}
+						icon={checks}
 						label={__('Validation', 'eightshift-forms')}
 					>
 						<Toggle
-							icon={icons.fieldRequired}
+							icon={fieldRequired}
 							label={__('Required', 'eightshift-forms')}
 							checked={dynamicIsRequired}
 							onChange={(value) => setAttributes({ [getAttrKey('dynamicIsRequired', attributes, manifest)]: value })}
@@ -107,12 +107,12 @@ export const DynamicOptions = (attributes) => {
 					</ContainerGroup>
 
 					<ContainerGroup
-						icon={icons.alignHorizontalVertical}
+						icon={alignHorizontalVertical}
 						label={__('Tracking', 'eightshift-forms')}
 						collapsable
 					>
 						<InputField
-							icon={icons.googleTagManager}
+							icon={googleTagManager}
 							label={__('GTM tracking code', 'eightshift-forms')}
 							placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 							value={dynamicTracking}

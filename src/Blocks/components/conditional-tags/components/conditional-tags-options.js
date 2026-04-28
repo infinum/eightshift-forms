@@ -15,7 +15,7 @@ import {
 	Modal,
 	HStack,
 } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { conditionH, conditionalVisibility, lightBulb, plusCircleFillAlt, trash, warningFillTransparent } from '@eightshift/ui-components/icons';
 import { getConstantsOptions } from '../../utils';
 import {
 	CONDITIONAL_TAGS_ACTIONS_LABELS,
@@ -109,7 +109,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				})}
 
 				<Button
-					icon={icons.plusCircleFillAlt}
+					icon={plusCircleFillAlt}
 					onClick={() => {
 						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', globalManifest.comparator.IS, '']]);
 						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
@@ -199,7 +199,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 				{total === index + 1 && (
 					<Button
-						icon={icons.plusCircleFillAlt}
+						icon={plusCircleFillAlt}
 						onClick={() => {
 							conditionalTagsRules[1][parent][index + 1] = [
 								formFields?.[0]?.value ?? '',
@@ -214,7 +214,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				)}
 
 				<Button
-					icon={icons.trash}
+					icon={trash}
 					onClick={() => {
 						conditionalTagsRules[1][parent].splice(index, 1);
 
@@ -235,13 +235,13 @@ export const ConditionalTagsOptions = (attributes) => {
 		<>
 			<Spacer
 				border
-				icon={icons.conditionalVisibility}
+				icon={conditionalVisibility}
 				text={__('Conditional visibility', 'eightshift-forms')}
 			/>
 			<>
 				{formFields?.length < 1 ? (
 					<RichLabel
-						icon={icons.warningFillTransparent}
+						icon={warningFillTransparent}
 						label={__('Feature unavailable', 'eightshift-forms')}
 						subtitle={__('It looks like your field has a missing name.', 'eightshift-forms')}
 					/>
@@ -271,7 +271,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							)}
 
 							<RichLabel
-								icon={icons.conditionH}
+								icon={conditionH}
 								label={__('Rules', 'eightshift-forms')}
 								// Translators: %d refers to the number of active rules
 								subtitle={rulesCount > 0 && sprintf(__('%d rules', 'eightshift-forms'), rulesCount)}
@@ -281,7 +281,7 @@ export const ConditionalTagsOptions = (attributes) => {
 								className='esf:max-w-760!'
 								title={
 									<RichLabel
-										icon={icons.conditionalVisibility}
+										icon={conditionalVisibility}
 										label={__('Conditional visibility', 'eightshift-forms')}
 									/>
 								}
@@ -305,7 +305,7 @@ export const ConditionalTagsOptions = (attributes) => {
 										"If you can't find a field, make sure the form is saved, and all fields have a name set.",
 										'eightshift-forms',
 									)}
-									icon={icons.lightBulb}
+									icon={lightBulb}
 									type='warning'
 								/>
 							</Modal>

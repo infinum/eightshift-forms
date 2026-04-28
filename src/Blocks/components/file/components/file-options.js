@@ -20,7 +20,7 @@ import {
 } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, buttonOutline, checks, cursorDisabled, fieldRequired, fileSize, fileType, files, googleTagManager, infoCircle, options, resetToZero, tools } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
 
 export const FileOptions = (attributes) => {
@@ -44,7 +44,7 @@ export const FileOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -72,7 +72,7 @@ export const FileOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
@@ -83,7 +83,7 @@ export const FileOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={fileIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
@@ -91,7 +91,7 @@ export const FileOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.files}
+				icon={files}
 				label={__('Allow multi-file upload', 'eightshift-forms')}
 				checked={fileIsMultiple}
 				onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
@@ -100,7 +100,7 @@ export const FileOptions = (attributes) => {
 
 			<InputField
 				value={fileCustomInfoText}
-				icon={icons.infoCircle}
+				icon={infoCircle}
 				label={__('Prompt text', 'eightshift-forms')}
 				placeholder={__('Drag and drop files here', 'eightshift-forms')}
 				onChange={(value) =>
@@ -116,7 +116,7 @@ export const FileOptions = (attributes) => {
 			/>
 
 			<InputField
-				icon={icons.buttonOutline}
+				icon={buttonOutline}
 				label={__('Upload button text', 'eightshift-forms')}
 				value={fileCustomInfoButtonText}
 				placeholder={__('Add files', 'eightshift-forms')}
@@ -126,12 +126,12 @@ export const FileOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={fileIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: value })}
@@ -139,7 +139,7 @@ export const FileOptions = (attributes) => {
 			/>
 
 			<InputField
-				icon={icons.fileType}
+				icon={fileType}
 				label={__('Accepted file types', 'eightshift-forms')}
 				value={fileAccept}
 				help={__('Separate items with a comma.', 'eightshift-forms')}
@@ -149,7 +149,7 @@ export const FileOptions = (attributes) => {
 			/>
 
 			<BaseControl
-				icon={icons.fileSize}
+				icon={fileSize}
 				label={__('File size limits', 'eightshift-forms')}
 				help={__('1MB = 1000 KB', 'eightshift-forms')}
 			>
@@ -165,7 +165,7 @@ export const FileOptions = (attributes) => {
 						suffix={__('KB', 'eightshift-forms')}
 					>
 						<Button
-							icon={icons.resetToZero}
+							icon={resetToZero}
 							tooltip={__('Reset', 'eightshift-forms')}
 							onClick={() => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: undefined })}
 							disabled={fileMinSize === 0}
@@ -186,7 +186,7 @@ export const FileOptions = (attributes) => {
 						suffix={__('KB', 'eightshift-forms')}
 					>
 						<Button
-							icon={icons.resetToZero}
+							icon={resetToZero}
 							tooltip={__('Reset', 'eightshift-forms')}
 							onClick={() => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: undefined })}
 							disabled={fileMaxSize === 0}
@@ -201,12 +201,12 @@ export const FileOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={fileTracking}

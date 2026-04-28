@@ -14,7 +14,7 @@ import {
 	Button,
 	HStack,
 } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, files, googleTagManager, migrationAlt, options, range, resetToZero, search, titleGeneric, tools } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,
@@ -50,7 +50,7 @@ export const CountryOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -71,7 +71,7 @@ export const CountryOptions = (attributes) => {
 
 			<ContainerGroup>
 				<Toggle
-					icon={icons.fieldPlaceholder}
+					icon={fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={countryUseLabelAsPlaceholder}
 					onChange={(value) => {
@@ -98,12 +98,12 @@ export const CountryOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.titleGeneric}
+				icon={titleGeneric}
 				label={__('Initial value', 'eightshift-forms')}
 				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={countryValue}
@@ -122,7 +122,7 @@ export const CountryOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={countryIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('countryIsDisabled', attributes, manifest)]: value })}
@@ -130,7 +130,7 @@ export const CountryOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.search}
+				icon={search}
 				label={__('Search', 'eightshift-forms')}
 				checked={countryUseSearch}
 				onChange={(value) => setAttributes({ [getAttrKey('countryUseSearch', attributes, manifest)]: value })}
@@ -138,7 +138,7 @@ export const CountryOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.files}
+				icon={files}
 				label={__('Allow multi selection', 'eightshift-forms')}
 				checked={countryIsMultiple}
 				onChange={(value) => {
@@ -148,7 +148,7 @@ export const CountryOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.migrationAlt}
+				icon={migrationAlt}
 				value={countryValueType}
 				onChange={(value) => setAttributes({ [getAttrKey('countryValueType', attributes, manifest)]: value })}
 				label={__('Output value type', 'eightshift-forms')}
@@ -176,12 +176,12 @@ export const CountryOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={countryIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
@@ -190,7 +190,7 @@ export const CountryOptions = (attributes) => {
 
 			{countryIsMultiple && (
 				<BaseControl
-					icon={icons.range}
+					icon={range}
 					label={__('Number of items', 'eightshift-forms')}
 				>
 					<HStack>
@@ -206,7 +206,7 @@ export const CountryOptions = (attributes) => {
 							prefix={__('Min', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('countryMinCount', attributes, manifest)]: undefined })}
 								disabled={countryMinCount === 0}
@@ -229,7 +229,7 @@ export const CountryOptions = (attributes) => {
 							prefix={__('Max', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('countryMaxCount', attributes, manifest)]: undefined })}
 								disabled={countryMaxCount === 0}
@@ -245,12 +245,12 @@ export const CountryOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={countryTracking}

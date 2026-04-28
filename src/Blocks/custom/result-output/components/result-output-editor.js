@@ -1,7 +1,7 @@
 import React from 'react';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AsyncSelect } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { form } from '@eightshift/ui-components/icons';
 import { __ } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';
@@ -15,7 +15,7 @@ export const ResultOutputEditor = ({ attributes, setAttributes, formSelectOption
 
 	return (
 		<Placeholder
-			icon={icons.form}
+			icon={form}
 			label={<span>{__('Eightshift Forms - Result output', 'eightshift-forms')}</span>}
 		>
 			<AsyncSelect

@@ -15,7 +15,7 @@ import {
 	ContainerGroup,
 	Modal,
 } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { conditionH, lightBulb, plusCircleFillAlt, trash, visibilityAlt } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
@@ -97,7 +97,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				/>
 
 				<Button
-					icon={icons.trash}
+					icon={trash}
 					onClick={() => {
 						conditionalTagsRulesForms.splice(index, 1);
 						setAttributes({
@@ -113,7 +113,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 	return (
 		<ContainerPanel>
 			<Toggle
-				icon={icons.visibilityAlt}
+				icon={visibilityAlt}
 				label={__('Field visibility overrides', 'eightshift-forms')}
 				checked={conditionalTagsUse}
 				onChange={(value) => {
@@ -130,7 +130,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 			<ContainerGroup hidden={!conditionalTagsUse}>
 				<RichLabel
-					icon={icons.conditionH}
+					icon={conditionH}
 					label={__('Rules', 'eightshift-forms')}
 					// Translators: %d refers to the number of active rules
 					subtitle={
@@ -143,7 +143,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 			<Modal
 				title={
 					<RichLabel
-						icon={icons.visibilityAlt}
+						icon={visibilityAlt}
 						label={__('Field visibility overrides', 'eightshift-forms')}
 					/>
 				}
@@ -187,7 +187,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				</div>
 
 				<Button
-					icon={icons.plusCircleFillAlt}
+					icon={plusCircleFillAlt}
 					onClick={() =>
 						setAttributes({
 							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [
@@ -201,7 +201,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				</Button>
 
 				<RichLabel
-					icon={icons.lightBulb}
+					icon={lightBulb}
 					label={__(
 						"If you can't find a field, make sure the form is saved, and all fields have a name set.",
 						'eightshift-forms',

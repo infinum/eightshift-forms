@@ -6,7 +6,7 @@ import { useState } from '@wordpress/element';
 import { isObject } from '@eightshift/ui-components/utilities';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { MultiSelect, InputField, Toggle, Spacer, ResponsiveLegacy, Slider, Notice } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { a11yWarning, containerSpacing, fieldAfterText, fieldBeforeText, help, hide, moreH, options, paletteColor, tag, width } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -19,7 +19,7 @@ export const FieldOptionsExternalBlocks = ({ attributes, setAttributes }) => {
 		<>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -64,7 +64,7 @@ export const FieldOptions = (attributes) => {
 				<>
 					<Spacer
 						border
-						icon={icons.tag}
+						icon={tag}
 						text={__('Label', 'eightshift-forms')}
 					/>
 					{showFieldHideLabel && (
@@ -88,7 +88,7 @@ export const FieldOptions = (attributes) => {
 					{(fieldHideLabel || fieldLabel === '') && (
 						<Notice
 							label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
-							icon={icons.a11yWarning}
+							icon={a11yWarning}
 							type='warning'
 						/>
 					)}
@@ -120,13 +120,13 @@ export const FieldOptionsLayout = (attributes) => {
 		<>
 			<Spacer
 				border
-				icon={icons.containerSpacing}
+				icon={containerSpacing}
 				text={__('Layout', 'eightshift-forms')}
 			/>
 			<ResponsiveLegacy
 				{...getResponsiveLegacyData(manifest.responsiveAttributes.fieldWidth, attributes, manifest, setAttributes)}
 				breakpointData={globalManifest.globalVariables.breakpoints}
-				icon={icons.width}
+				icon={width}
 				label={__('Width', 'eightshift-forms')}
 			>
 				{({ currentValue, handleChange }) => (
@@ -144,7 +144,7 @@ export const FieldOptionsLayout = (attributes) => {
 
 			{fieldStyleOptions?.length > 0 && (
 				<MultiSelect
-					icon={icons.paletteColor}
+					icon={paletteColor}
 					label={__('Style', 'eightshift-forms')}
 					value={fieldStyle}
 					options={fieldStyleOptions}
@@ -168,33 +168,33 @@ export const FieldOptionsMore = (attributes) => {
 		<>
 			<Spacer
 				border
-				icon={icons.moreH}
+				icon={moreH}
 				text={__('Content options', 'eightshift-forms')}
 			/>
 			<>
 				<InputField
-					icon={icons.help}
+					icon={help}
 					label={__('Help text', 'eightshift-forms')}
 					value={fieldHelp}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 				/>
 
 				<InputField
-					icon={icons.fieldBeforeText}
+					icon={fieldBeforeText}
 					label={__('Below the field label', 'eightshift-forms')}
 					value={fieldBeforeContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
 				/>
 
 				<InputField
-					icon={icons.fieldAfterText}
+					icon={fieldAfterText}
 					label={__('Above the help text', 'eightshift-forms')}
 					value={fieldAfterContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
 				/>
 
 				<InputField
-					icon={icons.fieldAfterText}
+					icon={fieldAfterText}
 					label={__('After field text', 'eightshift-forms')}
 					value={fieldSuffixContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldSuffixContent', attributes, manifest)]: value })}
@@ -212,7 +212,7 @@ export const FieldOptionsVisibility = (attributes) => {
 
 	return (
 		<Toggle
-			icon={icons.hide}
+			icon={hide}
 			label={__('Hidden', 'eightshift-forms')}
 			checked={fieldHidden}
 			onChange={(value) => setAttributes({ [getAttrKey('fieldHidden', attributes, manifest)]: value })}

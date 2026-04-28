@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { icons } from '@eightshift/ui-components/icons';
+import { anchor, conditionH, lightBulb, options, plusCircleFillAlt, trash, visible } from '@eightshift/ui-components/icons';
 import { getAttrKey, checkAttr, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,
@@ -89,7 +89,7 @@ export const StepMultiflowOptions = (attributes) => {
 								<span>{__('if the following conditions match:', 'eightshift-forms')}</span>
 
 								<Button
-									icon={icons.trash}
+									icon={trash}
 									onClick={() => {
 										stepMultiflowRules.splice(index, 1);
 										setAttributes({
@@ -123,7 +123,7 @@ export const StepMultiflowOptions = (attributes) => {
 				})}
 
 				<Button
-					icon={icons.plusCircleFillAlt}
+					icon={plusCircleFillAlt}
 					onClick={() =>
 						setAttributes({
 							[getAttrKey('stepMultiflowRules', attributes, manifest)]: [
@@ -173,7 +173,7 @@ export const StepMultiflowOptions = (attributes) => {
 				</div>
 				<div>
 					<Button
-						icon={icons.plusCircleFillAlt}
+						icon={plusCircleFillAlt}
 						onClick={() => {
 							stepMultiflowRules[topParent][2].push([
 								[formFields?.[topParent]?.subItems?.[0]?.value ?? '', globalManifest.comparator.IS, ''],
@@ -185,7 +185,7 @@ export const StepMultiflowOptions = (attributes) => {
 					</Button>
 
 					<Toggle
-						icon={icons.visible}
+						icon={visible}
 						type={'button'}
 						label={__('Disable next button', 'eightshift-forms')}
 						checked={stepMultiflowRules[topParent][4]}
@@ -266,7 +266,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 					{total === index + 1 && (
 						<Button
-							icon={icons.plusCircleFillAlt}
+							icon={plusCircleFillAlt}
 							onClick={() => {
 								stepMultiflowRules[topParent][2][parent][index + 1] = [
 									formFields?.[0]?.value ?? '',
@@ -281,7 +281,7 @@ export const StepMultiflowOptions = (attributes) => {
 					)}
 
 					<Button
-						icon={icons.trash}
+						icon={trash}
 						onClick={() => {
 							stepMultiflowRules[topParent][2][parent].splice(index, 1);
 
@@ -301,7 +301,7 @@ export const StepMultiflowOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('Multi step/flow form', 'eightshift-forms')}
 			/>
 
@@ -314,14 +314,14 @@ export const StepMultiflowOptions = (attributes) => {
 					/>
 
 					<Toggle
-						icon={icons.visible}
+						icon={visible}
 						label={__('Flow preview', 'eightshift-forms')}
 						checked={isModalPreviewOpen}
 						onChange={() => setIsModalPreviewOpen(true)}
 					/>
 
 					<Toggle
-						icon={icons.anchor}
+						icon={anchor}
 						label={__('Use steps multi-flow', 'eightshift-forms')}
 						checked={stepMultiflowUse}
 						onChange={(value) => {
@@ -337,7 +337,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 					<ContainerGroup showIf={stepMultiflowUse}>
 						<BaseControl
-							icon={icons.conditionH}
+							icon={conditionH}
 							label={__('Rules', 'eightshift-forms')}
 							// Translators: %d refers to the number of active rules
 							subtitle={
@@ -357,7 +357,7 @@ export const StepMultiflowOptions = (attributes) => {
 						<Modal
 							title={
 								<RichLabel
-									icon={icons.anchor}
+									icon={anchor}
 									label={__('Multi-flow preview', 'eightshift-forms')}
 								/>
 							}
@@ -376,7 +376,7 @@ export const StepMultiflowOptions = (attributes) => {
 						<Modal
 							title={
 								<RichLabel
-									icon={icons.anchor}
+									icon={anchor}
 									label={__('Multi-flow setup', 'eightshift-forms')}
 								/>
 							}
@@ -390,7 +390,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 							<div>
 								<RichLabel
-									icon={icons.lightBulb}
+									icon={lightBulb}
 									label={__(
 										"If you can't find a field, make sure the form is saved, and all fields have a name set.",
 										'eightshift-forms',

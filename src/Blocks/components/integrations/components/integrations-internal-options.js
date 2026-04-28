@@ -4,7 +4,7 @@ import { select } from '@wordpress/data';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { BaseControl, Button, ContainerPanel, Spacer, HStack } from '@eightshift/ui-components';
 import { LocationsButton, SettingsButton, resetInnerBlocks } from '../../utils';
-import { icons } from '@eightshift/ui-components/icons';
+import { reset, warning } from '@eightshift/ui-components/icons';
 import { FormOptions } from '../../../components/form/components/form-options';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 
@@ -21,7 +21,7 @@ export const IntegrationsInternalOptions = ({ attributes, setAttributes, clientI
 
 				<Spacer
 					border
-					icon={icons.warning}
+					icon={warning}
 					text={__('Danger zone', 'eightshift-forms')}
 				/>
 
@@ -32,7 +32,7 @@ export const IntegrationsInternalOptions = ({ attributes, setAttributes, clientI
 					)}
 				>
 					<Button
-						icon={icons.reset}
+						icon={reset}
 						onClick={() => {
 							// Reset block to original state.
 							resetInnerBlocks(clientId, true);

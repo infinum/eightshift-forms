@@ -1,5 +1,5 @@
 import React from 'react';
-import { icons } from '@eightshift/ui-components/icons';
+import { warningFillTransparent } from '@eightshift/ui-components/icons';
 import { getUtilsIcons } from '../../form/assets/state-init';
 
 export const InvalidEditor = ({ icon, heading, text }) => {
@@ -7,7 +7,7 @@ export const InvalidEditor = ({ icon, heading, text }) => {
 		<div>
 			<div>
 				{icon && getUtilsIcons(icon) && <div dangerouslySetInnerHTML={{ __html: getUtilsIcons(icon) }} />}
-				{(!icon || (icon && !getUtilsIcons(icon))) && icons.warningFillTransparent}
+				{(!icon || (icon && !getUtilsIcons(icon))) && warningFillTransparent}
 			</div>
 
 			{heading && <span>{heading}</span>}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, files, googleTagManager, optionListAlt, options, range, resetToZero, search, tools } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,
@@ -50,7 +50,7 @@ export const SelectOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -64,7 +64,7 @@ export const SelectOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.optionListAlt}
+				icon={optionListAlt}
 				label={__('Show as', 'eightshift-forms')}
 				value={selectShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'select')}
@@ -84,7 +84,7 @@ export const SelectOptions = (attributes) => {
 
 			<ContainerGroup>
 				<Toggle
-					icon={icons.fieldPlaceholder}
+					icon={fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={selectUseLabelAsPlaceholder}
 					onChange={(value) => {
@@ -111,7 +111,7 @@ export const SelectOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
@@ -122,7 +122,7 @@ export const SelectOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={selectIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('selectIsDisabled', attributes, manifest)]: value })}
@@ -130,7 +130,7 @@ export const SelectOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.search}
+				icon={search}
 				label={__('Search', 'eightshift-forms')}
 				checked={selectUseSearch}
 				onChange={(value) => setAttributes({ [getAttrKey('selectUseSearch', attributes, manifest)]: value })}
@@ -138,7 +138,7 @@ export const SelectOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.files}
+				icon={files}
 				label={__('Allow multi selection', 'eightshift-forms')}
 				checked={selectIsMultiple}
 				onChange={(value) => {
@@ -151,12 +151,12 @@ export const SelectOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={selectIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('selectIsRequired', attributes, manifest)]: value })}
@@ -165,7 +165,7 @@ export const SelectOptions = (attributes) => {
 
 			{selectIsMultiple && (
 				<BaseControl
-					icon={icons.range}
+					icon={range}
 					label={__('Number of items', 'eightshift-forms')}
 				>
 					<HStack>
@@ -181,7 +181,7 @@ export const SelectOptions = (attributes) => {
 							prefix={__('Min', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('selectMinCount', attributes, manifest)]: undefined })}
 								disabled={selectMinCount === 0}
@@ -204,7 +204,7 @@ export const SelectOptions = (attributes) => {
 							prefix={__('Max', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('selectMaxCount', attributes, manifest)]: undefined })}
 								disabled={selectMaxCount === 0}
@@ -220,12 +220,12 @@ export const SelectOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={selectTracking}

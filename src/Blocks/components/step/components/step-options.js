@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { icons } from '@eightshift/ui-components/icons';
+import { buttonFilled, options, tag } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
 import { ContainerPanel, InputField, Spacer } from '@eightshift/ui-components';
@@ -21,7 +21,7 @@ export const StepOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -45,12 +45,12 @@ export const StepOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.buttonFilled}
+				icon={buttonFilled}
 				text={__('Buttons', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.tag}
+				icon={tag}
 				label={__('Previous button label', 'eightshift-forms')}
 				placeholder={__('Previous', 'eightshift-forms')}
 				value={stepPrevLabel}
@@ -58,7 +58,7 @@ export const StepOptions = (attributes) => {
 			/>
 
 			<InputField
-				icon={icons.tag}
+				icon={tag}
 				label={__('Next button label', 'eightshift-forms')}
 				placeholder={__('Next', 'eightshift-forms')}
 				value={stepNextLabel}

@@ -5,7 +5,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { icons } from '@eightshift/ui-components/icons';
+import { conditionalVisibility, edit, globe, hide, idCard, layoutAlt, notebook, options, warning } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AnimatedVisibility, RichLabel, Notice, Button, InputField, Tooltip } from '@eightshift/ui-components';
 import { unescapeHTML, camelCase } from '@eightshift/ui-components/utilities';
@@ -335,7 +335,7 @@ export const MissingName = ({ value, asPlaceholder, isOptional = false }) => {
 						: __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')
 				}
 			>
-				{React.cloneElement(icons.warning)}
+				{React.cloneElement(warning)}
 			</Tooltip>
 		</div>
 	);
@@ -374,15 +374,15 @@ export const StatusFieldOutput = ({ components }) => {
  * @returns Component
  */
 export const StatusIconConditionals = () => {
-	return icons.conditionalVisibility;
+	return conditionalVisibility;
 };
 
 export const StatusIconHidden = () => {
-	return icons.hide;
+	return hide;
 };
 
 export const StatusIconMissingName = () => {
-	return icons.warning;
+	return warning;
 };
 
 /**
@@ -429,7 +429,7 @@ export const NameField = ({
 		return (
 			<div>
 				<RichLabel
-					icon={icons.idCard}
+					icon={idCard}
 					label={label ? label : __('Name', 'eightshift-forms')}
 				/>
 
@@ -588,7 +588,7 @@ export const FormEditButton = ({ formId }) => {
 	return (
 		<Button
 			href={`${wpAdminUrl}${editFormUrl}&post=${formId}`}
-			icon={icons.edit}
+			icon={edit}
 		>
 			{__('Edit fields', 'eightshift-forms')}
 		</Button>
@@ -613,7 +613,7 @@ export const SettingsButton = ({ formId = null }) => {
 			onPress={() => {
 				window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank');
 			}}
-			icon={icons.options}
+			icon={options}
 		>
 			{__('Edit settings', 'eightshift-forms')}
 		</Button>
@@ -630,7 +630,7 @@ export const GlobalSettingsButton = () => {
 			onPress={() => {
 				window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank');
 			}}
-			icon={icons.globe}
+			icon={globe}
 		>
 			{__('Edit global settings', 'eightshift-forms')}
 		</Button>
@@ -655,7 +655,7 @@ export const LocationsButton = ({ formId = null }) => {
 			onPress={() => {
 				window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank');
 			}}
-			icon={icons.notebook}
+			icon={notebook}
 		>
 			{__('Locations', 'eightshift-forms')}
 		</Button>
@@ -677,7 +677,7 @@ export const DashboardButton = () => {
 			onPress={() => {
 				window.open(`${wpAdminUrl}${dashboardPageUrl}`, '_blank');
 			}}
-			icon={icons.layoutAlt}
+			icon={layoutAlt}
 		>
 			{__('Visit dashboard settings', 'eightshift-forms')}
 		</Button>

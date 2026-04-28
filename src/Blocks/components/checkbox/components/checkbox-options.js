@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Button, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { a11yWarning, alignHorizontalVertical, checkSquare, cursorDisabled, googleTagManager, hide, options, tools, trash } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -29,7 +29,7 @@ export const CheckboxOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -62,18 +62,18 @@ export const CheckboxOptions = (attributes) => {
 			{(checkboxHideLabelText || checkboxLabel === '') && (
 				<Notice
 					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
-					icon={icons.a11yWarning}
+					icon={a11yWarning}
 					type='warning'
 				/>
 			)}
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 			<Toggle
-				icon={icons.checkSquare}
+				icon={checkSquare}
 				label={__('Checked', 'eightshift-forms')}
 				checked={checkboxIsChecked}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
@@ -81,7 +81,7 @@ export const CheckboxOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={checkboxIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
@@ -89,7 +89,7 @@ export const CheckboxOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.hide}
+				icon={hide}
 				label={__('Hidden', 'eightshift-forms')}
 				checked={checkboxIsHidden}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
@@ -106,7 +106,7 @@ export const CheckboxOptions = (attributes) => {
 						onClick={() => {
 							setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: undefined });
 						}}
-						icon={icons.trash}
+						icon={trash}
 						type='ghost'
 					/>
 				</>
@@ -121,12 +121,12 @@ export const CheckboxOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={checkboxTracking}

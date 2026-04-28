@@ -1,7 +1,7 @@
 import React from 'react';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AsyncSelect } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { form } from '@eightshift/ui-components/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { FormEditButton, outputFormSelectItemWithIcon } from '../../../components/utils';
@@ -17,7 +17,7 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 	if (formsFormPostId?.length < 1) {
 		return (
 			<Placeholder
-				icon={icons.form}
+				icon={form}
 				label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
 			>
 				<AsyncSelect
@@ -48,7 +48,7 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 			{isGeoPreview && <div>{__('Original form', 'eightshift-forms')}</div>}
 
 			<Placeholder
-				icon={icons.form}
+				icon={form}
 				label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
 				isColumnLayout={true}
 			>
@@ -68,7 +68,7 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 						return (
 							<Placeholder
 								key={index}
-								icon={icons.form}
+								icon={form}
 								label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
 							>
 								{sprintf(

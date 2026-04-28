@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, fieldPlaceholder, fieldRequired, googleTagManager, optionListAlt, options, tools } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,
@@ -32,7 +32,7 @@ export const RadiosOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -46,7 +46,7 @@ export const RadiosOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.optionListAlt}
+				icon={optionListAlt}
 				label={__('Show as', 'eightshift-forms')}
 				value={radiosShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'radios')}
@@ -75,7 +75,7 @@ export const RadiosOptions = (attributes) => {
 						/>
 					)}
 					<Toggle
-						icon={icons.fieldPlaceholder}
+						icon={fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={radiosUseLabelAsPlaceholder}
 						onChange={(value) => {
@@ -94,7 +94,7 @@ export const RadiosOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
@@ -106,12 +106,12 @@ export const RadiosOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={radiosIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
@@ -120,12 +120,12 @@ export const RadiosOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={radiosTracking}

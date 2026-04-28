@@ -11,7 +11,7 @@ import {
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
 import { Select, Button, ContainerPanel, InputField, Toggle, ContainerGroup, Spacer } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, dateTime, fieldPlaceholder, fieldRequired, fieldValue, googleTagManager, optionListAlt, options, readOnly, regex, tools } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -46,7 +46,7 @@ export const DateOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -61,7 +61,7 @@ export const DateOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.optionListAlt}
+				icon={optionListAlt}
 				label={__('Type', 'eightshift-forms')}
 				value={dateType}
 				options={getOption('dateType', attributes, manifest)}
@@ -79,7 +79,7 @@ export const DateOptions = (attributes) => {
 
 			<ContainerGroup>
 				<Toggle
-					icon={icons.fieldPlaceholder}
+					icon={fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={dateUseLabelAsPlaceholder}
 					onChange={(value) => {
@@ -106,12 +106,12 @@ export const DateOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.fieldValue}
+				icon={fieldValue}
 				label={__('Initial value', 'eightshift-forms')}
 				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={dateValue}
@@ -136,7 +136,7 @@ export const DateOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.readOnly}
+				icon={readOnly}
 				label={__('Read-only', 'eightshift-forms')}
 				checked={dateIsReadOnly}
 				onChange={(value) => setAttributes({ [getAttrKey('dateIsReadOnly', attributes, manifest)]: value })}
@@ -144,7 +144,7 @@ export const DateOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={dateIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: value })}
@@ -160,7 +160,7 @@ export const DateOptions = (attributes) => {
 
 			<InputField
 				label={__('Preview format', 'eightshift-forms')}
-				icon={icons.dateTime}
+				icon={dateTime}
 				value={datePreviewFormat}
 				placeholder={manifest.formats[dateType].preview}
 				help={__('Define format of date/time the user will see', 'eightshift-forms')}
@@ -169,7 +169,7 @@ export const DateOptions = (attributes) => {
 			/>
 
 			<InputField
-				icon={icons.dateTime}
+				icon={dateTime}
 				label={__('Output format', 'eightshift-forms')}
 				value={dateOutputFormat}
 				placeholder={manifest.formats[dateType].output}
@@ -180,12 +180,12 @@ export const DateOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={dateIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('dateIsRequired', attributes, manifest)]: value })}
@@ -193,7 +193,7 @@ export const DateOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.regex}
+				icon={regex}
 				label={__('Match pattern', 'eightshift-forms')}
 				options={dateValidationPatternOptions}
 				value={dateValidationPattern}
@@ -205,12 +205,12 @@ export const DateOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={dateTracking}

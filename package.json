@@ -36,25 +36,25 @@
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",
 		"husky": "^9.1.7",
-		"webpack": "^5.106.1",
-		"webpack-cli": "^6.0.1",
+		"webpack": "^5.106.2",
+		"webpack-cli": "^7.0.2",
 		"lint-staged": "^16.4.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs-tailwind": "^2.4.0",
-		"@eightshift/ui-components": "^6.3.0",
-		"@tailwindcss/postcss": "^4.2.1",
+		"@eightshift/frontend-libs-tailwind": "^3.1.0",
+		"@eightshift/ui-components": "^7.3.0",
+		"@tailwindcss/postcss": "^4.2.2",
 		"@tailwindcss/typography": "^0.5.19",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.18",
-		"caniuse-lite": "^1.0.30001787",
-		"choices.js": "^11.2.1",
+		"baseline-browser-mapping": "^2.10.20",
+		"caniuse-lite": "^1.0.30001788",
+		"choices.js": "^11.2.2",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
 		"reactflow": "^11.11.4",
-		"tailwindcss": "^4.2.1",
+		"tailwindcss": "^4.2.2",
 		"tailwindcss-motion": "^1.1.1",
-		"tailwindcss-react-aria-components": "^2.0.1"
+		"tailwindcss-react-aria-components": "^2.1.0"
 	},
 	"lint-staged": {
 		"*.js": "eslint",

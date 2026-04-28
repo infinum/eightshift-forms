@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { icons } from '@eightshift/ui-components/icons';
+import { a11yWarning, checkCircle, cursorDisabled, hide, options, tools, trash } from '@eightshift/ui-components/icons';
 import { Button, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
@@ -28,7 +28,7 @@ export const RadioOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField
@@ -60,19 +60,19 @@ export const RadioOptions = (attributes) => {
 			{(radioHideLabelText || radioLabel === '') && (
 				<Notice
 					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
-					icon={icons.a11yWarning}
+					icon={a11yWarning}
 					type='warning'
 				/>
 			)}
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.checkCircle}
+				icon={checkCircle}
 				label={__('Selected', 'eightshift-forms')}
 				checked={radioIsChecked}
 				onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
@@ -80,7 +80,7 @@ export const RadioOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={radioIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
@@ -88,7 +88,7 @@ export const RadioOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.hide}
+				icon={hide}
 				label={__('Hidden', 'eightshift-forms')}
 				checked={radioIsHidden}
 				onChange={(value) => setAttributes({ [getAttrKey('radioIsHidden', attributes, manifest)]: value })}
@@ -105,7 +105,7 @@ export const RadioOptions = (attributes) => {
 						onClick={() => {
 							setAttributes({ [getAttrKey('radioIcon', attributes, manifest)]: undefined });
 						}}
-						icon={icons.trash}
+						icon={trash}
 						type='ghost'
 					/>
 				</>

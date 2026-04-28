@@ -10,7 +10,7 @@ import {
 } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldRequired, googleTagManager, options, readOnly, star, titleGeneric, tools } from '@eightshift/ui-components/icons';
 import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 import { Slider } from '@eightshift/ui-components';
@@ -33,7 +33,7 @@ export const RatingOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -48,7 +48,7 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<Slider
-				icon={icons.star}
+				icon={star}
 				label={__('Amount of stars', 'eightshift-forms')}
 				value={ratingAmount}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
@@ -71,12 +71,12 @@ export const RatingOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.titleGeneric}
+				icon={titleGeneric}
 				label={__('Initial value', 'eightshift-forms')}
 				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={ratingValue}
@@ -91,7 +91,7 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.readOnly}
+				icon={readOnly}
 				label={__('Read-only', 'eightshift-forms')}
 				checked={ratingIsReadOnly}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingIsReadOnly', attributes, manifest)]: value })}
@@ -99,7 +99,7 @@ export const RatingOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={ratingIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingIsDisabled', attributes, manifest)]: value })}
@@ -107,12 +107,12 @@ export const RatingOptions = (attributes) => {
 			/>
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={ratingIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('ratingIsRequired', attributes, manifest)]: value })}
@@ -121,12 +121,12 @@ export const RatingOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={ratingTracking}

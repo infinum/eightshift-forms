@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Select, ContainerPanel, InputField } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { containerSpacing, positionHEnd, positionHStart } from '@eightshift/ui-components/icons';
 import {
 	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,
@@ -36,7 +36,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 			/>
 
 			<Select
-				icon={icons.containerSpacing}
+				icon={containerSpacing}
 				label={__('Compare operator', 'eightshift-forms')}
 				value={resultOutputItemOperator}
 				options={getConstantsOptions({
@@ -51,7 +51,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 			/>
 
 			<InputField
-				icon={icons.positionHStart}
+				icon={positionHStart}
 				label={showEndValue ? __('Variable value start', 'eightshift-forms') : __('Variable value', 'eightshift-forms')}
 				help={showEndValue && __('Start value must be number.', 'eightshift-forms')}
 				value={resultOutputItemValueStart}
@@ -60,7 +60,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 
 			{showEndValue && (
 				<InputField
-					icon={icons.positionHEnd}
+					icon={positionHEnd}
 					label={__('Variable value end', 'eightshift-forms')}
 					value={resultOutputItemValueEnd}
 					onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValueEnd', attributes, manifest)]: value })}

@@ -14,7 +14,7 @@ import {
 	Spacer,
 	Button,
 } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, googleTagManager, optionListAlt, options, readOnly, regex, resetToZero, titleGeneric, tools } from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,
@@ -74,7 +74,7 @@ export const InputOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -89,7 +89,7 @@ export const InputOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.optionListAlt}
+				icon={optionListAlt}
 				label={__('Type', 'eightshift-forms')}
 				value={inputType}
 				options={getOption('inputType', attributes, manifest)}
@@ -121,7 +121,7 @@ export const InputOptions = (attributes) => {
 
 			{inputType === 'range' && (
 				<Toggle
-					icon={icons.fieldPlaceholder}
+					icon={fieldPlaceholder}
 					label={__('Show custom input field', 'eightshift-forms')}
 					checked={inputRangeUseCustomField}
 					onChange={(value) => setAttributes({ [getAttrKey('inputRangeUseCustomField', attributes, manifest)]: value })}
@@ -136,7 +136,7 @@ export const InputOptions = (attributes) => {
 
 			<>
 				<Toggle
-					icon={icons.fieldPlaceholder}
+					icon={fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={inputUseLabelAsPlaceholder}
 					onChange={(value) => {
@@ -163,12 +163,12 @@ export const InputOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.titleGeneric}
+				icon={titleGeneric}
 				label={__('Initial value', 'eightshift-forms')}
 				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={inputValue}
@@ -183,7 +183,7 @@ export const InputOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.readOnly}
+				icon={readOnly}
 				label={__('Read-only', 'eightshift-forms')}
 				checked={inputIsReadOnly}
 				onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
@@ -191,7 +191,7 @@ export const InputOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={inputIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('inputIsDisabled', attributes, manifest)]: value })}
@@ -200,11 +200,11 @@ export const InputOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={inputIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('inputIsRequired', attributes, manifest)]: value })}
@@ -213,7 +213,7 @@ export const InputOptions = (attributes) => {
 
 			{!inputIsUrl && !inputIsEmail && (
 				<Select
-					icon={icons.regex}
+					icon={regex}
 					label={__('Match pattern', 'eightshift-forms')}
 					options={inputValidationPatternOptions}
 					value={inputValidationPattern}
@@ -238,7 +238,7 @@ export const InputOptions = (attributes) => {
 						prefix={__('Min length', 'eightshift-forms')}
 					>
 						<Button
-							icon={icons.resetToZero}
+							icon={resetToZero}
 							tooltip={__('Reset', 'eightshift-forms')}
 							onClick={() => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: undefined })}
 							disabled={inputMinLength === 0}
@@ -261,7 +261,7 @@ export const InputOptions = (attributes) => {
 						prefix={__('Max length', 'eightshift-forms')}
 					>
 						<Button
-							icon={icons.resetToZero}
+							icon={resetToZero}
 							tooltip={__('Reset', 'eightshift-forms')}
 							onClick={() => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: undefined })}
 							disabled={inputMaxLength === 0}
@@ -291,7 +291,7 @@ export const InputOptions = (attributes) => {
 							prefix={__('Min', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: undefined })}
 								disabled={inputMin === 0}
@@ -316,7 +316,7 @@ export const InputOptions = (attributes) => {
 							prefix={__('Max', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: undefined })}
 								disabled={inputMax === 0}
@@ -336,7 +336,7 @@ export const InputOptions = (attributes) => {
 							prefix={__('Step', 'eightshift-forms')}
 						>
 							<Button
-								icon={icons.resetToZero}
+								icon={resetToZero}
 								tooltip={__('Reset', 'eightshift-forms')}
 								onClick={() => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: undefined })}
 								disabled={inputStep === 0}
@@ -474,12 +474,12 @@ export const InputOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				value={inputTracking}
 				onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}

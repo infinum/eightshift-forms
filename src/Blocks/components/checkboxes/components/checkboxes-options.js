@@ -10,7 +10,7 @@ import {
 	FieldOptionsLayout,
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
-import { icons } from '@eightshift/ui-components/icons';
+import { checks, fieldPlaceholder, fieldRequired, optionListAlt, options, tools } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -50,7 +50,7 @@ export const CheckboxesOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -65,7 +65,7 @@ export const CheckboxesOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.optionListAlt}
+				icon={optionListAlt}
 				label={__('Show as', 'eightshift-forms')}
 				value={checkboxesShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'checkboxes')}
@@ -99,7 +99,7 @@ export const CheckboxesOptions = (attributes) => {
 						/>
 					)}
 					<Toggle
-						icon={icons.fieldPlaceholder}
+						icon={fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={checkboxesUseLabelAsPlaceholder}
 						onChange={(value) => {
@@ -118,7 +118,7 @@ export const CheckboxesOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
@@ -130,12 +130,12 @@ export const CheckboxesOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={checkboxesIsRequired}
 				onChange={(value) => {

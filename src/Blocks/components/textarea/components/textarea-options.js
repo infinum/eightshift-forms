@@ -3,7 +3,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { icons } from '@eightshift/ui-components/icons';
+import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, fieldValue, googleTagManager, options, readOnly, regex, resetToZero, tools } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	Select,
@@ -55,7 +55,7 @@ export const TextareaOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={icons.options}
+				icon={options}
 				text={__('General', 'eightshift-forms')}
 			/>
 
@@ -76,7 +76,7 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.fieldPlaceholder}
+				icon={fieldPlaceholder}
 				label={__('Use label as placeholder', 'eightshift-forms')}
 				checked={textareaUseLabelAsPlaceholder}
 				onChange={(value) => {
@@ -103,12 +103,12 @@ export const TextareaOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.tools}
+				icon={tools}
 				text={__('Advanced', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.fieldValue}
+				icon={fieldValue}
 				label={__('Initial value', 'eightshift-forms')}
 				placeholder={__('Enter initial value', 'eightshift-forms')}
 				value={textareaValue}
@@ -123,7 +123,7 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.readOnly}
+				icon={readOnly}
 				label={__('Read-only', 'eightshift-forms')}
 				checked={textareaIsReadOnly}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaIsReadOnly', attributes, manifest)]: value })}
@@ -131,7 +131,7 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<Toggle
-				icon={icons.cursorDisabled}
+				icon={cursorDisabled}
 				label={__('Disabled', 'eightshift-forms')}
 				checked={textareaIsDisabled}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
@@ -140,12 +140,12 @@ export const TextareaOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.checks}
+				icon={checks}
 				text={__('Validation', 'eightshift-forms')}
 			/>
 
 			<Toggle
-				icon={icons.fieldRequired}
+				icon={fieldRequired}
 				label={__('Required', 'eightshift-forms')}
 				checked={textareaIsRequired}
 				onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
@@ -153,7 +153,7 @@ export const TextareaOptions = (attributes) => {
 			/>
 
 			<Select
-				icon={icons.regex}
+				icon={regex}
 				label={__('Match pattern', 'eightshift-forms')}
 				options={textareaValidationPatternOptions}
 				value={textareaValidationPattern}
@@ -179,7 +179,7 @@ export const TextareaOptions = (attributes) => {
 					prefix={__('Min length', 'eightshift-forms')}
 				>
 					<Button
-						icon={icons.resetToZero}
+						icon={resetToZero}
 						tooltip={__('Reset', 'eightshift-forms')}
 						onClick={() => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: undefined })}
 						disabled={textareaMinLength === 0}
@@ -202,7 +202,7 @@ export const TextareaOptions = (attributes) => {
 					prefix={__('Max length', 'eightshift-forms')}
 				>
 					<Button
-						icon={icons.resetToZero}
+						icon={resetToZero}
 						tooltip={__('Reset', 'eightshift-forms')}
 						onClick={() => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: undefined })}
 						disabled={textareaMaxLength === 0}
@@ -216,12 +216,12 @@ export const TextareaOptions = (attributes) => {
 
 			<Spacer
 				border
-				icon={icons.alignHorizontalVertical}
+				icon={alignHorizontalVertical}
 				text={__('Tracking', 'eightshift-forms')}
 			/>
 
 			<InputField
-				icon={icons.googleTagManager}
+				icon={googleTagManager}
 				label={__('GTM tracking code', 'eightshift-forms')}
 				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
 				value={textareaTracking}

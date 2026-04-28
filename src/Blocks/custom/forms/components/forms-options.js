@@ -21,7 +21,7 @@ import {
 	ContainerGroup,
 	Modal,
 } from '@eightshift/ui-components';
-import { icons } from '@eightshift/ui-components/icons';
+import { codeVariable, emptyCircle, file, image, locationSettings, paletteColor, plusCircleFillAlt, tools, trash, visible } from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import {
 	FormEditButton,
@@ -116,11 +116,11 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 				)}
 
 				<ContainerGroup
-					icon={icons.tools}
+					icon={tools}
 					label={__('Advanced', 'eightshift-forms')}
 				>
 					<InputField
-						icon={icons.codeVariable}
+						icon={codeVariable}
 						label={__('Additional type specifier', 'eightshift-forms')}
 						help={__('Additional data type selectors', 'eightshift-forms')}
 						value={formsFormDataTypeSelector}
@@ -132,7 +132,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 
 				{formsStyleOptions?.length > 0 && (
 					<MultiSelect
-						icon={icons.paletteColor}
+						icon={paletteColor}
 						label={__('Form style preset', 'eightshift-forms')}
 						value={formsStyle}
 						options={formsStyleOptions}
@@ -148,7 +148,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 			>
 				<Repeater
 					noReordering
-					icon={icons.paletteColor}
+					icon={paletteColor}
 					label={__('Variation', 'eightshift-forms')}
 					items={formsVariation}
 					attributeName={getAttrKey('formsVariation', attributes, manifest)}
@@ -157,7 +157,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 					{formsVariation.map((item, index) => (
 						<RepeaterItem
 							key={index}
-							icon={icons.paletteColor}
+							icon={paletteColor}
 							title={item?.title}
 						>
 							<div>
@@ -200,7 +200,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 								size='large'
 								title={
 									<RichLabel
-										icon={icons.locationSettings}
+										icon={locationSettings}
 										label={__('Results output', 'eightshift-forms')}
 									/>
 								}
@@ -230,7 +230,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 
 								<Repeater
 									noReordering
-									icon={icons.emptyCircle}
+									icon={emptyCircle}
 									label={__('Add a new item', 'eightshift-forms')}
 									items={formsVariationDataFiles}
 									attributeName={getAttrKey('formsVariationDataFiles', attributes, manifest)}
@@ -239,7 +239,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 									{formsVariationDataFiles.map((item, index) => (
 										<RepeaterItem
 											key={index}
-											icon={icons.emptyCircle}
+											icon={emptyCircle}
 											title={item?.title}
 										>
 											<div>
@@ -299,7 +299,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 												<>
 													{!formsVariationDataFiles[index].file && (
 														<MediaPlaceholder
-															icon={icons.image}
+															icon={image}
 															onSelect={(value) => {
 																const newArray = [...formsVariationDataFiles];
 																newArray[index].file = {
@@ -318,7 +318,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 													{formsVariationDataFiles[index]?.file && (
 														<div>
 															<div>
-																{icons.file}
+																{file}
 																{formsVariationDataFiles[index]?.file?.title}
 															</div>
 															<Button
@@ -329,7 +329,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 																		[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
 																	});
 																}}
-																icon={icons.trash}
+																icon={trash}
 															/>
 														</div>
 													)}
@@ -390,7 +390,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 					/>
 
 					<BaseControl
-						icon={icons.locationSettings}
+						icon={locationSettings}
 						label={__('Advanced rules', 'eightshift-forms')}
 						// Translators: %d refers to the number of active rules
 						subtitle={
@@ -410,7 +410,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 
 					{formsFormGeolocationAlternatives?.length > 0 && (
 						<Toggle
-							icon={icons.visible}
+							icon={visible}
 							label={__('Rule preview', 'eightshift-forms')}
 							checked={isGeoPreview}
 							onChange={(value) => setIsGeoPreview(value)}
@@ -421,7 +421,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						<Modal
 							title={
 								<RichLabel
-									icon={icons.locationSettings}
+									icon={locationSettings}
 									label={__('Advanced rules', 'eightshift-forms')}
 								/>
 							}
@@ -495,7 +495,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 										/>
 
 										<Button
-											icon={icons.trash}
+											icon={trash}
 											onClick={() => {
 												formsFormGeolocationAlternatives.splice(index, 1);
 												setAttributes({
@@ -511,7 +511,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 							})}
 
 							<Button
-								icon={icons.plusCircleFillAlt}
+								icon={plusCircleFillAlt}
 								onClick={() =>
 									setAttributes({
 										[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [
