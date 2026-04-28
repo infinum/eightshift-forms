@@ -3,157 +3,275 @@
 @import 'tailwindcss' prefix(esf);
 @reference '../../../../tailwind.css';
 
-/* Choices.js select — third-party library CSS not expressible in Tailwind utilities */
-div.es-select {
-	@apply esf:rounded-md;
-	/* @apply esf:m-0; */
+.choices {
+	@apply esf:relative esf:overflow-hidden esf:mb-24 esf:text-lg;
+}
+.choices:focus {
+	@apply esf:outline-none;
+}
+.choices:last-child {
+	@apply esf:mb-0;
+}
+.choices.is-open {
+	@apply esf:overflow-visible;
+}
+.choices.is-disabled :is(.choices__inner, .choices__input) {
+	@apply esf:bg-secondary-100 esf:cursor-not-allowed esf:select-none;
+}
+.choices.is-disabled .choices__item {
+	@apply esf:cursor-not-allowed;
+	@apply esf:text-white;
+}
+.choices [hidden] {
+	@apply esf:absolute esf:inset-0 esf:pointer-events-none esf:opacity-0;
+}
+.choices[data-type*='select-one'] {
+	@apply esf:cursor-pointer;
+}
+.choices[data-type*='select-one'] .choices__inner {
+	@apply esf:pb-3;
+}
+.choices[data-type*='select-one'] .choices__input {
+	@apply esf:block esf:w-full esf:p-4 esf:border-b esf:border-border esf:bg-white esf:m-0;
+}
+.choices[data-type*='select-one'] .choices__button {
+	background-image: var(
+		--choices-icon-cross-inverse,
+		url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==')
+	);
+	@apply esf:p-0 esf:absolute esf:top-1/2 esf:right-0 esf:mt-[-10px] esf:mr-[25px] esf:size-20 esf:rounded-full esf:opacity-25;
+}
+.choices[data-type*='select-one'] .choices__button:is(:hover, :focus) {
+	@apply esf:opacity-100;
+}
+.choices[data-type*='select-one'] .choices__button:focus {
+	@apply esf:shadow-2xl esf:shadow-accent;
+}
+.choices[data-type*='select-one'] .choices__item[data-placeholder] .choices__button {
+	@apply esf:hidden;
+}
+.choices[data-type*='select-one']::after {
+	@apply esf:content-[''] esf:h-0 esf:w-0 esf:border-solid esf:absolute esf:top-1/2 esf:right-0 esf:pointer-events-none;
+}
+.choices[data-type*='select-one'].is-open::after {
+	@apply esf:border-transparent esf:border-transparent esf:border-accent;
+	@apply esf:mt-[-7.5px];
+}
+.choices[data-type*='select-one'][dir='rtl']::after {
+	@apply esf:left-[46px] esf:right-auto;
+}
+.choices[data-type*='select-one'][dir='rtl'] .choices__button {
+	@apply esf:right-auto esf:left-0 esf:ml-[25px] esf:mr-0;
+}
+.choices:is([data-type*='select-multiple'], [data-type*='text']) .choices__inner {
+	@apply esf:cursor-text;
+}
+.choices:is([data-type*='select-multiple'], [data-type*='text']) .choices__button {
+	@apply esf:relative esf:inline-block esf:m-0 esf:pl-[16px] esf:border-l esf:border-border;
+	background-image: var(
+		--choices-icon-cross,
+		url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==')
+	);
+	@apply esf:w-[8px] esf:h-[1px] esf:rounded-none esf:opacity-75;
+}
+.choices:is([data-type*='select-multiple'], [data-type*='text']) .choices__button:is(:hover, :focus) {
+	@apply esf:opacity-100;
+}
+.choices__inner {
+	@apply esf:inline-block esf:align-top esf:w-full esf:bg-white esf:p-3 esf:border esf:border-border esf:rounded-md esf:text-sm esf:min-h-44 esf:overflow-hidden;
+}
+.is-focused .choices__inner,
+.is-open .choices__inner {
+	@apply esf:border-border;
+}
+.is-open .choices__inner {
+	@apply esf:rounded-md esf:rounded-t-none;
+}
+.is-invalid .choices__inner {
+	/* @apply esf:border-error; */
+}
+.is-flipped.is-open .choices__inner {
+	@apply esf:rounded-b-none;
+}
+.choices__list {
+	@apply esf:m-0 esf:pl-0 esf:list-none;
+}
+.choices__list--single {
+	@apply esf:inline-block esf:p-4 esf:pl-4;
+}
+[dir='rtl'] .choices__list--single {
+	@apply esf:pr-4 esf:pl-16;
+}
+.choices__list--single,
+.choices__list--single .choices__item {
+	@apply esf:w-full;
+}
+.choices__list--multiple {
+	@apply esf:inline;
+}
+.choices__list--multiple .choices__item {
+	@apply esf:inline-block esf:align-middle;
+	@apply esf:align-middle;
+	@apply esf:rounded-full;
+	@apply esf:p-4 esf:px-10;
+	@apply esf:text-sm esf:font-medium;
+	@apply esf:mr-[15px] esf:mb-[15px];
+	@apply esf:bg-accent esf:border esf:border-accent;
+	@apply esf:text-white;
+	@apply esf:break-all;
+	@apply esf:box-border;
+}
+.choices__list--multiple .choices__item[data-deletable] {
+	@apply esf:pr-5;
+}
+[dir='rtl'] .choices__list--multiple .choices__item {
+	@apply esf:mr-0;
+	@apply esf:ml-[15px];
+}
+.choices__list--multiple .choices__item.is-highlighted {
+	@apply esf:bg-accent esf:border esf:border-accent;
+	@apply esf:border-accent;
+}
+.is-disabled .choices__list--multiple .choices__item {
+	@apply esf:bg-gray-100 esf:border esf:border-gray-100;
+	@apply esf:border-gray-400;
+}
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+	@apply esf:hidden;
+	@apply esf:z-1;
+	@apply esf:absolute;
+	@apply esf:w-full;
+	@apply esf:bg-white;
+	@apply esf:border esf:border-border;
+	@apply esf:top-full;
+	@apply esf:mt-[-1px];
+	@apply esf:rounded-b-md;
+	@apply esf:overflow-hidden;
+	@apply esf:break-all;
+}
+.is-active.choices__list--dropdown,
+.is-active.choices__list[aria-expanded] {
+	@apply esf:block;
+}
+.is-open .choices__list--dropdown,
+.is-open .choices__list[aria-expanded] {
+	@apply esf:border-border;
+}
+.is-flipped .choices__list--dropdown,
+.is-flipped .choices__list[aria-expanded] {
+	@apply esf:top-auto;
+	@apply esf:bottom-full;
+	@apply esf:mt-0;
+	@apply esf:mb-[-1px];
+	@apply esf:rounded-md esf:rounded-t-none;
+}
+.choices__list--dropdown .choices__list,
+.choices__list[aria-expanded] .choices__list {
+	@apply esf:relative;
+	@apply esf:max-h-300;
+	@apply esf:overflow-auto;
+	@apply esf:will-change-[scroll-position];
+}
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+	@apply esf:relative;
+	@apply esf:p-4;
 	@apply esf:text-sm;
 }
-
-div.es-select.choices[data-type*='select-one'] .choices__inner {
-	/* @apply esf:p-0; */
+[dir='rtl'] .choices__list--dropdown .choices__item,
+[dir='rtl'] .choices__list[aria-expanded] .choices__item {
+	@apply esf:text-right;
 }
-
-div.es-select.choices[data-type*='select-multiple'] .choices__inner {
-	/* @apply esf:py-10 esf:px-10; */
+@media (min-width: 640px) {
+	.choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text],
+	.choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text] {
+		@apply esf:pr-100;
+	}
+	.choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text]::after,
+	.choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text]::after {
+		@apply esf:content-[attr(data-select-text)];
+		@apply esf:text-xs;
+		@apply esf:absolute;
+		@apply esf:right-10;
+		top: 50%;
+		@apply esf:top-1/2;
+		@apply esf:translate-y-[-50%];
+	}
+	[dir='rtl'] .choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text],
+	[dir='rtl'] .choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text] {
+		@apply esf:text-right;
+		@apply esf:pl-100;
+		@apply esf:pr-10;
+	}
+	[dir='rtl'] .choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text]::after,
+	[dir='rtl'] .choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text]::after {
+		@apply esf:right-auto;
+		@apply esf:left-10;
+	}
 }
-
-div.es-select.choices[data-type*='select-multiple'] .choices__inner .choices__input {
-	/* @apply esf:p-0;
-		@apply esf:m-0; */
+.choices__list--dropdown .choices__item--selectable.is-selected::after,
+.choices__list[aria-expanded] .choices__item--selectable.is-selected::after {
+	@apply esf:content-none;
 }
-
-div.es-select.choices[data-type*='select-multiple'] .choices__inner .choices__input::placeholder {
-	@apply esf:text-gray-400;
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list--dropdown .choices__item--selectable.is-selected,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-selected {
+	@apply esf:bg-gray-100;
 }
-
-div.es-select .choices__inner {
-	@apply esf:text-sm;
-	@apply esf:rounded-md;
+.choices__item {
+	@apply esf:cursor-default;
+}
+.choices__item--selectable {
+	@apply esf:cursor-pointer;
+}
+.choices__item--disabled {
+	@apply esf:cursor-not-allowed;
+	@apply esf:select-none;
+	@apply esf:opacity-50;
+}
+.choices__heading {
+	@apply esf:font-semibold;
+	@apply esf:text-xs;
+	@apply esf:p-4;
+	@apply esf:border-b esf:border-border;
+	@apply esf:text-gray-500;
+}
+.choices__button {
+	@apply esf:indent-[-9999px];
+	@apply esf:appearance-none;
+	@apply esf:border-0;
 	@apply esf:bg-transparent;
-	/* @apply esf:block-size-auto; */
-	@apply esf:border;
-	@apply esf:border-border;
-	/* @apply esf:p-0; */
-	/* @apply esf:min-block-size-42; */
-	@apply esf:transition-colors esf:duration-300;
+	@apply esf:cursor-pointer;
 }
-
-div.es-select .choices__list--dropdown {
-	@apply esf:transition-colors esf:duration-300;
-}
-
-div.es-select .choices__list--dropdown .choices__item {
+.choices__input {
+	@apply esf:inline-block;
+	@apply esf:align-baseline;
+	@apply esf:bg-gray-100;
 	@apply esf:text-sm;
-	@apply esf:p-10;
-	@apply esf:flex esf:items-center esf:flex-wrap;
-}
-
-div.es-select .choices__list--dropdown .choices__input {
-	@apply esf:border-b;
-	@apply esf:border-border;
-}
-
-div.es-select .choices__list--single {
-	@apply esf:min-h-42;
-	@apply esf:py-10;
-	@apply esf:px-10;
-	@apply esf:pr-42;
-	@apply esf:flex esf:items-center esf:flex-wrap;
-	@apply esf:text-sm;
-}
-
-div.es-select .choices__list--multiple .choices__item {
-	@apply esf:text-sm;
-}
-
-div.es-select .choices__input {
+	@apply esf:mb-5;
+	@apply esf:border-0;
 	@apply esf:rounded-none;
-	@apply esf:border-none;
-	@apply esf:bg-none;
-	@apply esf:text-sm;
+	@apply esf:max-w-full;
+	@apply esf:p-4;
 }
-
-div.es-select .choices__input:focus {
-	/* @apply esf:box-shadow-none; */
-	@apply esf:border-accent;
+.choices__input::-webkit-search-cancel-button,
+.choices__input::-webkit-search-decoration,
+.choices__input::-webkit-search-results-button,
+.choices__input::-webkit-search-results-decoration {
+	@apply esf:hidden;
 }
-
-div.es-select.is-focused .choices__inner {
-	@apply esf:border-accent;
+.choices__input::-ms-clear,
+.choices__input::-ms-reveal {
+	@apply esf:hidden;
+	@apply esf:w-0;
+	@apply esf:h-0;
 }
-
-div.es-select.is-open .choices__list--dropdown {
-	@apply esf:border-accent;
+[dir='rtl'] .choices__input {
+	@apply esf:pr-2;
+	@apply esf:pl-0;
 }
-
-/* Input — admin focus ring and transition */
-input.es-input {
-	@apply esf:transition-colors esf:duration-300;
-}
-
-input.es-input:focus:not(:focus-visible) {
-	/* @apply esf:box-shadow-none!; */
-}
-
-input.es-input:focus-visible {
-	/* @apply esf:box-shadow-none!; */
-	/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!; */
-}
-
-/* Input with inline before/after content — focus ring propagation */
-.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible)
-	.es-field__after-content {
-	/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!;
-		@apply esf:clip-path-inset-100vw -100vw -100vw 0; */
-}
-
-.es-field__content:has(.es-field__after-content):not(:has(.es-field__before-content)):has(.es-input:focus-visible)
-	.es-input {
-	/* @apply esf:clip-path-inset-100vw 1px -100vw -100vw; */
-}
-
-.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible)
-	.es-field__before-content {
-	/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!;
-		@apply esf:clip-path-inset-100vw 0 -100vw -100vw; */
-}
-
-.es-field__content:has(.es-field__before-content):not(:has(.es-field__after-content)):has(.es-input:focus-visible)
-	.es-input {
-	/* @apply esf:clip-path-inset-100vw -100vw -100vw 1px; */
-}
-
-.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
-	.es-field__after-content,
-.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
-	.es-field__before-content {
-	/* @apply esf:box-shadow-0 0 0 4px color-mix(in oklch, var(--esf-color-accent-600, #0d9488) 30%, transparent)!; */
-}
-
-.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
-	.es-field__before-content {
-	/* @apply esf:clip-path-inset-100vw 0 -100vw -100vw; */
-}
-
-.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible)
-	.es-field__after-content {
-	/* @apply esf:clip-path-inset-100vw -100vw -100vw 0; */
-}
-
-.es-field__content:has(.es-field__before-content):has(.es-field__after-content):has(.es-input:focus-visible) .es-input {
-	/* @apply esf:clip-path-inset-100vw 1px -100vw 1px; */
-}
-
-/* Choices.js select — admin overrides (border radius, font size, shadows) */
-div.es-select .choices__list--dropdown {
-	/* @apply esf:border-start-start-radius-0;
-		@apply esf:border-start-end-radius-0;
-		@apply esf:border-end-end-radius-0.375rem;
-		@apply esf:border-end-start-radius-0.375rem; */
-	/* @apply esf:box-shadow-0 4px 6px -1px oklch(0% 0 0 / 0.1), 0 2px 4px -2px oklch(0% 0 0 / 0.1); */
-}
-
-div.es-select.is-open {
-	/* @apply esf:box-shadow-0 4px 6px -1px oklch(0% 0 0 / 0.1), 0 2px 4px -2px oklch(0% 0 0 / 0.1); */
+.choices__placeholder {
+	@apply esf:opacity-50;
 }

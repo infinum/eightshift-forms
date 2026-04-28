@@ -90,7 +90,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				</div>
 			<?php } ?>
 		</div>
-		<div class="esf:overflow-x-hidden esf:h-full esf:max-w-xl esf:px-5 esf:pb-5">
+		<div class="esf:h-full esf:max-w-xl esf:px-5 esf:pb-5">
 			<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?>
 		</div>

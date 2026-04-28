@@ -22,7 +22,7 @@ if (!$tabLabel || !$tabContent) {
 <details
 	class="<?php echo esc_attr(Helpers::clsx([
 						UtilsHelper::getStateSelectorAdmin('tabsItem'),
-						'esf:overflow-hidden esf:group',
+						'esf:group',
 						'esf:md:[&:not([open])]:hidden',
 						$tabWithBg ? 'esf:bg-white esf:border esf:border-border esf:rounded-md' : '',
 					])); ?>"

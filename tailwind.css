@@ -1,13 +1,5 @@
-/* stylelint-disable-next-line @stylistic/max-line-length */
-/* stylelint-disable declaration-block-no-duplicate-properties, block-no-redundant-nested-style-rules, no-invalid-position-declaration, at-rule-no-unknown, lightness-notation, hue-degree-notation, custom-property-empty-line-before, custom-property-pattern, at-rule-no-deprecated, nesting-selector-no-missing-scoping-root, selector-max-specificity */
-@plugin 'tailwindcss-motion';
-@plugin 'tailwindcss-react-aria-components';
-@plugin '@tailwindcss/typography';
-
 @source '/src/*.{html,js,php,json,css}';
 @source '/*.php';
-@source '/es-tw-responsive-classes.txt';
-@source '/manifest.json';
 
 @theme {
 	--spacing: 0.0625rem; /* 1px */
@@ -42,19 +34,14 @@
 	--color-accent-700: var(--esf-color-teal-700);
 	--color-accent-800: var(--esf-color-teal-800);
 	--color-accent-900: var(--esf-color-teal-900);
-	--color-accent-950: var(--esf-color-teal-950);
-
-	/* --color-link: var(--esf-color-accent-700);
-	--color-link-hover: var(--esf-color-accent-900); */
 
 	--color-accent: #29a3a3;
+	--color-accent-dark: #218282;
 
 	--color-accent-05: #29a3a30d;
 	--color-accent-10: #29a3a31a;
 	--color-accent-30: #29a3a333;
 	--color-accent-50: #29a3a380;
-
-	--color-accent-dark: #218282;
 
 	--color-border: #dedede;
 
@@ -120,6 +107,23 @@ body {
 	--esf-color-accent-950: var(--es-color-accent-950);
 
 	--esf-color-error: var(--es-color-error); */
+}
+
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cache'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='location'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='dashboard'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='debug'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='documentation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='migration'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='transfer'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wp'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wpml'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='calculator'] {
+	.es-submit--global {
+		@apply esf:hidden;
+	}
 }
 
 .esf-button-primary {
@@ -199,342 +203,29 @@ body {
 	}
 }
 
-/* Textarea — dynamic height via CSS variables */
-/* textarea.es-textarea {
-	--textarea-size: 3;
-	--textarea-size-max: initial;
-	min-block-size: calc(2.625rem * var(--textarea-size));
-	block-size: calc(2.625rem * var(--textarea-size));
+.esf-pagination {
+	@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
+
+	& ul {
+		@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0;
+	}
+
+	& li {
+		@apply esf:m-0;
+	}
+
+	& a,
+	& span.current {
+		@apply esf:text-inherit esf:bg-transparent esf:border esf:border-border;
+		@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+		@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+	}
+
+	& span.current {
+		@apply esf:text-white esf:bg-accent-dark esf:border-accent-dark;
+	}
 }
 
-textarea.es-textarea--limit-height {
-	overflow: auto important;
-	resize: none important;
-	max-block-size: calc(2.625rem * var(--textarea-size-max)) important;
-} */
-
-/* textarea.es-textarea__size--big {
-	--textarea-size: 8;
+.es-loader.es-form-is-active .es-loader__spinner {
+	@apply esf:animate-spin esf:duration-500;
 }
-
-textarea.es-textarea__size--huge {
-	--textarea-size: 16;
-}
-
-textarea.es-textarea__size--big.es-textarea--limit-height {
-	--textarea-size-max: 8;
-}
-
-textarea.es-textarea__size--huge.es-textarea--limit-height {
-	--textarea-size-max: 16;
-} */
-
-/* textarea.es-textarea--monospace {
-	font-family: monospace;
-} */
-
-/* Submit — admin context overrides (compact, fit-content width) */
-/* .es-admin-settings a.es-submit,
-.es-admin-settings button.es-submit,
-.es-admin-listing a.es-submit,
-.es-admin-listing button.es-submit {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.3125rem;
-	width: fit-content;
-	height: 2.5rem;
-	font-weight: 500;
-	padding: 0.75rem 1rem;
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-}
-
-.es-admin-settings a.es-submit.es-form-is-disabled,
-.es-admin-settings button.es-submit.es-form-is-disabled,
-.es-admin-listing a.es-submit.es-form-is-disabled,
-.es-admin-listing button.es-submit.es-form-is-disabled {
-	pointer-events: none;
-	opacity: 0.5;
-}
-
-.es-admin-settings a.es-submit.es-submit--ghost,
-.es-admin-settings button.es-submit.es-submit--ghost,
-.es-admin-listing a.es-submit.es-submit--ghost,
-.es-admin-listing button.es-submit.es-submit--ghost {
-	background: transparent;
-	color: var(--esf-color-accent-600, #0d9488);
-}
-
-.es-admin-settings a.es-submit.es-submit--outline,
-.es-admin-settings button.es-submit.es-submit--outline,
-.es-admin-listing a.es-submit.es-submit--outline,
-.es-admin-listing button.es-submit.es-submit--outline {
-	background: transparent;
-	color: var(--esf-color-accent-600, #0d9488);
-	border: 1px solid var(--esf-color-accent-600, #0d9488);
-}
-
-.es-admin-settings a.es-submit.es-submit--mini,
-.es-admin-settings button.es-submit.es-submit--mini,
-.es-admin-listing a.es-submit.es-submit--mini,
-.es-admin-listing button.es-submit.es-submit--mini {
-	padding: 0.5rem;
-	height: 1.875rem;
-} */
-
-/* Steps component — CSS counter not expressible in Tailwind utilities */
-/* .esf-steps-list {
-	counter-reset: esf-steps;
-}
-
-.esf-steps-item {
-	counter-increment: esf-steps;
-}
-
-.esf-steps-item::before {
-	content: counter(esf-steps);
-	font-size: 0.75rem;
-	line-height: 1;
-	border-radius: 100rem;
-	color: var(--esf-color-accent-600, #0d9488);
-	border: 1px solid color-mix(in oklch, var(--esf-color-accent-500, #14b8a6) 30%, transparent);
-	width: 1.6rem;
-	height: 1.6rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-} */
-
-/* Loader spinner — CSS animation not expressible in Tailwind utilities */
-
-/* Rating stars — nth-selector loop not expressible in Tailwind utilities */
-/* .es-rating {
-	--esf-rating-icon-color: var(--esf-color-secondary-300, #d4d4d8);
-	--esf-rating-icon-active-color: oklch(79.5% 0.184 86.047);
-}
-
-.es-rating:hover .es-rating__star path {
-	color: var(--esf-rating-icon-active-color) important;
-	fill: var(--esf-rating-icon-active-color) important;
-}
-
-.es-rating__star path {
-	color: var(--esf-rating-icon-active-color);
-	fill: var(--esf-rating-icon-active-color);
-	transition:
-		color 0.15s ease-out 0.05s,
-		fill 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
-}
-
-.es-rating__star:hover ~ .es-rating__star path {
-	color: var(--esf-rating-icon-color) important;
-	fill: var(--esf-rating-icon-color) important;
-}
-
-.es-rating[data-rating='0'] .es-rating__star path,
-.es-rating[data-rating=''] .es-rating__star path {
-	color: var(--esf-rating-icon-color);
-	fill: var(--esf-rating-icon-color);
-}
-
-.es-rating[data-rating='1'] .es-rating__star[data-rating='1'] ~ .es-rating__star path,
-.es-rating[data-rating='2'] .es-rating__star[data-rating='2'] ~ .es-rating__star path,
-.es-rating[data-rating='3'] .es-rating__star[data-rating='3'] ~ .es-rating__star path,
-.es-rating[data-rating='4'] .es-rating__star[data-rating='4'] ~ .es-rating__star path,
-.es-rating[data-rating='5'] .es-rating__star[data-rating='5'] ~ .es-rating__star path,
-.es-rating[data-rating='6'] .es-rating__star[data-rating='6'] ~ .es-rating__star path,
-.es-rating[data-rating='7'] .es-rating__star[data-rating='7'] ~ .es-rating__star path,
-.es-rating[data-rating='8'] .es-rating__star[data-rating='8'] ~ .es-rating__star path,
-.es-rating[data-rating='9'] .es-rating__star[data-rating='9'] ~ .es-rating__star path,
-.es-rating[data-rating='10'] .es-rating__star[data-rating='10'] ~ .es-rating__star path {
-	color: var(--esf-rating-icon-color);
-	fill: var(--esf-rating-icon-color);
-} */
-
-/* Field — required asterisk and modifier layouts */
-/* .es-field__label--is-required::after {
-	content: '*';
-	font-size: 0.75rem;
-	color: var(--esf-color-red-500, #ef4444);
-	vertical-align: top;
-}
-
-.es-field.es-form-is-active .es-field__label {
-	color: var(--esf-color-accent-600, #0d9488);
-}
-
-legend .es-field__label-inner {
-	display: inline-block;
-	margin-block-end: 0.3125rem;
-}
-
-.es-field--submit {
-	display: flex;
-	justify-content: flex-end;
-	max-inline-size: 850px;
-}
-
-.es-field--fifty-fifty-horizontal .es-field__inner {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	align-items: center;
-}
-
-.es-field--fifty-fifty-horizontal .es-field__label {
-	margin: 0;
-}
-
-.es-field--fifty-fifty-horizontal .es-field__content {
-	display: flex;
-	align-items: center;
-	gap: 0.3125rem;
-}
-
-.es-field--fifty-fifty-horizontal .es-field__content-wrap {
-	flex-grow: 1;
-}
-	*/
-
-/* Card inline — pseudo-element hover overlay and modifier effects */
-/* .es-card-inline::before {
-	background-color: var(--esf-color-secondary-50, #fafafa);
-	border-radius: 0.5rem;
-	content: '';
-	inset: -0.5rem -1rem;
-	opacity: 0;
-	pointer-events: none;
-	position: absolute;
-	transition:
-		opacity 0.3s ease-in-out,
-		background-color 0.3s ease-in-out;
-	z-index: -1;
-}
-
-.es-card-inline--invalid::before {
-	background-color: oklch(97.1% 0.013 17.38);
-}
-
-.es-card-inline--indented {
-	padding-inline-start: 2rem;
-}
-
-.es-card-inline--indented::after {
-	content: '';
-	position: absolute;
-	inset-inline-start: 0.7rem;
-	block-size: 100%;
-	inset-block-start: 0;
-	border-inline-start: 1px dotted var(--esf-color-secondary-300, #d4d4d8);
-}
-
-.es-card-inline--use-hover .es-card-inline__right-wrap {
-	opacity: 0;
-	transition: opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.es-card-inline--use-hover:hover::before {
-	opacity: 0.85;
-	z-index: 1;
-}
-
-.es-card-inline--use-hover:hover .es-card-inline__right-wrap {
-	opacity: 1;
-} */
-
-/* Group component — --default-listing modifier grid */
-/* .es-group--default-listing > .es-group__content {
-	display: grid;
-	row-gap: 0.9375rem;
-} */
-
-/* Admin top menu bar — WP admin bar item */
-/* #wpadminbar #wp-admin-bar-es-forms > a {
-	display: flex;
-	align-items: center;
-}
-
-#wpadminbar #wp-admin-bar-es-forms > a > svg {
-	color: #ff6900;
-	margin-inline-start: 0.625rem;
-	vertical-align: middle;
-} */
-
-/* Admin settings — data-attribute selectors for submit button visibility */
-/* .es-admin-settings .es-form[data-settings-type='cache'] .es-submit--global,
-.es-admin-settings .es-form[data-settings-type='location'] .es-submit--global,
-.es-admin-settings .es-form[data-settings-type='dashboard'] .es-submit--global,
-.es-admin-settings .es-form[data-settings-type='debug'] .es-submit--global,
-.es-admin-settings .es-form[data-settings-type='documentation'] .es-submit--global,
-.es-admin-settings .es-form[data-settings-type='migration'] .es-submit--global,
-.es-admin-settings .es-form[data-settings-type='transfer'] .es-submit--global,
-.es-admin-settings .es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'] .es-submit--global,
-.es-admin-settings .es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'] .es-submit--global,
-.es-admin-settings .es-form[data-form-type='settingsGlobal'][data-settings-type='wp'] .es-submit--global,
-.es-admin-settings .es-form[data-form-type='settingsGlobal'][data-settings-type='wpml'] .es-submit--global,
-.es-admin-settings .es-form[data-form-type='settingsGlobal'][data-settings-type='calculator'] .es-submit--global {
-	display: none;
-} */
-
-/* Global message — admin toast notification style (overrides frontend banner) */
-/* .es-admin-listing__form .es-global-msg {
-	position: fixed;
-	right: 2rem;
-	inset-block-end: 2rem;
-	z-index: 9999;
-	max-inline-size: 18rem;
-	max-block-size: 80vh;
-	overflow-x: hidden;
-	border-radius: 0.5rem;
-	padding: 0.75rem 1rem;
-	opacity: 0;
-	background-color: oklch(96.2% 0.059 215.41);
-	border: 1px solid oklch(90.9% 0.093 210.43);
-	color: oklch(20.1% 0.051 232.17);
-	transform: translateX(2rem);
-	transition:
-		transform 0.3s ease-out,
-		background-color 0.3s linear,
-		opacity 0.3s linear;
-	display: block important;
-}
-
-.es-admin-listing__form .es-global-msg.es-form-is-active {
-	transform: translateX(0);
-	opacity: 1;
-}
-
-.es-admin-listing__form .es-global-msg[data-status='error'] {
-	background-color: oklch(96.9% 0.015 12.42);
-	border-color: oklch(63.7% 0.237 25.33);
-	color: oklch(25.8% 0.092 26.04);
-}
-
-.es-admin-listing__form .es-global-msg[data-status='warning'] {
-	background-color: oklch(97.3% 0.062 101.54);
-	border-color: oklch(79.5% 0.184 86.047);
-	color: oklch(28.6% 0.066 53.81);
-}
-
-.es-admin-listing__form .es-global-msg[data-status='success'] {
-	background-color: oklch(96.2% 0.044 156.74);
-	border-color: oklch(72.3% 0.219 149.58);
-	color: oklch(26.6% 0.065 152.93);
-} */
-
-/* Loader — admin overlay background */
-/* .es-admin-listing .es-loader::after {
-	background-color: #f0f0f1;
-} */
-
-/* Admin listing — loader fixed positioning in admin context */
-/* .es-admin-listing__form .es-loader {
-	z-index: 10;
-}
-
-.es-admin-listing__form .es-loader svg {
-	position: fixed;
-	inset-block: auto 1.25rem;
-	inset-inline: auto 1.25rem;
-	transform: none;
-} */
