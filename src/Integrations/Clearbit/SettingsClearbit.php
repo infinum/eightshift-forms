@@ -362,7 +362,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 					'layoutType' => 'layout-grid-half',
 					'layoutWithBg' => false,
 				],
-				...(\array_map(
+				...\array_map(
 					static function ($item) use ($clearbitMapValue, $properties) {
 						$selectedValue = $clearbitMapValue[$item] ?? '';
 						return [
@@ -396,7 +396,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 						];
 					},
 					$clearbitAvailableKeys
-				) ?? []),
+				),
 			],
 		];
 	}

@@ -24,13 +24,13 @@ if (!$buttonLabel) {
 	return;
 }
 
-$tag = '';
+$outputTag = '';
 
 if ($buttonUrl) {
-	$tag = 'a';
+	$outputTag = 'a';
 	$buttonAttrs['href'] = $buttonUrl;
 } else {
-	$tag = 'button';
+	$outputTag = 'button';
 }
 
 if ($buttonIsDisabled) {
@@ -73,11 +73,11 @@ $class = Helpers::clsx([
 
 ?>
 
-<<?php echo esc_attr($tag); ?> class="<?php echo esc_attr($class); ?>" <?php echo Helpers::getAttrsOutput($buttonAttrs); ?>>
+<<?php echo esc_attr($outputTag); ?> class="<?php echo esc_attr($class); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($buttonAttrs)); ?>>
 	<?php
 	if (!empty($buttonIcon)) {
 		echo $buttonIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	}
 	?>
 	<?php echo esc_html($buttonLabel); ?>
-</<?php echo esc_attr($tag); ?>>
+</<?php echo esc_attr($outputTag); ?>>

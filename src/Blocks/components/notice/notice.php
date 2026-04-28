@@ -42,8 +42,8 @@ if (!$noticeContent) {
 
 ?>
 
-<div class="esf:flex esf:items-center esf:gap-10 <?php echo $noticeTypeClass; ?> esf:px-20 esf:py-15 esf:text-lg esf:rounded-md">
-	<div class="esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-30 esf:[&>svg]:h-30 <?php echo $iconColorClass; ?>">
+<div class="esf:flex esf:items-center esf:gap-10 <?php echo esc_attr($noticeTypeClass); ?> esf:px-20 esf:py-15 esf:text-lg esf:rounded-md">
+	<div class="esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-30 esf:[&>svg]:h-30 <?php echo esc_attr($iconColorClass); ?>">
 		<?php echo $noticeIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		?>
 	</div>

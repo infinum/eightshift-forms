@@ -122,7 +122,7 @@ if (has_filter($filterName)) {
 		$options[] = '
 			<option
 				value="' . $code . '"
-				' .  Helpers::getAttrsOutput($optionAttrs) . '
+				' .  wp_kses_post(Helpers::getAttrsOutput($optionAttrs)) . '
 				' . selected($code, $phoneSelectValue, false) . '
 			>' . $optionLabel . '</option>';
 	}
@@ -142,7 +142,7 @@ $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrsSelect)) . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -152,7 +152,7 @@ $phone = '
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_readonly($phoneIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($phoneAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrs)) . '
 	/>
 	' . $additionalContent . '
 ';

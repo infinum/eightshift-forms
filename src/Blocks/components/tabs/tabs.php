@@ -23,6 +23,6 @@ if (!$tabsContent) {
 ?>
 <div class="<?php echo esc_attr($tabsClass); ?>">
 	<?php
-	echo $tabsContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+	echo wp_kses_post($tabsContent);
 	?>
 </div>

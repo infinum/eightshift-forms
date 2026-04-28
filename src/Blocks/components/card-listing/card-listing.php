@@ -32,7 +32,7 @@ $classes = Helpers::clsx([
 
 <div
 	class="<?php echo esc_attr($classes); ?>"
-	<?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
 	<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between esf:text-sm esf:py-10 esf:px-20 esf:group/card-listing">
 		<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
 			<?php if ($cardListingUseCheckbox) { ?>

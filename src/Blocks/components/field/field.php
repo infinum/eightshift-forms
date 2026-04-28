@@ -180,7 +180,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo Helpers::getAttrsOutput($fieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($fieldAttrs));
 	?>>
 
 	<?php
@@ -202,7 +202,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				<?php
-				echo Helpers::getAttrsOutput($fieldAttrsLabel); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				echo wp_kses_post(Helpers::getAttrsOutput($fieldAttrsLabel));
 				?>>
 				<span class="<?php echo esc_attr($labelInnerClass); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>

@@ -29,7 +29,7 @@ $resultClass = Helpers::clsx([
 
 <div
 	class="<?php echo esc_attr($resultClass); ?>"
-	<?php echo Helpers::getAttrsOutput($resultAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($resultAttrs));
 	?>>
 	<?php
 	echo do_blocks(get_the_content(null, false, $resultOutputPostId)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped

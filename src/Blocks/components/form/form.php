@@ -139,7 +139,7 @@ $formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_en
 
 <form
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($formAttrs)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>
 	novalidate
 	onsubmit="event.preventDefault();">

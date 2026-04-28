@@ -201,7 +201,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'layoutType' => 'layout-grid-half',
 								'layoutWithBg' => false,
 							],
-							...(\array_map(
+							...\array_map(
 								function ($item) {
 									return [
 										'component' => 'layout',
@@ -223,7 +223,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 									];
 								},
 								$enrichment['settingsFields'] ?? []
-							) ?? [])
+							)
 						],
 					],
 					[

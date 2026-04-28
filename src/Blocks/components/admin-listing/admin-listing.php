@@ -41,20 +41,20 @@ $additionalAttributes = [
 	}
 	?>
 
-	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo UtilsHelper::getStateSelectorAdmin('listingBulkItems'); ?>" <?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
+	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo esc_attr(UtilsHelper::getStateSelectorAdmin('listingBulkItems')); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
 		<div class="esf:bg-white esf:rounded-md esf:flex-1">
 			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-border">
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
 					<?php
 					if (isset($adminListingTopItems['left'])) {
-						echo Helpers::ensureString($adminListingTopItems['left']);
+						echo wp_kses_post(Helpers::ensureString($adminListingTopItems['left']));
 					}
 					?>
 				</div>
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
 					<?php
 					if (isset($adminListingTopItems['right'])) {
-						echo Helpers::ensureString($adminListingTopItems['right']);
+						echo wp_kses_post(Helpers::ensureString($adminListingTopItems['right']));
 					}
 					?>
 				</div>
@@ -62,11 +62,11 @@ $additionalAttributes = [
 			<?php
 			if ($adminListingShowNoItems) { ?>
 				<div class="esf:px-20 esf:py-60">
-					<?php echo Helpers::ensureString($adminListingNoItems); ?>
+					<?php echo wp_kses_post(Helpers::ensureString($adminListingNoItems)); ?>
 				</div>
 			<?php } else { ?>
 				<?php
-				echo Helpers::ensureString($adminListingItems);
+				echo wp_kses_post(Helpers::ensureString($adminListingItems));
 				echo Helpers::render('pagination', [
 					'data' => $adminListingPagination,
 				], 'components', false, 'admin-listing/partials');

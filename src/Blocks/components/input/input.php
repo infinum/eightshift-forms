@@ -145,7 +145,7 @@ $input = '
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($inputAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($inputAttrs)) . '
 	/>
 ';
 
@@ -155,7 +155,7 @@ if ($inputRangeUseCustomField && $inputType === 'range') {
 		type="number"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($inputAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($inputAttrs)) . '
 	/>';
 }
 

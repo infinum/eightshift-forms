@@ -82,7 +82,7 @@ $date = '
 		type="' . esc_attr($dateType) . '"
 		' . disabled($dateIsDisabled, true, false) . '
 		' . wp_readonly($dateIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($dateAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($dateAttrs)) . '
 	/>
 	' . $additionalContent . '
 ';

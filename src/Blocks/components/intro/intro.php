@@ -30,13 +30,13 @@ $introSubtitleClass = Helpers::clsx([
 
 <div class="esf:flex esf:flex-col esf:gap-5">
 	<?php if ($introTitle) { ?>
-		<div class="<?php echo $introTitleClass; ?>">
+		<div class="<?php echo esc_attr($introTitleClass); ?>">
 			<?php echo esc_html($introTitle); ?>
 		</div>
 	<?php } ?>
 
 	<?php if ($introSubtitle) { ?>
-		<div class="<?php echo $introSubtitleClass; ?>">
+		<div class="<?php echo esc_attr($introSubtitleClass); ?>">
 			<?php echo wp_kses_post($introSubtitle); ?>
 		</div>
 	<?php } ?>

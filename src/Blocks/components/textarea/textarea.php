@@ -79,7 +79,7 @@ $textarea = '<textarea
 		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . wp_readonly($textareaIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($textareaAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($textareaAttrs)) . '
 	>' . wp_kses_post($textareaValue) . '</textarea>
 	' . $additionalContent . '
 ';

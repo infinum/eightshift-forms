@@ -27,7 +27,7 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 						$additionalClass,
 					])); ?>"
 	<?php
-	echo Helpers::getAttrsOutput($additionalAttributes);
+	echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes));
 	?>>
 	<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>

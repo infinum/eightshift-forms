@@ -24,7 +24,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 ?>
 <div
 	class="<?php echo esc_attr("$selectorJsItem") ?> esf:flex esf:flex-col esf:gap-8"
-	<?php echo Helpers::getAttrsOutput($additionalAttributes); ?>>
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
 	<?php
 	if ($items) {
 		foreach ($items as $item) {

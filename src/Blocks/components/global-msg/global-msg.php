@@ -49,7 +49,7 @@ if (has_filter($filterName) && !is_admin()) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo Helpers::getAttrsOutput($globalMsgAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($globalMsgAttrs)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

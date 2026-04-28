@@ -69,7 +69,7 @@ class ResultOutputItemPart implements ServiceInterface
 			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
 		];
 
-		return "<span " . Helpers::getAttrsOutput($attrs) . ">{$content}</span>";
+		return "<span " . \wp_kses_post(Helpers::getAttrsOutput($attrs)) . ">{$content}</span>";
 	}
 
 	/**

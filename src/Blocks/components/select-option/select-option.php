@@ -41,7 +41,7 @@ if ($conditionalTags) {
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
 	<?php disabled($selectOptionIsDisabled); ?>
-	<?php echo Helpers::getAttrsOutput($customAttributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($customAttributes));
 	?>>
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

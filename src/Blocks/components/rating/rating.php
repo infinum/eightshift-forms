@@ -90,7 +90,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 
 $rating = '
 	<div class="' . esc_attr($ratingClass) . '"
-		' . Helpers::getAttrsOutput($ratingAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($ratingAttrs)) . '
 	>
 	' . $stars . '
 	</div>

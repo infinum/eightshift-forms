@@ -126,7 +126,7 @@ if (has_filter($filterName)) {
 		$options[] = '
 			<option
 				value="' . $code . '"
-				' .  Helpers::getAttrsOutput($optionAttrs) . '
+				' .  wp_kses_post(Helpers::getAttrsOutput($optionAttrs)) . '
 				' . selected($code, isset($countryValue[$code]) ? $code : null, false) . '
 			>' . $label . '</option>';
 	}
@@ -138,7 +138,7 @@ $country = '
 		name="' . esc_attr($countryName) . '"
 		id="' . esc_attr($countryId) . '"
 		' . disabled($countryIsDisabled, true, false) . '
-		' . Helpers::getAttrsOutput($countryAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($countryAttrs)) . '
 	>
 	' . $placeholder . '
 	' . implode('', $options) . '

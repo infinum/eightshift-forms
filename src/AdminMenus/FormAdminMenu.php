@@ -724,7 +724,6 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardListingUrl' => $editLink,
 						'cardListingSubTitle' => \implode('|', $this->getSubtitle($item)),
 						'cardListingIcon' => UtilsHelper::getUtilsIcons('post'),
-						// 'cardListingUseCheckbox' => true,
 						'cardListingId' => $itemId,
 						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 					]);
@@ -857,9 +856,9 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 					]);
 					$tableHead['data'] = \__('Data', 'eightshift-forms');
-					$tableContent[$itemId]['data'] = '<span class="' . $manualSubmitData . '" ' . Helpers::getAttrsOutput([
+					$tableContent[$itemId]['data'] = '<span class="' . $manualSubmitData . '" ' . \wp_kses_post(Helpers::getAttrsOutput([
 						UtilsHelper::getStateAttribute('manualSubmitId') => $itemId,
-					]) . '>' . ($item['data'] ?? '') . '</span>';
+					])) . '>' . ($item['data'] ?? '') . '</span>';
 
 					$i++;
 				}
@@ -1152,7 +1151,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			]),
 			...(isset($include['search']) ? [
 				Helpers::render('input', [
-					// 'fieldSkip' => true,
+					'fieldSkip' => true,
 					'inputName' => 'search',
 					'inputPlaceholder' => \__('Search', 'eightshift-forms'),
 					'additionalClass' => "$searchSelector esf:max-w-3xs!",

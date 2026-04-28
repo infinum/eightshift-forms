@@ -50,7 +50,7 @@ $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
-		' . Helpers::getAttrsOutput($submitItemAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($submitItemAttrs)) . '
 	><span class="' . esc_attr(FormsHelper::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
@@ -64,7 +64,7 @@ if ($submitButtonAsLink) {
 	<a
 		href="' . esc_url($submitButtonAsLinkUrl) . '"
 		class="' . esc_attr("{$submitClass} {$submitLinkClass}") . '"
-		' . Helpers::getAttrsOutput($submitItemAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($submitItemAttrs)) . '
 	><span class="' . esc_attr(FormsHelper::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
 	' . $additionalContent . '
 	';

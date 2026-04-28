@@ -85,7 +85,7 @@ if ($checkboxTracking) {
 
 <div
 	class="<?php echo esc_attr($checkboxClass); ?>"
-	<?php echo Helpers::getAttrsOutput($checkboxFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($checkboxFieldAttrs));
 	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
 		<input
@@ -93,7 +93,7 @@ if ($checkboxTracking) {
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxName); ?>"
-			<?php echo Helpers::getAttrsOutput($checkboxAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			<?php echo wp_kses_post(Helpers::getAttrsOutput($checkboxAttrs));
 			?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?> />

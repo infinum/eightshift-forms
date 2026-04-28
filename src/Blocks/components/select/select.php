@@ -101,7 +101,7 @@ $select = '
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
 		' . disabled($selectIsDisabled, true, false) . '
-		' . Helpers::getAttrsOutput($selectAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($selectAttrs)) . '
 	>
 		' . $placeholder . '
 		' . $selectContent . '
