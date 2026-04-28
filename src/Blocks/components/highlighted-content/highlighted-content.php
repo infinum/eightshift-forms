@@ -24,7 +24,7 @@ $highlightedContentIcon = Helpers::checkAttr('highlightedContentIcon', $attribut
 	</div>
 
 	<?php if ($highlightedContentSubtitle) { ?>
-		<div class="esf:text-xs esf:leading-snug esf:text-gray-500 esf:flex esf:items-center esf:flex-col esf:[&_a]:text-accent-600 esf:[&_a]:underline esf:[&_a]:decoration-dotted">
+		<div class="esf:text-xs esf:leading-snug esf:text-gray-500 esf:flex esf:items-center esf:flex-col">
 			<?php echo wp_kses_post($highlightedContentSubtitle); ?>
 		</div>
 	<?php } ?>

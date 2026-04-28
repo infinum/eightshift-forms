@@ -119,6 +119,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						'tabContent' => [
 							[
 								'component' => 'layout',
+								'layoutWithBg' => false,
 								'layoutContent' => [
 									[
 										'component' => 'intro',
@@ -214,6 +215,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						'tabContent' => [
 							[
 								'component' => 'layout',
+								'layoutWithBg' => false,
 								'layoutContent' => [
 									[
 										'component' => 'intro',

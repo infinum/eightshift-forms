@@ -31,7 +31,7 @@ $additionalAttributes = [
 
 ?>
 
-<div class="esf:flex esf:flex-col esf:gap-15 esf:-ml-20 esf:p-40">
+<div class="esf-main-container esf:css-reset esf:flex esf:flex-col esf:gap-15 esf:-ml-20 esf:p-40">
 	<?php
 	if ($adminListingPageTitle) {
 		echo Helpers::render('intro', [
@@ -79,7 +79,7 @@ $additionalAttributes = [
 				<?php
 				echo Helpers::render('highlighted-content', [
 					'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="esf-link-primary" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
+					'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="esf-button-primary-outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
 					'highlightedContentIcon' => 'docsFormList',
 				]);
 				?>
