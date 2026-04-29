@@ -165,7 +165,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<mixed>
 	 */
 	public function getSettingsData(string $formId): array
 	{

@@ -47,7 +47,7 @@
 		@apply esf:w-full;
 		@apply esf:bg-white;
 		@apply esf:border esf:border-border;
-		@apply esf:top-0;
+		@apply esf:top-full;
 		@apply esf:inset-x-0;
 		@apply esf:-mt-px;
 		@apply esf:rounded-b-md;

@@ -414,7 +414,6 @@ export class Utils {
 		for (const [name] of this.state.getStateElements(formId)) {
 			const value = this.state.getStateElementValue(name, formId);
 			const trackingName = this.state.getStateElementTracking(name, formId);
-			const field = this.state.getStateElementField(name, formId);
 
 			if (!trackingName) {
 				continue;

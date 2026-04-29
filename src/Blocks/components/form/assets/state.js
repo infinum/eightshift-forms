@@ -569,7 +569,7 @@ export class State {
 	getStateFilteredByKey = (obj, targetKey, findItem, formId) => {
 		return Object?.values(
 			Object?.fromEntries(
-				Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem),
+				Object?.entries(getState([obj], formId) ?? {})?.filter(([_key, value]) => value[targetKey] === findItem),
 			),
 		);
 	};

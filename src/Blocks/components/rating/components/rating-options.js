@@ -26,7 +26,7 @@ import manifest from '../manifest.json';
 import { Slider } from '@eightshift/ui-components';
 
 export const RatingOptions = (attributes) => {
-	const { setAttributes, title = __('Rating', 'eightshift-forms') } = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 

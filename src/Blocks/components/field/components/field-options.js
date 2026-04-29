@@ -114,7 +114,6 @@ export const FieldOptions = (attributes) => {
 export const FieldOptionsLayout = (attributes) => {
 	const {
 		responsiveAttributes: { fieldWidth },
-		options,
 	} = manifest;
 
 	const { blockName, setAttributes } = attributes;

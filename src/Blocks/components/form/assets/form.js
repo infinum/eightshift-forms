@@ -995,7 +995,7 @@ export class Form {
 			return output;
 		}
 
-		for (const [key, group] of Object.entries(groups)) {
+		for (const [_key, group] of Object.entries(groups)) {
 			const groupSaveAsOneField = Boolean(group.getAttribute(this.state.getStateAttribute('groupSaveAsOneField')));
 
 			if (!groupSaveAsOneField) {
@@ -1010,7 +1010,7 @@ export class Form {
 
 			const groupInnerItems = {};
 
-			for (const [key, groupInnerItem] of Object.entries(groupInner)) {
+			for (const [_key, groupInnerItem] of Object.entries(groupInner)) {
 				const { name, value, disabled } = groupInnerItem;
 
 				// Skip select search field.
@@ -1367,7 +1367,7 @@ export class Form {
 
 					utils.setFieldFilledState(formId, name);
 				},
-				onOpen: function (selectedDates, dateStr, instance) {
+				onOpen: function () {
 					utils.setActiveState(formId, name);
 
 					if (!state.getStateSettingsDisableScrollToFieldOnFocus()) {

@@ -45,7 +45,7 @@ final class SettingsOutputHelpers
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<int, array<string, list<array<string, list<array<string, string>>|string>>|string>>
 	 */
 	public static function getNoActiveFeature(): array
 	{
@@ -79,7 +79,7 @@ final class SettingsOutputHelpers
 	 *
 	 * @param string $type Settings/Integration type.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<string, list<array<string, list<array<string, string>>|string>>|string>
 	 */
 	public static function getNoValidGlobalConfig(string $type): array
 	{
