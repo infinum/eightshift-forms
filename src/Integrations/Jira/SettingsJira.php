@@ -316,8 +316,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								[
 									'component' => 'group',
 									'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
-									'groupSaveOneField' => true,
-									'groupStyle' => 'default-listing',
 									'groupContent' => [
 										...\array_map(
 											function ($item) use ($mapParams) {

@@ -342,8 +342,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 		return [
 			'component' => 'group',
 			'groupName' => SettingsHelpers::getOptionName($key),
-			'groupSaveOneField' => true,
-			'groupStyle' => 'default-listing',
 			'groupContent' => [
 				[
 					'component' => 'layout',

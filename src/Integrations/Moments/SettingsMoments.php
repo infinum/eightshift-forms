@@ -216,8 +216,6 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 									[
 										'component' => 'group',
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
-										'groupSaveOneField' => true,
-										'groupStyle' => 'default-listing',
 										'groupContent' => [
 											[
 												'component' => 'field',

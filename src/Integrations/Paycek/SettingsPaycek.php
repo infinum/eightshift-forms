@@ -279,8 +279,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
 										'component' => 'field',

@@ -270,8 +270,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									[
 										'component' => 'group',
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY),
-										'groupSaveOneField' => true,
-										'groupStyle' => 'default-listing',
 										'groupContent' => [
 											...\array_filter(\array_map(
 												function ($item) use ($mapParams, $personName, $personFields) {

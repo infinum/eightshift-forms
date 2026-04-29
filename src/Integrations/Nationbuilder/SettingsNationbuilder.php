@@ -178,8 +178,6 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
 										'component' => 'field',
