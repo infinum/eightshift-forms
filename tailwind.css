@@ -1,3 +1,5 @@
+/* stylelint-disable at-rule-no-unknown */
+
 @source '/src/*.{html,js,php,json,css}';
 @source '/*.php';
 
@@ -194,7 +196,8 @@ body {
 
 .esf-main-container {
 	button:not(disabled),
-	a {
+	a,
+	.choices {
 		@apply esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none;
 	}
 
