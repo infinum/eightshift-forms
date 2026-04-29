@@ -14,6 +14,7 @@ $introTitleType = Helpers::checkAttr('introTitleType', $attributes, $manifest);
 
 $introTitleClass = Helpers::clsx([
 	'esf:font-medium',
+	$introTitleType === 'big' ? 'esf:text-2xl' : '',
 	$introTitleType === 'default' ? 'esf:text-xl' : '',
 	$introTitleType === 'medium' ? 'esf:text-base' : '',
 	$introTitleType === 'small' ? 'esf:text-sm esf:font-normal' : '',

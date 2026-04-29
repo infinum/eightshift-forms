@@ -37,6 +37,7 @@ $additionalAttributes = [
 		echo Helpers::render('intro', [
 			'introTitle' => $adminListingPageTitle,
 			'introSubtitle' => $adminListingPageSubTitle,
+			'introTitleType' => 'big',
 		]);
 	}
 	?>

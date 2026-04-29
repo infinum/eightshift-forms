@@ -40,11 +40,16 @@ if (!$noticeContent) {
 	return;
 }
 
+$svgClasses = Helpers::clsx([
+	'esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-30 esf:[&>svg]:h-30',
+	$iconColorClass,
+]);
+
 ?>
 
 <div class="esf:flex esf:items-center esf:gap-10 <?php echo esc_attr($noticeTypeClass); ?> esf:px-20 esf:py-15 esf:text-lg esf:rounded-md">
-	<div class="esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-30 esf:[&>svg]:h-30 <?php echo esc_attr($iconColorClass); ?>">
-		<?php echo $noticeIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+	<div class="<?php echo esc_attr($svgClasses); ?>">
+		<?php echo wp_kses_post($noticeIcon);
 		?>
 	</div>
 	<div class="esf:flex esf:flex-col esf:gap-5">

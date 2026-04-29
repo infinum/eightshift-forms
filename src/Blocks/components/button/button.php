@@ -76,7 +76,7 @@ $class = Helpers::clsx([
 <<?php echo esc_attr($outputTag); ?> class="<?php echo esc_attr($class); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($buttonAttrs)); ?>>
 	<?php
 	if (!empty($buttonIcon)) {
-		echo $buttonIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+		echo wp_kses_post($buttonIcon);
 	}
 	?>
 	<?php echo esc_html($buttonLabel); ?>
