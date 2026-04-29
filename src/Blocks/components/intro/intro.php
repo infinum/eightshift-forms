@@ -18,7 +18,7 @@ $introActions = Helpers::checkAttr('introActions', $attributes, $manifest);
 
 $introClasses = Helpers::clsx([
 	'esf:flex esf:flex-col esf:gap-5',
-	$introType === 'highlighted' ? 'esf:items-center esf:justify-center esf:text-center' : '',
+	$introType === 'highlighted' ? 'esf:items-center esf:justify-center esf:text-center esf:gap-10' : '',
 ]);
 
 $introTitleClass = Helpers::clsx([
