@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
@@ -142,7 +143,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		$debug['responseBody'] = $responseBody;
 		$debug['errorCode'] = $errorCode;
 
-		if (!empty($responseBody['success'])) {
+		if (ApiHelpers::isSuccessResponse($responseCode)) {
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [
@@ -152,8 +153,8 @@ class FriendlyCaptcha implements CaptchaInterface
 			];
 		}
 
-		// Auth issues — bad/missing API key. Status 401/403 or specific error codes.
-		if (\in_array($responseCode, [401, 403], true) || \in_array($errorCode, self::ERROR_CODES_AUTH, true)) {
+		// Auth issues — bad/missing API key.
+		if (\in_array($errorCode, self::ERROR_CODES_AUTH, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaAuthError'),
@@ -205,7 +206,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		}
 
 		// Non-success HTTP status with no recognised error code (e.g. 5xx).
-		if ($responseCode < 200 || $responseCode >= 300) {
+		if (ApiHelpers::isErrorResponse($responseCode)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaHttpError'),

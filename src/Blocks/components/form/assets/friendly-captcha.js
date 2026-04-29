@@ -1,6 +1,6 @@
 /* global frcaptcha */
 
-import { StateEnum, prefix, setStateWindow } from './state-init';
+import { prefix, setStateWindow } from './state-init';
 
 /**
  * FriendlyCaptcha class.
@@ -29,10 +29,6 @@ export class FriendlyCaptcha {
 	 */
 	init() {
 		if (!this.state.getStateCaptchaIsUsed()) {
-			return;
-		}
-
-		if (this.state.getStateCaptchaType() !== StateEnum.CAPTCHA_TYPE_FRIENDLY) {
 			return;
 		}
 
