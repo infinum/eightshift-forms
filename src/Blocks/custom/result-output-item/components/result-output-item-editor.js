@@ -1,4 +1,3 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
 import { InnerBlocks } from '@wordpress/block-editor';

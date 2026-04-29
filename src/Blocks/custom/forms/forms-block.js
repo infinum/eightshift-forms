@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
 import { FormsEditor } from './components/forms-editor';

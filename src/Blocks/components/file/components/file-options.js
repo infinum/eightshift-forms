@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
@@ -20,7 +19,21 @@ import {
 } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { alignHorizontalVertical, buttonOutline, checks, cursorDisabled, fieldRequired, fileSize, fileType, files, googleTagManager, infoCircle, options, resetToZero, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	buttonOutline,
+	checks,
+	cursorDisabled,
+	fieldRequired,
+	fileSize,
+	fileType,
+	files,
+	googleTagManager,
+	infoCircle,
+	options,
+	resetToZero,
+	tools,
+} from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
 
 export const FileOptions = (attributes) => {

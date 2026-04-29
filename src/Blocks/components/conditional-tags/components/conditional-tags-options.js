@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
@@ -15,7 +15,14 @@ import {
 	Modal,
 	HStack,
 } from '@eightshift/ui-components';
-import { conditionH, conditionalVisibility, lightBulb, plusCircleFillAlt, trash, warningFillTransparent } from '@eightshift/ui-components/icons';
+import {
+	conditionH,
+	conditionalVisibility,
+	lightBulb,
+	plusCircleFillAlt,
+	trash,
+	warningFillTransparent,
+} from '@eightshift/ui-components/icons';
 import { getConstantsOptions } from '../../utils';
 import {
 	CONDITIONAL_TAGS_ACTIONS_LABELS,

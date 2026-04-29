@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
@@ -14,7 +14,20 @@ import {
 	ContainerGroup,
 	Modal,
 } from '@eightshift/ui-components';
-import { add, clipboard, data, dummySpacer, edit, formAlt, loopMode, reset, swap, tools, trash, warning } from '@eightshift/ui-components/icons';
+import {
+	add,
+	clipboard,
+	data,
+	dummySpacer,
+	edit,
+	formAlt,
+	loopMode,
+	reset,
+	swap,
+	tools,
+	trash,
+	warning,
+} from '@eightshift/ui-components/icons';
 import {
 	updateIntegrationBlocks,
 	resetInnerBlocks,

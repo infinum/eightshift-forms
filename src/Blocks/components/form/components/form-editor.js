@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import globalSettings from '../../../manifest.json';
 import manifest from '../manifest.json';

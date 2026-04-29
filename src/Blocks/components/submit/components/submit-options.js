@@ -1,6 +1,12 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { alignHorizontalVertical, cursorDisabled, googleTagManager, options, titleGeneric, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	cursorDisabled,
+	googleTagManager,
+	options,
+	titleGeneric,
+	tools,
+} from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';

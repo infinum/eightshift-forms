@@ -1,4 +1,3 @@
-import React from 'react';
 import { warningFillTransparent } from '@eightshift/ui-components/icons';
 import { getUtilsIcons } from '../../form/assets/state-init';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { SubmitEditor as SubmitEditorComponent } from '../../../components/submit/components/submit-editor';
 

@@ -1,9 +1,20 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, fieldValue, googleTagManager, options, readOnly, regex, resetToZero, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	cursorDisabled,
+	fieldPlaceholder,
+	fieldRequired,
+	fieldValue,
+	googleTagManager,
+	readOnly,
+	regex,
+	resetToZero,
+	tools,
+} from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	Select,

@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { getOption, checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
@@ -14,7 +13,20 @@ import {
 	Spacer,
 	Button,
 } from '@eightshift/ui-components';
-import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, googleTagManager, optionListAlt, options, readOnly, regex, resetToZero, titleGeneric, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	cursorDisabled,
+	fieldPlaceholder,
+	fieldRequired,
+	googleTagManager,
+	optionListAlt,
+	readOnly,
+	regex,
+	resetToZero,
+	titleGeneric,
+	tools,
+} from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,

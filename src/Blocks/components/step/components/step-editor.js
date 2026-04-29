@@ -1,4 +1,3 @@
-import React from 'react';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';

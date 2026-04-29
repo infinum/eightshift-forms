@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';

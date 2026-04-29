@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { AirtableEditor } from './components/airtable-editor';
 import { AirtableOptions } from './components/airtable-options';

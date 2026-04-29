@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { DateEditor as DateEditorComponent } from '../../../components/date/components/date-editor';
 

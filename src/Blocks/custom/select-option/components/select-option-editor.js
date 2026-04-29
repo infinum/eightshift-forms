@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { SelectOptionEditor as SelectOptionEditorComponent } from '../../../components/select-option/components/select-option-editor';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelect, select } from '@wordpress/data';
 import { InspectorControls } from '@wordpress/block-editor';
 import { FormSelectorEditor } from './components/form-selector-editor';

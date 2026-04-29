@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import ReactFlow, { MarkerType, Controls, Background, MiniMap, Position, Handle } from 'reactflow';
 import { camelCase } from '@eightshift/ui-components/utilities';
 

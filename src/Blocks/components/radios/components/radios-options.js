@@ -1,9 +1,17 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { alignHorizontalVertical, checks, fieldPlaceholder, fieldRequired, googleTagManager, optionListAlt, options, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	fieldPlaceholder,
+	fieldRequired,
+	googleTagManager,
+	optionListAlt,
+	options,
+	tools,
+} from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,

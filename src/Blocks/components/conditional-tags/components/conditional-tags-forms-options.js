@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { getAttrKey, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	BaseControl,
 	Select,
 	RichLabel,
 	Notice,

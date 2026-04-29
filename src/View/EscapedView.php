@@ -40,7 +40,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	/**
 	 * Get all SVG output tags.
 	 *
-	 * wp_kses lowercases all tag and attribute names before lookup (see wp_kses_split2, wp_kses_attr_check),
+	 * Wp_kses lowercases all tag and attribute names before lookup (see wp_kses_split2, wp_kses_attr_check),
 	 * so every key here must be lowercase — even camelCase SVG names like viewBox or linearGradient.
 	 *
 	 * @return array<string, array<string, bool>|true>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { PhoneEditor as PhoneEditorComponent } from '../../../components/phone/components/phone-editor';
 

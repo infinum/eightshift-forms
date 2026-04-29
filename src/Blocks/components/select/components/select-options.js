@@ -1,7 +1,19 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, files, googleTagManager, optionListAlt, options, range, resetToZero, search, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	cursorDisabled,
+	fieldPlaceholder,
+	fieldRequired,
+	files,
+	googleTagManager,
+	optionListAlt,
+	range,
+	resetToZero,
+	search,
+	tools,
+} from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,

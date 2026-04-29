@@ -1,11 +1,27 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { alignHorizontalVertical, checks, cursorDisabled, fieldPlaceholder, fieldRequired, fieldValue, googleTagManager, migrationAlt, options, order, readOnly, regex, search, titleGeneric, tools, visible } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	cursorDisabled,
+	fieldPlaceholder,
+	fieldRequired,
+	fieldValue,
+	googleTagManager,
+	migrationAlt,
+	options,
+	order,
+	readOnly,
+	regex,
+	search,
+	titleGeneric,
+	tools,
+	visible,
+} from '@eightshift/ui-components/icons';
 import {
 	FieldOptions,
 	FieldOptionsMore,

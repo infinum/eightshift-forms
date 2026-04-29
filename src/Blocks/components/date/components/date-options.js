@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
@@ -11,7 +10,21 @@ import {
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
 import { Select, Button, ContainerPanel, InputField, Toggle, ContainerGroup, Spacer } from '@eightshift/ui-components';
-import { alignHorizontalVertical, checks, cursorDisabled, dateTime, fieldPlaceholder, fieldRequired, fieldValue, googleTagManager, optionListAlt, options, readOnly, regex, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	cursorDisabled,
+	dateTime,
+	fieldPlaceholder,
+	fieldRequired,
+	fieldValue,
+	googleTagManager,
+	optionListAlt,
+	options,
+	readOnly,
+	regex,
+	tools,
+} from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';

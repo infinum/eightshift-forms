@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
@@ -10,7 +9,18 @@ import {
 } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { alignHorizontalVertical, checks, cursorDisabled, fieldRequired, googleTagManager, options, readOnly, star, titleGeneric, tools } from '@eightshift/ui-components/icons';
+import {
+	alignHorizontalVertical,
+	checks,
+	cursorDisabled,
+	fieldRequired,
+	googleTagManager,
+	options,
+	readOnly,
+	star,
+	titleGeneric,
+	tools,
+} from '@eightshift/ui-components/icons';
 import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 import { Slider } from '@eightshift/ui-components';

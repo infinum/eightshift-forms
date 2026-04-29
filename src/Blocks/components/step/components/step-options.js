@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { buttonFilled, options, tag } from '@eightshift/ui-components/icons';

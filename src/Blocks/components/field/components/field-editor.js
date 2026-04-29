@@ -1,7 +1,3 @@
-/* global esFormsLocalization */
-
-import React from 'react';
-import { __ } from '@wordpress/i18n';
 import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { StatusIconHidden, StatusFieldOutput } from './../../utils';
 import manifest from '../manifest.json';
@@ -32,7 +28,6 @@ export const FieldEditor = (attributes) => {
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
-	const fieldIsRequired = checkAttr('fieldIsRequired', attributes, manifest);
 
 	// Enable option to skip field and just render content.
 	if (fieldSkip) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { select } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { props, BlockInserter } from '@eightshift/frontend-libs-tailwind/scripts';

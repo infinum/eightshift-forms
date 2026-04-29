@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { ResultOutputEditor } from './components/result-output-editor';
 import { ResultOutputOptions } from './components/result-output-options';

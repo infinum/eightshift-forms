@@ -1,4 +1,3 @@
-import React from 'react';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AsyncSelect } from '@eightshift/ui-components';
 import { form } from '@eightshift/ui-components/icons';

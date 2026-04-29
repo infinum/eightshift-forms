@@ -1,4 +1,3 @@
-import React from 'react';
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { preventSaveOnMissingProps, StatusIconMissingName, StatusIconConditionals } from './../../utils';

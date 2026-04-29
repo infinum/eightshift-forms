@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { a11yWarning, checkSquare, cursorDisabled, hide, options, tools } from '@eightshift/ui-components/icons';

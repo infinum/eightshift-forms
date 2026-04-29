@@ -1,5 +1,3 @@
-/* @import 'choices.js/public/assets/styles/choices.min.css'; */
-
 @import 'tailwindcss' prefix(esf);
 @reference '../../../../tailwind.css';
 

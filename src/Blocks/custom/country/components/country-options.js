@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CountryOptions as CountryOptionsComponent } from '../../../components/country/components/country-options';
 

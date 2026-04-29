@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { RadioOptions as RadioOptionsComponent } from '../../../components/radio/components/radio-options';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { SettingsButton, GlobalSettingsButton } from '../../../components/utils';
 import { ContainerPanel, HStack } from '@eightshift/ui-components';

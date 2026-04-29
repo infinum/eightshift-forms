@@ -41,9 +41,9 @@
 		"lint-staged": "^16.4.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs-tailwind": "^3.1.0",
+		"@eightshift/frontend-libs-tailwind": "^3.1.1",
 		"@eightshift/ui-components": "^7.3.0",
-		"@tailwindcss/postcss": "^4.2.2",
+		"@tailwindcss/postcss": "^4.2.3",
 		"@tailwindcss/typography": "^0.5.19",
 		"autosize": "^6.0.1",
 		"baseline-browser-mapping": "^2.10.20",
@@ -52,7 +52,7 @@
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
 		"reactflow": "^11.11.4",
-		"tailwindcss": "^4.2.2",
+		"tailwindcss": "^4.2.3",
 		"tailwindcss-motion": "^1.1.1",
 		"tailwindcss-react-aria-components": "^2.1.0"
 	},

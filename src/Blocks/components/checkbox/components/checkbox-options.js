@@ -1,10 +1,19 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { Button, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { a11yWarning, alignHorizontalVertical, checkSquare, cursorDisabled, googleTagManager, hide, options, tools, trash } from '@eightshift/ui-components/icons';
+import {
+	a11yWarning,
+	alignHorizontalVertical,
+	checkSquare,
+	cursorDisabled,
+	googleTagManager,
+	hide,
+	options,
+	tools,
+	trash,
+} from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';

@@ -1,6 +1,6 @@
 /* global esFormsLocalization */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
@@ -21,7 +21,18 @@ import {
 	ContainerGroup,
 	Modal,
 } from '@eightshift/ui-components';
-import { codeVariable, emptyCircle, file, image, locationSettings, paletteColor, plusCircleFillAlt, tools, trash, visible } from '@eightshift/ui-components/icons';
+import {
+	codeVariable,
+	emptyCircle,
+	file,
+	image,
+	locationSettings,
+	paletteColor,
+	plusCircleFillAlt,
+	tools,
+	trash,
+	visible,
+} from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import {
 	FormEditButton,

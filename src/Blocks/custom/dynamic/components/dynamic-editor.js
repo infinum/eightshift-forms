@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { DynamicEditor as DynamicEditorComponent } from '../../../components/dynamic/components/dynamic-editor';
 

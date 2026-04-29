@@ -1,4 +1,3 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';

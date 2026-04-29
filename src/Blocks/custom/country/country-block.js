@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { CountryEditor } from './components/country-editor';
 import { CountryOptions } from './components/country-options';

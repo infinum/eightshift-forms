@@ -5,7 +5,17 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { conditionalVisibility, edit, globe, hide, idCard, layoutAlt, notebook, options, warning } from '@eightshift/ui-components/icons';
+import {
+	conditionalVisibility,
+	edit,
+	globe,
+	hide,
+	idCard,
+	layoutAlt,
+	notebook,
+	options,
+	warning,
+} from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AnimatedVisibility, RichLabel, Notice, Button, InputField, Tooltip } from '@eightshift/ui-components';
 import { unescapeHTML, camelCase } from '@eightshift/ui-components/utilities';

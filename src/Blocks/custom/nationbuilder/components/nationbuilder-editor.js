@@ -1,4 +1,3 @@
-import React from 'react';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { props, BlockInserter } from '@eightshift/frontend-libs-tailwind/scripts';
 import { additionalBlocksNoIntegration, FormEditor } from '../../../components/form/components/form-editor';

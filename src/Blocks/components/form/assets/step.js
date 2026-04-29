@@ -25,7 +25,7 @@ export class Steps {
 	 * Init steps.
 	 *
 	 * @param {string} formId Form Id.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	initOne(formId) {
@@ -33,29 +33,27 @@ export class Steps {
 			return;
 		}
 
-		window.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onInitEvent
-		);
+		window.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);
 	}
 
 	/**
 	 * Handle form submit in case of the step used and all logic.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} response Response from the API..
 	 *
 	 * @returns {void}
 	 */
 	formStepSubmit(formId, response) {
-		const {
-			status,
-			message,
-			data,
-		} = response;
+		const { status, message, data } = response;
 
 		if (status === 'success') {
-			this.goToNextStep(formId, data?.[this.state.getStateResponseOutputKey('stepNextStep')], parseInt(data?.[this.state.getStateResponseOutputKey('stepProgressBarItems')], 10), Boolean(data?.[this.state.getStateResponseOutputKey('stepIsDisableNextButton')]));
+			this.goToNextStep(
+				formId,
+				data?.[this.state.getStateResponseOutputKey('stepNextStep')],
+				parseInt(data?.[this.state.getStateResponseOutputKey('stepProgressBarItems')], 10),
+				Boolean(data?.[this.state.getStateResponseOutputKey('stepIsDisableNextButton')]),
+			);
 		} else {
 			const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
@@ -77,14 +75,17 @@ export class Steps {
 	 */
 	formStepSubmitAfter(formId, response) {
 		// Reset timeout for after each submit.
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 		}
 
 		// Hide global msg in any case after some time.
-		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-			this.utils.unsetGlobalMsg(formId);
-		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
+			() => {
+				this.utils.unsetGlobalMsg(formId);
+			},
+			parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
+		);
 
 		// Dispatch event.
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitEnd'), formId, response);
@@ -106,21 +107,28 @@ export class Steps {
 		}
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
-		const flow = [
-			...this.state.getStateFormStepsFlow(formId),
-			currentStep,
-		];
+		const flow = [...this.state.getStateFormStepsFlow(formId), currentStep];
 
 		this.setChangeStep(formId, nextStep, flow, progressBarItems, !this.state.getStateFormMultistepSkipScroll(formId));
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
-			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
+			this.state
+				.getStateFormStepsElement(nextStep, formId)
+				.querySelector(
+					`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`,
+				)
+				?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
 
 		// Hide next button directed from the api.
 		if (disableNextButton) {
-			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
+			this.state
+				.getStateFormStepsElement(nextStep, formId)
+				.querySelector(
+					`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`,
+				)
+				?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
 
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsGoToNextStep'), formId);
@@ -136,10 +144,8 @@ export class Steps {
 	goToPrevStep(formId) {
 		const flow = this.state.getStateFormStepsFlow(formId);
 
-		const nextStep =  flow.pop();
-		const newFlow = [
-			...flow,
-		];
+		const nextStep = flow.pop();
+		const newFlow = [...flow];
 
 		this.setChangeStep(formId, nextStep, newFlow, 0, !this.state.getStateFormMultistepSkipScroll(formId));
 
@@ -156,12 +162,13 @@ export class Steps {
 	 */
 	goToStepWithError(formId, errors) {
 		const flow = this.state.getStateFormStepsFlow(formId);
-		const nextStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null;
+		const nextStep =
+			Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) =>
+				arr.includes(Object.keys(errors)[0]),
+			)?.[0] || null;
 		const nextStepIndex = flow.findIndex((item) => item === nextStep);
 
-		const newFlow = [
-			...this.state.getStateFormStepsFlow(formId),
-		];
+		const newFlow = [...this.state.getStateFormStepsFlow(formId)];
 
 		// If index is found, remove all steps after that index.
 		if (nextStepIndex >= 0) {
@@ -189,7 +196,12 @@ export class Steps {
 		this.setChangeStep(formId, firstStep, [], 0, shouldScroll);
 
 		// Hide prev button.
-		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
+		this.state
+			.getStateFormStepsElement(firstStep, formId)
+			.querySelector(
+				`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`,
+			)
+			?.classList?.add(this.state.getStateSelector('isHidden'));
 
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsResetSteps'), formId);
 	}
@@ -229,7 +241,9 @@ export class Steps {
 		}
 
 		// Reset filled steps.
-		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
+		this.state
+			.getStateFormStepsElements(formId)
+			.forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
 
 		// Add filled to all filled steps.
 		flow.forEach((item) => {
@@ -271,7 +285,7 @@ export class Steps {
 			// Loop items count from state and output empty divs.
 			for (let index = 0; index < this.state.getStateFormStepsProgressBarCount(formId); index++) {
 				// Create div element.
-				const node = document.createElement("div");
+				const node = document.createElement('div');
 
 				// Output active elements.
 				if ((flow?.length === 0 && index === 0) || (flow?.length > 0 && index <= flow?.length)) {
@@ -287,17 +301,25 @@ export class Steps {
 			const currentStep = this.state.getStateFormStepsCurrent(formId);
 
 			// Remove active from current step.
-			this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelector('isActive'));
-	
+			this.state
+				.getStateFormStepsElementProgressBar(currentStep, formId)
+				?.classList?.remove(this.state.getStateSelector('isActive'));
+
 			// Add active to new step.
-			this.state.getStateFormStepsElementProgressBar(nextStep, formId)?.classList?.add(this.state.getStateSelector('isActive'));
-	
+			this.state
+				.getStateFormStepsElementProgressBar(nextStep, formId)
+				?.classList?.add(this.state.getStateSelector('isActive'));
+
 			// Reset filled steps.
-			this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
+			this.state
+				.getStateFormStepsElementsProgressBar(formId)
+				.forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
 
 			// Add filled to all filled steps.
 			flow.forEach((item) => {
-				this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelector('isFilled'));
+				this.state
+					.getStateFormStepsElementProgressBar(item, formId)
+					?.classList?.add(this.state.getStateSelector('isFilled'));
 			});
 		}
 	}
@@ -310,9 +332,7 @@ export class Steps {
 	 * @returns {array}
 	 */
 	getIgnoreFields(formId) {
-		const flow = [
-			...this.state.getStateFormStepsFlow(formId),
-		];
+		const flow = [...this.state.getStateFormStepsFlow(formId)];
 
 		flow.push(this.state.getStateFormStepsLastStep(formId));
 
@@ -335,14 +355,11 @@ export class Steps {
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	removeEvents() {
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onInitEvent
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);
 	}
 
 	/**
@@ -396,7 +413,7 @@ export class Steps {
 		form.classList.toggle(this.state.getStateSelector('isStepPreviewActive'));
 	};
 
-		////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
 

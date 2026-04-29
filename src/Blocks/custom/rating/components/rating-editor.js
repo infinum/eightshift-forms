@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { RatingEditor as RatingEditorComponent } from '../../../components/rating/components/rating-editor';
 

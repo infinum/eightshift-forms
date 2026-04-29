@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { TextareaEditor as TextareaEditorComponent } from '../../../components/textarea/components/textarea-editor';
 

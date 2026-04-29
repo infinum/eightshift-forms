@@ -8,7 +8,9 @@ import { Utils } from '../assets/utils';
 domReady(() => {
 	// Global variable must be set for everything to work.
 	if (typeof esFormsLocalization === 'undefined') {
-		throw Error('Your project is missing global variable "esFormsLocalization" called from the enqueue script in the forms.');
+		throw Error(
+			'Your project is missing global variable "esFormsLocalization" called from the enqueue script in the forms.',
+		);
 	}
 
 	// Bailout if no forms pages.

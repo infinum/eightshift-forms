@@ -1,4 +1,3 @@
-import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 import { prefix, setStateWindow } from './state-init';
 
 /**
@@ -76,10 +75,20 @@ export class Geolocation {
 
 			switch (type) {
 				case 'country':
-					this.utils.setManualSelectByAttributeValue(formId, name, [location], this.state.getStateAttribute('countryCode'));
+					this.utils.setManualSelectByAttributeValue(
+						formId,
+						name,
+						[location],
+						this.state.getStateAttribute('countryCode'),
+					);
 					break;
 				case 'phone':
-					this.utils.setManualPhonePrefixByAttributeValue(formId, name, location, this.state.getStateAttribute('countryCode'));
+					this.utils.setManualPhonePrefixByAttributeValue(
+						formId,
+						name,
+						location,
+						this.state.getStateAttribute('countryCode'),
+					);
 					break;
 			}
 		});

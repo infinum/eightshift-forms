@@ -1,8 +1,16 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { anchor, conditionH, lightBulb, options, plusCircleFillAlt, trash, visible } from '@eightshift/ui-components/icons';
+import {
+	anchor,
+	conditionH,
+	lightBulb,
+	options,
+	plusCircleFillAlt,
+	trash,
+	visible,
+} from '@eightshift/ui-components/icons';
 import { getAttrKey, checkAttr, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,

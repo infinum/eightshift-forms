@@ -1,4 +1,3 @@
-import React from 'react';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CountryEditor as CountryEditorComponent } from '../../../components/country/components/country-editor';
 

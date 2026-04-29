@@ -1,4 +1,3 @@
-import React from 'react';
 import { IntegrationsInternalOptions } from '../../../components/integrations/components/integrations-internal-options';
 import manifest from '../manifest.json';
 

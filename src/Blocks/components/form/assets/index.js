@@ -6,7 +6,9 @@ import { Utils } from './utils';
 
 // Global variable must be set for everything to work.
 if (typeof esFormsLocalization === 'undefined') {
-	throw Error('Your project is missing global variable "esFormsLocalization" called from the enqueue script in the forms.');
+	throw Error(
+		'Your project is missing global variable "esFormsLocalization" called from the enqueue script in the forms.',
+	);
 }
 
 // Set initial state.

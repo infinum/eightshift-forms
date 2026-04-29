@@ -1,12 +1,23 @@
 /* global esFormsLocalization */
 
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { isObject } from '@eightshift/ui-components/utilities';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { MultiSelect, InputField, Toggle, Spacer, ResponsiveLegacy, Slider, Notice } from '@eightshift/ui-components';
-import { a11yWarning, containerSpacing, fieldAfterText, fieldBeforeText, help, hide, moreH, options, paletteColor, tag, width } from '@eightshift/ui-components/icons';
+import {
+	a11yWarning,
+	containerSpacing,
+	fieldAfterText,
+	fieldBeforeText,
+	help,
+	hide,
+	moreH,
+	options,
+	paletteColor,
+	tag,
+	width,
+} from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';

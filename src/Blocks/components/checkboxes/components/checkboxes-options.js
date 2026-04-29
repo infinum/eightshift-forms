@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __, _n } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { AnimatedVisibility, Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import {
 	FieldOptions,
 	FieldOptionsMore,
 	FieldOptionsLayout,
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
-import { checks, fieldPlaceholder, fieldRequired, optionListAlt, options, tools } from '@eightshift/ui-components/icons';
+import { checks, fieldPlaceholder, fieldRequired, optionListAlt, tools } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
