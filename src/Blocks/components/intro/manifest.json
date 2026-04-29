@@ -13,6 +13,16 @@
 		},
 		"introSubtitle": {
 			"type": "string"
+		},
+		"introIcon": {
+			"type": "string"
+		},
+		"introType": {
+			"type": "string",
+			"default": "default"
+		},
+		"introActions": {
+			"type": "string"
 		}
 	}
 }

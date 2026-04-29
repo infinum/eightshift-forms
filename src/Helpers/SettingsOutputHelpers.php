@@ -51,12 +51,26 @@ final class SettingsOutputHelpers
 	{
 		return [
 			[
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Feature not active', 'eightshift-forms'),
-				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Oh no it looks like this feature is not active, please go to your <a href="%s">dashboard</a> and activate it.', 'eightshift-forms'), GeneralHelpers::getSettingsGlobalPageUrl(Config::SLUG_ADMIN_DASHBOARD)),
-				'highlightedContentIcon' => 'tools',
+				'component' => 'layout',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Feature not active', 'eightshift-forms'),
+						'introSubtitle' => \__('Oh no it looks like this feature is not active, please go to your dashboard and activate it.', 'eightshift-forms'),
+						'introIcon' => 'tools',
+						'introType' => 'highlighted',
+						'introActions' => [
+							[
+								'component' => 'button',
+								'buttonLabel' => \__('Go to dashboard', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl(Config::SLUG_ADMIN_DASHBOARD),
+							],
+						],
+					],
+				],
 			],
+
 		];
 	}
 
@@ -76,12 +90,24 @@ final class SettingsOutputHelpers
 		}
 
 		return [
-			[
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
-				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $title, GeneralHelpers::getSettingsGlobalPageUrl($type)),
-				'highlightedContentIcon' => 'tools',
+			'component' => 'layout',
+			'layoutContent' => [
+				[
+					'component' => 'intro',
+					'introTitle' => \__('Some config required', 'eightshift-forms'),
+					// translators: %s will be replaced with the integration name.
+					'introSubtitle' => \sprintf(\__('Before using %s you need to configure it in global settings.', 'eightshift-forms'), $title),
+					'introIcon' => 'tools',
+					'introType' => 'highlighted',
+					'introActions' => [
+						[
+							'component' => 'button',
+							'buttonLabel' => \__('Go to global settings', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($type),
+						],
+					],
+				],
 			],
 		];
 	}
@@ -95,7 +121,7 @@ final class SettingsOutputHelpers
 	{
 		return [
 			'component' => 'notice',
-			'noticeContent' => \__("Your form is missing form fields, please edit your form before making integration connection!", 'eightshift-forms'),
+			'noticeContent' => \__('Your form is missing form fields, please edit your form before making integration connection!', 'eightshift-forms'),
 		];
 	}
 

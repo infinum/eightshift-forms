@@ -33,6 +33,7 @@ abstract class AbstractFormBuilder
 		'layoutContent',
 		'cardInline',
 		'cardInlineRightContent',
+		'introActions',
 	];
 
 	/**

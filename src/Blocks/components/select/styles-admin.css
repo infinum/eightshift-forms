@@ -2,13 +2,10 @@
 @reference '../../../../tailwind.css';
 
 .choices {
-	@apply esf:relative esf:overflow-hidden esf:mb-24 esf:text-lg;
+	@apply esf:relative esf:overflow-hidden esf:text-sm;
 }
 .choices:focus {
 	@apply esf:outline-none;
-}
-.choices:last-child {
-	@apply esf:mb-0;
 }
 .choices.is-open {
 	@apply esf:overflow-visible;

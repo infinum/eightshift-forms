@@ -19,6 +19,7 @@ $buttonAttrs = Helpers::checkAttr('buttonAttrs', $attributes, $manifest);
 $buttonIcon = Helpers::checkAttr('buttonIcon', $attributes, $manifest);
 $buttonIconSize = Helpers::checkAttr('buttonIconSize', $attributes, $manifest);
 $buttonIsDisabled = Helpers::checkAttr('buttonIsDisabled', $attributes, $manifest);
+$buttonNewTab = Helpers::checkAttr('buttonNewTab', $attributes, $manifest);
 
 if (!$buttonLabel) {
 	return;
@@ -29,6 +30,11 @@ $outputTag = '';
 if ($buttonUrl) {
 	$outputTag = 'a';
 	$buttonAttrs['href'] = $buttonUrl;
+
+	if ($buttonNewTab) {
+		$buttonAttrs['target'] = '_blank';
+		$buttonAttrs['rel'] = 'noopener noreferrer';
+	}
 } else {
 	$outputTag = 'button';
 }

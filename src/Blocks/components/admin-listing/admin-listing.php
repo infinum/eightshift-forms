@@ -78,10 +78,17 @@ $additionalAttributes = [
 		<div class="esf:max-w-sm">
 			<div class="esf:bg-white esf:rounded-md esf:p-20">
 				<?php
-				echo Helpers::render('highlighted-content', [
-					'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
-					'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="esf-button-primary-outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
-					'highlightedContentIcon' => 'docsFormList',
+				echo Helpers::render('intro', [
+					'introTitle' => __('Need help?', 'eightshift-forms'),
+					'introSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms'),
+					'introIcon' => 'docsFormList',
+					'introType' => 'highlighted',
+					'introActions' => Helpers::render('button', [
+						'buttonLabel' => __('Visit Documentation', 'eightshift-forms'),
+						'buttonVariant' => 'primaryOutline',
+						'buttonUrl' => 'https://eightshift.com/forms/welcome/',
+						'buttonNewTab' => true,
+					]),
 				]);
 				?>
 			</div>

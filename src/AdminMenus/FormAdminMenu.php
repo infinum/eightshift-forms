@@ -370,86 +370,104 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
-					Helpers::render('highlighted-content', [
+					Helpers::render('intro', [
 						'highlightedContentTitle' => \__('Location list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							Your form is not assigned to any location.<br />
-							<br /><a class="esf-button-primary-outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateLocations',
+						'introSubtitle' => \__('Your form is not assigned to any location.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateLocations',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
 					$output = [
-						Helpers::render('highlighted-content', [
-							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
-							// Translators: %s is the link to the forms listing page.
-							'highlightedContentSubtitle' => \sprintf(\__('
-								Your don\'t have any result outputs in trash.<br />
-								<br /><a class="esf-button-primary-outline" href="%s">Go to result outputs</a>', 'eightshift-forms'), GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS, '', \esc_url($parent))),
-							'highlightedContentIcon' => 'emptyStateTrash',
+						Helpers::render('intro', [
+							'introTitle' => \__('Trash list is empty', 'eightshift-forms'),
+							'introSubtitle' => \__('Your don\'t have any result outputs in trash.', 'eightshift-forms'),
+							'introIcon' => 'emptyStateTrash',
+							'introType' => 'highlighted',
+							'introActions' => Helpers::render('button', [
+								'buttonLabel' => \__('Go to result outputs', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS, '', \esc_url($parent)),
+							]),
 						]),
 					];
 				} else {
 					$output = [
-						Helpers::render('highlighted-content', [
-							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
-							// Translators: %s is the link to the forms listing page.
-							'highlightedContentSubtitle' => \sprintf(\__('
-								Your don\'t have any form in trash.<br />
-								<br /><a class="esf-button-primary-outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-							'highlightedContentIcon' => 'emptyStateTrash',
+						Helpers::render('intro', [
+							'introTitle' => \__('Trash list is empty', 'eightshift-forms'),
+							'introSubtitle' => \__('Your don\'t have any form in trash.', 'eightshift-forms'),
+							'introIcon' => 'emptyStateTrash',
+							'introType' => 'highlighted',
+							'introActions' => Helpers::render('button', [
+								'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+							]),
 						]),
 					];
 				}
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Result output list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							Your don\'t have any result outputs.<br />
-							<br /><a class="esf-button-primary-outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateResults',
+					Helpers::render('intro', [
+						'introTitle' => \__('Result output list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('Your don\'t have any result outputs.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateResults',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Entry list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							You don\'t have any form entries on this form.<br />
-							<br /><a class="esf-button-primary-outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateEntries',
+					Helpers::render('intro', [
+						'introTitle' => \__('Entry list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('You don\'t have any form entries on this form.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateEntries',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Activity log list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							You don\'t have any activity logs on this form.<br />
-							<br /><a class="esf-button-primary-outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateEntries',
+					Helpers::render('intro', [
+						'introTitle' => \__('Activity log list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('You don\'t have any activity logs on this form.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateEntries',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			default:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('You have no forms', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							You don\'t have any forms to show.<br />
-							<br /><a class="esf-button-primary-outline" href="%s">Add your first form</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG))),
-						'highlightedContentIcon' => 'emptyStateFormList',
+					Helpers::render('intro', [
+						'introTitle' => \__('You have no forms', 'eightshift-forms'),
+						'introSubtitle' => \__('You don\'t have any forms to show.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateFormList',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Add your first form', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
+						]),
 					]),
 				];
 				break;

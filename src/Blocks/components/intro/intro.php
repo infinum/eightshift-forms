@@ -6,11 +6,20 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $introTitle = Helpers::checkAttr('introTitle', $attributes, $manifest);
 $introSubtitle = Helpers::checkAttr('introSubtitle', $attributes, $manifest);
 $introTitleType = Helpers::checkAttr('introTitleType', $attributes, $manifest);
+$introIcon = Helpers::checkAttr('introIcon', $attributes, $manifest);
+$introType = Helpers::checkAttr('introType', $attributes, $manifest);
+$introActions = Helpers::checkAttr('introActions', $attributes, $manifest);
+
+$introClasses = Helpers::clsx([
+	'esf:flex esf:flex-col esf:gap-5',
+	$introType === 'highlighted' ? 'esf:items-center esf:justify-center esf:text-center' : '',
+]);
 
 $introTitleClass = Helpers::clsx([
 	'esf:font-medium',
@@ -27,9 +36,22 @@ $introSubtitleClass = Helpers::clsx([
 	'esf:[&_li]:m-0',
 ]);
 
+$introIconClass = Helpers::clsx([
+	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-accent-600',
+]);
+
 ?>
 
-<div class="esf:flex esf:flex-col esf:gap-5">
+<div class="<?php echo esc_attr($introClasses); ?>">
+	<?php if ($introIcon) { ?>
+		<div class="<?php echo esc_attr($introIconClass); ?>">
+			<?php
+			echo wp_kses_post(UtilsHelper::getUtilsIcons($introIcon));
+			?>
+		</div>
+	<?php }
+	?>
+
 	<?php if ($introTitle) { ?>
 		<div class="<?php echo esc_attr($introTitleClass); ?>">
 			<?php echo esc_html($introTitle); ?>
@@ -40,5 +62,9 @@ $introSubtitleClass = Helpers::clsx([
 		<div class="<?php echo esc_attr($introSubtitleClass); ?>">
 			<?php echo wp_kses_post($introSubtitle); ?>
 		</div>
+	<?php } ?>
+
+	<?php if ($introActions) { ?>
+		<?php echo wp_kses_post($introActions); ?>
 	<?php } ?>
 </div>

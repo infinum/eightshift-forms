@@ -20,6 +20,10 @@
 		},
 		"buttonIsDisabled": {
 			"type": "boolean"
+		},
+		"buttonNewTab": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }
