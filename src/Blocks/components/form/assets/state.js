@@ -430,6 +430,12 @@ export class State {
 	getStateCaptchaHideBadge = () => {
 		return getState([StateEnum.CAPTCHA_HIDE_BADGE], StateEnum.CAPTCHA);
 	};
+	getStateCaptchaType = () => {
+		return getState([StateEnum.CAPTCHA_TYPE], StateEnum.CAPTCHA);
+	};
+	getStateCaptchaEndpoint = () => {
+		return getState([StateEnum.CAPTCHA_ENDPOINT], StateEnum.CAPTCHA);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Geolocation getters.
