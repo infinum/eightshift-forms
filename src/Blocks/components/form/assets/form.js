@@ -596,18 +596,34 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	runFormCaptcha(formId, filter = {}) {
+	async runFormCaptcha(formId, filter = {}) {
 		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
 
-		const actionName = this.state.getStateCaptchaSubmitAction();
-		const siteKey = this.state.getStateCaptchaSiteKey();
+		switch (this.state.getStateCaptchaType()) {
+			case StateEnum.CAPTCHA_TYPE_FRIENDLY: {
+				const widget = window[prefix]?.friendlyCaptcha;
+				const token = widget?.getResponse() ?? '';
 
-		if (this.state.getStateCaptchaIsEnterprise()) {
-			this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
-		} else {
-			this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
+				this.setFormDataCaptcha({
+					token,
+				});
+
+				await this.formSubmit(formId, filter);
+				break;
+			}
+			default: {
+				const actionName = this.state.getStateCaptchaSubmitAction();
+				const siteKey = this.state.getStateCaptchaSiteKey();
+
+				if (this.state.getStateCaptchaIsEnterprise()) {
+					this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
+				} else {
+					this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
+				}
+				break;
+			}
 		}
 	}
 

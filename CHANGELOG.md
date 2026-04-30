@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.2.0]
+
+### Added
+
+- Added Friendly Captcha as an alternative spam prevention provider alongside Google reCAPTCHA. Includes site key/API key configuration, EU endpoint toggle, automatic SDK loading, and mutual exclusivity with reCAPTCHA.
+
 ## [9.1.6]
 
 ### Changed
@@ -1813,6 +1819,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.2.0]: https://github.com/infinum/eightshift-forms/compare/9.1.6...9.2.0
 [9.1.6]: https://github.com/infinum/eightshift-forms/compare/9.1.5...9.1.6
 [9.1.5]: https://github.com/infinum/eightshift-forms/compare/9.1.4...9.1.5
 [9.1.4]: https://github.com/infinum/eightshift-forms/compare/9.1.3...9.1.4

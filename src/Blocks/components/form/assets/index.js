@@ -1,7 +1,7 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import { setStateInitial } from './state-init';
+import { StateEnum, setStateInitial } from './state-init';
 import { Utils } from './utils';
 
 // Global variable must be set for everything to work.
@@ -19,11 +19,19 @@ const utils = new Utils();
 const state = utils.getState();
 
 domReady(() => {
-	// Load captcha if using initial.
 	if (state.getStateCaptchaIsUsed()) {
-		import('./captcha').then(({ Captcha }) => {
-			new Captcha(utils).init();
-		});
+		switch (state.getStateCaptchaType()) {
+			case StateEnum.CAPTCHA_TYPE_FRIENDLY:
+				import('./friendly-captcha').then(({ FriendlyCaptcha }) => {
+					new FriendlyCaptcha(utils).init();
+				});
+				break;
+			default:
+				import('./captcha').then(({ Captcha }) => {
+					new Captcha(utils).init();
+				});
+				break;
+		}
 	}
 
 	if (!state.getStateSettingsFormDisableAutoInit()) {

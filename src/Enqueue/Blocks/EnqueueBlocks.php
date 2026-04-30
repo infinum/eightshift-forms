@@ -15,11 +15,15 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\SettingsSettings;
+use EightshiftForms\Captcha\FriendlyCaptcha;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
+use EightshiftForms\Captcha\SettingsRecaptcha;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
+use EightshiftForms\Enqueue\Captcha\EnqueueRecaptcha;
+use EightshiftForms\Enqueue\Captcha\EnqueueFriendlyCaptcha;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\FiltersOutputMock;
@@ -327,17 +331,37 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			'location' => $this->geolocation->getUsersGeolocation(),
 		];
 
-		// Check if Captcha data is set and valid.
+		// Build the single captcha payload. `type` discriminates the provider so the JS
+		// layer can render the right widget without probing multiple top-level keys.
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			$output['captcha'] = [
-				'isUsed' => true,
-				'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
-				'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
-				'submitAction' => SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'initAction' => SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
-				'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
-			];
+			$provider = SettingsCaptcha::getActiveProvider();
+
+			switch ($provider) {
+				case SettingsCaptcha::PROVIDER_FRIENDLY:
+					$output['captcha'] = [
+						'isUsed' => true,
+						'type' => SettingsCaptcha::PROVIDER_FRIENDLY,
+						'siteKey' => SettingsHelpers::getOptionWithConstant(
+							Variables::getFriendlyCaptchaSiteKey(),
+							SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY
+						),
+						'endpoint' => FriendlyCaptcha::getEndpoint(),
+						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+					];
+					break;
+				default:
+					$output['captcha'] = [
+						'isUsed' => true,
+						'type' => SettingsCaptcha::PROVIDER_GOOGLE,
+						'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+						'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY),
+						'submitAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+						'initAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+						'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+					];
+					break;
+			}
 		} else {
 			$output['captcha'] = [
 				'isUsed' => false,
@@ -362,20 +386,27 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	protected function getFrontendScriptDependencies(): array
 	{
-		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [];
-		}
+		$output = [];
 
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksFrontend']);
-		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
-			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+			$output = \apply_filters($scriptsDependency, []);
 		}
 
-		return [
-			"{$this->getAssetsPrefix()}-" . EnqueueCaptcha::CAPTCHA_ENQUEUE_HANDLE,
-			...$scriptsDependencyOutput,
-		];
+		switch (SettingsCaptcha::getActiveProvider()) {
+			case SettingsCaptcha::PROVIDER_FRIENDLY:
+				if (\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$output[] = "{$this->getAssetsPrefix()}-" . EnqueueFriendlyCaptcha::FRIENDLY_CAPTCHA_ENQUEUE_HANDLE;
+				}
+				break;
+			default:
+				if (\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$output[] = "{$this->getAssetsPrefix()}-" . EnqueueRecaptcha::CAPTCHA_ENQUEUE_HANDLE;
+				}
+				break;
+		}
+
+		return $output;
 	}
 }

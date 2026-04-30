@@ -12,16 +12,16 @@ namespace EightshiftForms\Enqueue\Captcha;
 
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsRecaptcha;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class EnqueueCaptcha
+ * Class EnqueueRecaptcha
  */
-class EnqueueCaptcha extends AbstractEnqueueTheme
+class EnqueueRecaptcha extends AbstractEnqueueTheme
 {
 	/**
 	 * Captcha enqueue handle.
@@ -47,7 +47,7 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 	 */
 	protected function getFrontendScriptDependencies(): array
 	{
-		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+		if (!\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [];
 		}
 
@@ -69,7 +69,7 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 	public function enqueueScriptsCaptcha(): void
 	{
 		// Check if Captcha data is set and valid.
-		$isSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		$isSettingsGlobalValid = \apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsGlobalValid) {
@@ -78,9 +78,9 @@ class EnqueueCaptcha extends AbstractEnqueueTheme
 
 		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
 
-		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY);
 
-		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
 		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
 
