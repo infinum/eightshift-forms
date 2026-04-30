@@ -132,6 +132,8 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
 										SettingsHelpers::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId),
@@ -163,6 +165,8 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							...($overrideGlobalSettingsPhone ? [
 								[
 									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
@@ -198,6 +202,8 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 						'tabContent' => [
 							[
 								'component' => 'select',
+								'selectIsRequired' => true,
+								'selectSingleSubmit' => true,
 								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 								'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY),
 								'selectContent' => $this->getCountrySettingsList(
@@ -212,7 +218,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							[
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Countries in dataset', 'eightshift-forms'),
-								'selectFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
+								'textareaFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
 								'textareaIsReadOnly' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'country',
@@ -246,6 +252,8 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								],
 								[
 									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
 									'selectContent' => $this->getCountrySettingsList(

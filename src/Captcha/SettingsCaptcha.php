@@ -122,8 +122,10 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 						'selectFieldLabel' => \__('Provider', 'eightshift-forms'),
 						// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
 						'selectFieldHelp' => \__('Pick which captcha service validates submissions. Switching the provider reloads the fields below.', 'eightshift-forms'),
+						'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
 						'selectSingleSubmit' => true,
-						'selectValue' => $provider,
+						'selectIsRequired' => true,
+						'selectValue' => SettingsHelpers::getOptionValue(self::SETTINGS_CAPTCHA_PROVIDER_KEY),
 						'selectContent' => [
 							[
 								'component' => 'select-option',

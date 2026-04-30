@@ -435,6 +435,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 									'component' => 'select',
 									'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_FALLBACK_LOG_LEVEL_KEY),
 									'selectValue' => $logLevel,
+									'selectSingleSubmit' => true,
+									'selectIsRequired' => true,
 									'selectFieldLabel' => \__('Log level', 'eightshift-forms'),
 									'selectFieldHelp' => \__('The log level to use for the activity log.', 'eightshift-forms'),
 									'selectContent' => [

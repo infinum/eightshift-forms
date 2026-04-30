@@ -24,6 +24,10 @@ $classes = Helpers::clsx([
 	$additionalClass,
 ]);
 
+$iconClass = Helpers::clsx([
+	'esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-24 esf:[&>svg]:h-24',
+]);
+
 ?>
 
 <div
@@ -32,7 +36,7 @@ $classes = Helpers::clsx([
 	<div class="esf:flex esf:flex-col esf:gap-10">
 		<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
 			<?php if ($cardInlineIcon) { ?>
-				<div class="esf:flex esf:items-center esf:justify-center esf:shrink-0 esf:[&>svg]:w-24 esf:[&>svg]:h-24">
+				<div class="<?php echo esc_attr($iconClass); ?>">
 					<?php echo wp_kses_post($cardInlineIcon); ?>
 				</div>
 			<?php } ?>
