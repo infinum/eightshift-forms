@@ -16,13 +16,13 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $globalMsgAttrs = [];
 
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
-$globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attributes, $manifest);
+$globalMsgTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg']);
 
-$globalMsgClass = Helpers::classnames([
+$globalMsgClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);
 
@@ -49,7 +49,7 @@ if (has_filter($filterName) && !is_admin()) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo Helpers::getAttrsOutput($globalMsgAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($globalMsgAttrs)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

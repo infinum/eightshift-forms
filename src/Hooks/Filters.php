@@ -159,6 +159,7 @@ final class Filters
 				'additionalAddonBlocks',
 				'mediaBreakpoints',
 				'tailwindSelectors',
+				'tailwindSelectorsAdmin',
 			],
 			'general' => [
 				'httpRequestTimeout',

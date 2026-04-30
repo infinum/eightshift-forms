@@ -203,9 +203,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		return \array_merge(
 			parent::getBlockEditorScriptDependencies(),
-			[
-				'lodash',
-			],
+			[],
 			$scriptsDependencyOutput
 		);
 	}

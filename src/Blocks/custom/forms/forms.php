@@ -88,7 +88,7 @@ if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 $twClassesData = FormsHelper::getTwSelectorsData($attributes);
 $twClasses = FormsHelper::getTwSelectors($twClassesData, ['forms']);
 
-$formsClass = Helpers::classnames([
+$formsClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'forms', $blockClass),
 	UtilsHelper::getStateSelector('forms'),
 	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
@@ -101,7 +101,7 @@ $formsClass = Helpers::classnames([
 <div
 	class="<?php echo esc_attr($formsClass); ?>"
 	<?php
-	echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	echo wp_kses_post(Helpers::getAttrsOutput($formAttrs));
 	?>>
 	<?php
 	foreach ($allForms as $formId) {
@@ -136,7 +136,6 @@ $formsClass = Helpers::classnames([
 		'loader',
 		Helpers::props('loader', $attributes, [
 			'loaderIsGeolocation' => true,
-			'loaderTwSelectorsData' => $twClassesData,
 		])
 	);
 	?>

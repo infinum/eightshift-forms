@@ -23,14 +23,8 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 
 ?>
 <div
-	class="<?php echo esc_attr("{$sectionClass}__item-details {$selectorJsItem}") ?>"
-	<?php
-	foreach ($additionalAttributes as $key => $value) {
-		if (!empty($key) && !empty($value)) {
-			echo wp_kses_post(" {$key}='" . $value . "'");
-		}
-	}
-	?>>
+	class="<?php echo esc_attr("$selectorJsItem") ?> esf:flex esf:flex-col esf:gap-8"
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
 	<?php
 	if ($items) {
 		foreach ($items as $item) {
@@ -46,42 +40,43 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			}
 
 			if ($status !== 'publish') {
-				$subtitle[] = '<span class="status-text">' . ucfirst($status) . '</span>';
+				$subtitle[] = '<span>' . ucfirst($status) . '</span>';
 			}
 
 			$itemTitle = get_the_title($id) ?: __('No title', 'eightshift-forms');
 
-			echo Helpers::render('card-inline', [
-				'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$id})" : ''),
-				'cardInlineTitleLink' => $item['editLink'] ?? '',
-				'cardInlineSubTitle' => implode('<span>|</span>', $subtitle),
-				'cardInlineIndented' => true,
-				'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-				'cardInlineRightContent' => Helpers::ensureString([
+			echo Helpers::render('card-listing', [
+				'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$id})" : ''),
+				'cardListingUrl' => $item['editLink'] ?? '',
+				'cardListingSubTitle' => implode('<span>|</span>', $subtitle),
+				'cardListingIcon' => UtilsHelper::getUtilsIcons('post'),
+				'cardListingRightContent' => Helpers::ensureString([
 					...($viewLink ? [
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $viewLink,
-							'submitValue' => __('View', 'eightshift-forms'),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonUrl' => $viewLink,
+							'buttonLabel' => __('View', 'eightshift-forms'),
 						]),
 					] : []),
 					...($editLink ? [
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $editLink,
-							'submitValue' => __('Edit', 'eightshift-forms'),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonUrl' => $editLink,
+							'buttonLabel' => __('Edit', 'eightshift-forms'),
 						]),
 					] : []),
+				]),
+				'additionalClass' => Helpers::clsx([
+					'esf:pl-10 esf:ml-30 esf:border-l esf:border-border',
 				]),
 			]);
 		}
 	} else {
-		echo Helpers::render('card-inline', [
-			'cardInlineTitle' => $emptyContent,
-			'cardInlineIndented' => true,
-			'cardInlineInvalid' => true,
+		echo Helpers::render('card-listing', [
+			'cardListingSubTitle' => $emptyContent,
+			'additionalClass' => Helpers::clsx([
+				'esf:pl-10 esf:ml-30 esf:border-l esf:border-border',
+			]),
 		]);
 	}
 	?>

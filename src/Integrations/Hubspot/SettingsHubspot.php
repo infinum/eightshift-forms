@@ -136,7 +136,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<mixed>
 	 */
 	public function getSettingsData(string $formId): array
 	{
@@ -165,7 +165,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'input',
@@ -228,15 +228,13 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyHubspot(),
@@ -246,7 +244,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

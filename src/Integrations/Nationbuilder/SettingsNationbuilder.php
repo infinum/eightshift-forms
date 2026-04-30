@@ -178,8 +178,6 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
 										'component' => 'field',
@@ -322,15 +320,13 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientIdNationBuilder(),
@@ -340,7 +336,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientSecretNationBuilder(),
@@ -350,7 +346,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getClientSlugNationBuilder(),
@@ -360,12 +356,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getOauthConnection($this->oauthNationbuilder->getOauthAuthorizeUrl(), OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY, self::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -390,8 +386,6 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'queue',
 								'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
-								'textareaSize' => 'huge',
-								'textareaLimitHeight' => true,
 							],
 						],
 					],

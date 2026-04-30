@@ -253,7 +253,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								...($personName ? [
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'intro',
@@ -270,8 +270,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									[
 										'component' => 'group',
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY),
-										'groupSaveOneField' => true,
-										'groupStyle' => 'default-listing',
 										'groupContent' => [
 											...\array_filter(\array_map(
 												function ($item) use ($mapParams, $personName, $personFields) {
@@ -316,7 +314,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'intro',
@@ -373,7 +371,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									...($useLead ? [
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -390,7 +388,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										],
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -425,7 +423,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										],
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -481,7 +479,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									...($useOrganization ? [
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -574,15 +572,13 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyPipedrive(),
@@ -592,7 +588,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

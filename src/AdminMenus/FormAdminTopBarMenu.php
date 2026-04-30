@@ -93,13 +93,16 @@ class FormAdminTopBarMenu implements ServiceInterface
 			);
 		}
 
+		// Inline style as this must be available in all locations where we don't have Tailwind CSS.
+		$titleWarning = "<span style='display: flex; align-items: center; gap: 5px;'>{$mainLabel} " . "<span style='color: red;'>" . UtilsHelper::getUtilsIcons('warning') . "</span></span>";
+
 		// Add main menu item.
 		$adminBar->add_menu(
 			[
 				'id' => $prefix,
 				'parent' => 'eightshift',
 				'group' => '',
-				'title' => $isDevelopMode ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
+				'title' => $isDevelopMode ? $titleWarning : $mainLabel,
 				'href' => GeneralHelpers::getListingPageUrl(),
 				'meta' => [
 					'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,

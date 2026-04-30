@@ -19,7 +19,7 @@ $resultAttrs = [
 	UtilsHelper::getStateAttribute('formId') => esc_attr($resultOutputFormPostId),
 ];
 
-$resultClass = Helpers::classnames([
+$resultClass = Helpers::clsx([
 	Helpers::selector($blockClass, $blockClass),
 	Helpers::selector($resultOutputHide, UtilsHelper::getStateSelector('isHidden')),
 	UtilsHelper::getStateSelector('resultOutput'),
@@ -29,7 +29,7 @@ $resultClass = Helpers::classnames([
 
 <div
 	class="<?php echo esc_attr($resultClass); ?>"
-	<?php echo Helpers::getAttrsOutput($resultAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($resultAttrs));
 	?>>
 	<?php
 	echo do_blocks(get_the_content(null, false, $resultOutputPostId)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped

@@ -10,9 +10,9 @@
 		"tabContent": {
 			"type": "string"
 		},
-		"tabNoBg": {
+		"tabWithBg": {
 			"type": "boolean",
-			"default": false
+			"default": true
 		}
 	}
 }

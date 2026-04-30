@@ -30,13 +30,15 @@ export class Export {
 	async submit(target) {
 		const formData = new FormData();
 
-		const field = this.state.getFormFieldElementByChild(target);
-		const formId = field?.getAttribute(this.state.getStateAttribute('formId'));
-		const type = field?.getAttribute(this.state.getStateAttribute('exportType'));
+		const formId = target.getAttribute(this.state.getStateAttribute('formId'));
+		const type = target.getAttribute(this.state.getStateAttribute('exportType'));
 
 		formData.append('formId', formId);
 		formData.append('type', type);
-		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
+		formData.append(
+			'ids',
+			document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')),
+		);
 
 		this.utils.showLoader(formId);
 
@@ -57,11 +59,7 @@ export class Export {
 			const response = await fetch(this.state.getRestUrl('export'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-				data,
-			} = parsedResponse;
+			const { message, status, data } = parsedResponse;
 
 			const exportContent = data?.[this.state.getStateResponseOutputKey('adminExportContent')];
 
@@ -76,23 +74,23 @@ export class Export {
 			setTimeout(() => {
 				this.utils.unsetGlobalMsg(this.FORM_ID);
 			}, 6000);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'adminExport', name, message));
 		}
-	};
+	}
 
 	isDisableButton(element) {
 		return element.classList.contains(this.state.getStateSelector('isDisabled'));
 	}
 
 	downloadCSVFromJson(arrayOfJson) {
-		const replacer = (key, value) => value === null ? '' : value;
+		const replacer = (key, value) => (value === null ? '' : value);
 		const header = Object.keys(arrayOfJson[0]);
-		let csv = arrayOfJson.map((row) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+		let csv = arrayOfJson.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(','));
 		csv.unshift(header.join(','));
 
 		return csv.join('\r\n');

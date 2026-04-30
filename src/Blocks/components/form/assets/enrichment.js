@@ -1,4 +1,4 @@
-import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 import { prefix, setStateWindow } from './state-init';
 
 /**
@@ -120,7 +120,11 @@ export class Enrichment {
 			[name]: typeof valueData === 'undefined' ? '' : valueData,
 		};
 
-		this.setLocalStorage(newStorage, this.state.getStateEnrichmentFormPrefillStorageName(formId), this.state.getStateEnrichmentExpirationPrefill());
+		this.setLocalStorage(
+			newStorage,
+			this.state.getStateEnrichmentFormPrefillStorageName(formId),
+			this.state.getStateEnrichmentExpirationPrefill(),
+		);
 	}
 
 	/**

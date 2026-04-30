@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { CalculatorEditor } from './components/calculator-editor';
 import { CalculatorOptions } from './components/calculator-options';

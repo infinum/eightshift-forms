@@ -45,18 +45,32 @@ final class SettingsOutputHelpers
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<int, array<string, list<array<string, list<array<string, string>>|string>>|string>>
 	 */
 	public static function getNoActiveFeature(): array
 	{
 		return [
 			[
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Feature not active', 'eightshift-forms'),
-				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Oh no it looks like this feature is not active, please go to your <a href="%s">dashboard</a> and activate it.', 'eightshift-forms'), GeneralHelpers::getSettingsGlobalPageUrl(Config::SLUG_ADMIN_DASHBOARD)),
-				'highlightedContentIcon' => 'tools',
+				'component' => 'layout',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Feature not active', 'eightshift-forms'),
+						'introSubtitle' => \__('Oh no it looks like this feature is not active, please go to your dashboard and activate it.', 'eightshift-forms'),
+						'introIcon' => 'tools',
+						'introType' => 'highlighted',
+						'introActions' => [
+							[
+								'component' => 'button',
+								'buttonLabel' => \__('Go to dashboard', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl(Config::SLUG_ADMIN_DASHBOARD),
+							],
+						],
+					],
+				],
 			],
+
 		];
 	}
 
@@ -65,7 +79,7 @@ final class SettingsOutputHelpers
 	 *
 	 * @param string $type Settings/Integration type.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<string, list<array<string, list<array<string, string>>|string>>|string>
 	 */
 	public static function getNoValidGlobalConfig(string $type): array
 	{
@@ -76,12 +90,24 @@ final class SettingsOutputHelpers
 		}
 
 		return [
-			[
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
-				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $title, GeneralHelpers::getSettingsGlobalPageUrl($type)),
-				'highlightedContentIcon' => 'tools',
+			'component' => 'layout',
+			'layoutContent' => [
+				[
+					'component' => 'intro',
+					'introTitle' => \__('Some config required', 'eightshift-forms'),
+					// translators: %s will be replaced with the integration name.
+					'introSubtitle' => \sprintf(\__('Before using %s you need to configure it in global settings.', 'eightshift-forms'), $title),
+					'introIcon' => 'tools',
+					'introType' => 'highlighted',
+					'introActions' => [
+						[
+							'component' => 'button',
+							'buttonLabel' => \__('Go to global settings', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($type),
+						],
+					],
+				],
 			],
 		];
 	}
@@ -94,10 +120,8 @@ final class SettingsOutputHelpers
 	public static function getDataMappedIntegrationMissingFields(): array
 	{
 		return [
-			'component' => 'intro',
-			'introSubtitle' => \__("Your form is missing form fields, please edit your form before making integration connection!", 'eightshift-forms'),
-			'introIsHighlighted' => true,
-			'introIsHighlightedImportant' => true,
+			'component' => 'notice',
+			'noticeContent' => \__('Your form is missing form fields, please edit your form before making integration connection!', 'eightshift-forms'),
 		];
 	}
 
@@ -112,13 +136,13 @@ final class SettingsOutputHelpers
 	{
 		return [
 			'component' => 'layout',
-			'layoutType' => 'layout-v-stack-card',
 			'layoutContent' => [
 				[
 					'component' => 'intro',
 					'introTitle' => \__('Disclaimer', 'eightshift-forms'),
 					// translators: %s will be replaced with the type of disclaimer.
 					'introSubtitle' => \sprintf(\__("Eightshift Forms doesn't configure the %s or any other third-party tools. However, enabling this feature adds necessary configurations in the backend for everything to function correctly.", 'eightshift-forms'), \esc_html($type)),
+					'introTitleType' => 'medium',
 				],
 			],
 		];
@@ -256,7 +280,7 @@ final class SettingsOutputHelpers
 		if ($constantName) {
 			// translators: %s will be replaced with global variable name.
 			$helpOutput .= \sprintf(\__('
-				<details class="is-filter-applied">
+				<details class="esf-is-filter-applied">
 					<summary>Available global variables</summary>
 					<ul>
 						<li>%s</li>
@@ -266,7 +290,7 @@ final class SettingsOutputHelpers
 				</details>', 'eightshift-forms'), $constantName);
 
 			if ($isConstantValueUsed) {
-				$helpOutput = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
+				$helpOutput = '<span class="esf-is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
 			}
 		}
 
@@ -290,13 +314,13 @@ final class SettingsOutputHelpers
 	public static function getTestApiConnection(string $key): array
 	{
 		return [
-			'component' => 'submit',
-			'submitValue' => \__('Test API connection', 'eightshift-forms'),
-			'submitVariant' => 'outline',
-			'submitAttrs' => [
+			'component' => 'button',
+			'buttonLabel' => \__('Test API connection', 'eightshift-forms'),
+			'buttonVariant' => 'primaryOutline',
+			'buttonAttrs' => [
 				UtilsHelper::getStateAttribute('testApiType') => $key,
 			],
-			'additionalClass' => UtilsHelper::getStateSelectorAdmin('testApi') . ' es-submit--api-test',
+			'additionalClass' => UtilsHelper::getStateSelectorAdmin('testApi'),
 		];
 	}
 
@@ -318,7 +342,6 @@ final class SettingsOutputHelpers
 
 		return [
 			'component' => 'layout',
-			'layoutType' => 'layout-v-stack-clean-full',
 			'layoutContent' => [
 				[
 					'component' => 'checkboxes',
@@ -337,10 +360,8 @@ final class SettingsOutputHelpers
 					]
 				],
 				$allowIsChecked ? [
-					'component' => 'intro',
-					'introSubtitle' => \__('Make sure you turn off the Oauth connection when the connection is created or it will turn off automatically after 5 minutes if your Cron events are set correctly. ', 'eightshift-forms'),
-					'introIsHighlighted' => true,
-					'introIsHighlightedImportant' => true,
+					'component' => 'notice',
+					'noticeContent' => \__('Make sure you turn off the Oauth connection when the connection is created or it will turn off automatically after 5 minutes if your Cron events are set correctly. ', 'eightshift-forms'),
 				] : [],
 				[
 					'component' => 'card-inline',
@@ -348,12 +369,11 @@ final class SettingsOutputHelpers
 					'cardInlineSubTitle' => $token ? \__('Oauth connected.', 'eightshift-forms') : \__('Oauth connection required!', 'eightshift-forms'),
 					'cardInlineRightContent' => [
 						[
-							'component' => 'submit',
-							'submitValue' => \__('Oauth Connect', 'eightshift-forms'),
-							'submitVariant' => $token ? 'success' : 'error',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $url,
-							'submitIsDisabled' => $allowIsChecked ? false : true,
+							'component' => 'button',
+							'buttonLabel' => \__('Oauth Connect', 'eightshift-forms'),
+							'buttonVariant' => $token ? 'primary' : 'primaryOutline',
+							'buttonUrl' => $url,
+							'buttonIsDisabled' => $allowIsChecked ? false : true,
 						],
 					],
 				],
@@ -385,7 +405,7 @@ final class SettingsOutputHelpers
 		// translators: %s will be replaced with form field names.
 		return \sprintf(\__('
 			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
-			<details class="is-filter-applied">
+			<details class="esf-is-filter-applied">
 				<summary>Available tags</summary>
 				<ul>
 					%s
@@ -410,7 +430,7 @@ final class SettingsOutputHelpers
 
 		// translators: %s will be replaced with integration response tags.
 		return \sprintf(\__('
-			<details class="is-filter-applied">
+			<details class="esf-is-filter-applied">
 				<summary>Response tags</summary>
 				<ul>
 					%s

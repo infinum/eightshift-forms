@@ -31,4 +31,8 @@
 		<exclude name="Generic.Files.LineLength.TooLong"/>
 	</rule>
 
+	<rule ref="Squiz.PHP.CommentedOutCode.Found">
+		<severity>0</severity>
+	</rule>
+
 </ruleset>

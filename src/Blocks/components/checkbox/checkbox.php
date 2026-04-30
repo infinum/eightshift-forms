@@ -29,14 +29,13 @@ $checkboxTracking = Helpers::checkAttr('checkboxTracking', $attributes, $manifes
 $checkboxSingleSubmit = Helpers::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
 $checkboxAttrs = Helpers::checkAttr('checkboxAttrs', $attributes, $manifest);
 $checkboxAsToggle = Helpers::checkAttr('checkboxAsToggle', $attributes, $manifest);
-$checkboxAsToggleSize = Helpers::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
 $checkboxHideLabelText = Helpers::checkAttr('checkboxHideLabelText', $attributes, $manifest);
 $checkboxHideLabel = Helpers::checkAttr('checkboxHideLabel', $attributes, $manifest);
 $checkboxHelp = Helpers::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Helpers::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 $checkboxIcon = Helpers::checkAttr('checkboxIcon', $attributes, $manifest);
 $checkboxIsHidden = Helpers::checkAttr('checkboxIsHidden', $attributes, $manifest);
-$checkboxTwSelectorsData = Helpers::checkAttr('checkboxTwSelectorsData', $attributes, $manifest);
+$checkboxTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
@@ -44,15 +43,14 @@ if ($checkboxAsToggle) {
 
 $twClasses = FormsHelper::getTwSelectors($checkboxTwSelectorsData, ['checkbox']);
 
-$checkboxClass = Helpers::classnames([
+$checkboxClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'checkbox', $componentClass),
-	Helpers::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($checkboxIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
-$checkboxInputClass = Helpers::classnames([
+$checkboxInputClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'checkbox', 'input', "{$componentClass}__input"),
 	Helpers::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
@@ -87,7 +85,7 @@ if ($checkboxTracking) {
 
 <div
 	class="<?php echo esc_attr($checkboxClass); ?>"
-	<?php echo Helpers::getAttrsOutput($checkboxFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($checkboxFieldAttrs));
 	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
 		<input
@@ -95,7 +93,7 @@ if ($checkboxTracking) {
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxName); ?>"
-			<?php echo Helpers::getAttrsOutput($checkboxAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			<?php echo wp_kses_post(Helpers::getAttrsOutput($checkboxAttrs));
 			?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?> />

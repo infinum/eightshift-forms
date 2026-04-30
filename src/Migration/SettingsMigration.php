@@ -102,14 +102,11 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
-				'introSubtitle' => \__('Backup the database before running a migration and clear all cache. <br /> The process is not reversible.', 'eightshift-forms'),
+				'component' => 'notice',
+				'noticeContent' => \__('Backup the database before running a migration and clear all cache. <br /> The process is not reversible.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
@@ -117,10 +114,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'cardInlineSubTitle' => \__('Breaking changes for Clearbit integration.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
+								'component' => 'button',
+								'buttonLabel' => \__('Migrate', 'eightshift-forms'),
+								'buttonVariant' => 'primaryGhost',
+								'buttonAttrs' => [
 									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_CLEARBIT,
 								],
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
@@ -129,7 +126,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
+						'dividerSeparator' => true,
 					],
 					[
 						'component' => 'card-inline',
@@ -137,10 +134,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'cardInlineSubTitle' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
+								'component' => 'button',
+								'buttonLabel' => \__('Migrate', 'eightshift-forms'),
+								'buttonVariant' => 'primaryGhost',
+								'buttonAttrs' => [
 									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
 								],
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
@@ -149,7 +146,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
+						'dividerSeparator' => true,
 					],
 					[
 						'component' => 'card-inline',
@@ -157,10 +154,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'cardInlineSubTitle' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
+								'component' => 'button',
+								'buttonLabel' => \__('Migrate', 'eightshift-forms'),
+								'buttonVariant' => 'primaryGhost',
+								'buttonAttrs' => [
 									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
 								],
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
@@ -169,7 +166,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
+						'dividerSeparator' => true,
 					],
 					[
 						'component' => 'card-inline',
@@ -177,10 +174,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'cardInlineSubTitle' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
+								'component' => 'button',
+								'buttonLabel' => \__('Migrate', 'eightshift-forms'),
+								'buttonVariant' => 'primaryGhost',
+								'buttonAttrs' => [
 									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
 								],
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
@@ -191,7 +188,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'textarea',

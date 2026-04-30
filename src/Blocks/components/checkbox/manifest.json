@@ -77,9 +77,6 @@
 		"checkboxHelp": {
 			"type": "string"
 		},
-		"checkboxAsToggleSize": {
-			"type": "string"
-		},
 		"checkboxDisabledOptions": {
 			"type": "array"
 		},

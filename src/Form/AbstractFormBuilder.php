@@ -33,6 +33,7 @@ abstract class AbstractFormBuilder
 		'layoutContent',
 		'cardInline',
 		'cardInlineRightContent',
+		'introActions',
 	];
 
 	/**
@@ -113,7 +114,8 @@ abstract class AbstractFormBuilder
 			$component === 'radios' ||
 			$component === 'group' ||
 			$component === 'layout' ||
-			$component === 'tabs'
+			$component === 'tabs' ||
+			$component === 'cardInline'
 		) {
 			$output = '';
 
@@ -159,10 +161,6 @@ abstract class AbstractFormBuilder
 
 		if (isset($attributes['additionalFieldClass'])) {
 			$additionalAttributes['additionalFieldClass'] = $attributes['additionalFieldClass'];
-		}
-
-		if (isset($attributes['additionalGroupClass'])) {
-			$additionalAttributes['additionalGroupClass'] = $attributes['additionalGroupClass'];
 		}
 
 		// Build the component.

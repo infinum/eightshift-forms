@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { DateEditor } from './components/date-editor';
 import { DateOptions } from './components/date-options';

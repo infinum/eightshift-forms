@@ -165,7 +165,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<mixed>
 	 */
 	public function getSettingsData(string $formId): array
 	{
@@ -197,7 +197,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 										'checkboxValue' => self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								]
 							],
@@ -273,8 +272,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'textareaIsPreventSubmit' => true,
 									'textareaName' => 'queue',
 									'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
-									'textareaSize' => 'huge',
-									'textareaLimitHeight' => true,
 								],
 							],
 						],
@@ -288,7 +285,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								$this->getSettingsGlobalMap(
 									$this->hubspotClient->getContactProperties(),
@@ -345,37 +342,55 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 		return [
 			'component' => 'group',
 			'groupName' => SettingsHelpers::getOptionName($key),
-			'groupSaveOneField' => true,
-			'groupStyle' => 'default-listing',
 			'groupContent' => [
 				[
-					'component' => 'field',
-					'fieldLabel' => '<b>' . \__('Clearbit field', 'eightshift-forms') . '</b>',
-					'fieldContent' => '<b>' . \__('HubSpot property', 'eightshift-forms') . '</b>',
-					'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-					'fieldIsFiftyFiftyHorizontal' => true,
+					'component' => 'layout',
+					'layoutContent' => [
+						[
+							'component' => 'intro',
+							'introTitle' => \__('Clearbit field', 'eightshift-forms'),
+							'introTitleType' => 'medium',
+						],
+						[
+							'component' => 'intro',
+							'introTitle' => \__('HubSpot property', 'eightshift-forms'),
+							'introTitleType' => 'medium',
+						],
+					],
+					'layoutType' => 'layout-grid-half',
+					'layoutWithBg' => false,
 				],
 				...\array_map(
 					static function ($item) use ($clearbitMapValue, $properties) {
 						$selectedValue = $clearbitMapValue[$item] ?? '';
 						return [
-							'component' => 'select',
-							'selectName' => $item,
-							'selectFieldLabel' => '<code>' . $item . '</code>',
-							'selectFieldBeforeContent' => '&rarr;',
-							'selectFieldIsFiftyFiftyHorizontal' => true,
-							'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
-							'selectContent' => \array_map(
-								static function ($option) use ($selectedValue) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $option,
-										'selectOptionValue' => $option,
-										'selectOptionIsSelected' => $selectedValue === $option,
-									];
-								},
-								$properties
-							),
+							'component' => 'layout',
+							'layoutType' => 'layout-grid-half',
+							'layoutWithBg' => false,
+							'layoutContent' => [
+								[
+									'component' => 'intro',
+									'introTitle' => $item,
+									'introTitleType' => 'small',
+								],
+								[
+									'component' => 'select',
+									'selectName' => $item,
+									'selectFieldHideLabel' => true,
+									'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+									'selectContent' => \array_map(
+										static function ($option) use ($selectedValue) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $option,
+												'selectOptionValue' => $option,
+												'selectOptionIsSelected' => $selectedValue === $option,
+											];
+										},
+										$properties
+									),
+								],
+							],
 						];
 					},
 					$clearbitAvailableKeys

@@ -268,7 +268,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 							...($isUsed ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -288,7 +288,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									'component' => 'textarea',
 									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_KEY),
 									'textareaFieldLabel' => \__('Recipient e-mail advanced', 'eightshift-forms'),
-									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Specify additional emails based on field values.<br />
@@ -324,7 +323,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -340,7 +339,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'textarea',
@@ -373,7 +372,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -388,7 +387,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -418,7 +417,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -438,7 +437,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								...($isSenderUsed ? [
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'select',
@@ -461,7 +460,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'input',
@@ -477,7 +476,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'textarea',
@@ -492,7 +491,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkboxes',
@@ -534,11 +533,10 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
-						'introSubtitle' => \__('Mailer uses the built-in WordPress mailing system.<br /><br />If using an external mailing service, configure it manually or through a plugin.', 'eightshift-forms'),
+						'introSubtitle' => \__('Mailer uses the built-in WordPress mailing system.<br />If using an external mailing service, configure it manually or through a plugin.', 'eightshift-forms'),
 					],
 				],
 			],

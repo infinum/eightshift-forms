@@ -178,7 +178,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 							...($useEvents ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
@@ -211,13 +211,11 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								...(($eventsEmailFieldValue && $eventsEventNameValue) ? [
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'group',
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
-										'groupSaveOneField' => true,
-										'groupStyle' => 'default-listing',
 										'groupContent' => [
 											[
 												'component' => 'field',
@@ -308,15 +306,13 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyMoments(),
@@ -326,7 +322,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUrlMoments(),
@@ -336,7 +332,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

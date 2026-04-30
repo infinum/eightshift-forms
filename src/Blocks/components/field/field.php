@@ -52,7 +52,6 @@ $fieldAttrsLabel = Helpers::checkAttr('fieldAttrsLabel', $attributes, $manifest)
 $fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
 $fieldInlineBeforeAfterContent = Helpers::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
-$fieldIsFiftyFiftyHorizontal = Helpers::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
 $fieldTypeCustom = Helpers::checkAttr('fieldTypeCustom', $attributes, $manifest);
 $fieldTracking = Helpers::checkAttr('fieldTracking', $attributes, $manifest);
 $fieldTypeInternal = Helpers::checkAttr('fieldTypeInternal', $attributes, $manifest);
@@ -85,7 +84,7 @@ $twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
 	$selectorClass,
 ]);
 
-$fieldClass = Helpers::classnames([
+$fieldClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'field', $componentClass),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field', "{$componentClass}--{$selectorClass}"),
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
@@ -95,52 +94,51 @@ $fieldClass = Helpers::classnames([
 	UtilsHelper::getStateSelector('field'),
 	Helpers::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
 	Helpers::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
-	Helpers::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,
 ]);
 
-$labelClass = Helpers::classnames([
+$labelClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 ]);
 
-$labelInnerClass = Helpers::classnames([
+$labelInnerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
 ]);
 
-$innerClass = Helpers::classnames([
+$innerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-inner'),
 ]);
 
-$contentClass = Helpers::classnames([
+$contentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content'),
 ]);
 
-$beforeContentClass = Helpers::classnames([
+$beforeContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-before-content'),
 ]);
 
-$suffixContentClass = Helpers::classnames([
+$suffixContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'suffix-content', "{$componentClass}__suffix-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-suffix-content'),
 ]);
 
-$afterContentClass = Helpers::classnames([
+$afterContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-after-content'),
 ]);
 
-$helpClass = Helpers::classnames([
+$helpClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-help'),
 ]);
 
-$contentWrapClass = Helpers::classnames([
+$contentWrapClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
@@ -182,7 +180,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo Helpers::getAttrsOutput($fieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($fieldAttrs));
 	?>>
 
 	<?php
@@ -204,7 +202,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				<?php
-				echo Helpers::getAttrsOutput($fieldAttrsLabel); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				echo wp_kses_post(Helpers::getAttrsOutput($fieldAttrsLabel));
 				?>>
 				<span class="<?php echo esc_attr($labelInnerClass); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>
@@ -260,7 +258,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 				Helpers::props('error', $attributes, [
 					'errorId' => $fieldId,
 					'selectorClass' => $componentClass,
-					'additionalClass' => Helpers::classnames([
+					'additionalClass' => Helpers::clsx([
 						FormsHelper::getTwPart($twClasses, 'field', 'error'),
 						FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
 					]),

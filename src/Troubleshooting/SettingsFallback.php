@@ -304,18 +304,16 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('View all activity logs in database', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitVariant' => 'ghost',
-								'submitButtonAsLink' => true,
-								'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS, $formId),
-								'submitValue' => \__('View', 'eightshift-forms'),
+								'component' => 'button',
+								'buttonVariant' => 'primaryGhost',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS, $formId),
+								'buttonLabel' => \__('View', 'eightshift-forms'),
 							],
 						],
 					],
@@ -366,22 +364,20 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							...($activityLogUse ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'layout',
-									'layoutType' => 'layout-v-stack-clean',
 									'layoutContent' => [
 										[
 											'component' => 'card-inline',
 											'cardInlineTitle' => \__('View all activity logs in database', 'eightshift-forms'),
 											'cardInlineRightContent' => [
 												[
-													'component' => 'submit',
-													'submitVariant' => 'ghost',
-													'submitButtonAsLink' => true,
-													'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
-													'submitValue' => \__('View all activity logs', 'eightshift-forms'),
+													'component' => 'button',
+													'buttonVariant' => 'primaryGhost',
+													'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
+													'buttonLabel' => \__('View all activity logs', 'eightshift-forms'),
 												],
 											],
 										],
@@ -421,7 +417,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								] : []),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -433,12 +429,14 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
 									'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_FALLBACK_LOG_LEVEL_KEY),
 									'selectValue' => $logLevel,
+									'selectSingleSubmit' => true,
+									'selectIsRequired' => true,
 									'selectFieldLabel' => \__('Log level', 'eightshift-forms'),
 									'selectFieldHelp' => \__('The log level to use for the activity log.', 'eightshift-forms'),
 									'selectContent' => [
@@ -490,7 +488,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 				[
 					'component' => 'divider',
-					'dividerExtraVSpacing' => true,
+					'dividerSeparator' => true,
 				],
 				[
 					'component' => 'input',
@@ -1077,7 +1075,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'component' => 'checkbox',
 				'checkboxLabel' => $key,
 				// translators: %1$s will be replaced with the flag label. %2$s will be replaced with the recommended text.
-				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="info-strong">Recommended.</strong>', 'eightshift-forms') : '')),
+				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="esf:text-accent esf:font-medium">Recommended.</strong>', 'eightshift-forms') : '')),
 				'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($key, self::SETTINGS_FALLBACK_FLAGS_KEY),
 				'checkboxValue' => $key,
 				'checkboxAsToggle' => true,

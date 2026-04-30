@@ -10,13 +10,15 @@ export class Increment {
 	}
 
 	init() {
-		document.querySelectorAll(this.selector).forEach((element) => element.addEventListener('click', this.onClick, true));
+		document
+			.querySelectorAll(this.selector)
+			.forEach((element) => element.addEventListener('click', this.onClick, true));
 	}
 
 	onClick = (event) => {
 		event.preventDefault();
 
-		if(!confirm(this.confirmMsg)) {
+		if (!confirm(this.confirmMsg)) {
 			return;
 		}
 
@@ -24,13 +26,11 @@ export class Increment {
 	};
 
 	async submit(target) {
-
 		const formId = this.state.getFormIdByElement(target);
-		const field = this.state.getFormFieldElementByChild(target);
 
 		const formData = new FormData();
 
-		formData.append('formId', field.getAttribute(this.state.getStateAttribute('formId')));
+		formData.append('formId', target.getAttribute(this.state.getStateAttribute('formId')));
 		this.utils.showLoader(formId);
 
 		// Populate body data.
@@ -50,10 +50,7 @@ export class Increment {
 			const response = await fetch(this.state.getRestUrl('increment'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-			} = parsedResponse;
+			const { message, status } = parsedResponse;
 
 			this.utils.hideLoader(formId);
 			this.utils.setGlobalMsg(formId, message, status);
@@ -61,12 +58,12 @@ export class Increment {
 			setTimeout(() => {
 				location.reload();
 			}, 1000);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'adminIncrement', name, message));
 		}
-	};
+	}
 }

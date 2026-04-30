@@ -1,11 +1,33 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { select, useDispatch, useSelect, dispatch } from "@wordpress/data";
+import { select, useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Button, PanelBody, Modal } from '@wordpress/components';
-import { icons, Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
+import {
+	BaseControl,
+	Select,
+	RichLabel,
+	Button,
+	ContainerPanel,
+	ContainerGroup,
+	Modal,
+} from '@eightshift/ui-components';
+import {
+	add,
+	clipboard,
+	data,
+	dummySpacer,
+	edit,
+	formAlt,
+	loopMode,
+	reset,
+	swap,
+	tools,
+	trash,
+	warning,
+} from '@eightshift/ui-components/icons';
 import {
 	updateIntegrationBlocks,
 	resetInnerBlocks,
@@ -31,7 +53,7 @@ export const IntegrationsOptions = ({
 }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
-		// Check if form selector has inner blocks.
+	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
 		const blocks = select('core/block-editor').getBlock(clientId);
 
@@ -73,89 +95,112 @@ export const IntegrationsOptions = ({
 
 		return (
 			<Modal
-				className='es-modal-max-width-xxl es-rounded-3!'
-				title={<IconLabel icon={icons.clipboard} label={__('Sync report', 'eightshift-forms')} standalone />}
+				title={
+					<RichLabel
+						icon={clipboard}
+						label={__('Sync report', 'eightshift-forms')}
+					/>
+				}
 				onRequestClose={() => {
 					setModalOpen(false);
 					dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(false);
 				}}
 			>
-				<Section
+				<ContainerGroup
 					showIf={added.length > 0}
-					icon={icons.add}
+					icon={add}
 					label={__('Added fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-green-500!'
-					noBottomSpacing={changed.length < 1 && replaced.length < 1 && removed?.length < 1}
 				>
-					<div className='es-v-spaced'>
-						{added.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
+					<div>
+						{added.map((item, i) => (
+							<RichLabel
+								icon={dummySpacer}
+								label={item}
+								key={i}
+							/>
+						))}
 					</div>
-				</Section>
+				</ContainerGroup>
 
-				<Section
-					showIf={removed.length > 0} icon={icons.trash}
+				<ContainerGroup
+					showIf={removed.length > 0}
+					icon={trash}
 					label={__('Removed fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-red-500!'
-					noBottomSpacing={changed.length < 1 && replaced.length < 1}
 				>
-					<div className='es-v-spaced'>
-						{removed.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
+					<div>
+						{removed.map((item, i) => (
+							<RichLabel
+								icon={dummySpacer}
+								label={item}
+								key={i}
+							/>
+						))}
 					</div>
-				</Section>
+				</ContainerGroup>
 
-				<Section
+				<ContainerGroup
 					showIf={replaced.length > 0}
-					icon={icons.swap}
+					icon={swap}
 					label={__('Replaced fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-yellow-500!'
-					noBottomSpacing={changed.length < 1}
 				>
-					<div className='es-v-spaced'>
-						{replaced.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
+					<div>
+						{replaced.map((item, i) => (
+							<RichLabel
+								icon={dummySpacer}
+								label={item}
+								key={i}
+							/>
+						))}
 					</div>
-				</Section>
+				</ContainerGroup>
 
-				<Section
+				<ContainerGroup
 					showIf={changed.length > 0}
-					icon={icons.edit}
+					icon={edit}
 					label={__('Updated field attributes', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-blue-500!'
-					noBottomSpacing
 				>
-					<div className='es-v-spaced'>
-						{changed.map((item, i) =>
-							<IconLabel
-								icon={icons.dummySpacer}
+					<div>
+						{changed.map((item, i) => (
+							<RichLabel
+								icon={dummySpacer}
 								label={
 									<span key={i}>
 										<code>{Object.keys(item)[0]}</code>: {Object.values(item)[0].join(', ')}
 									</span>
 								}
 								key={i}
-								standalone
-							/>)
-						}
+							/>
+						))}
 					</div>
-				</Section>
+				</ContainerGroup>
 			</Modal>
 		);
 	};
 
 	return (
 		<>
-			<PanelBody title={title}>
-				<Control>
-					<div className='es-fifty-fifty-h es-gap-2!'>
+			<ContainerPanel title={title}>
+				<BaseControl>
+					<div>
 						<SettingsButton />
 						<LocationsButton />
 					</div>
-				</Control>
+				</BaseControl>
 
-				<Section icon={icons.tools} label={__('Integration options', 'eightshift-forms')}>
+				<ContainerGroup
+					icon={tools}
+					label={__('Integration options', 'eightshift-forms')}
+				>
 					<Select
-						icon={icons.formAlt}
+						icon={formAlt}
 						label={__('Select a form to display', 'eightshift-forms')}
-						help={!(innerIdKey && itemId) && __('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+						help={
+							!(innerIdKey && itemId) &&
+							__(
+								"If you don't see a form in the list, start typing its name while the dropdown is open.",
+								'eightshift-forms',
+							)
+						}
 						value={itemId}
 						options={formItems}
 						onChange={(value) => {
@@ -175,15 +220,16 @@ export const IntegrationsOptions = ({
 								}
 							}
 						}}
-						reducedBottomSpacing={innerIdKey && itemId}
-						closeMenuAfterSelect
 						simpleValue
 						clearable
 					/>
 
-					{(innerIdKey && itemId) &&
+					{innerIdKey && itemId && (
 						<Select
-							help={__('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+							help={__(
+								"If you don't see a form in the list, start typing its name while the dropdown is open.",
+								'eightshift-forms',
+							)}
 							value={innerId}
 							options={formInnerItems}
 							onChange={(value) => {
@@ -195,100 +241,107 @@ export const IntegrationsOptions = ({
 									setAttributes({ [innerIdKey]: value.toString() });
 								}
 							}}
-							closeMenuAfterSelect
 							simpleValue
 							clearable
 						/>
-					}
+					)}
 
-					{hasInnerBlocks &&
-						<div className={'es-border-t-gray-300 es-mt-5 es-pt-5'}>
-							<Control
-								help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
-								additionalClasses={'es-border-b-gray-300 es-pb-5'}
+					{hasInnerBlocks && (
+						<div>
+							<BaseControl
+								help={__(
+									'Syncs the current form with the integration. Unsaved changes will be lost!',
+									'eightshift-forms',
+								)}
 							>
 								<Button
-									icon={icons.loopMode}
+									icon={loopMode}
 									onClick={() => {
 										// Sync integration blocks.
 										syncIntegrationBlocks(clientId, postId).then((val) => {
 											if (val?.status === 'error') {
-												createNotice(
-													'error',
-													val?.message,
-													{
-														type: 'snackbar',
-														icon: '❌',
-													}
-												);
+												createNotice('error', val?.message, {
+													type: 'snackbar',
+													icon: '❌',
+												});
 											} else {
 												createNotice(
 													val?.update ? 'success' : 'info',
-													val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'),
+													val?.update
+														? __('Sync complete!', 'eightshift-forms')
+														: __('Nothing synced, form is up-to-date', 'eightshift-forms'),
 													{
 														type: 'snackbar',
 														icon: '✅',
-													}
+													},
 												);
 											}
 										});
 									}}
-									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 								>
 									{__('Sync integration', 'eightshift-forms')}
 								</Button>
 
-								{Object.keys(modalContent).length > 0 &&
+								{Object.keys(modalContent).length > 0 && (
 									<Button
 										onClick={() => {
 											setModalOpen(true);
 											dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(true);
 										}}
-										className='es-rounded-1 es-mt-1 es-font-weight-500'
 									>
 										{__('View changes', 'eightshift-forms')}
 									</Button>
-								}
-							</Control>
+								)}
+							</BaseControl>
 
-							<Control help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}>
+							<BaseControl
+								help={__(
+									'Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.',
+									'eightshift-forms',
+								)}
+							>
 								<Button
-									icon={icons.data}
+									icon={data}
 									onClick={() => {
 										// Sync integration blocks.
-										clearTransientCache(block).then((msg) => createNotice('success', msg, {
-											type: 'snackbar',
-										}));
+										clearTransientCache(block).then((msg) =>
+											createNotice('success', msg, {
+												type: 'snackbar',
+											}),
+										);
 									}}
-									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 								>
 									{__('Clear cache', 'eightshift-forms')}
 								</Button>
-							</Control>
+							</BaseControl>
 						</div>
-					}
-				</Section>
+					)}
+				</ContainerGroup>
 
-				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')} noBottomSpacing>
-					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')} noBottomSpacing>
+				<ContainerGroup
+					icon={warning}
+					label={__('Danger zone', 'eightshift-forms')}
+				>
+					<BaseControl
+						help={__(
+							'If you want to use a different integration for this form. Current configuration will be deleted.',
+							'eightshift-forms',
+						)}
+					>
 						<Button
-							icon={icons.reset}
+							icon={reset}
 							onClick={() => {
 								// Reset block to original state.
 								resetInnerBlocks(clientId, true);
 							}}
-							className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 						>
 							{__('Reset form', 'eightshift-forms')}
 						</Button>
-					</Control>
-				</Section>
+					</BaseControl>
+				</ContainerGroup>
 
-				{isModalOpen &&
-					<SyncModal />
-				}
-
-			</PanelBody>
+				{isModalOpen && <SyncModal />}
+			</ContainerPanel>
 
 			<StepMultiflowOptions
 				{...props('step', attributes, {

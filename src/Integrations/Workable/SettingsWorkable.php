@@ -172,15 +172,13 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyWorkable(),
@@ -190,7 +188,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getSubdomainWorkable(),
@@ -200,7 +198,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -228,7 +226,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'select',
@@ -265,14 +263,12 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							'tabLabel' => \__('Geolocation Tags', 'eightshift-forms'),
 							'tabContent' => [
 								[
-									'component' => 'intro',
-									'introSubtitle' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
-									'introIsHighlighted' => true,
+									'component' => 'notice',
+									'noticeContent' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
 								],
 								[
 									'component' => 'textarea',
 									'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY),
-									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Geolocation tags', 'eightshift-forms'),
 									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
@@ -308,7 +304,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'steps',

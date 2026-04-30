@@ -299,7 +299,10 @@ export class State {
 		return getState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], formId);
 	};
 	getStateElementConditionalTagsDefaultsInner = (name, innerName, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], formId);
+		return getState(
+			[StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS],
+			formId,
+		);
 	};
 	getStateElementConditionalTagsRef = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], formId);
@@ -308,7 +311,10 @@ export class State {
 		return getState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], formId);
 	};
 	getStateElementConditionalTagsRefInner = (name, innerName, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF], formId);
+		return getState(
+			[StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF],
+			formId,
+		);
 	};
 	getStateElementConditionalTagsTags = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], formId);
@@ -457,15 +463,23 @@ export class State {
 	};
 	getStateEnrichmentIsLocalStorageUsed = () => {
 		return (
-			getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG) // eslint-disable-line max-len
+			getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) &&
+			getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
+			!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG)
 		);
 	};
 	getStateEnrichmentIsPrefillUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG); // eslint-disable-line max-len
+		return (
+			getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) &&
+			getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
+			!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG)
+		);
 	};
 	getStateEnrichmentIsPrefillUrlUsed = () => {
 		return (
-			getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG) // eslint-disable-line max-len
+			getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) &&
+			getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
+			!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG)
 		);
 	};
 	getStateEnrichmentExpiration = () => {
@@ -559,7 +573,11 @@ export class State {
 	////////////////////////////////////////////////////////////////
 
 	getStateFilteredByKey = (obj, targetKey, findItem, formId) => {
-		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem)));
+		return Object?.values(
+			Object?.fromEntries(
+				Object?.entries(getState([obj], formId) ?? {})?.filter(([_key, value]) => value[targetKey] === findItem),
+			),
+		);
 	};
 	getFormElementByChild = (element) => {
 		return element?.closest(this.getStateSelector('form', true));

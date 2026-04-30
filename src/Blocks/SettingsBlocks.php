@@ -121,18 +121,19 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'checkboxValue' => self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...($overrideGlobalSettingsCountry ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
 										SettingsHelpers::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId),
@@ -158,13 +159,14 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...($overrideGlobalSettingsPhone ? [
 								[
 									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
@@ -200,6 +202,8 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 						'tabContent' => [
 							[
 								'component' => 'select',
+								'selectIsRequired' => true,
+								'selectSingleSubmit' => true,
 								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 								'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY),
 								'selectContent' => $this->getCountrySettingsList(
@@ -209,18 +213,16 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Countries in dataset', 'eightshift-forms'),
-								'selectFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
+								'textareaFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
 								'textareaIsReadOnly' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'country',
 								'textareaValue' => \wp_json_encode($this->countries->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
-								'textareaSize' => 'huge',
-								'textareaLimitHeight' => true,
 							],
 						],
 					],
@@ -246,10 +248,12 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							...(!$disablePhoneCountryPicker ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
 									'selectContent' => $this->getCountrySettingsList(

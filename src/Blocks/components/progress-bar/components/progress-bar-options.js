@@ -1,15 +1,11 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import { TextControl } from '@wordpress/components';
-import { icons, checkAttr, IconToggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { scrollbarH, tag } from '@eightshift/ui-components/icons';
+import { InputField, Toggle } from '@eightshift/ui-components';
+import manifest from '../manifest.json';
 
 export const ProgressBarOptions = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('progress-bar');
-
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const progressBarUse = checkAttr('progressBarUse', attributes, manifest);
 	const progressBarHideLabels = checkAttr('progressBarHideLabels', attributes, manifest);
@@ -18,8 +14,8 @@ export const ProgressBarOptions = (attributes) => {
 
 	return (
 		<>
-			<IconToggle
-				icon={icons.scrollbarH}
+			<Toggle
+				icon={scrollbarH}
 				label={__('Show progress bar', 'eightshift-forms')}
 				checked={progressBarUse}
 				onChange={(value) => {
@@ -27,8 +23,8 @@ export const ProgressBarOptions = (attributes) => {
 				}}
 			/>
 
-			<IconToggle
-				icon={icons.tag}
+			<Toggle
+				icon={tag}
 				label={__('Hide progress bar labels', 'eightshift-forms')}
 				help={__('This will hide the labels on the progress bar.', 'eightshift-forms')}
 				checked={progressBarHideLabels}
@@ -37,14 +33,16 @@ export const ProgressBarOptions = (attributes) => {
 				}}
 			/>
 
-			{progressBarMultiflowUse &&
-				<TextControl
+			{progressBarMultiflowUse && (
+				<InputField
 					type={'number'}
 					label={__('Progress bar initial steps number', 'eightshift-forms')}
 					value={progressBarMultiflowInitCount}
-					onChange={(value) => setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })}
+					onChange={(value) =>
+						setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })
+					}
 				/>
-			}
+			)}
 		</>
 	);
 };

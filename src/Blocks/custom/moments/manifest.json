@@ -5,7 +5,7 @@
 	"description" : "Moments subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-infobip"
+		"src": "moments"
 	},
 	"keywords": [
 		"moments"

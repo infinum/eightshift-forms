@@ -49,15 +49,7 @@
 		"textareaMaxLength": {
 			"type": "integer"
 		},
-		"textareaIsMonospace": {
-			"type": "boolean",
-			"default": false
-		},
 		"textareaSaveAsJson": {
-			"type": "boolean",
-			"default": false
-		},
-		"textareaLimitHeight": {
 			"type": "boolean",
 			"default": false
 		},
@@ -84,10 +76,6 @@
 		},
 		"textareaTypeCustom": {
 			"type": "string"
-		},
-		"textareaSize": {
-			"type": "string",
-			"default": "default"
 		},
 		"textareaIsPreventSubmit": {
 			"type": "boolean",

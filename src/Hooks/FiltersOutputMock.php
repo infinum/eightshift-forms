@@ -59,7 +59,7 @@ final class FiltersOutputMock
 				$settings .= '<ul>';
 				foreach ($filterData as $key => $value) {
 					$settingsValue = \implode(', ', $value);
-					$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+					$settings .= "<li>{$key} : {$settingsValue}</li>";
 				}
 				$settings .= '</ul>';
 				$filterUsed = true;
@@ -308,13 +308,13 @@ final class FiltersOutputMock
 		$prefix = $defaultPrefix ? \__('Value set in code', 'eightshift-forms') : '';
 
 		if (empty($prefix)) {
-			return '<br /><div class="is-filter-applied">' . $data . '</div>';
+			return '<br /><div class="esf-is-filter-applied">' . $data . '</div>';
 		}
 
 		if (empty($data)) {
-			return '<div class="is-filter-applied">' . $prefix . '</div>';
+			return '<div class="esf-is-filter-applied">' . $prefix . '</div>';
 		}
 
-		return '<br /><br /><details class="is-filter-applied"><summary>' . $prefix . '</summary>' . $data . '</details>';
+		return '<br /><br /><details class="esf-is-filter-applied"><summary>' . $prefix . '</summary>' . $data . '</details>';
 	}
 }

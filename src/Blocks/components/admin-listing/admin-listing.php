@@ -25,73 +25,82 @@ $adminListingPagination = Helpers::checkAttr('adminListingPagination', $attribut
 $adminListingTopItems = Helpers::checkAttr('adminListingTopItems', $attributes, $manifest);
 $adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $manifest);
 
-$help = Helpers::render('container', [
-	'containerContent' => Helpers::render('highlighted-content', [
-		'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
-		'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
-		'highlightedContentIcon' => 'docsFormList',
-	]),
-]);
+$additionalAttributes = [
+	UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([])
+];
 
 ?>
 
-<div class="<?php echo esc_attr($componentClass); ?>">
+<div class="esf-main-container esf:css-reset esf:flex esf:flex-col esf:gap-15 esf:-ml-20 esf:p-40">
 	<?php
 	if ($adminListingPageTitle) {
 		echo Helpers::render('intro', [
 			'introTitle' => $adminListingPageTitle,
-			// Translators: %s is the number of forms.
 			'introSubtitle' => $adminListingPageSubTitle,
-			'introIsHeading' => true,
+			'introTitleType' => 'big',
 		]);
 	}
 	?>
 
-	<?php
-	echo Helpers::render('layout', [
-		'layoutType' => 'layout-v-stack-card-fullwidth',
-		'layoutContent' => Helpers::ensureString([
-			Helpers::render('container', [
-				'containerContent' => Helpers::ensureString([
-					Helpers::render('container', [
-						'containerUse' => $adminListingTopItems,
-						'containerClass' => "{$componentClass}__top-bar",
-						'containerContent' => Helpers::ensureString([
-							Helpers::render('container', [
-								'containerClass' => "{$componentClass}__top-bar-left",
-								'containerUse' => !empty($adminListingTopItems['left']),
-								'containerContent' => $adminListingTopItems['left'] ?? '',
-							]),
-							Helpers::render('container', [
-								'containerClass' => "{$componentClass}__top-bar-right",
-								'containerUse' => !empty($adminListingTopItems['right']),
-								'containerContent' => $adminListingTopItems['right'] ?? '',
-							]),
-						]),
+	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo esc_attr(UtilsHelper::getStateSelectorAdmin('listingBulkItems')); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
+		<div class="esf:bg-white esf:rounded-md esf:flex-1">
+			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-border">
+				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
+					<?php
+					if (isset($adminListingTopItems['left'])) {
+						echo wp_kses_post(Helpers::ensureString($adminListingTopItems['left']));
+					}
+					?>
+				</div>
+				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
+					<?php
+					if (isset($adminListingTopItems['right'])) {
+						echo wp_kses_post(Helpers::ensureString($adminListingTopItems['right']));
+					}
+					?>
+				</div>
+			</div>
+			<?php
+			if ($adminListingShowNoItems) { ?>
+				<div class="esf:px-20 esf:py-60">
+					<?php echo wp_kses_post(Helpers::ensureString($adminListingNoItems)); ?>
+				</div>
+			<?php } else { ?>
+				<?php
+				echo wp_kses_post(Helpers::ensureString($adminListingItems));
+				echo Helpers::render('pagination', [
+					'data' => $adminListingPagination,
+				], 'components', false, 'admin-listing/partials');
+				?>
+			<?php } ?>
+		</div>
+
+		<div class="esf:max-w-sm">
+			<div class="esf:bg-white esf:rounded-md esf:p-20">
+				<?php
+				echo Helpers::render('intro', [
+					'introTitle' => __('Need help?', 'eightshift-forms'),
+					'introSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms'),
+					'introIcon' => 'docsFormList',
+					'introType' => 'highlighted',
+					'introActions' => Helpers::render('button', [
+						'buttonLabel' => __('Visit Documentation', 'eightshift-forms'),
+						'buttonVariant' => 'primaryOutline',
+						'buttonUrl' => 'https://eightshift.com/forms/welcome/',
+						'buttonNewTab' => true,
 					]),
-					$adminListingShowNoItems ?
-						Helpers::ensureString($adminListingNoItems) :
-						Helpers::ensureString($adminListingItems),
-					Helpers::render('pagination', [
-						'data' => $adminListingPagination,
-					], 'components', false, 'admin-listing/partials'),
-				]),
-			]),
-			$help,
-		]),
-		'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingBulkItems'),
-		'additionalAttributes' => [
-			UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([]),
-		],
-	]);
-	?>
+				]);
+				?>
+			</div>
+		</div>
+	</div>
 </div>
 
 <?php
 
 // This is fake form to be able to init state for global msg.
 
-$formClasses = Helpers::classnames([
+$formClasses = Helpers::clsx([
 	UtilsHelper::getStateSelector('form'),
 	Helpers::selector($componentClass, $componentClass, 'form'),
 ]);

@@ -36,7 +36,6 @@ $countryPlaceholder = Helpers::checkAttr('countryPlaceholder', $attributes, $man
 $countryUseLabelAsPlaceholder = Helpers::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
 $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $manifest);
 $countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
-$countryTwSelectorsData = Helpers::checkAttr('countryTwSelectorsData', $attributes, $manifest);
 $countryIsMultiple = Helpers::checkAttr('countryIsMultiple', $attributes, $manifest);
 $countryValue = Helpers::checkAttr('countryValue', $attributes, $manifest);
 
@@ -46,10 +45,10 @@ $countryId = $countryName . '-' . Helpers::getUnique();
 $countryHideLabel = false;
 $countryFieldLabel = $attributes[Helpers::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
 
-$countryClass = Helpers::classnames([
+$countryClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($countrySingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -111,12 +110,12 @@ if (has_filter($filterName)) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? ''; // Country phone code.
-		$unlocalizedLabel = $option[3] ?? '';
+		$unLocalizedLabel = $option[3] ?? '';
 
 		$customProperties = [
 			UtilsHelper::getStateAttribute('countryCode') => $code,
 			UtilsHelper::getStateAttribute('countryName') => $label,
-			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unlocalizedLabel,
+			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unLocalizedLabel,
 			UtilsHelper::getStateAttribute('countryNumber') => $value,
 		];
 
@@ -127,7 +126,7 @@ if (has_filter($filterName)) {
 		$options[] = '
 			<option
 				value="' . $code . '"
-				' .  Helpers::getAttrsOutput($optionAttrs) . '
+				' .  wp_kses_post(Helpers::getAttrsOutput($optionAttrs)) . '
 				' . selected($code, isset($countryValue[$code]) ? $code : null, false) . '
 			>' . $label . '</option>';
 	}
@@ -139,7 +138,7 @@ $country = '
 		name="' . esc_attr($countryName) . '"
 		id="' . esc_attr($countryId) . '"
 		' . disabled($countryIsDisabled, true, false) . '
-		' . Helpers::getAttrsOutput($countryAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($countryAttrs)) . '
 	>
 	' . $placeholder . '
 	' . implode('', $options) . '
@@ -152,7 +151,7 @@ $fieldOutput = [
 	'fieldId' => $countryId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
 	'fieldName' => $countryName,
-	'fieldTwSelectorsData' => $countryTwSelectorsData,
+	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
 	'fieldIsRequired' => $countryIsRequired,
 	'fieldDisabled' => !empty($countryIsDisabled),
 	'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

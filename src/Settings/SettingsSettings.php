@@ -108,7 +108,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkbox',

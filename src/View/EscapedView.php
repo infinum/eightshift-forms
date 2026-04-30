@@ -8,6 +8,7 @@
 
 namespace EightshiftForms\View;
 
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use EightshiftFormsVendor\EightshiftLibs\View\AbstractEscapedView;
 
@@ -21,7 +22,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('wp_kses_allowed_html', [$this, 'setCustomWpksesPostTags'], 10, 2);
+		\add_filter('wp_kses_allowed_html', [$this, 'setCustomWpksesPostTags'], 99999, 2);
 	}
 
 	/**
@@ -34,35 +35,61 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	 */
 	public function setCustomWpksesPostTags(array $tags, string $context)  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
 	{
-		return \array_merge(
-			$this->setForm(),
-			$this->getSvg(),
-			$tags
-		);
+		static $result = null;
+
+		if ($result !== null) {
+			return $result;
+		}
+
+		// $dataTags = \array_merge($tags['data'], $this->getOutputTags());
+
+		$output = \array_merge($tags, self::FORM, $this->getSvg());
+
+		$items = ['button', 'form', 'select', 'input', 'textarea', 'label', 'span'];
+		foreach ($items as $item) {
+			$output[$item]['data-*'] = true;
+		}
+
+		$result = $output;
+
+		return $result;
 	}
 
 	/**
-	 * Add forms additional attributes to allow list.
+	 * Get all output tags.
 	 *
-	 * @return  array<string, array<string, bool>>
+	 * @return array<string, array<string, bool>|true>
 	 */
-	private function setForm(): array
+	private function getOutputTags(): array
 	{
-		return self::FORM;
+		$output = [];
+		foreach (Helpers::getSettings()['enums']['attrs'] as $item) {
+			$output[\str_replace('data-', '', $item)] = true;
+		}
+		return $output;
 	}
 
 	/**
 	 * Get all SVG output tags.
 	 *
+	 * Wp_kses lowercases all tag and attribute names before lookup (see wp_kses_split2, wp_kses_attr_check),
+	 * so every key here must be lowercase — even camelCase SVG names like viewBox or linearGradient.
+	 *
 	 * @return array<string, array<string, bool>|true>
 	 */
 	private function getSvg(): array
 	{
-		$svg = self::SVG;
+		static $result = null;
+
+		if ($result !== null) {
+			return $result;
+		}
 
 		$commonSvgParams = [
+			'attributename' => true,
 			'begin' => true,
-			'calcMode' => true,
+			'calcmode' => true,
+			'class' => true,
 			'clip-rule' => true,
 			'cx' => true,
 			'cy' => true,
@@ -72,10 +99,12 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 			'fill-opacity' => true,
 			'fill-rule' => true,
 			'height' => true,
-			'keySplines' => true,
-			'keyTimes' => true,
+			'id' => true,
+			'keysplines' => true,
+			'keytimes' => true,
+			'opacity' => true,
 			'r' => true,
-			'repeatCount' => true,
+			'repeatcount' => true,
 			'rx' => true,
 			'ry' => true,
 			'stroke' => true,
@@ -84,52 +113,35 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 			'stroke-linejoin' => true,
 			'stroke-opacity' => true,
 			'stroke-width' => true,
+			'style' => true,
 			'transform' => true,
 			'values' => true,
-			'viewBox' => true,
+			'viewbox' => true,
 			'width' => true,
+			'x' => true,
 			'xmlns' => true,
 			'y' => true,
-			'style' => true,
-			'class' => true,
 		];
 
-		$svg['circle'] = \array_merge(
-			$svg['circle'],
-			$commonSvgParams,
-		);
+		$gradientParams = [
+			'id' => true,
+			'gradienttransform' => true,
+			'gradientunits' => true,
+		];
 
-		$svg['svg'] = \array_merge(
-			$svg['svg'],
-			$commonSvgParams,
-		);
+		$svg = self::SVG;
 
-		$svg['path'] = \array_merge(
-			$svg['path'],
-			$commonSvgParams,
-		);
+		foreach (['circle', 'svg', 'path', 'ellipse', 'g'] as $tag) {
+			$svg[$tag] = \array_merge($svg[$tag], $commonSvgParams);
+		}
 
-		$svg['ellipse'] = \array_merge(
-			$svg['ellipse'],
-			$commonSvgParams,
-		);
+		$svg['rect'] = \array_merge($commonSvgParams, ['path' => true]);
+		$svg['animate'] = $commonSvgParams;
+		$svg['lineargradient'] = \array_merge($gradientParams, ['x1' => true, 'x2' => true, 'y1' => true, 'y2' => true]);
+		$svg['radialgradient'] = \array_merge($gradientParams, ['cx' => true, 'cy' => true, 'r' => true]);
+		$svg['stop'] = ['id' => true, 'offset' => true, 'stop-color' => true, 'stop-opacity' => true];
 
-		$svg['g'] = \array_merge(
-			$svg['g'],
-			$commonSvgParams,
-		);
-
-		$svg['rect'] = \array_merge($commonSvgParams, [
-			'x' => true,
-			'y' => true,
-			'width' => true,
-			'height' => true,
-			'rx' => true,
-			'path' => true,
-			'fill' => true,
-			'd' => true,
-		]);
-
-		return $svg;
+		$result = $svg;
+		return $result;
 	}
 }

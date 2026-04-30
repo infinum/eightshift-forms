@@ -3,7 +3,7 @@ import { ConditionalTags } from './conditional-tags';
 import { Enrichment } from './enrichment';
 import { Geolocation } from './geolocation';
 import { State } from './state';
-import { StateEnum, prefix, setStateWindow, setStateValues, getState } from './state-init';
+import { StateEnum, prefix, setStateWindow, setStateValues } from './state-init';
 import { Steps } from './step';
 import globalManifest from './../../../manifest.json';
 
@@ -337,7 +337,10 @@ export class Utils {
 			return;
 		}
 
-		messageContainer?.classList?.remove(this.state.getStateSelector('isActive'), this.state.getStateSelector('hasError'));
+		messageContainer?.classList?.remove(
+			this.state.getStateSelector('isActive'),
+			this.state.getStateSelector('hasError'),
+		);
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -381,7 +384,10 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		} else {
-			messageContainer?.classList?.add(this.state.getStateSelector('isActive'), this.state.getStateSelector('hasError'));
+			messageContainer?.classList?.add(
+				this.state.getStateSelector('isActive'),
+				this.state.getStateSelector('hasError'),
+			);
 			messageContainer.dataset.status = status;
 			messageContainer.role = 'alert';
 
@@ -408,7 +414,6 @@ export class Utils {
 		for (const [name] of this.state.getStateElements(formId)) {
 			const value = this.state.getStateElementValue(name, formId);
 			const trackingName = this.state.getStateElementTracking(name, formId);
-			const field = this.state.getStateElementField(name, formId);
 
 			if (!trackingName) {
 				continue;
@@ -988,7 +993,9 @@ export class Utils {
 
 		const custom = this.state.getStateElementCustom(name, formId);
 
-		const option = [...custom?.passedElement?.element?.options].find((option) => option.getAttribute(attribute) === value);
+		const option = [...custom?.passedElement?.element?.options].find(
+			(option) => option.getAttribute(attribute) === value,
+		);
 
 		if (option) {
 			custom.setChoiceByValue(option.value);
@@ -1123,7 +1130,9 @@ export class Utils {
 		if (custom) {
 			if (newValue.length) {
 				newValue.forEach((item, index) => {
-					const option = [...custom.passedElement?.element?.options].find((option) => option.getAttribute(attribute) === item);
+					const option = [...custom.passedElement?.element?.options].find(
+						(option) => option.getAttribute(attribute) === item,
+					);
 
 					if (option) {
 						custom.setChoiceByValue(option.value);
@@ -1470,7 +1479,9 @@ export class Utils {
 	setResultsOutput(formId, data) {
 		const formFid = this.state.getStateFormFid(formId);
 		// Check if we have output element - block.
-		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formFid}"]`);
+		const outputElement = document.querySelector(
+			`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formFid}"]`,
+		);
 
 		// If no output element, bailout.
 		if (!outputElement) {
@@ -1489,7 +1500,8 @@ export class Utils {
 				);
 
 				itemElements.forEach((item) => {
-					const operator = item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || globalManifest.comparator.IS;
+					const operator =
+						item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || globalManifest.comparator.IS;
 					const startValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValueStart'));
 					const endValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValueEnd'));
 
@@ -1520,7 +1532,9 @@ export class Utils {
 		}
 
 		// Show form elements.
-		const showFormElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputShowForm', true)}`);
+		const showFormElement = outputElement.querySelectorAll(
+			`${this.state.getStateSelector('resultOutputShowForm', true)}`,
+		);
 
 		if (showFormElement) {
 			showFormElement.forEach((item) => {
@@ -1540,7 +1554,9 @@ export class Utils {
 	 */
 	resetResultsOutput(formId) {
 		// Check if we have output element - block.
-		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
+		const outputElement = document.querySelector(
+			`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`,
+		);
 
 		if (!outputElement) {
 			return;
@@ -1600,13 +1616,19 @@ export class Utils {
 			[globalManifest.comparator.SW]: (start, value) => String(value).startsWith(String(start)),
 			[globalManifest.comparator.EW]: (start, value) => String(value).endsWith(String(start)),
 			[globalManifest.comparatorExtended.B]: (start, value, end) => {
-				return parseFloat(String(value)) > parseFloat(String(start)) && parseFloat(String(value)) < parseFloat(String(end));
+				return (
+					parseFloat(String(value)) > parseFloat(String(start)) && parseFloat(String(value)) < parseFloat(String(end))
+				);
 			},
 			[globalManifest.comparatorExtended.BS]: (start, value, end) => {
-				return parseFloat(String(value)) >= parseFloat(String(start)) && parseFloat(String(value)) <= parseFloat(String(end));
+				return (
+					parseFloat(String(value)) >= parseFloat(String(start)) && parseFloat(String(value)) <= parseFloat(String(end))
+				);
 			},
 			[globalManifest.comparatorExtended.BN]: (start, value, end) => {
-				return parseFloat(String(value)) < parseFloat(String(start)) || parseFloat(String(value)) > parseFloat(String(end));
+				return (
+					parseFloat(String(value)) < parseFloat(String(start)) || parseFloat(String(value)) > parseFloat(String(end))
+				);
 			},
 			[globalManifest.comparatorExtended.BNS]: (start, value, end) =>
 				parseFloat(String(value)) <= parseFloat(String(start)) || parseFloat(String(value)) >= parseFloat(String(end)),
@@ -1630,7 +1652,9 @@ export class Utils {
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 			const option = this.state.getStateElementCustom(name, formId).passedElement?.element?.selectedOptions?.[0];
-			const type = this.state.getStateElementCustom(name, formId).passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
+			const type = this.state
+				.getStateElementCustom(name, formId)
+				.passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
 			const prefixOutput = this.getCountryCombinedValue(formId, name, option, type);
 
 			return data?.prefix === '' || !prefixOutput ? '' : `${prefixOutput}${data?.value}`;
@@ -1697,7 +1721,9 @@ export class Utils {
 			return [];
 		}
 
-		const type = this.state.getStateElementCustom(name, formId).passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
+		const type = this.state
+			.getStateElementCustom(name, formId)
+			.passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
 
 		const output = [];
 

@@ -105,92 +105,100 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	}
 
 	/**
-	 * Field list for the "Settings" tab — API keys and EU endpoint toggle.
+	 * Build the merged settings page.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * Lays the page out Corvus-style: a flat tab bar with the provider select
+	 * as the driver field at the top of the first tab, and downstream tabs
+	 * conditionally present based on the active provider.
+	 *
+	 * @return array<int, array<mixed>>
 	 */
-	public static function getGeneralContent(): array
+	public static function getSettingsGlobalData(): array
 	{
 		return [
-			[
-				'component' => 'intro',
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'introSubtitle' => \__('Protect your forms from spam and abuse using Friendly Captcha.<br />A privacy-focused, GDPR-compliant alternative to Google reCAPTCHA.', 'eightshift-forms'),
-			],
-			SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
-				Variables::getFriendlyCaptchaSiteKey(),
-				self::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY,
-				'ES_FRIENDLY_CAPTCHA_SITE_KEY',
-				\__('Site key', 'eightshift-forms'),
-			),
-			SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
-				Variables::getFriendlyCaptchaApiKey(),
-				self::SETTINGS_FRIENDLY_CAPTCHA_API_KEY,
-				'ES_FRIENDLY_CAPTCHA_API_KEY',
-				\__('API key', 'eightshift-forms'),
-			),
-			[
-				'component' => 'divider',
-				'dividerExtraVSpacing' => true,
-			],
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'checkboxesFieldHelp' => \__('The EU endpoint is hosted in Germany and ensures visitor data never leaves the EU.<br />Requires a Friendly Captcha Advanced or Enterprise plan.', 'eightshift-forms'),
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Use EU endpoint', 'eightshift-forms'),
-						'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
-						'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY,
-						'checkboxAsToggle' => true,
+			'component' => 'tabs',
+			'tabsContent' => [
+				[
+					'component' => 'tab',
+					'tabLabel' => \__('Settings', 'eightshift-forms'),
+					'tabContent' => [
+						[
+							'component' => 'intro',
+							// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+							'introSubtitle' => \__('Protect your forms from spam and abuse using Friendly Captcha.<br />A privacy-focused, GDPR-compliant alternative to Google reCAPTCHA.', 'eightshift-forms'),
+						],
+						SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
+							Variables::getFriendlyCaptchaSiteKey(),
+							self::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY,
+							'ES_FRIENDLY_CAPTCHA_SITE_KEY',
+							\__('Site key', 'eightshift-forms'),
+						),
+						SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
+							Variables::getFriendlyCaptchaApiKey(),
+							self::SETTINGS_FRIENDLY_CAPTCHA_API_KEY,
+							'ES_FRIENDLY_CAPTCHA_API_KEY',
+							\__('API key', 'eightshift-forms'),
+						),
+						[
+							'component' => 'divider',
+							'dividerSeparator' => true,
+						],
+						[
+							'component' => 'checkboxes',
+							'checkboxesFieldLabel' => '',
+							'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
+							// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+							'checkboxesFieldHelp' => \__('The EU endpoint is hosted in Germany and ensures visitor data never leaves the EU.<br />Requires a Friendly Captcha Advanced or Enterprise plan.', 'eightshift-forms'),
+							'checkboxesContent' => [
+								[
+									'component' => 'checkbox',
+									'checkboxLabel' => \__('Use EU endpoint', 'eightshift-forms'),
+									'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY),
+									'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_USE_EU_ENDPOINT_KEY,
+									'checkboxAsToggle' => true,
+								],
+							],
+						],
+						[
+							'component' => 'divider',
+							'dividerSeparator' => true,
+						],
+						[
+							'component' => 'checkboxes',
+							'checkboxesFieldHideLabel' => true,
+							'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+							'checkboxesContent' => [
+								[
+									'component' => 'checkbox',
+									'checkboxLabel' => \__('Load widget on website load', 'eightshift-forms'),
+									'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+									'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY,
+									'checkboxHelp' => \__('By default, the widget is only loaded on pages that contain forms. Enable this to load it on every page.', 'eightshift-forms'),
+									'checkboxSingleSubmit' => true,
+									'checkboxAsToggle' => true,
+									'checkboxAsToggleSize' => 'medium',
+								],
+							],
+						],
 					],
 				],
-			],
-			[
-				'component' => 'divider',
-				'dividerExtraVSpacing' => true,
-			],
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldHideLabel' => true,
-				'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Load widget on website load', 'eightshift-forms'),
-						'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
-						'checkboxValue' => self::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY,
-						'checkboxHelp' => \__('By default, the widget is only loaded on pages that contain forms. Enable this to load it on every page.', 'eightshift-forms'),
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
+				[
+					'component' => 'tab',
+					'tabLabel' => \__('Help', 'eightshift-forms'),
+					'tabContent' => [
+						[
+							'component' => 'steps',
+							'stepsTitle' => \__('How to get the Friendly Captcha API keys?', 'eightshift-forms'),
+							'stepsContent' => [
+								// translators: %s will be replaced with the external link.
+								\sprintf(\__('Visit the <a href="%s" target="_blank" rel="noopener noreferrer">Friendly Captcha dashboard</a>.', 'eightshift-forms'), 'https://app.friendlycaptcha.eu/dashboard'),
+								\__('Create a new application and copy the <strong>Site key</strong>.', 'eightshift-forms'),
+								\__('Go to <strong>API Keys</strong> and create a new API key.', 'eightshift-forms'),
+								\__('Copy both keys into the fields under the Settings tab or use the global constants.', 'eightshift-forms'),
+								\__('In the Friendly Captcha dashboard, open your application settings, go to the <strong>Protection</strong> tab, and set the <strong>Widget Mode</strong> to <strong>Smart</strong>.', 'eightshift-forms'),
+							],
+						],
 					],
-				],
-			],
-		];
-	}
-
-	/**
-	 * Field list for the "Help" tab — setup steps.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public static function getHelpContent(): array
-	{
-		return [
-			[
-				'component' => 'steps',
-				'stepsTitle' => \__('How to get the Friendly Captcha API keys?', 'eightshift-forms'),
-				'stepsContent' => [
-					// translators: %s will be replaced with the external link.
-					\sprintf(\__('Visit the <a href="%s" target="_blank" rel="noopener noreferrer">Friendly Captcha dashboard</a>.', 'eightshift-forms'), 'https://app.friendlycaptcha.eu/dashboard'),
-					\__('Create a new application and copy the <strong>Site key</strong>.', 'eightshift-forms'),
-					\__('Go to <strong>API Keys</strong> and create a new API key.', 'eightshift-forms'),
-					\__('Copy both keys into the fields under the Settings tab or use the global constants.', 'eightshift-forms'),
-					\__('In the Friendly Captcha dashboard, open your application settings, go to the <strong>Protection</strong> tab, and set the <strong>Widget Mode</strong> to <strong>Smart</strong>.', 'eightshift-forms'),
 				],
 			],
 		];

@@ -5,7 +5,7 @@
 	"description" : "Display the result output variable blocks based on the users form submission",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-checkbox"
+		"src": "checkbox"
 	},
 	"keywords": [
 		"result",

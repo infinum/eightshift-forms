@@ -33,7 +33,6 @@ $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder',
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
 $selectMinCount = Helpers::checkAttr('selectMinCount', $attributes, $manifest);
 $selectMaxCount = Helpers::checkAttr('selectMaxCount', $attributes, $manifest);
-$selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
 
@@ -41,9 +40,9 @@ $selectId = $selectName . '-' . Helpers::getUnique();
 $selectHideLabel = false;
 $selectFieldLabel = $attributes[Helpers::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
 
-$selectClass = Helpers::classnames([
+$selectClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'select'),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -102,7 +101,7 @@ $select = '
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
 		' . disabled($selectIsDisabled, true, false) . '
-		' . Helpers::getAttrsOutput($selectAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($selectAttrs)) . '
 	>
 		' . $placeholder . '
 		' . $selectContent . '
@@ -114,7 +113,7 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectId,
 	'fieldName' => $selectName,
-	'fieldTwSelectorsData' => $selectTwSelectorsData,
+	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),

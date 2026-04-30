@@ -97,13 +97,13 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 						'component' => 'intro',
 						// translators: %s will be replaced with the link.
 						'introSubtitle' => \sprintf(\__("
-							<p>By default geolocation uses <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> MaxMind ID database</a> to get users location.</p>
-							<p>With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.</p>
+							By default geolocation uses <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> MaxMind ID database</a> to get users location.<br/><br/>
+							With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.
 						", 'eightshift-forms'), 'https://www.maxmind.com', 'https://eightshift.com/forms/features/geolocation'),
 					],
 					[
 						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
+						'dividerSeparator' => true,
 					],
 					[
 						'component' => 'checkboxes',
@@ -124,17 +124,15 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 				],
 			],
 			(\is_plugin_active('cloudflare/cloudflare.php') && !SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) ? [
-				'component' => 'intro',
+				'component' => 'notice',
 				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('
+				'noticeContent' => \sprintf(\__('
 					<b>Geolocation is not working due to Cloudflare plugin</b>
 					<p>
 						We have detected that you are using the Cloudflare plugin.
 						Please turn on the Cloudflare feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
 					</p>
 				', 'eightshift-forms'), GeneralHelpers::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
 			] : [],
 		];
 	}

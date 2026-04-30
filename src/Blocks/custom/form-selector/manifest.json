@@ -2,14 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "form-selector",
 	"title": "Form selector",
-	"description" : "Choose the form you want to display",
+	"description": "Choose the form you want to display",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-picker"
+		"src": "form-picker"
 	},
-	"keywords": [
-		"forms"
-	],
+	"keywords": ["forms"],
 	"hasInnerBlocks": true,
 	"supports": {
 		"inserter": false
@@ -28,10 +26,7 @@
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
 						"inputInputIsEmail": true,
-						"inputInputDisabledOptions": [
-							"inputInputIsRequired",
-							"inputInputName"
-						]
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
 					}
 				],
 				[
@@ -57,9 +52,7 @@
 						"textareaTextareaName": "message"
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		},
 		{
@@ -125,10 +118,7 @@
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
 						"inputInputIsEmail": true,
-						"inputInputDisabledOptions": [
-							"inputInputIsRequired",
-							"inputInputName"
-						]
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
 					}
 				],
 				[
@@ -154,9 +144,7 @@
 						"textareaTextareaName": "message"
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		},
 		{
@@ -172,10 +160,7 @@
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
 						"inputInputIsEmail": true,
-						"inputInputDisabledOptions": [
-							"inputInputIsRequired",
-							"inputInputName"
-						]
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
 					}
 				],
 				[
@@ -204,9 +189,7 @@
 						"inputInputName": "amount"
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		},
 		{
@@ -222,10 +205,7 @@
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
 						"inputInputIsEmail": true,
-						"inputInputDisabledOptions": [
-							"inputInputIsRequired",
-							"inputInputName"
-						]
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
 					}
 				],
 				[
@@ -238,9 +218,7 @@
 						"inputInputName": "amount"
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		},
 		{
@@ -256,10 +234,7 @@
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
 						"inputInputIsEmail": true,
-						"inputInputDisabledOptions": [
-							"inputInputIsRequired",
-							"inputInputName"
-						]
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
 					}
 				],
 				[
@@ -285,9 +260,7 @@
 						"textareaTextareaName": "message"
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		},
 		{
@@ -304,9 +277,7 @@
 						"inputInputIsNumber": true
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		},
 		{
@@ -322,10 +293,7 @@
 						"inputInputName": "email",
 						"inputInputIsRequired": true,
 						"inputInputIsEmail": true,
-						"inputInputDisabledOptions": [
-							"inputInputIsRequired",
-							"inputInputName"
-						]
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
 					}
 				],
 				[
@@ -336,9 +304,7 @@
 						"inputInputName": "name"
 					}
 				],
-				[
-					"eightshift-forms/submit"
-				]
+				["eightshift-forms/submit"]
 			]
 		}
 	]

@@ -8,42 +8,27 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$layoutUse = Helpers::checkAttr('layoutUse', $attributes, $manifest);
-if (!$layoutUse) {
-	return;
-}
-
-$componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $layoutContent = Helpers::checkAttr('layoutContent', $attributes, $manifest);
-$layoutTag = Helpers::checkAttr('layoutTag', $attributes, $manifest);
 $layoutType = Helpers::checkAttr('layoutType', $attributes, $manifest);
-
-$layoutClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($blockClass, $blockClass, $selectorClass),
-	Helpers::selector($additionalClass, $additionalClass),
-]);
+$layoutWithBg = Helpers::checkAttr('layoutWithBg', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 
 ?>
 
-<<?php echo esc_attr($layoutTag); ?>
-	class="<?php echo esc_attr($layoutClass); ?>"
-	data-layout-type="<?php echo esc_attr($layoutType); ?>"
+<div
+	class="<?php echo esc_attr(Helpers::clsx([
+						'esf:grid esf:grid-cols-1 esf:gap-15',
+						$layoutWithBg ? 'esf:p-20  esf:bg-white esf:border esf:border-border esf:rounded-md' : '',
+						$layoutType === 'layout-grid-half' ? "esf:grid-cols-2 esf:items-center" : '',
+
+						$additionalClass,
+					])); ?>"
 	<?php
-	foreach ($additionalAttributes as $key => $value) {
-		if (!empty($key) && !empty($value)) {
-			echo wp_kses_post(" {$key}='" . $value . "'");
-		}
-	}
+	echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes));
 	?>>
-	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-		?>
-	</div>
-</<?php echo esc_attr($layoutTag); ?>>
+	<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
+</div>

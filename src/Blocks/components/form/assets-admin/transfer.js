@@ -12,7 +12,7 @@ export class Transfer {
 		this.confirmMsg = options.confirmMsg;
 	}
 
-	init () {
+	init() {
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
@@ -30,8 +30,7 @@ export class Transfer {
 
 	async submit(target) {
 		const formId = this.state.getFormIdByElement(target);
-		const field = this.state.getFormFieldElementByChild(target);
-		const type = field.getAttribute(this.state.getStateAttribute('migrationType'));
+		const type = target.getAttribute(this.state.getStateAttribute('migrationType'));
 
 		const formData = new FormData();
 
@@ -47,11 +46,11 @@ export class Transfer {
 			formData.append('upload', this.utils.getFileNameFromFileObject(file));
 			formData.append('override', document.querySelector(`${this.overrideExistingSelector} input`).checked);
 
-			if(!confirm(this.confirmMsg)) {
+			if (!confirm(this.confirmMsg)) {
 				return;
 			}
 		} else {
-			formData.append('items', field.getAttribute(this.state.getStateAttribute('migrationExportItems')));
+			formData.append('items', target.getAttribute(this.state.getStateAttribute('migrationExportItems')));
 		}
 
 		// Populate body data.
@@ -71,11 +70,7 @@ export class Transfer {
 			const response = await fetch(this.state.getRestUrl('transfer'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-				data,
-			} = parsedResponse;
+			const { message, status, data } = parsedResponse;
 
 			this.utils.hideLoader(formId);
 			this.utils.setGlobalMsg(formId, message, status);
@@ -86,33 +81,34 @@ export class Transfer {
 						location.reload();
 					}, 1000);
 				} else {
-					this.createFile(data?.[this.state.getStateResponseOutputKey('adminTransferContent')], data?.[this.state.getStateResponseOutputKey('adminTransferName')]);
+					this.createFile(
+						data?.[this.state.getStateResponseOutputKey('adminTransferContent')],
+						data?.[this.state.getStateResponseOutputKey('adminTransferName')],
+					);
 				}
 			}
 
 			setTimeout(() => {
 				this.utils.unsetGlobalMsg(formId);
 			}, 6000);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'adminTransfer', name, message));
 		}
-	};
+	}
 
 	onClickItem = (event) => {
-		const {
-			value,
-			checked,
-			name,
-		} = event.target;
+		const { value, checked, name } = event.target;
 
-		const button = document.querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('migrationType')}='${name}']`);
+		const button = document.querySelector(
+			`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('migrationType')}='${name}']`,
+		);
 		const items = button?.getAttribute(this.state.getStateAttribute('migrationExportItems'));
 
-		let output = items ? items.split(",") : [];
+		let output = items ? items.split(',') : [];
 
 		if (checked) {
 			output.push(value);
@@ -124,12 +120,12 @@ export class Transfer {
 	};
 
 	createFile(data, exportName) {
-		const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(data);
+		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(data);
 
 		const downloadAnchorNode = document.createElement('a');
 
-		downloadAnchorNode.setAttribute("href", dataStr);
-		downloadAnchorNode.setAttribute("download", exportName + ".json");
+		downloadAnchorNode.setAttribute('href', dataStr);
+		downloadAnchorNode.setAttribute('download', exportName + '.json');
 
 		document.body.appendChild(downloadAnchorNode); // required for Firefox browser
 

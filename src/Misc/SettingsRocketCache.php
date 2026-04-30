@@ -87,12 +87,12 @@ class SettingsRocketCache implements SettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Forms cache', 'eightshift-forms'),
 						'introSubtitle' => \__('When you clear forms cache, you will also clear WP Rocket cache.', 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],

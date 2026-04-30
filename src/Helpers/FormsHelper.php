@@ -171,7 +171,9 @@ final class FormsHelper
 			return [];
 		}
 
-		$filterName = HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']);
+		$filter = \is_admin() ? 'tailwindSelectorsAdmin' : 'tailwindSelectors';
+
+		$filterName = HooksHelpers::getFilterName(['blocks', $filter]);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, [], $attributes);
 		}
@@ -209,19 +211,19 @@ final class FormsHelper
 	 *
 	 * @param array<string, string> $data Data to get base from.
 	 * @param string $selector Selector to get data for.
-	 * @param string $sufix Sufix to add to the selector.
+	 * @param string $suffix Suffix to add to the selector.
 	 *
 	 * @return string
 	 */
-	public static function getTwBase(array $data, string $selector, string $sufix = ''): string
+	public static function getTwBase(array $data, string $selector, string $suffix = ''): string
 	{
 		$base = $data[$selector]['base'] ?? [];
 
 		if (!$base) {
-			return $sufix;
+			return $suffix;
 		}
 
-		return \implode(' ', !\is_array($base) ? [$base, $sufix] : \array_merge($base, [$sufix]));
+		return \implode(' ', !\is_array($base) ? [$base, $suffix] : \array_merge($base, [$suffix]));
 	}
 
 	/**
@@ -230,25 +232,25 @@ final class FormsHelper
 	 * @param array<string, string> $data Data to get part from.
 	 * @param string $parentSelector Parent selector to get data for.
 	 * @param string $selector Selector to get data for.
-	 * @param string $sufix Sufix to add to the selector.
+	 * @param string $suffix Suffix to add to the selector.
 	 *
 	 * @return string
 	 */
-	public static function getTwPart(array $data, string $parentSelector, string $selector, string $sufix = ''): string
+	public static function getTwPart(array $data, string $parentSelector, string $selector, string $suffix = ''): string
 	{
 		$parts = $data[$parentSelector]['parts'] ?? [];
 
 		if (!$parts) {
-			return $sufix;
+			return $suffix;
 		}
 
 		$part = $parts[$selector] ?? [];
 
 		if (!$part) {
-			return $sufix;
+			return $suffix;
 		}
 
-		return \implode(' ', !\is_array($part) ? [$part, $sufix] : \array_merge($part, [$sufix]));
+		return \implode(' ', !\is_array($part) ? [$part, $suffix] : \array_merge($part, [$suffix]));
 	}
 
 	/**

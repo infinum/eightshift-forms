@@ -103,16 +103,12 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			SettingsOutputHelpers::getMiscDisclaimer(\__('WPML', 'eightshift-forms')),
 			[
-				'component' => 'intro',
-				'introSubtitle' => \__('All po/mo translation files were translated using AI. Please check the translations and correct and if you find any issues, please contact us.', 'eightshift-forms'),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
+				'component' => 'notice',
+				'noticeContent' => \__('All po/mo translation files were translated using AI. Please check the translations and correct and if you find any issues, please contact us.', 'eightshift-forms'),
 			],
 			[
-				'component' => 'intro',
-				'introSubtitle' => \__('In order for Eightshift Forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
+				'component' => 'notice',
+				'noticeContent' => \__('In order for Eightshift Forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'intro',
@@ -120,45 +116,45 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Forms listing', 'eightshift-forms'),
 						'introSubtitle' => \__("By default, we use the `get_locale()` function to retrieve the default language of your project. Once the WPML plugin is activated, we assign a new language tag to each setting and display forms only in the specific language.", 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Forms selector', 'eightshift-forms'),
 						'introSubtitle' => \__("When selecting forms in your forms picker, you will only see forms available in your language.", 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Forms settings', 'eightshift-forms'),
 						'introSubtitle' => \__("We will make each forms settings language specific.", 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Global settings', 'eightshift-forms'),
 						'introSubtitle' => \__("Global settings will be language specific, except for API keys, tokens and etc.", 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],

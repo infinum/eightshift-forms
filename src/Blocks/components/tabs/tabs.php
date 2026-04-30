@@ -9,16 +9,11 @@
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
-
 $tabsContent = Helpers::checkAttr('tabsContent', $attributes, $manifest);
 
-$tabsClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+$tabsClass = Helpers::clsx([
 	UtilsHelper::getStateSelectorAdmin('tabs'),
+	'esf:flex esf:flex-col esf:gap-15',
 ]);
 
 if (!$tabsContent) {
@@ -28,6 +23,6 @@ if (!$tabsContent) {
 ?>
 <div class="<?php echo esc_attr($tabsClass); ?>">
 	<?php
-	echo $tabsContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+	echo wp_kses_post($tabsContent);
 	?>
 </div>

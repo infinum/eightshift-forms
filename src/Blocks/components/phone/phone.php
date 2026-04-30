@@ -35,7 +35,7 @@ $phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest)
 $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
-$phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
+$phoneTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 $phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
 $phoneViewType = Helpers::checkAttr('phoneViewType', $attributes, $manifest);
 $phoneValueType = Helpers::checkAttr('phoneValueType', $attributes, $manifest);
@@ -48,12 +48,12 @@ $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attribute
 
 $twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
 
-$phoneClass = Helpers::classnames([
+$phoneClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
-$phoneSelectClass = Helpers::classnames([
+$phoneSelectClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
 ]);
@@ -94,7 +94,7 @@ if (has_filter($filterName)) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
-		$unlocalizedLabel = $option[3] ?? '';
+		$unLocalizedLabel = $option[3] ?? '';
 
 		switch ($phoneViewType) {
 			case 'number-country-code':
@@ -111,7 +111,7 @@ if (has_filter($filterName)) {
 		$customProperties = [
 			UtilsHelper::getStateAttribute('countryCode') => $code,
 			UtilsHelper::getStateAttribute('countryName') => $label,
-			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unlocalizedLabel,
+			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unLocalizedLabel,
 			UtilsHelper::getStateAttribute('countryNumber') => $value,
 		];
 
@@ -122,7 +122,7 @@ if (has_filter($filterName)) {
 		$options[] = '
 			<option
 				value="' . $code . '"
-				' .  Helpers::getAttrsOutput($optionAttrs) . '
+				' .  wp_kses_post(Helpers::getAttrsOutput($optionAttrs)) . '
 				' . selected($code, $phoneSelectValue, false) . '
 			>' . $optionLabel . '</option>';
 	}
@@ -142,7 +142,7 @@ $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrsSelect)) . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -152,7 +152,7 @@ $phone = '
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_readonly($phoneIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($phoneAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrs)) . '
 	/>
 	' . $additionalContent . '
 ';

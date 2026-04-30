@@ -1,59 +1,17 @@
-import React from 'react';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { preventSaveOnMissingProps, StatusIconMissingName, StatusIconConditionals } from './../../utils';
+import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('select');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
 	const selectName = checkAttr('selectName', attributes, manifest);
-	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectName', attributes, manifest), selectName);
 
-	const selectClass = classnames([
-		selector(componentClass, componentClass),
-		selector(selectIsDisabled, componentClass, '', 'disabled'),
-		selector(additionalClass, additionalClass),
-	]);
-
-	const selectComponent = (
-		<>
-			<div className={selectClass}>
-
-				{selectContent}
-
-				<MissingName value={selectName} />
-
-				{selectName &&
-					<ConditionalTagsEditor
-						{...props('conditionalTags', attributes)}
-					/>
-				}
-			</div>
-		</>
-	);
+	const selectComponent = <div className='esf-fieldset'>{selectContent}</div>;
 
 	return (
 		<>
@@ -62,8 +20,10 @@ export const SelectEditor = (attributes) => {
 					fieldContent: selectComponent,
 					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				statusSlog={[
+					!selectName && <StatusIconMissingName />,
+					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
+				]}
 			/>
 		</>
 	);

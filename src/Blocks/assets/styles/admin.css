@@ -1,0 +1,29 @@
+/* Eightshift UI components */
+@import '@eightshift/ui-components/dist/assets/wp-overrides/replace-fonts.css';
+@import '@eightshift/ui-components/dist/assets/style-admin.css';
+
+/* ES Forms styles */
+@import '../../../../tailwind.css';
+
+body,
+body :is(#wpwrap) {
+	@import 'tailwindcss/theme.css' prefix(esf);
+	@import 'tailwindcss/utilities.css' prefix(esf);
+}
+
+/* Admin settings page layout fixes */
+.eightshift-forms_page_es-settings-global,
+.toplevel_page_es-forms,
+.admin_page_es-settings {
+	& #wpbody-content {
+		padding-block-end: 0;
+
+		& > .notice {
+			display: none;
+		}
+	}
+
+	& #wpfooter {
+		display: none;
+	}
+}

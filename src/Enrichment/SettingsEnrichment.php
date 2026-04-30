@@ -161,13 +161,12 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment parameters', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('
@@ -179,32 +178,52 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
 							],
 							[
-								'component' => 'field',
-								'fieldLabel' => '<b>' . \__('URL parameter', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . \__('Field name', 'eightshift-forms') . '</b>',
-								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-								'fieldIsFiftyFiftyHorizontal' => true,
+								'component' => 'layout',
+								'layoutContent' => [
+									[
+										'component' => 'intro',
+										'introTitle' => \__('URL parameter', 'eightshift-forms'),
+										'introTitleType' => 'medium',
+									],
+									[
+										'component' => 'intro',
+										'introTitle' => \__('Field name', 'eightshift-forms'),
+										'introTitleType' => 'medium',
+									],
+								],
+								'layoutType' => 'layout-grid-half',
+								'layoutWithBg' => false,
 							],
 							...\array_map(
 								function ($item) {
 									return [
-										'component' => 'input',
-										'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-										'inputFieldLabel' => $item,
-										'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-										'inputFieldIsFiftyFiftyHorizontal' => true,
-										'inputFieldBeforeContent' => '&rarr;',
+										'component' => 'layout',
+										'layoutType' => 'layout-grid-half',
+										'layoutWithBg' => false,
+										'layoutContent' => [
+											[
+												'component' => 'intro',
+												'introTitle' => $item,
+												'introTitleType' => 'small',
+											],
+											[
+												'component' => 'input',
+												'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+												'inputFieldHideLabel' => true,
+												'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+											],
+										],
 									];
 								},
 								$enrichment['settingsFields'] ?? []
-							),
+							)
 						],
 					],
 					[
@@ -235,7 +254,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							...($isUsedPrefill ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -284,7 +303,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment smart parameters', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('

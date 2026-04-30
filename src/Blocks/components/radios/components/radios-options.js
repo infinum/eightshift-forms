@@ -1,30 +1,30 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
-import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
+import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
 import {
-	checkAttr,
-	getAttrKey,
-	props,
-	icons,
-	Section,
-	IconToggle,
-	IconLabel,
-	STORE_NAME,
-	Select,
-} from '@eightshift/frontend-libs/scripts';
-import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
+	alignHorizontalVertical,
+	checks,
+	fieldPlaceholder,
+	fieldRequired,
+	googleTagManager,
+	optionListAlt,
+	options,
+	tools,
+} from '@eightshift/ui-components/icons';
+import {
+	FieldOptions,
+	FieldOptionsMore,
+	FieldOptionsLayout,
+	FieldOptionsVisibility,
+} from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import manifest from '../manifest.json';
+import globalManifest from '../../../manifest.json';
 
 export const RadiosOptions = (attributes) => {
-	const globalManifest = select(STORE_NAME).getSettings();
-	const manifest = select(STORE_NAME).getComponent('radios');
-
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -37,28 +37,30 @@ export const RadiosOptions = (attributes) => {
 	const radiosPlaceholder = checkAttr('radiosPlaceholder', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Radio buttons', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-				<NameField
-					value={radiosName}
-					attribute={getAttrKey('radiosName', attributes, manifest)}
-					disabledOptions={radiosDisabledOptions}
-					setAttributes={setAttributes}
-					type={'radios'}
-					isChanged={isNameChanged}
-					setIsChanged={setIsNameChanged}
-				/>
-			</Section>
+		<ContainerPanel>
+			<Spacer
+				border
+				icon={options}
+				text={__('General', 'eightshift-forms')}
+			/>
+			<NameField
+				value={radiosName}
+				attribute={getAttrKey('radiosName', attributes, manifest)}
+				disabledOptions={radiosDisabledOptions}
+				setAttributes={setAttributes}
+				type={'radios'}
+				isChanged={isNameChanged}
+				setIsChanged={setIsNameChanged}
+			/>
 
 			<Select
-				icon={icons.optionListAlt}
+				icon={optionListAlt}
 				label={__('Show as', 'eightshift-forms')}
 				value={radiosShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'radios')}
 				disabled={isOptionDisabled(getAttrKey('radiosShowAs', attributes, manifest), radiosDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value })}
 				simpleValue
-				inlineLabel
 				noSearch
 				clearable
 				placeholder={__('Choose an alternative', 'eightshift-forms')}
@@ -70,19 +72,18 @@ export const RadiosOptions = (attributes) => {
 				})}
 			/>
 
-			{radiosShowAs === 'select' &&
-				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-					{!radiosUseLabelAsPlaceholder &&
-						<TextControl
+			{radiosShowAs === 'select' && (
+				<>
+					{!radiosUseLabelAsPlaceholder && (
+						<InputField
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={radiosPlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('radiosPlaceholder', attributes, manifest), radiosDisabledOptions)}
-							className='es-no-field-spacing'
 						/>
-					}
-					<IconToggle
-						icon={icons.fieldPlaceholder}
+					)}
+					<Toggle
+						icon={fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={radiosUseLabelAsPlaceholder}
 						onChange={(value) => {
@@ -90,8 +91,8 @@ export const RadiosOptions = (attributes) => {
 							setAttributes({ [getAttrKey('radiosUseLabelAsPlaceholder', attributes, manifest)]: value });
 						}}
 					/>
-				</Section>
-			}
+				</>
+			)}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -99,34 +100,46 @@ export const RadiosOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')} >
-				<IconToggle
-					icon={icons.required}
-					label={__('Required', 'eightshift-forms')}
-					checked={radiosIsRequired}
-					onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
-					noBottomSpacing
-				/>
-			</Section>
+			<Spacer
+				border
+				icon={tools}
+				text={__('Advanced', 'eightshift-forms')}
+			/>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<FieldOptionsVisibility
-					{...props('field', attributes, {
-						fieldDisabledOptions: radiosDisabledOptions,
-					})}
-				/>
-			</Section>
+			<FieldOptionsVisibility
+				{...props('field', attributes, {
+					fieldDisabledOptions: radiosDisabledOptions,
+				})}
+			/>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={radiosTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('radiosTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radiosTracking', attributes, manifest), radiosDisabledOptions)}
-					className='es-no-field-spacing'
-				/>
-			</Section>
+			<Spacer
+				border
+				icon={checks}
+				text={__('Validation', 'eightshift-forms')}
+			/>
+
+			<Toggle
+				icon={fieldRequired}
+				label={__('Required', 'eightshift-forms')}
+				checked={radiosIsRequired}
+				onChange={(value) => setAttributes({ [getAttrKey('radiosIsRequired', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('radiosIsRequired', attributes, manifest), radiosDisabledOptions)}
+			/>
+
+			<Spacer
+				border
+				icon={alignHorizontalVertical}
+				text={__('Tracking', 'eightshift-forms')}
+			/>
+
+			<InputField
+				icon={googleTagManager}
+				label={__('GTM tracking code', 'eightshift-forms')}
+				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
+				value={radiosTracking}
+				onChange={(value) => setAttributes({ [getAttrKey('radiosTracking', attributes, manifest)]: value })}
+				disabled={isOptionDisabled(getAttrKey('radiosTracking', attributes, manifest), radiosDisabledOptions)}
+			/>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -140,6 +153,6 @@ export const RadiosOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('radiosFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

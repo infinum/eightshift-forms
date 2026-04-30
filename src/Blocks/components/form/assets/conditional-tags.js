@@ -295,12 +295,15 @@ export class ConditionalTags {
 		// Loop all inner items.
 		for (const [fieldName, innerItems] of Object.entries(data?.inner ?? {})) {
 			// Get correct selector type.
-			let selectorType = this.state.getStateElementTypeField(fieldName, formId) === 'select' ? selectValueAttr : fieldNameAttr;
+			let selectorType =
+				this.state.getStateElementTypeField(fieldName, formId) === 'select' ? selectValueAttr : fieldNameAttr;
 
 			// Loop all inner items.
 			innerItems.forEach((inner) => {
 				// Push selector for style output.
-				output.push(`${formSelector}[${formIdAttr}="${formId}"] [${fieldNameAttr}="${fieldName}"] [${selectorType}="${inner}"]`);
+				output.push(
+					`${formSelector}[${formIdAttr}="${formId}"] [${fieldNameAttr}="${fieldName}"] [${selectorType}="${inner}"]`,
+				);
 			});
 		}
 
@@ -382,9 +385,13 @@ export class ConditionalTags {
 	 */
 	getFieldTopLevel(formId, name, isNoneFormBlock = false) {
 		// Find defaults to know what direction to use.
-		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId); // eslint-disable-line max-len
+		const defaultState = !isNoneFormBlock
+			? this.state.getStateElementConditionalTagsDefaults(name, formId)
+			: this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
 
-		const ref = !isNoneFormBlock ? this.state.getStateElementConditionalTagsRef(name, formId) : this.state.getStateElementFieldConditionalTagsRef(name, formId);
+		const ref = !isNoneFormBlock
+			? this.state.getStateElementConditionalTagsRef(name, formId)
+			: this.state.getStateElementFieldConditionalTagsRef(name, formId);
 
 		// Check if conditions are valid or not. This is where the magic happens.
 		const isValid = ref?.map((validItem) => validItem.every(Boolean)).some(Boolean);

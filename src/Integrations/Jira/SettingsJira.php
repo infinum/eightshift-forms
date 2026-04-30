@@ -276,16 +276,16 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES])),
+								// translators: %s will be replaced with the field tags.
+								'introSubtitle' => \sprintf(\__('All fields will be outputted in the Jira issue description field using table layout but you can also map individual custom field. %s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES]))),
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'checkboxes',
@@ -298,14 +298,13 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 										'checkboxIsChecked' => $manualMapParams,
 										'checkboxValue' => self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...(($customFields && !$this->jiraClient->isSelfHosted()) ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'field',
@@ -317,8 +316,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								[
 									'component' => 'group',
 									'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
-									'groupSaveOneField' => true,
-									'groupStyle' => 'default-listing',
 									'groupContent' => [
 										...\array_map(
 											function ($item) use ($mapParams) {
@@ -407,15 +404,13 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyJira(),
@@ -425,7 +420,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiBoardJira(),
@@ -436,7 +431,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUserJira(),
@@ -447,7 +442,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -460,13 +455,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 											'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 											'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
 											'checkboxAsToggle' => true,
-											'checkboxAsToggleSize' => 'medium',
 										],
 									],
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -483,7 +477,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => false,
-								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a difference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
 							],
 						],
@@ -498,7 +492,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Jira Account.', 'eightshift-forms'),
-									// translators: %s will be replaced with the api externa link.
+									// translators: %s will be replaced with the api external link.
 									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong>.', 'eightshift-forms'), 'https://id.atlassian.com/manage-profile/security/api-tokens'),
 									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],

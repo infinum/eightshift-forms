@@ -1,0 +1,234 @@
+/* stylelint-disable at-rule-no-unknown */
+
+@source '/src/*.{html,js,php,json,css}';
+@source '/*.php';
+
+@theme {
+	--spacing: 0.0625rem; /* 1px */
+
+	--default-font-family: var(--es-font-sans, 'Geist Variable', system-ui, sans-serif);
+	--default-mono-font-family: var(--es-font-mono, 'Geist Mono Variable', ui-monospace, monospace);
+
+	--color-*: initial;
+
+	--color-black: #181818;
+	--color-white: #ffffff;
+
+	--color-secondary-50: var(--esf-color-zinc-50);
+	--color-secondary-100: var(--esf-color-zinc-100);
+	--color-secondary-200: var(--esf-color-zinc-200);
+	--color-secondary-300: var(--esf-color-zinc-300);
+	--color-secondary-400: var(--esf-color-zinc-400);
+	--color-secondary-500: var(--esf-color-zinc-500);
+	--color-secondary-600: var(--esf-color-zinc-600);
+	--color-secondary-700: var(--esf-color-zinc-700);
+	--color-secondary-800: var(--esf-color-zinc-800);
+	--color-secondary-900: var(--esf-color-zinc-900);
+	--color-secondary-950: var(--esf-color-zinc-950);
+
+	--color-accent-50: var(--esf-color-teal-50);
+	--color-accent-100: var(--esf-color-teal-100);
+	--color-accent-200: var(--esf-color-teal-200);
+	--color-accent-300: var(--esf-color-teal-300);
+	--color-accent-400: var(--esf-color-teal-400);
+	--color-accent-500: var(--esf-color-teal-500);
+	--color-accent-600: var(--esf-color-teal-600);
+	--color-accent-700: var(--esf-color-teal-700);
+	--color-accent-800: var(--esf-color-teal-800);
+	--color-accent-900: var(--esf-color-teal-900);
+
+	--color-accent: #29a3a3;
+	--color-accent-dark: #218282;
+
+	--color-accent-05: #29a3a30d;
+	--color-accent-10: #29a3a31a;
+	--color-accent-30: #29a3a333;
+	--color-accent-50: #29a3a380;
+
+	--color-border: #dedede;
+
+	--color-yellow-100: #fef3c7;
+	--color-yellow-500: #eab308;
+	--color-yellow-950: #451a03;
+
+	--color-sky-50: #f0f9ff;
+	--color-sky-100: #e0f2fe;
+	--color-sky-200: #bae6fd;
+	--color-sky-500: #0ea5e9;
+	--color-sky-950: #082f49;
+
+	--color-gray-50: #f9fafb;
+	--color-gray-100: #f3f4f6;
+	--color-gray-200: #e5e7eb;
+	--color-gray-300: #d1d5db;
+	--color-gray-400: #9ca3af;
+	--color-gray-500: #6b7280;
+	--color-gray-600: #4b5563;
+	--color-gray-950: #030712;
+
+	--color-red-50: #fef2f2;
+
+	--color-red-100: #fee2e2;
+	--color-red-200: #fecaca;
+	--color-red-500: #ef4444;
+	--color-red-400: #f87171;
+	--color-red-600: #dc2626;
+	--color-red-800: #991b1b;
+	--color-red-950: #450a0a;
+
+	--color-green-50: #f0fdf4;
+	--color-green-100: #dcfce7;
+	--color-green-200: #bbf7d0;
+	--color-green-500: #22c55e;
+	--color-green-950: #052e16;
+}
+
+body {
+	/* --esf-color-secondary-50: var(--es-color-secondary-50);
+	--esf-color-secondary-100: var(--es-color-secondary-100);
+	--esf-color-secondary-200: var(--es-color-secondary-200);
+	--esf-color-secondary-300: var(--es-color-secondary-300);
+	--esf-color-secondary-400: var(--es-color-secondary-400);
+	--esf-color-secondary-500: var(--es-color-secondary-500);
+	--esf-color-secondary-600: var(--es-color-secondary-600);
+	--esf-color-secondary-700: var(--es-color-secondary-700);
+	--esf-color-secondary-800: var(--es-color-secondary-800);
+	--esf-color-secondary-900: var(--es-color-secondary-900);
+	--esf-color-secondary-950: var(--es-color-secondary-950);
+
+	--esf-color-accent-50: var(--es-color-accent-50);
+	--esf-color-accent-100: var(--es-color-accent-100);
+	--esf-color-accent-200: var(--es-color-accent-200);
+	--esf-color-accent-300: var(--es-color-accent-300);
+	--esf-color-accent-400: var(--es-color-accent-400);
+	--esf-color-accent-500: var(--es-color-accent-500);
+	--esf-color-accent-600: var(--es-color-accent-600);
+	--esf-color-accent-700: var(--es-color-accent-700);
+	--esf-color-accent-800: var(--es-color-accent-800);
+	--esf-color-accent-900: var(--es-color-accent-900);
+	--esf-color-accent-950: var(--es-color-accent-950);
+
+	--esf-color-error: var(--es-color-error); */
+}
+
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cache'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='location'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='dashboard'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='debug'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='documentation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='migration'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='transfer'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wp'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wpml'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='calculator'] {
+	.es-submit--global {
+		@apply esf:hidden;
+	}
+}
+
+.esf-button-primary {
+	@apply esf:text-white esf:bg-accent esf:border-accent;
+	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
+	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
+	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
+	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-primary-outline {
+	@apply esf:text-accent esf:bg-transparent esf:border esf:border-accent;
+	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
+	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
+	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
+	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-primary-ghost {
+	@apply esf:text-accent esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:hover:text-accent esf:hover:bg-accent-30;
+	@apply esf:active:text-accent esf:active:bg-accent-30;
+	@apply esf:focus:text-accent esf:focus:bg-accent-30;
+	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
+	@apply esf:[&.is-active]:bg-accent-30;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-secondary-ghost {
+	@apply esf:text-inherit esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:hover:text-inherit esf:hover:bg-accent-30;
+	@apply esf:active:text-inherit esf:active:bg-accent-30;
+	@apply esf:focus:text-inherit esf:focus:bg-accent-30;
+	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
+	@apply esf:[&.is-active]:bg-accent-30;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-primary-basic {
+	@apply esf:text-inherit esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:hover:text-inherit esf:hover:text-accent;
+	@apply esf:active:text-inherit esf:active:text-accent;
+	@apply esf:focus:text-inherit esf:focus:text-accent;
+	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
+	@apply esf:[&.is-active]:text-accent;
+	@apply esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:items-center esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-is-filter-applied {
+	@apply esf:bg-accent-10 esf:text-accent;
+	@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
+	@apply esf:mt-5;
+	@apply esf:w-fit;
+	@apply esf:cursor-pointer;
+
+	@apply esf:[&_ul]:mt-5 esf:[&_ul]:text-gray-400;
+}
+
+/* Error — hide empty error elements */
+.es-error:empty,
+.es-global-msg:empty {
+	@apply esf:hidden;
+}
+
+.esf-main-container {
+	button:not(disabled),
+	a,
+	.choices {
+		@apply esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none;
+	}
+
+	.es-checkbox-toggle__input:focus + .es-checkbox-toggle__label:before {
+		@apply esf:outline-2 esf:outline-offset-2 esf:outline-accent esf:shadow-none;
+	}
+}
+
+.esf-pagination {
+	@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
+
+	& ul {
+		@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0;
+	}
+
+	& li {
+		@apply esf:m-0;
+	}
+
+	& a,
+	& span.current {
+		@apply esf:text-inherit esf:bg-transparent esf:border esf:border-border;
+		@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+		@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+	}
+
+	& span.current {
+		@apply esf:text-white esf:bg-accent-dark esf:border-accent-dark;
+	}
+}
+
+.es-loader.es-form-is-active .es-loader__spinner {
+	@apply esf:animate-spin esf:duration-500;
+}

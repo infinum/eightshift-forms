@@ -228,7 +228,6 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_SECURITY_IP_IGNORE_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Ignore IPs', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.

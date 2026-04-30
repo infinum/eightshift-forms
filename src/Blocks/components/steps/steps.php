@@ -8,34 +8,26 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$componentClass = $manifest['componentClass'] ?? '';
-
 $stepsTitle = Helpers::checkAttr('stepsTitle', $attributes, $manifest);
 $stepsContent = Helpers::checkAttr('stepsContent', $attributes, $manifest);
-
-$stepsClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-]);
 
 if (!$stepsContent) {
 	return;
 }
 
 ?>
-<div class="<?php echo esc_attr($stepsClass); ?>">
+<div>
 	<?php if ($stepsTitle) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
+		<div class="esf:inline-block esf:mb-16 esf:text-[0.95rem] esf:font-medium">
 			<?php echo esc_html($stepsTitle); ?>
 		</div>
 	<?php } ?>
 
-	<ul class="<?php echo esc_attr("{$componentClass}__steps"); ?>">
+	<ol class="esf-steps-list esf:flex esf:flex-col esf:gap-8 esf:m-0 esf:p-0">
 		<?php foreach ($stepsContent as $step) { ?>
-			<li class="<?php echo esc_attr("{$componentClass}__step"); ?>">
-				<span class="<?php echo esc_attr("{$componentClass}__step-inner"); ?>">
-					<?php echo wp_kses_post($step); ?>
-				</span>
+			<li class="esf:list-inside esf:text-gray-500 esf:m-0 esf:[&_a]:text-accent esf:[&_a]:underline esf:[&_a]:hover:text-accent-dark esf:[&_a]:transition-colors esf:[&_a]:duration-300">
+				<?php echo wp_kses_post($step); ?>
 			</li>
 		<?php } ?>
-	</ul>
+		</ul>
 </div>

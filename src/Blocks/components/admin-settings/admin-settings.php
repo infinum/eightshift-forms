@@ -9,16 +9,10 @@
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifestSection = Helpers::getComponent('admin-settings-section');
-
-echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
-$sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminSettingsPageTitle = Helpers::checkAttr('adminSettingsPageTitle', $attributes, $manifest);
-$adminSettingsSubTitle = Helpers::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
 $adminSettingsBackLink = Helpers::checkAttr('adminSettingsBackLink', $attributes, $manifest);
 $adminSettingsFormEditLink = Helpers::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
 $adminSettingsFormLocationsLink = Helpers::checkAttr('adminSettingsFormLocationsLink', $attributes, $manifest);
@@ -28,21 +22,15 @@ $adminSettingsType = Helpers::checkAttr('adminSettingsType', $attributes, $manif
 $adminSettingsIsGlobal = Helpers::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
 $adminSettingsNotice = Helpers::checkAttr('adminSettingsNotice', $attributes, $manifest);
 
-$layoutClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($sectionClass, $sectionClass),
-	Helpers::selector($sectionClass, $sectionClass, '', 'with-sidebar'),
-]);
-
 if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	return;
 }
 
 ?>
 
-<div class="<?php echo esc_attr($layoutClass); ?>">
+<div class="esf-main-container esf:css-reset esf:flex esf:flex-row esf:gap-30 esf:-ml-20 esf:p-40 esf:bg-gray-50 esf:min-h-screen">
 	<?php if ($adminSettingsNotice) { ?>
-		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
+		<div class="esf:flex esf:flex-col esf:gap-16">
 			<?php
 			echo Helpers::render(
 				'notice',
@@ -55,25 +43,19 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			?>
 		</div>
 	<?php } ?>
-	<div class="<?php echo esc_attr("{$sectionClass}__sidebar"); ?>">
-		<div class="<?php echo esc_attr("{$sectionClass}__section {$sectionClass}__section--clean"); ?>">
-			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__menu-link {$sectionClass}__menu-link--fit"); ?>">
-				<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-					<?php
-					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-					esc_html__('Forms', 'eightshift-forms');
-					?>
-				</span>
-			</a>
-		</div>
-
+	<div class="esf:flex esf:max-w-3xs esf:w-full esf:flex-col esf:gap-24 esf:sticky esf:self-start">
 		<?php
-		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+		echo Helpers::render('button', [
+			'buttonVariant' => 'secondaryGhost',
+			'buttonLabel' => esc_html__('Forms', 'eightshift-forms'),
+			'buttonIcon' => UtilsHelper::getUtilsIcons('arrowLeft'),
+			'buttonUrl' => $adminSettingsBackLink,
+		]);
+
 		echo Helpers::render(
 			'sidebar-section',
 			[
 				'items' => $adminSettingsSidebar,
-				'sectionClass' => $sectionClass,
 				'adminSettingsType' => $adminSettingsType,
 			],
 			'components',
@@ -82,45 +64,33 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		);
 		?>
 	</div>
-	<div class="<?php echo esc_attr("{$sectionClass}__main"); ?>">
-		<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
-			<div class="<?php echo esc_attr("{$sectionClass}__heading"); ?>">
-				<div class="<?php echo esc_attr("{$sectionClass}__heading-wrap"); ?>">
-					<div class="<?php echo esc_attr("{$sectionClass}__heading-title"); ?>">
-						<?php echo esc_html($adminSettingsPageTitle); ?>
-					</div>
+	<div class="esf:flex esf:flex-col esf:h-full esf:gap-15 esf:flex-1">
+		<div class="esf:flex esf:items-center esf:justify-between esf:min-h-14 esf:px-5">
+			<div class="esf:text-2xl esf:font-medium">
+				<?php echo esc_html($adminSettingsPageTitle); ?>
+			</div>
 
-					<?php if (!$adminSettingsIsGlobal) { ?>
-						<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
-							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
-								<?php
-								// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-								echo UtilsHelper::getUtilsIcons('edit'),
-								esc_html__('Edit form', 'eightshift-forms');
-								?>
-							</a>
+			<?php if (!$adminSettingsIsGlobal) { ?>
+				<div class="esf:flex esf:items-center esf:gap-8">
+					<?php echo Helpers::render('button', [
+						'buttonVariant' => 'secondaryGhost',
+						'buttonLabel' => esc_html__('Edit form', 'eightshift-forms'),
+						'buttonIcon' => UtilsHelper::getUtilsIcons('edit'),
+						'buttonUrl' => $adminSettingsFormEditLink,
+					]); ?>
 
-							<a href="<?php echo esc_url($adminSettingsFormLocationsLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
-								<?php
-								// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-								echo UtilsHelper::getUtilsIcons('location'),
-								esc_html__('Locations used', 'eightshift-forms');
-								?>
-							</a>
-						</div>
-					<?php } ?>
+					<?php echo Helpers::render('button', [
+						'buttonVariant' => 'secondaryGhost',
+						'buttonLabel' => esc_html__('Locations used', 'eightshift-forms'),
+						'buttonIcon' => UtilsHelper::getUtilsIcons('location'),
+						'buttonUrl' => $adminSettingsFormLocationsLink,
+					]); ?>
 				</div>
-
-				<?php if ($adminSettingsSubTitle) { ?>
-					<div class="<?php echo esc_attr("{$sectionClass}__description"); ?>">
-						<?php echo esc_html($adminSettingsSubTitle); ?>
-					</div>
-				<?php } ?>
-			</div>
-			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-				?>
-			</div>
+			<?php } ?>
+		</div>
+		<div class="esf:h-full esf:max-w-xl esf:px-5 esf:pb-5">
+			<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+			?>
 		</div>
 	</div>
 </div>

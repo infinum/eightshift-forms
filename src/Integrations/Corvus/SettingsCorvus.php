@@ -218,7 +218,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Is test mode enabled?', 'eightshift-forms'),
-										'checkboxHelp' => \__('In test mode all playments will go to the test payment gateway.', 'eightshift-forms'),
+										'checkboxHelp' => \__('In test mode all payments will go to the test payment gateway.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IS_TEST, self::SETTINGS_CORVUS_IS_TEST, $formId),
 										'checkboxValue' => self::SETTINGS_CORVUS_IS_TEST,
 										'checkboxAsToggle' => true,
@@ -228,7 +228,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'select',
@@ -483,7 +483,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -503,7 +503,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -547,8 +547,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
 										'component' => 'field',
@@ -667,7 +665,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
-								'textareaIsMonospace' => true,
 								'textareaIsRequired' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Store IDs', 'eightshift-forms'),
@@ -684,7 +681,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 							...($storeIds ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								...$this->getApiKeysSettings($storeIds),
 							] : []),
