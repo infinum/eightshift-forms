@@ -12,8 +12,13 @@
 @import '@eightshift/ui-components/dist/assets/style.css';
 
 /* ES Forms styles */
-@import 'tailwindcss' prefix(esf);
 @import '../../../../tailwind.css';
+
+body,
+body :is(#wpwrap) {
+	@import 'tailwindcss/theme.css' prefix(esf);
+	@import 'tailwindcss/utilities.css' prefix(esf);
+}
 
 /* All editor styles should be here. */
 
