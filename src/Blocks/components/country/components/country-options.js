@@ -22,6 +22,7 @@ import {
 	files,
 	googleTagManager,
 	migrationAlt,
+	options as optionsIcon,
 	range,
 	resetToZero,
 	search,
@@ -63,7 +64,7 @@ export const CountryOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={options}
+				icon={optionsIcon}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField

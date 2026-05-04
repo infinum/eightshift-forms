@@ -9,6 +9,7 @@ import {
 	files,
 	googleTagManager,
 	optionListAlt,
+	options as optionsIcon,
 	range,
 	resetToZero,
 	search,
@@ -62,7 +63,7 @@ export const SelectOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={options}
+				icon={optionsIcon}
 				text={__('General', 'eightshift-forms')}
 			/>
 			<NameField

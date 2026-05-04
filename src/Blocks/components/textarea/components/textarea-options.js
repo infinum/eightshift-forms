@@ -10,6 +10,7 @@ import {
 	fieldRequired,
 	fieldValue,
 	googleTagManager,
+	options as optionsIcon,
 	readOnly,
 	regex,
 	resetToZero,
@@ -66,7 +67,7 @@ export const TextareaOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={options}
+				icon={optionsIcon}
 				text={__('General', 'eightshift-forms')}
 			/>
 

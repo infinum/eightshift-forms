@@ -21,6 +21,7 @@ import {
 	fieldRequired,
 	googleTagManager,
 	optionListAlt,
+	options as optionsIcon,
 	readOnly,
 	regex,
 	resetToZero,
@@ -86,7 +87,7 @@ export const InputOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={options}
+				icon={optionsIcon}
 				text={__('General', 'eightshift-forms')}
 			/>
 

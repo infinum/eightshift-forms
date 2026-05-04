@@ -10,7 +10,14 @@ import {
 	FieldOptionsLayout,
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
-import { checks, fieldPlaceholder, fieldRequired, optionListAlt, tools } from '@eightshift/ui-components/icons';
+import {
+	checks,
+	fieldPlaceholder,
+	fieldRequired,
+	optionListAlt,
+	options as optionsIcon,
+	tools,
+} from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -50,7 +57,7 @@ export const CheckboxesOptions = (attributes) => {
 		<ContainerPanel>
 			<Spacer
 				border
-				icon={options}
+				icon={optionsIcon}
 				text={__('General', 'eightshift-forms')}
 			/>
 
