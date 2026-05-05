@@ -8,6 +8,10 @@ import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blo
 import {
 	conditionalVisibility,
 	edit,
+	errorCircle,
+	fieldDisabled,
+	fieldReadonly,
+	fieldRequired,
 	globe,
 	hide,
 	idCard,
@@ -18,9 +22,9 @@ import {
 } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { AnimatedVisibility, RichLabel, Notice, Button, InputField, Tooltip } from '@eightshift/ui-components';
-import { unescapeHTML, camelCase } from '@eightshift/ui-components/utilities';
+import { camelCase, clsx } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
-import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
+import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
 import globalSettings from './../../manifest.json';
 
 /**
@@ -352,47 +356,44 @@ export const MissingName = ({ value, asPlaceholder, isOptional = false }) => {
 };
 
 export const StatusFieldOutput = ({ components }) => {
-	if (!components) {
+	if (!components?.length) {
 		return null;
 	}
 
+	const statusIcons = {
+		conditionals: conditionalVisibility,
+		hidden: hide,
+		missingName: errorCircle,
+		required: fieldRequired,
+		disabled: fieldDisabled,
+		readonly: fieldReadonly,
+	};
+
 	return (
-		<div className='esf:absolute! esf:-bottom-10! esf:-right-10! esf:flex! esf:gap-4!'>
-			{components.map((component) => {
-				if (!component) {
+		<div className='esf:absolute esf:-bottom-10 esf:-right-10 esf:flex esf:gap-4'>
+			{components.map((name) => {
+				const icon = statusIcons[name];
+
+				if (!icon) {
 					return null;
 				}
 
+				const classes = clsx(
+					'esf:bg-accent-600 esf:rounded-full esf:p-5 esf:text-white',
+					name === 'missingName' ? 'esf:bg-red-500' : '',
+				);
+
 				return (
 					<div
-						className='esf:bg-accent-600! esf:rounded-full! esf:p-5! esf:text-white!'
-						key={component.key}
+						key={name}
+						className={classes}
 					>
-						{component}
+						{icon}
 					</div>
 				);
 			})}
 		</div>
 	);
-};
-
-/**
- * Outputs notification if status is conditionals.
- *
- * @param {bool} value Field value.
- *
- * @returns Component
- */
-export const StatusIconConditionals = () => {
-	return conditionalVisibility;
-};
-
-export const StatusIconHidden = () => {
-	return hide;
-};
-
-export const StatusIconMissingName = () => {
-	return warning;
 };
 
 /**
@@ -692,45 +693,4 @@ export const DashboardButton = () => {
 			{__('Visit dashboard settings', 'eightshift-forms')}
 		</Button>
 	);
-};
-
-/**
- * Returns output select item with icon.
- *
- * @returns object
- */
-export const outputFormSelectItemWithIcon = (props) => {
-	const { label, id, metadata } = props;
-
-	if (!id) {
-		return '';
-	}
-
-	let outputLabel = unescapeHTML(label);
-	let icon = getUtilsIcons('post');
-
-	if (!outputLabel) {
-		outputLabel = __(`Form ${id}`, 'eightshift-forms');
-	}
-
-	if (getUtilsIcons(metadata)) {
-		icon = getUtilsIcons(metadata);
-	}
-
-	if (isDeveloperMode()) {
-		outputLabel = `${outputLabel} (${id})`;
-	}
-
-	return {
-		id,
-		label: (
-			<span
-				dangerouslySetInnerHTML={{
-					__html: `<span>${icon}</span>${outputLabel}`,
-				}}
-			/>
-		),
-		value: id,
-		metadata,
-	};
 };

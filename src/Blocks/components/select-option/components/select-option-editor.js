@@ -1,12 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	StatusFieldOutput,
-	StatusIconHidden,
-	StatusIconConditionals,
-	StatusIconMissingName,
-	preventSaveOnMissingProps,
-} from './../../utils';
+import { StatusFieldOutput, preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
 
@@ -32,10 +26,10 @@ export const SelectOptionEditor = (attributes) => {
 
 			<StatusFieldOutput
 				components={[
-					selectOptionIsHidden && <StatusIconHidden />,
-					!selectOptionValue && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+					selectOptionIsHidden && 'hidden',
+					!selectOptionValue && 'missingName',
+					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
+				].filter(Boolean)}
 			/>
 		</div>
 	);

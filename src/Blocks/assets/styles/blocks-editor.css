@@ -1,13 +1,3 @@
-/* Eightshift UI components - WP overrides */
-@import '@eightshift/ui-components/dist/assets/wp-overrides/fix-label-text-case.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/increase-sidebar-width.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/make-block-messages-nicer.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/restyle-tooltips.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/round-corners.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/unify-button-sizes.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/replace-fonts.css';
-@import '@eightshift/ui-components/dist/assets/wp-overrides/allow-full-width-blocks.css';
-
 /* Eightshift UI components */
 @import '@eightshift/ui-components/dist/assets/style.css';
 
@@ -23,42 +13,63 @@ body :is(#wpwrap) {
 /* All editor styles should be here. */
 
 .esf-input {
-	@apply esf:w-full esf:border esf:border-secondary-200 esf:bg-secondary-100 esf:p-10 esf:rounded-md esf:text-sm esf:h-42 esf:text-secondary-900 esf:placeholder:text-secondary-400;
+	@apply esf:w-full;
+	@apply esf:border;
+	@apply esf:border-border;
+	@apply esf:bg-white;
+	@apply esf:p-10;
+	@apply esf:rounded-md;
+	@apply esf:text-sm;
+	@apply esf:h-42;
+	@apply esf:shadow-none;
+	@apply esf:text-black;
+	@apply esf:placeholder:text-gray-400;
 }
 
 .esf-field-hidden {
 	@apply esf:opacity-50;
 }
 
-.esf-input-disabled {
-	@apply esf:bg-secondary-100 esf:text-secondary-400;
-}
-
-.esf-input-readonly {
-	@apply esf:bg-secondary-100 esf:text-secondary-400;
-}
-
-.esf-input-required {
-	@apply esf:bg-secondary-100 esf:text-secondary-400;
-}
-
 .esf-fieldset {
-	@apply esf:flex esf:flex-col esf:gap-10 esf:border esf:border-secondary-200 esf:bg-secondary-100 esf:p-10 esf:rounded-md esf:text-sm esf:text-secondary-900;
+	@apply esf:flex;
+	@apply esf:flex-col;
+	@apply esf:gap-1;
+	@apply esf:border;
+	@apply esf:border-secondary-200;
+	@apply esf:bg-white;
+	@apply esf:p-10;
+	@apply esf:rounded-md;
+	@apply esf:text-sm;
+	@apply esf:text-black;
 }
 
 .esf-fieldset-item {
-	@apply esf:py-8 esf:px-5;
+	@apply esf:py-8;
+	@apply esf:px-5;
 }
 
 .esf-fieldset-checkbox {
-	@apply esf:flex esf:flex-row esf:gap-10 esf:items-center;
-	@apply esf:before:content-[''] esf:before:block esf:before:size-15 esf:before:border esf:before:border-secondary-200;
+	@apply esf:flex;
+	@apply esf:flex-row;
+	@apply esf:gap-10;
+	@apply esf:items-center;
+
+	&:before {
+		@apply esf:content-[''];
+		@apply esf:block;
+		@apply esf:size-15;
+		@apply esf:border;
+		@apply esf:border-secondary-200;
+	}
 }
 
 .esf-fieldset-radio {
-	@apply esf:before:rounded-full;
+	&:before {
+		@apply esf:rounded-full;
+	}
 }
 
 .esf-fieldset-checked {
-	@apply esf:before:bg-accent-500 esf:before:border-accent-500;
+	@apply esf:before:bg-accent;
+	@apply esf:before:border-accent;
 }

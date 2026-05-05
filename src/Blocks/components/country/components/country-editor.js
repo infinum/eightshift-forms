@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { props, checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconMissingName, StatusIconConditionals } from '../../utils';
+import { preventSaveOnMissingProps } from '../../utils';
 import manifest from '../manifest.json';
 
 export const CountryEditor = (attributes) => {
@@ -28,10 +28,10 @@ export const CountryEditor = (attributes) => {
 					fieldContent: country,
 					fieldIsRequired: checkAttr('countryIsRequired', attributes, manifest),
 				})}
-				statusSlog={[
-					!countryName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+				statusSlot={[
+					!countryName && 'missingName',
+					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
+				].filter(Boolean)}
 			/>
 		</>
 	);

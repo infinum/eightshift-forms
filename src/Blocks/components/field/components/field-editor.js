@@ -1,5 +1,5 @@
 import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
-import { StatusIconHidden, StatusFieldOutput } from './../../utils';
+import { StatusFieldOutput } from './../../utils';
 import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
 
@@ -24,7 +24,7 @@ export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) =
 	);
 };
 export const FieldEditor = (attributes) => {
-	const { statusSlog = [] } = attributes;
+	const { statusSlot = [] } = attributes;
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
@@ -42,6 +42,8 @@ export const FieldEditor = (attributes) => {
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
+	const statusFieldData = [fieldHidden && 'hidden', ...statusSlot].filter(Boolean);
+
 	return (
 		<div className={clsx('esf:w-full esf:flex! esf:flex-col! esf:gap-4!', fieldHidden && 'esf-field-hidden')}>
 			{fieldLabel && !fieldHideLabel && (
@@ -53,7 +55,7 @@ export const FieldEditor = (attributes) => {
 			{fieldBeforeContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldBeforeContent}</div>}
 
 			<div className='esf:relative!'>
-				{fieldContent} <StatusFieldOutput components={[fieldHidden && <StatusIconHidden />, ...statusSlog]} />
+				{fieldContent} <StatusFieldOutput components={statusFieldData} />
 			</div>
 
 			{fieldSuffixContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldSuffixContent}</div>}

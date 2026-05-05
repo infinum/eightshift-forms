@@ -1,9 +1,8 @@
-import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { AsyncSelect } from '@eightshift/ui-components';
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { form } from '@eightshift/ui-components/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
-import { FormEditButton, outputFormSelectItemWithIcon } from '../../../components/utils';
+import { FormEditButton } from '../../../components/utils';
 import manifest from '../manifest.json';
 
 export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOptions }) => {
@@ -18,27 +17,7 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 			<Placeholder
 				icon={form}
 				label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-			>
-				<AsyncSelect
-					label={<span>{__('To get started, select a form:', 'eightshift-forms')}</span>}
-					help={__("If you can't find a form, start typing its name while the dropdown is open.", 'eightshift-forms')}
-					value={outputFormSelectItemWithIcon(
-						Object.keys(formsFormPostIdRaw).length ? formsFormPostIdRaw : { id: formsFormPostId },
-					)}
-					loadOptions={formSelectOptions}
-					onChange={(value) => {
-						setAttributes({
-							[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
-								id: value?.id,
-								label: value?.metadata?.label,
-								value: value?.metadata?.value,
-								metadata: value?.metadata?.metadata,
-							},
-							[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
-						});
-					}}
-				/>
-			</Placeholder>
+			/>
 		);
 	}
 

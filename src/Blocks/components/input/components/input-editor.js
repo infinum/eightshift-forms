@@ -1,8 +1,7 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import { preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
-import { clsx } from '@eightshift/ui-components/utilities';
 
 export const InputEditor = (attributes) => {
 	const { blockClientId, prefix } = attributes;
@@ -32,35 +31,29 @@ export const InputEditor = (attributes) => {
 	}
 
 	const input = (
-		<>
-			<input
-				className={clsx(
-					'esf-input',
-					inputIsDisabled && 'esf-input-disabled',
-					inputIsReadOnly && 'esf-input-readonly',
-					inputIsRequired && 'esf-input-required',
-				)}
-				value={inputValue}
-				placeholder={inputPlaceholder}
-				type={inputType}
-				disabled
-				{...additionalProps}
-			/>
-		</>
+		<input
+			className='esf-input'
+			value={inputValue}
+			placeholder={inputPlaceholder}
+			type={inputType}
+			disabled
+			{...additionalProps}
+		/>
 	);
 
 	return (
-		<>
-			<FieldEditor
-				{...props('field', attributes, {
-					fieldContent: input,
-					fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
-				})}
-				statusSlog={[
-					!inputName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
-			/>
-		</>
+		<FieldEditor
+			{...props('field', attributes, {
+				fieldContent: input,
+				fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
+			})}
+			statusSlot={[
+				!inputName && 'missingName',
+				inputIsDisabled && 'disabled',
+				inputIsReadOnly && 'readonly',
+				inputIsRequired && 'required',
+				attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
+			].filter(Boolean)}
+		/>
 	);
 };

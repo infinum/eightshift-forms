@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import { preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const DateEditor = (attributes) => {
@@ -32,10 +32,9 @@ export const DateEditor = (attributes) => {
 					fieldContent: date,
 					fieldIsRequired: checkAttr('dateIsRequired', attributes, manifest),
 				})}
-				statusSlog={[
-					!dateName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+				statusSlot={[!dateName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
+					Boolean,
+				)}
 			/>
 		</>
 	);

@@ -6,7 +6,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { getAttrKey, checkAttr, props } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getAttrKey, checkAttr, props, fetchFromWpRest } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,
 	MultiSelect,
@@ -18,7 +18,6 @@ import {
 	Button,
 	ContainerPanel,
 	InputField,
-	ContainerGroup,
 	Modal,
 } from '@eightshift/ui-components';
 import {
@@ -34,16 +33,13 @@ import {
 	visible,
 } from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
-import {
-	FormEditButton,
-	LocationsButton,
-	SettingsButton,
-	outputFormSelectItemWithIcon,
-} from '../../../components/utils';
-import { getRestUrl } from '../../../components/form/assets/state-init';
+import { FormEditButton, LocationsButton, SettingsButton } from '../../../components/utils';
+import { getRestUrl, getUtilsIcons } from '../../../components/form/assets/state-init';
 import manifest from '../manifest.json';
+import { Spacer } from '@eightshift/ui-components';
+import { location } from '@eightshift/ui-components/icons';
 
-export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOptions }) => {
+export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const { isGeoPreview, setIsGeoPreview } = preview;
 
 	const formsFormPostId = checkAttr('formsFormPostId', attributes, manifest);
@@ -96,13 +92,40 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 
 	return (
 		<>
-			<ContainerPanel title={__('Form', 'eightshift-forms')}>
+			<ContainerPanel>
 				<AsyncSelect
-					help={__("If you can't find a form, start typing its name while the dropdown is open.", 'eightshift-forms')}
-					value={outputFormSelectItemWithIcon(
-						Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : { id: formsFormPostId },
+					value={Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : { id: formsFormPostId }}
+					fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
+						noCache: true,
+						processLabel: ({ title: { rendered: label } }) => label,
+						fields: 'id,title,integration_type',
+						processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+							id,
+							value: id,
+							label,
+							metadata,
+						}),
+					})}
+					customValueDisplay={(item) => (
+						<span className='esf:flex esf:items-center esf:gap-10'>
+							<span
+								dangerouslySetInnerHTML={{
+									__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+								}}
+							/>
+							{item?.label}
+						</span>
 					)}
-					loadOptions={formSelectOptions}
+					customMenuOption={(item) => (
+						<span className='esf:flex esf:items-center esf:gap-10'>
+							<span
+								dangerouslySetInnerHTML={{
+									__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+								}}
+							/>
+							{item?.label}
+						</span>
+					)}
 					onChange={(value) => {
 						setAttributes({
 							[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
@@ -126,20 +149,21 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 					</BaseControl>
 				)}
 
-				<ContainerGroup
+				<Spacer
+					border
 					icon={tools}
-					label={__('Advanced', 'eightshift-forms')}
-				>
-					<InputField
-						icon={codeVariable}
-						label={__('Additional type specifier', 'eightshift-forms')}
-						help={__('Additional data type selectors', 'eightshift-forms')}
-						value={formsFormDataTypeSelector}
-						onChange={(value) =>
-							setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })
-						}
-					/>
-				</ContainerGroup>
+					text={__('Advanced', 'eightshift-forms')}
+				/>
+
+				<InputField
+					icon={codeVariable}
+					label={__('Additional type specifier', 'eightshift-forms')}
+					help={__('Additional data type selectors', 'eightshift-forms')}
+					value={formsFormDataTypeSelector}
+					onChange={(value) =>
+						setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })
+					}
+				/>
 
 				{formsStyleOptions?.length > 0 && (
 					<MultiSelect
@@ -153,51 +177,54 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 				)}
 			</ContainerPanel>
 
-			<ContainerPanel
-				title={__('Results output', 'eightshift-forms')}
-				initialOpen={true}
-			>
-				<Repeater
-					noReordering
+			<Spacer border />
+
+			{formsUseCustomResultOutputFeature && (
+				<ContainerPanel
+					title={__('Results output', 'eightshift-forms')}
 					icon={paletteColor}
-					label={__('Variation', 'eightshift-forms')}
-					items={formsVariation}
-					attributeName={getAttrKey('formsVariation', attributes, manifest)}
-					setAttributes={setAttributes}
+					closable
 				>
-					{formsVariation.map((item, index) => (
-						<RepeaterItem
-							key={index}
-							icon={paletteColor}
-							title={item?.title}
-						>
-							<div>
-								<InputField
-									value={item.title}
-									label={__('Key', 'eightshift-forms')}
-									onChange={(value) => {
-										const newArray = [...formsVariation];
-										newArray[index].title = value;
+					<Repeater
+						noReordering
+						icon={paletteColor}
+						label={__('Variation', 'eightshift-forms')}
+						items={formsVariation}
+						attributeName={getAttrKey('formsVariation', attributes, manifest)}
+						setAttributes={setAttributes}
+					>
+						{formsVariation.map((item, index) => (
+							<RepeaterItem
+								key={index}
+								icon={paletteColor}
+								title={item?.title}
+							>
+								<div>
+									<InputField
+										value={item.title}
+										label={__('Key', 'eightshift-forms')}
+										onChange={(value) => {
+											const newArray = [...formsVariation];
+											newArray[index].title = value;
 
-										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
-									}}
-								/>
-								<InputField
-									value={item.slug}
-									label={__('Value', 'eightshift-forms')}
-									onChange={(value) => {
-										const newArray = [...formsVariation];
-										newArray[index].slug = value;
+											setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+										}}
+									/>
+									<InputField
+										value={item.slug}
+										label={__('Value', 'eightshift-forms')}
+										onChange={(value) => {
+											const newArray = [...formsVariation];
+											newArray[index].slug = value;
 
-										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
-									}}
-								/>
-							</div>
-						</RepeaterItem>
-					))}
-				</Repeater>
+											setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+										}}
+									/>
+								</div>
+							</RepeaterItem>
+						))}
+					</Repeater>
 
-				{formsUseCustomResultOutputFeature && (
 					<>
 						<Button
 							variant='secondary'
@@ -261,7 +288,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].label = value;
 
-														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+														setAttributes({
+															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+														});
 													}}
 												/>
 												<InputField
@@ -271,7 +300,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].title = value;
 
-														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+														setAttributes({
+															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+														});
 													}}
 												/>
 											</div>
@@ -301,7 +332,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].url = value;
 
-														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+														setAttributes({
+															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+														});
 													}}
 												/>
 											)}
@@ -355,7 +388,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].fieldName = value;
 
-														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+														setAttributes({
+															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+														});
 													}}
 												/>
 												<InputField
@@ -365,7 +400,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].fieldValue = value;
 
-														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+														setAttributes({
+															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+														});
 													}}
 												/>
 											</div>
@@ -375,13 +412,14 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 							</Modal>
 						)}
 					</>
-				)}
-			</ContainerPanel>
+				</ContainerPanel>
+			)}
 
 			{formsUseGeolocation && (
 				<ContainerPanel
 					title={__('Geolocation', 'eightshift-forms')}
-					initialOpen={false}
+					icon={location}
+					closable
 				>
 					<MultiSelect
 						label={__('Show form only if in these countries:', 'eightshift-forms')}
@@ -471,12 +509,42 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 								return (
 									<div key={index}>
 										<AsyncSelect
-											value={outputFormSelectItemWithIcon(
+											value={
 												Object.keys(formsFormGeolocationAlternatives?.[index]?.form ?? {}).length
 													? formsFormGeolocationAlternatives?.[index]?.form
-													: { id: formsFormGeolocationAlternatives?.[index]?.formId },
+													: { id: formsFormGeolocationAlternatives?.[index]?.formId }
+											}
+											fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
+												noCache: true,
+												processLabel: ({ title: { rendered: label } }) => label,
+												fields: 'id,title,integration_type',
+												processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+													id,
+													value: id,
+													label,
+													metadata,
+												}),
+											})}
+											customValueDisplay={(item) => (
+												<span className='esf:flex esf:items-center esf:gap-10'>
+													<span
+														dangerouslySetInnerHTML={{
+															__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+														}}
+													/>
+													{item?.label}
+												</span>
 											)}
-											loadOptions={formSelectOptions}
+											customMenuOption={(item) => (
+												<span className='esf:flex esf:items-center esf:gap-10'>
+													<span
+														dangerouslySetInnerHTML={{
+															__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+														}}
+													/>
+													{item?.label}
+												</span>
+											)}
 											onChange={(value) => {
 												const newData = [...formsFormGeolocationAlternatives];
 												newData[index].form = {

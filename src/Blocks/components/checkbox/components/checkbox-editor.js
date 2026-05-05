@@ -1,12 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	StatusFieldOutput,
-	StatusIconConditionals,
-	StatusIconHidden,
-	StatusIconMissingName,
-	preventSaveOnMissingProps,
-} from './../../utils';
+import { StatusFieldOutput, preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
 
@@ -42,10 +36,10 @@ export const CheckboxEditor = (attributes) => {
 			/>
 			<StatusFieldOutput
 				components={[
-					checkboxIsHidden && <StatusIconHidden />,
-					!checkboxValue && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+					checkboxIsHidden && 'hidden',
+					!checkboxValue && 'missingName',
+					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
+				].filter(Boolean)}
 			/>
 		</div>
 	);

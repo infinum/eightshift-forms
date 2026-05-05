@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import { preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
@@ -13,29 +13,25 @@ export const TextareaEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
 	const textarea = (
-		<>
-			<textarea
-				className='esf-input'
-				placeholder={textareaPlaceholder}
-				readOnly
-			>
-				{textareaValue}
-			</textarea>
-		</>
+		<textarea
+			className='esf-input esf:h-80'
+			placeholder={textareaPlaceholder}
+			disabled
+		>
+			{textareaValue}
+		</textarea>
 	);
 
 	return (
-		<>
-			<FieldEditor
-				{...props('field', attributes, {
-					fieldContent: textarea,
-					fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
-				})}
-				statusSlog={[
-					!textareaName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
-			/>
-		</>
+		<FieldEditor
+			{...props('field', attributes, {
+				fieldContent: textarea,
+				fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
+			})}
+			statusSlot={[
+				!textareaName && 'missingName',
+				attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
+			].filter(Boolean)}
+		/>
 	);
 };

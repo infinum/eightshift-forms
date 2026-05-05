@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import { preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const PhoneEditor = (attributes) => {
@@ -38,10 +38,9 @@ export const PhoneEditor = (attributes) => {
 					fieldContent: phone,
 					fieldIsRequired: checkAttr('phoneIsRequired', attributes, manifest),
 				})}
-				statusSlog={[
-					!phoneName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+				statusSlot={[!phoneName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
+					Boolean,
+				)}
 			/>
 		</>
 	);

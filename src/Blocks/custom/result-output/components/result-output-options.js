@@ -1,11 +1,13 @@
+/* global esFormsLocalization */
+
 import { __ } from '@wordpress/i18n';
-import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { AsyncSelect, ContainerPanel } from '@eightshift/ui-components';
-import { outputFormSelectItemWithIcon } from '../../../components/utils';
+import { checkAttr, fetchFromWpRest, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { AsyncSelect, ContainerPanel, Toggle } from '@eightshift/ui-components';
 import { visibilityAlt } from '@eightshift/ui-components/icons';
+import { getUtilsIcons } from '../../../components/form/assets/state-init';
 import manifest from '../manifest.json';
 
-export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptions, resultSelectOptions }) => {
+export const ResultOutputOptions = ({ attributes, setAttributes }) => {
 	const resultOutputFormPostId = checkAttr('resultOutputFormPostId', attributes, manifest);
 	const resultOutputFormPostIdRaw = checkAttr('resultOutputFormPostIdRaw', attributes, manifest);
 	const resultOutputPostId = checkAttr('resultOutputPostId', attributes, manifest);
@@ -13,17 +15,21 @@ export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptio
 	const resultOutputHide = checkAttr('resultOutputHide', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Result Output', 'eightshift-forms')}>
+		<ContainerPanel>
 			<AsyncSelect
 				label={__('Result Output', 'eightshift-forms')}
-				help={__(
-					"If you can't find your output item, try typing its name while the dropdown is open.",
-					'eightshift-forms',
-				)}
-				value={outputFormSelectItemWithIcon(
-					Object.keys(resultOutputPostIdRaw ?? {}).length ? resultOutputPostIdRaw : { id: resultOutputPostId },
-				)}
-				loadOptions={resultSelectOptions}
+				value={Object.keys(resultOutputPostIdRaw ?? {}).length ? resultOutputPostIdRaw : { id: resultOutputPostId }}
+				fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.results, {
+					noCache: true,
+					processLabel: ({ title: { rendered: label } }) => label,
+					fields: 'id,title,integration_type',
+					processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+						id,
+						value: id,
+						label,
+						metadata,
+					}),
+				})}
 				onChange={(value) => {
 					setAttributes({
 						[getAttrKey('resultOutputPostIdRaw', attributes, manifest)]: {
@@ -39,16 +45,42 @@ export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptio
 
 			<AsyncSelect
 				label={__('Connected Form', 'eightshift-forms')}
-				help={__(
-					"If you can't find your connected form, try typing its name while the dropdown is open.",
-					'eightshift-forms',
-				)}
-				value={outputFormSelectItemWithIcon(
+				value={
 					Object.keys(resultOutputFormPostIdRaw ?? {}).length
 						? resultOutputFormPostIdRaw
-						: { id: resultOutputFormPostId },
+						: { id: resultOutputFormPostId }
+				}
+				fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
+					noCache: true,
+					processLabel: ({ title: { rendered: label } }) => label,
+					fields: 'id,title,integration_type',
+					processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+						id,
+						value: id,
+						label,
+						metadata,
+					}),
+				})}
+				customValueDisplay={(item) => (
+					<span className='esf:flex esf:items-center esf:gap-10'>
+						<span
+							dangerouslySetInnerHTML={{
+								__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+							}}
+						/>
+						{item?.label}
+					</span>
 				)}
-				loadOptions={formSelectOptions}
+				customMenuOption={(item) => (
+					<span className='esf:flex esf:items-center esf:gap-10'>
+						<span
+							dangerouslySetInnerHTML={{
+								__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+							}}
+						/>
+						{item?.label}
+					</span>
+				)}
 				onChange={(value) => {
 					setAttributes({
 						[getAttrKey('resultOutputFormPostIdRaw', attributes, manifest)]: {
@@ -62,7 +94,7 @@ export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptio
 				}}
 			/>
 
-			<IconToggle
+			<Toggle
 				icon={visibilityAlt}
 				label={__('Hide by default', 'eightshift-forms')}
 				help={__('Hide result output block by default. It will be shown only on form success.', 'eightshift-forms')}

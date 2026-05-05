@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { props, checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconConditionals, StatusIconMissingName } from './../../utils';
+import { preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const FileEditor = (attributes) => {
@@ -36,10 +36,9 @@ export const FileEditor = (attributes) => {
 					fieldContent: file,
 					fieldIsRequired: checkAttr('fileIsRequired', attributes, manifest),
 				})}
-				statusSlog={[
-					!fileName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+				statusSlot={[!fileName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
+					Boolean,
+				)}
 			/>
 		</>
 	);

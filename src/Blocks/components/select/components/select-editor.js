@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { preventSaveOnMissingProps, StatusIconMissingName, StatusIconConditionals } from './../../utils';
+import { preventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
@@ -20,10 +20,10 @@ export const SelectEditor = (attributes) => {
 					fieldContent: selectComponent,
 					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
-				statusSlog={[
-					!selectName && <StatusIconMissingName />,
-					attributes?.[`${prefix}ConditionalTagsUse`] && <StatusIconConditionals />,
-				]}
+				statusSlot={[
+					!selectName && 'missingName',
+					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
+				].filter(Boolean)}
 			/>
 		</>
 	);
