@@ -10,6 +10,7 @@ import {
 	Button,
 	HStack,
 	NumberPicker,
+	Notice,
 } from '@eightshift/ui-components';
 import {
 	FieldOptions,
@@ -160,6 +161,16 @@ export const FileOptions = (attributes) => {
 				onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
 			/>
+
+			{fileAccept && (
+				<Notice
+					type='info'
+					label={__(
+						'Make sure the file types you have entered are supported by WordPress uploader.',
+						'eightshift-forms',
+					)}
+				/>
+			)}
 
 			<BaseControl
 				icon={fileSize}

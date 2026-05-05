@@ -8,7 +8,6 @@
 
 namespace EightshiftForms\View;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use EightshiftFormsVendor\EightshiftLibs\View\AbstractEscapedView;
 
@@ -41,8 +40,6 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 			return $result;
 		}
 
-		// $dataTags = \array_merge($tags['data'], $this->getOutputTags());
-
 		$output = \array_merge($tags, self::FORM, $this->getSvg());
 
 		$items = ['button', 'form', 'select', 'input', 'textarea', 'label', 'span'];
@@ -50,23 +47,11 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 			$output[$item]['data-*'] = true;
 		}
 
+		$output['select']['multiple'] = true;
+
 		$result = $output;
 
 		return $result;
-	}
-
-	/**
-	 * Get all output tags.
-	 *
-	 * @return array<string, array<string, bool>|true>
-	 */
-	private function getOutputTags(): array
-	{
-		$output = [];
-		foreach (Helpers::getSettings()['enums']['attrs'] as $item) {
-			$output[\str_replace('data-', '', $item)] = true;
-		}
-		return $output;
 	}
 
 	/**

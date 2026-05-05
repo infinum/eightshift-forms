@@ -103,12 +103,15 @@ body {
 	}
 }
 
+.esf-button-disabled {
+	@apply esf:opacity-50 esf:cursor-not-allowed esf:pointer-events-none;
+}
+
 .esf-button-primary {
 	@apply esf:text-white esf:bg-accent esf:border-accent;
 	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
 	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
 	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
-	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
 	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
 	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
@@ -118,7 +121,7 @@ body {
 	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
 	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
 	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
-	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
+
 	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
 	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
@@ -128,7 +131,6 @@ body {
 	@apply esf:hover:text-accent esf:hover:bg-accent-30;
 	@apply esf:active:text-accent esf:active:bg-accent-30;
 	@apply esf:focus:text-accent esf:focus:bg-accent-30;
-	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
 	@apply esf:[&.is-active]:bg-accent-30;
 	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
@@ -138,7 +140,6 @@ body {
 	@apply esf:hover:text-inherit esf:hover:bg-accent-30;
 	@apply esf:active:text-inherit esf:active:bg-accent-30;
 	@apply esf:focus:text-inherit esf:focus:bg-accent-30;
-	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
 	@apply esf:[&.is-active]:bg-accent-30;
 	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
@@ -148,7 +149,6 @@ body {
 	@apply esf:hover:text-inherit;
 	@apply esf:active:text-inherit;
 	@apply esf:focus:text-inherit;
-	@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed;
 	@apply esf:[&.is-active]:text-accent;
 	@apply esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:items-center esf:gap-10 esf:transition-colors esf:duration-300;
 }
@@ -176,6 +176,10 @@ body {
 		@apply esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none;
 	}
 
+	button {
+		@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed esf:disabled:pointer-events-none;
+	}
+
 	.es-checkbox-toggle__input:focus + .es-checkbox-toggle__label:before {
 		@apply esf:outline-2 esf:outline-offset-2 esf:outline-accent esf:shadow-none;
 	}
@@ -200,7 +204,7 @@ body {
 	}
 
 	& span.current {
-		@apply esf:text-white esf:bg-accent-dark esf:border-accent-dark;
+		@apply esf:text-white esf:bg-accent esf:border-accent;
 	}
 }
 

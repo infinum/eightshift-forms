@@ -28,10 +28,11 @@ interface ValidatorInterface
 	 * Validate files from the validation reference.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, string> $manualValidationReference Manual validation reference.
 	 *
 	 * @return array<int|string, string>
 	 */
-	public function validateFiles(array $formDetails): array;
+	public function validateFiles(array $formDetails, array $manualValidationReference = []): array;
 
 	/**
 	 * Validate mandatory params or FormDetails.

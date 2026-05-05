@@ -74,12 +74,16 @@ $class = Helpers::clsx([
 	$buttonClass,
 	$buttonIconSizeClass,
 	$additionalClass,
+	Helpers::selector($buttonIsDisabled && $outputTag === 'a', 'esf-button-disabled'),
 	'esf:w-fit',
 ]);
 
 ?>
 
-<<?php echo esc_attr($outputTag); ?> class="<?php echo esc_attr($class); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($buttonAttrs)); ?>>
+<<?php echo esc_attr($outputTag); ?>
+	class="<?php echo esc_attr($class); ?>"
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($buttonAttrs)); ?>>
+
 	<?php
 	if (!empty($buttonIcon)) {
 		echo wp_kses_post($buttonIcon);

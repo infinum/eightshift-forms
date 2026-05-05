@@ -77,17 +77,9 @@ class Theme implements ServiceInterface
 	public function getBlockFormsTailwindSelectors(): array
 	{
 		return [
-			'forms' => [
-				'base' => [
-					'esf:[&.es-form-is-geolocation-loading]:min-h-100',
-					'esf:[&.es-form-is-geolocation-loading_.es-form]:hidden',
-					'esf:[&.es-form-is-geolocation-loading>.es-loader__geolocation]:block',
-				],
-			],
 			'form' => [
 				'parts' => [
 					'fields' => [
-						'group/field',
 						'esf:flex esf:flex-col esf:gap-20',
 					],
 				],
@@ -108,7 +100,6 @@ class Theme implements ServiceInterface
 						...Theme::THEME_ADMIN_SELECTORS['label'],
 					],
 					'help' => Theme::THEME_ADMIN_SELECTORS['help'],
-					'error' => [],
 				],
 			],
 			'input' => [
@@ -121,33 +112,6 @@ class Theme implements ServiceInterface
 					...Theme::THEME_ADMIN_SELECTORS['input'],
 					'esf:min-h-200',
 					'esf:h-auto',
-				],
-			],
-			'select' => [
-				'base' => [
-					...Theme::THEME_ADMIN_SELECTORS['input'],
-				],
-			],
-			'country' => [
-				'base' => [
-					...Theme::THEME_ADMIN_SELECTORS['input'],
-				],
-			],
-			'date' => [
-				'base' => [
-					...Theme::THEME_ADMIN_SELECTORS['input'],
-				],
-			],
-			'phone' => [
-				'base' => [
-					...Theme::THEME_ADMIN_SELECTORS['input'],
-				],
-				'parts' => [
-					'field-content-wrap' => [
-						'esf:grid',
-						'esf:gap-x-10',
-						'esf:grid-cols-[min(120px)_1fr]',
-					],
 				],
 			],
 			'error' => [
@@ -184,6 +148,21 @@ class Theme implements ServiceInterface
 						'esf:[.es-checkbox__label]:block',
 						'esf:[.es-checkbox__label]:pl-30',
 						'esf:[.es-checkbox__label]:min-h-20',
+						'esf:[.es-checkbox__label]:after:content-["✓"]',
+						'esf:[.es-checkbox__label]:after:absolute',
+						'esf:[.es-checkbox__label]:after:top-0',
+						'esf:[.es-checkbox__label]:after:start-0',
+						'esf:[.es-checkbox__label]:after:w-20',
+						'esf:[.es-checkbox__label]:after:h-20',
+						'esf:[.es-checkbox__label]:after:flex',
+						'esf:[.es-checkbox__label]:after:items-center',
+						'esf:[.es-checkbox__label]:after:justify-center',
+						'esf:[.es-checkbox__label]:after:text-white',
+						'esf:[.es-checkbox__label]:after:text-xs',
+						'esf:[.es-checkbox__label]:after:font-semibold',
+						'esf:[.es-checkbox__label]:after:transition-opacity',
+						'esf:[.es-checkbox__label]:after:opacity-0',
+						'esf:[.es-checkbox__label]:peer-checked/checkbox:after:opacity-100',
 						'esf:[.es-checkbox__label]:before:content-[\'\']',
 						'esf:[.es-checkbox__label]:before:absolute',
 						'esf:[.es-checkbox__label]:before:top-0',
@@ -234,51 +213,7 @@ class Theme implements ServiceInterface
 					],
 					'help' => [
 						...Theme::THEME_ADMIN_SELECTORS['help'],
-						'esf:[.es-checkbox-toggle\_\_help]:pr-50',
-					],
-				],
-			],
-			'radio' => [
-				'base' => [
-					'esf:[&.es-form-is-disabled]:opacity-50',
-				],
-				'parts' => [
-					'input' => [
-						'esf:peer/checkbox',
-						'esf:sr-only',
-					],
-					'content' => [
-						'esf:flex',
-						'esf:flex-row',
-						'esf:gap-10',
-						'esf:items-center',
-					],
-					'label' => [
-						...Theme::THEME_ADMIN_SELECTORS['label'],
-						'esf:cursor-pointer',
-						'esf:flex',
-						'esf:flex-row',
-						'esf:gap-10',
-						'esf:items-center',
-						'esf:before:content-[\'\']',
-						'esf:before:block',
-						'esf:before:size-15',
-						'esf:before:shrink-0',
-						'esf:before:border',
-						'esf:before:border-secondary-200',
-						'esf:before:rounded-full',
-						'esf:peer-checked/checkbox:before:bg-accent-500',
-						'esf:peer-checked/checkbox:before:border-accent-500',
-					],
-				],
-			],
-			'radios' => [
-				'parts' => [
-					'field-content-wrap' => [
-						'esf:group-[.es-field--radios-style-horizontal]/field:flex',
-						'esf:group-[.es-field--radios-style-horizontal]/field:flex-wrap',
-						'esf:group-[.es-field--radios-style-horizontal]/field:items-center',
-						'esf:group-[.es-field--radios-style-horizontal]/field:gap-10',
+						'esf:[.es-checkbox-toggle__help]:pr-50',
 					],
 				],
 			],
@@ -287,19 +222,12 @@ class Theme implements ServiceInterface
 					'field-label' => [
 						'esf:font-semibold',
 					],
-					'field-content-wrap' => [
-						'esf:group-[.es-field--checkboxes-style-horizontal]/field:flex',
-						'esf:group-[.es-field--checkboxes-style-horizontal]/field:flex-wrap',
-						'esf:group-[.es-field--checkboxes-style-horizontal]/field:items-center',
-						'esf:group-[.es-field--checkboxes-style-horizontal]/field:gap-10',
-					],
 				],
 			],
 			'loader' => [
 				'base' => [
-					'esf:group/loader',
 					'esf:hidden',
-					'esf:absolute',
+					'esf:fixed',
 					'esf:inset-0',
 					'esf:w-screen',
 					'esf:h-screen',
@@ -352,7 +280,6 @@ class Theme implements ServiceInterface
 					'esf:opacity-0',
 					'esf:translate-x-32',
 
-					// 'esf:hidden',
 					'esf:[&.es-form-is-active]:translate-x-0',
 					'esf:[&.es-form-is-active]:opacity-100',
 					'esf:data-[status="error"]:bg-red-100 esf:data-[status="error"]:border-red-500 esf:data-[status="error"]:text-red-950',
@@ -363,198 +290,46 @@ class Theme implements ServiceInterface
 			],
 			'file' => [
 				'base' => [
-					'esf:absolute',
-					'esf:-z-10',
-					'esf:opacity-0',
+					'esf:sr-only',
 				],
 				'parts' => [
+					'field' => [
+						'esf:group/file',
+						'esf:[&_.dz-image]:hidden',
+						'esf:[&_.dz-progress]:hidden',
+						'esf:[&_.dz-success-mark]:hidden',
+						'esf:[&_.dz-error-mark]:hidden',
+						'esf:[&_.dz-progress]:hidden',
+						'esf:[&_.dz-error-message]:text-red-500',
+						'esf:[&_.dz-remove]:text-accent',
+						'esf:[&_.dz-remove]:underline',
+						'esf:[&_.dz-remove]:hover:text-accent-dark',
+						'esf:[&_.dz-remove]:cursor-pointer',
+						'esf:[&_.dz-remove]:transition-colors',
+						'esf:[&_.dz-remove]:duration-300',
+					],
 					'button' => [
-						'esf:order-2',
-						'esf:mr-5',
-						'esf:text-secondary-600',
-						'esf:hover:underline',
+						'esf-button-primary-outline',
 					],
 					'custom-wrap' => [
+						'esf:group-[&.dz-max-files-reached]/file:opacity-50',
+						'esf:group-[&.dz-max-files-reached]/file:pointer-events-none',
 						'esf:w-full',
+						'esf:rounded-md',
+						'esf:p-20',
 						'esf:cursor-pointer',
-						'esf:text-gray-500',
-						'esf:text-sm',
-						'esf:py-10',
+						'esf:flex',
+						'esf:flex-col',
+						'esf:justify-center',
+						'esf:items-center',
+						'esf:gap-10',
 						'esf:bg-white',
 						'esf:border',
-						'esf:border-secondary-400',
+						'esf:border-border',
 						'esf:border-dashed',
-						'esf:flex',
-						'esf:flex-row',
-						'esf:flex-wrap',
-						'esf:justify-center',
-						'esf:[&.dz-max-files-reached]:opacity-50',
 					],
 					'info' => [
 						'esf:text-gray-500',
-						'esf:text-sm',
-						'esf:order-3',
-					],
-				],
-			],
-			'step' => [
-				'base' => [
-					'esf:hidden',
-					'esf:w-full',
-					'esf:[&.es-form-is-active]:block',
-				],
-				'parts' => [
-					'debug-details' => [
-						'esf:hidden',
-					],
-					'inner' => [
-						'esf:flex',
-						'esf:flex-wrap',
-						'esf:w-full',
-					],
-					'navigation' => [
-						'esf:flex',
-						'esf:items-center',
-						'esf:justify-between',
-						'esf:w-full',
-					],
-					'navigation-inner' => [
-						'esf:flex',
-						'esf:items-center',
-						'esf:justify-between',
-						'esf:w-full',
-					],
-					'navigation-next' => [
-						'esf:ml-auto',
-					],
-				],
-			],
-			'progress-bar' => [
-				'base' => [
-					'esf:w-full',
-					'esf:flex',
-					'esf:items-center',
-				],
-				'parts' => [
-					'item' => [
-						'esf:relative',
-						'esf:z-20',
-						'esf:border',
-						'esf:w-20',
-						'esf:h-20',
-						'esf:border-secondary-300',
-						'esf:bg-white',
-						'esf:rounded-full',
-						'esf:flex',
-						'esf:items-center',
-						'esf:justify-center',
-						'esf:text-xs',
-						'esf:text-gray-500',
-						'esf:transition-colors',
-						'esf:[&.es-form-is-active]:border-accent-600',
-						'esf:[&.es-form-is-active]:bg-accent-600',
-						'esf:[&.es-form-is-active]:text-white',
-						'esf:[&.es-form-is-filled]:border-accent-600',
-						'esf:[&.es-form-is-filled]:bg-accent-600',
-						'esf:[&.es-form-is-filled]:text-white',
-					],
-					'item-inner' => [
-						'esf:text-xs',
-					],
-					'multistep' => [
-						'esf:relative',
-						'esf:flex',
-						'esf:justify-between',
-						'esf:gap-10',
-						'esf:w-full',
-						'esf:before:content-[\'\']',
-						'esf:before:border-t',
-						'esf:before:border-secondary-300',
-						'esf:before:border-dashed',
-						'esf:before:z-10',
-						'esf:before:absolute',
-						'esf:before:top-10',
-						'esf:before:left-0',
-						'esf:before:right-0',
-					],
-					'multiflow' => [
-						'esf:relative',
-						'esf:flex',
-						'esf:justify-between',
-						'esf:gap-10',
-						'esf:w-full',
-						'esf:before:content-[\'\']',
-						'esf:before:border-t',
-						'esf:before:border-secondary-300',
-						'esf:before:border-dashed',
-						'esf:before:z-10',
-						'esf:before:absolute',
-						'esf:before:top-10',
-						'esf:before:left-0',
-						'esf:before:right-0',
-					],
-				],
-			],
-			'range' => [
-				'base' => [
-					'esf:w-full',
-					'esf:cursor-pointer',
-					'esf:appearance-none',
-					'esf:h-5',
-					'esf:rounded-full',
-					'esf:bg-secondary-200',
-				],
-				'parts' => [
-					'field-content-wrap' => [
-						'esf:flex',
-						'esf:flex-wrap',
-						'esf:items-center',
-						'esf:justify-between',
-						'esf:gap-5',
-					],
-					'min' => [
-						'esf:text-gray-500',
-						'esf:text-xs',
-					],
-					'max' => [
-						'esf:text-gray-500',
-						'esf:text-xs',
-					],
-					'current' => [
-						'esf:text-secondary-400',
-						'esf:text-xs',
-					],
-				],
-			],
-			'form-edit-actions' => [
-				'base' => [
-					'esf:flex',
-					'esf:items-center',
-					'esf:gap-5',
-				],
-				'parts' => [
-					'link' => [
-						'esf:text-secondary-400',
-						'esf:hover:text-accent-600',
-						'esf:transition-colors',
-						'esf:duration-300',
-						'esf:[&>svg]:w-20',
-						'esf:[&>svg]:h-20',
-					],
-				],
-			],
-			'rating' => [
-				'base' => [
-					'esf:inline-flex',
-					'esf:items-center',
-					'esf:relative',
-				],
-				'parts' => [
-					'star' => [
-						'esf:flex',
-						'esf:cursor-pointer',
-						'esf:[&_*]:select-none',
-						'esf:[&_*]:pointer-events-none',
 					],
 				],
 			],

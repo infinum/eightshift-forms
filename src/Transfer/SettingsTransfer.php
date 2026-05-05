@@ -251,11 +251,11 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'dividerSeparator' => true,
 									],
 									[
+										// File accept is defined in the File upload route.
 										'component' => 'file',
 										'fileName' => 'upload',
 										'fileIsRequired' => true,
 										'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
-										'fileAccept' => 'json',
 										'additionalClass' => UtilsHelper::getStateSelectorAdmin('transferUpload'),
 									],
 									[

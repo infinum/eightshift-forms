@@ -59,27 +59,28 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		foreach ($data as $key => $value) {
+			$settingsGlobal = $value['settingsGlobal'] ?? '';
 			$use = $value['use'] ?? '';
+			$type = $value['type'] ?? '';
+			$labels = $value['labels'] ?? [];
+			$icon = $labels['icon'] ?? '';
+			$title = $labels['title'] ?? '';
 
-			if (!$use) {
+			if ($key === SettingsDashboard::SETTINGS_TYPE_KEY) {
+				continue;
+			}
+
+			if (!$settingsGlobal) {
 				continue;
 			}
 
 			$checked = SettingsHelpers::isOptionCheckboxChecked($use, $use);
 
-			$labels = $value['labels'] ?? [];
-
 			$item = [
 				'component' => 'card-inline',
-				'cardInlineTitle' => $labels['title'] ?? '',
-				'cardInlineIcon' => $labels['icon'] ?? '',
+				'cardInlineTitle' => $title,
+				'cardInlineIcon' => $icon,
 				'cardInlineRightContent' => [
-					$checked ? [
-						'component' => 'button',
-						'buttonVariant' => 'primaryGhost',
-						'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($key),
-						'buttonLabel' => \__('Edit', 'eightshift-forms'),
-					] : [],
 					[
 						'component' => 'checkboxes',
 						'checkboxesName' => SettingsHelpers::getOptionName($use),
@@ -94,10 +95,19 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 							],
 						],
 					],
+					[
+						'component' => 'button',
+						'buttonVariant' => 'primaryGhost',
+						'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($key),
+						'buttonIsDisabled' => !$checked,
+						'buttonLabel' => \__('Edit', 'eightshift-forms'),
+					],
 				],
 			];
 
-			$filtered[$value['type']][] = $item;
+			if ($type) {
+				$filtered[$type][] = $item;
+			}
 		}
 
 		$output = [

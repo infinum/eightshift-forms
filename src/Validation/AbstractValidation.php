@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Helpers\HooksHelpers;
-use Throwable;
 
 /**
  * Class Validation
@@ -122,20 +121,17 @@ abstract class AbstractValidation implements ValidatorInterface
 	{
 		$denyIfFileIsNotUploaded = \apply_filters(HooksHelpers::getFilterName(['validation', 'forceMimetypeFromFs']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 
-		if (\getenv('TEST')) {
-			$denyIfFileIsNotUploaded = \getenv('test_force_option_eightshift_forms_force_mimetype_from_fs');
-		}
-
 		$mimeTypes = \array_flip(\wp_get_mime_types());
 
 		$fileMimetype = $file['type'];
 		if ($file['tmp_name'] ?? false) {
-			try {
-				$fileMimetype = \mime_content_type($file['tmp_name']);
-			} catch (Throwable $t) {
+			$detected = \mime_content_type($file['tmp_name']);
+			if ($detected === false) {
 				if ($denyIfFileIsNotUploaded) {
 					return false;
 				}
+			} else {
+				$fileMimetype = $detected;
 			}
 		} elseif ($denyIfFileIsNotUploaded) {
 			return false;
@@ -153,7 +149,7 @@ abstract class AbstractValidation implements ValidatorInterface
 
 		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
 
-		$allowedExtensionsForMimetype = \explode('|', $mimeTypes[$fileMimetype] ?? '');
+		$allowedExtensionsForMimetype = \array_filter(\explode('|', (string) ($mimeTypes[$fileMimetype] ?? '')));
 
 		if (\in_array($fileExtension, $allowedExtensionsForMimetype, true)) {
 			return true;

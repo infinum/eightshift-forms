@@ -1172,7 +1172,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					'fieldSkip' => true,
 					'inputName' => 'search',
 					'inputPlaceholder' => \__('Search', 'eightshift-forms'),
-					'additionalClass' => "$searchSelector esf:max-w-3xs!",
+					'additionalClass' => "$searchSelector esf:w-170!",
 					'inputValue' => $search,
 				]),
 			] : []),
@@ -1208,7 +1208,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						]),
 					]),
 					'selectPlaceholder' => \__('Per page', 'eightshift-forms'),
-					'additionalClass' => Helpers::clsx([...Theme::THEME_ADMIN_SELECTORS['input'], $perPageSelector, 'esf:max-w-90!']),
+					'additionalClass' => Helpers::clsx([...Theme::THEME_ADMIN_SELECTORS['input'], $perPageSelector, 'esf:w-95!']),
 				]),
 			] : []),
 		];

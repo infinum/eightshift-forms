@@ -133,9 +133,12 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		// Manual reference for validation is only used in admin as there are no editor form builder to get the correct reference.
+		$manualValidationReference = $this->getManualValidationReferenceByFormType($formDetails);
+
 		// Validate files.
 		if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-			if ($validate = $this->getValidator()->validateFiles($formDetails)) {
+			if ($validate = $this->getValidator()->validateFiles($formDetails, $manualValidationReference)) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
@@ -158,7 +161,7 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		// Upload files to temp folder.
 		$formDetails[Config::FD_FILES_UPLOAD] = $uploadFile;
 
-		if (UploadHelpers::isUploadError($uploadError)) {
+		if (UploadHelpers::isUploadError((string) $uploadError)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
@@ -185,5 +188,23 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 				UtilsHelper::getStateResponseOutputKey('fileName') => $uploadFile['outputName'] ?? '',
 			],
 		];
+	}
+
+	/**
+	 * Get manual validation reference.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getManualValidationReferenceByFormType(array $formDetails): array
+	{
+		if ($formDetails[Config::FD_TYPE] === Config::FILE_UPLOAD_ADMIN_TYPE_NAME) {
+			return [
+				'accept' => 'json',
+			];
+		}
+
+		return [];
 	}
 }

@@ -87,7 +87,6 @@ if ($fileIsRequired) {
 
 $fileAttrs['aria-invalid'] = 'false';
 
-
 $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"

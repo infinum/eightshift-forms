@@ -327,10 +327,11 @@ class Validator extends AbstractValidation
 	 * Validate files from the validation reference.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, string> $manualValidationReference Manual validation reference.
 	 *
 	 * @return array<int|string, string>
 	 */
-	public function validateFiles(array $formDetails): array
+	public function validateFiles(array $formDetails, array $manualValidationReference = []): array
 	{
 		$output = [];
 		$file = $formDetails[Config::FD_FILES_UPLOAD];
@@ -346,6 +347,10 @@ class Validator extends AbstractValidation
 
 		// Find validation reference by ID.
 		$reference = $validationReference[$fieldName] ?? [];
+
+		if ($manualValidationReference) {
+			$reference = \array_merge($reference, $manualValidationReference);
+		}
 
 		// Loop all validations from the reference.
 		foreach ($reference as $dataKey => $dataValue) {

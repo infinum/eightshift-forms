@@ -103,9 +103,8 @@ export class Transfer {
 	onClickItem = (event) => {
 		const { value, checked, name } = event.target;
 
-		const button = document.querySelector(
-			`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('migrationType')}='${name}']`,
-		);
+		const button = document.querySelector(`[${this.state.getStateAttribute('migrationType')}='${name}']`);
+
 		const items = button?.getAttribute(this.state.getStateAttribute('migrationExportItems'));
 
 		let output = items ? items.split(',') : [];

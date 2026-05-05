@@ -111,7 +111,7 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	 * as the driver field at the top of the first tab, and downstream tabs
 	 * conditionally present based on the active provider.
 	 *
-	 * @return array<int, array<mixed>>
+	 * @return array<string,mixed>
 	 */
 	public static function getSettingsGlobalData(): array
 	{

@@ -556,7 +556,7 @@ export class ConditionalTags {
 		const custom = this.state.getStateElementCustom(name, formId);
 
 		// Get active items.
-		custom?.getValue(true).forEach((innerName) => {
+		custom?.getValue(true)?.forEach((innerName) => {
 			// Remove active items by name.
 			if (this.getFieldInnerByName(formId, name, innerName)) {
 				custom?.removeActiveItemsByValue(innerName);

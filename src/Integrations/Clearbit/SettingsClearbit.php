@@ -242,6 +242,14 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 							'tabLabel' => \__('Available fields', 'eightshift-forms'),
 							'tabContent' => [
 								[
+									'component' => 'intro',
+									'introSubtitle' => \__('Select the Clearbit fields you want to use.', 'eightshift-forms'),
+								],
+								[
+									'component' => 'divider',
+									'dividerSeparator' => true,
+								],
+								[
 									'component' => 'checkboxes',
 									'checkboxesFieldHideLabel' => true,
 									'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
@@ -373,7 +381,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'introTitle' => $item,
 									'introTitleType' => 'small',
 								],
-								[
+								$properties ? [
 									'component' => 'select',
 									'selectName' => $item,
 									'selectFieldHideLabel' => true,
@@ -389,7 +397,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 										},
 										$properties
 									),
-								],
+								] : [],
 							],
 						];
 					},
