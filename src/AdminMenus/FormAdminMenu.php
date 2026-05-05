@@ -435,6 +435,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'introTitle' => \__('Entry list is empty', 'eightshift-forms'),
 						'introSubtitle' => \__('You don\'t have any form entries on this form.', 'eightshift-forms'),
 						'introIcon' => 'emptyStateEntries',
+						'introType' => 'highlighted',
 						'introActions' => Helpers::render('button', [
 							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
 							'buttonVariant' => 'primaryOutline',
@@ -449,6 +450,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'introTitle' => \__('Activity log list is empty', 'eightshift-forms'),
 						'introSubtitle' => \__('You don\'t have any activity logs on this form.', 'eightshift-forms'),
 						'introIcon' => 'emptyStateEntries',
+						'introType' => 'highlighted',
 						'introActions' => Helpers::render('button', [
 							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
 							'buttonVariant' => 'primaryOutline',
@@ -463,6 +465,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'introTitle' => \__('You have no forms', 'eightshift-forms'),
 						'introSubtitle' => \__('You don\'t have any forms to show.', 'eightshift-forms'),
 						'introIcon' => 'emptyStateFormList',
+						'introType' => 'highlighted',
 						'introActions' => Helpers::render('button', [
 							'buttonLabel' => \__('Add your first form', 'eightshift-forms'),
 							'buttonVariant' => 'primaryOutline',

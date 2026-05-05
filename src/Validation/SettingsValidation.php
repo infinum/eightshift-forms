@@ -119,19 +119,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Messages', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => SettingsHelpers::getSettingName($key),
-								'inputFieldLabel' => \ucfirst($key),
-								'inputPlaceholder' => $this->labels->getLabels()[$formType][$key] ?? '',
-								'inputValue' => SettingsHelpers::getSettingValue($key, $formId),
-							],
-						],
-					],
-					[
-						'component' => 'tab',
 						'tabLabel' => \__('Users', 'eightshift-forms'),
 						'tabContent' => [
 							[
@@ -184,6 +171,19 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 									],
 								],
 							] : []),
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Messages', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => SettingsHelpers::getSettingName($key),
+								'inputFieldLabel' => \ucfirst($key),
+								'inputPlaceholder' => $this->labels->getLabels()[$formType][$key] ?? '',
+								'inputValue' => SettingsHelpers::getSettingValue($key, $formId),
+							],
 						],
 					],
 				],
