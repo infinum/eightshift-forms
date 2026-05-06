@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$data = $attributes['data'] ?? [];
-
 $paginationTotalPages = Helpers::checkAttr('paginationTotalPages', $attributes, $manifest);
 $paginationCurrentPage = Helpers::checkAttr('paginationCurrentPage', $attributes, $manifest);
 

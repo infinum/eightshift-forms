@@ -26,7 +26,7 @@ $classes = Helpers::clsx([
 <div class="<?php echo esc_attr($classes); ?>">
 	<table class="esf:border-spacing-0 esf:w-full">
 		<?php if ($tableHead) { ?>
-			<thead class="esf:bg-secondary-100">
+			<thead class="esf:bg-gray-100">
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
 						<th class="esf:border-r esf:border-b esf:border-border esf:p-8 esf:text-left esf:last:border-r-0">

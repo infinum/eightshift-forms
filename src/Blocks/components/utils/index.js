@@ -379,7 +379,7 @@ export const StatusFieldOutput = ({ components }) => {
 				}
 
 				const classes = clsx(
-					'esf:bg-accent-600 esf:rounded-full esf:p-5 esf:text-white',
+					'esf:bg-accent esf:rounded-full esf:p-5 esf:text-white',
 					name === 'missingName' ? 'esf:bg-red-500' : '',
 				);
 

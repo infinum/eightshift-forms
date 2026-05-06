@@ -1,3 +1,6 @@
+@import 'tailwindcss' prefix(esf);
+@import '../../../../tailwind.css';
+
 .esf-pagination {
 	@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
 

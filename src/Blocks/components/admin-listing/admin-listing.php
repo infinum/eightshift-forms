@@ -21,7 +21,7 @@ $adminListingPageTitle = Helpers::checkAttr('adminListingPageTitle', $attributes
 $adminListingPageSubTitle = Helpers::checkAttr('adminListingPageSubTitle', $attributes, $manifest);
 $adminListingShowNoItems = Helpers::checkAttr('adminListingShowNoItems', $attributes, $manifest);
 $adminListingItems = Helpers::checkAttr('adminListingItems', $attributes, $manifest);
-$adminListingPagination = Helpers::checkAttr('adminListingPagination', $attributes, $manifest);
+$adminListingData = Helpers::checkAttr('adminListingData', $attributes, $manifest);
 $adminListingTopItems = Helpers::checkAttr('adminListingTopItems', $attributes, $manifest);
 $adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $manifest);
 
@@ -69,7 +69,8 @@ $additionalAttributes = [
 				<?php
 				echo wp_kses_post(Helpers::ensureString($adminListingItems));
 				echo Helpers::render('pagination', [
-					'adminListingPagination' => $adminListingPagination,
+					'paginationTotalPages' => $adminListingData['totalPages'] ?? 1,
+					'paginationCurrentPage' => $adminListingData['currentPage'] ?? 1,
 				], 'components', true);
 				?>
 			<?php } ?>

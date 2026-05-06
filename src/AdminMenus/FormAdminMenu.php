@@ -318,7 +318,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				'adminListingItems' => $this->getListingItems($items, $type, $parent),
 				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent, $search, $perPage),
 				'adminListingNoItems' => $this->getNoItemsMessage($type, $parent),
-				'adminListingPagination' => $data
+				'adminListingData' => $data,
 			]
 		);
 	}
@@ -1029,7 +1029,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		}
 
 		if ($status !== 'publish' && $showOnlyStatus) {
-			$output[] = '<span class="esf:text-secondary-400 esf:bg-secondary-100 esf:text-xs esf:px-5 esf:py-2 esf:rounded-md">' . ($status) . '</span>';
+			$output[] = '<span class="esf:text-gray-400 esf:bg-gray-100 esf:text-xs esf:px-5 esf:py-2 esf:rounded-md">' . ($status) . '</span>';
 		}
 
 		return $output;

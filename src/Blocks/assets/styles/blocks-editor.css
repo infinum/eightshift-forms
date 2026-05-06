@@ -1,3 +1,5 @@
+/* stylelint-disable selector-max-specificity, no-invalid-position-at-import-rule */
+
 /* Eightshift UI components */
 @import '@eightshift/ui-components/dist/assets/style.css';
 
@@ -35,7 +37,7 @@ body :is(#wpwrap) {
 	@apply esf:flex-col;
 	@apply esf:gap-1;
 	@apply esf:border;
-	@apply esf:border-secondary-200;
+	@apply esf:border-border;
 	@apply esf:bg-white;
 	@apply esf:p-10;
 	@apply esf:rounded-md;
@@ -59,7 +61,7 @@ body :is(#wpwrap) {
 		@apply esf:block;
 		@apply esf:size-15;
 		@apply esf:border;
-		@apply esf:border-secondary-200;
+		@apply esf:border-border;
 	}
 }
 

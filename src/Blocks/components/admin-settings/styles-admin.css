@@ -1,0 +1,47 @@
+/* stylelint-disable selector-max-specificity */
+
+@import 'tailwindcss' prefix(esf);
+@import '../../../../tailwind.css';
+
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cache'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='location'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='dashboard'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='debug'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='documentation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='migration'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='transfer'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wp'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wpml'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='calculator'] {
+	.es-submit--global {
+		@apply esf:hidden;
+	}
+}
+
+.esf-main-container {
+	/* stylelint-disable-next-line selector-type-no-unknown */
+	button:not(disabled),
+	a,
+	.choices {
+		@apply esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none;
+	}
+
+	button {
+		@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed esf:disabled:pointer-events-none;
+	}
+
+	.es-checkbox-toggle__input:focus + .es-checkbox-toggle__label::before {
+		@apply esf:outline-2 esf:outline-offset-2 esf:outline-accent esf:shadow-none;
+	}
+}
+
+.esf-is-filter-applied {
+	@apply esf:bg-accent-10 esf:text-accent;
+	@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
+	@apply esf:mt-5;
+	@apply esf:w-fit;
+	@apply esf:cursor-pointer;
+	@apply esf:[&_ul]:mt-5 esf:[&_ul]:text-gray-400;
+}

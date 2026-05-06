@@ -15,14 +15,14 @@ export const FileEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('fileName', attributes, manifest), fileName);
 
 	const file = (
-		<div className='esf:flex! esf:flex-col! esf:gap-10! esf:items-center! esf:text-center! esf:border! esf:border-dashed! esf:border-secondary-200! esf:bg-secondary-100! esf:p-20! esf:rounded-md!'>
+		<div className='esf:flex! esf:flex-col! esf:gap-10! esf:items-center! esf:text-center! esf:border! esf:border-dashed! esf:border-border! esf:bg-gray-100! esf:p-20! esf:rounded-md!'>
 			<div>
-				<div className='esf:text-base! esf:text-secondary-600!'>
+				<div className='esf:text-base! esf:text-gray-600!'>
 					{fileCustomInfoTextUse && fileCustomInfoText}
 					{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
 				</div>
 
-				<div className='esf:text-xs! esf:text-secondary-400!'>
+				<div className='esf:text-xs! esf:text-gray-400!'>
 					{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}
 				</div>
 			</div>

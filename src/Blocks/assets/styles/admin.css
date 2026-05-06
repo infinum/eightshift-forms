@@ -1,3 +1,5 @@
+/* stylelint-disable selector-max-specificity, no-invalid-position-at-import-rule */
+
 /* Eightshift UI components */
 @import '@eightshift/ui-components/dist/assets/style-admin.css';
 

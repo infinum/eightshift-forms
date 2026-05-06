@@ -19,7 +19,7 @@ export const SelectOptionEditor = (attributes) => {
 			className={clsx(
 				'esf-fieldset-item',
 				selectOptionIsHidden && 'esf-field-hidden',
-				selectOptionIsSelected && 'esf:text-accent-600!',
+				selectOptionIsSelected && 'esf:text-accent!',
 			)}
 		>
 			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}

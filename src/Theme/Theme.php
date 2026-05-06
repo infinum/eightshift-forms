@@ -388,6 +388,19 @@ class Theme implements ServiceInterface
 						'esf:data-[status="info"]:text-sky-950',
 					],
 				],
+				'loader' => [
+					'base' => [
+						'esf:z-99999',
+						'esf:fixed!',
+						'esf:w-screen!',
+						'esf:h-screen!',
+					],
+					'parts' => [
+						'overlay' => [
+							'esf:fixed!',
+						],
+					],
+				],
 			]
 		);
 
@@ -422,6 +435,11 @@ class Theme implements ServiceInterface
 	public function getTheme(): array
 	{
 		return [
+			'forms' => [
+				'base' => [
+					'esf:relative',
+				],
+			],
 			'form' => [
 				'parts' => [
 					'fields' => [
@@ -570,16 +588,17 @@ class Theme implements ServiceInterface
 			'loader' => [
 				'base' => [
 					'esf:hidden',
-					'esf:fixed',
+					'esf:absolute',
 					'esf:inset-0',
-					'esf:w-screen',
-					'esf:h-screen',
-					'esf:z-99999',
+					'esf:w-full',
+					'esf:h-full',
 					'esf:[&.es-form-is-active]:block',
+					'esf:[&.es-form-is-active]:[&_.es-loader\_\_spinner]:animate-spin',
+					'esf:[&.es-form-is-active]:[&_.es-loader\_\_spinner]:duration-500',
 				],
 				'parts' => [
 					'overlay' => [
-						'esf:fixed',
+						'esf:absolute',
 						'esf:inset-0',
 						'esf:w-full',
 						'esf:h-full',
@@ -590,7 +609,7 @@ class Theme implements ServiceInterface
 						'esf:duration-300',
 					],
 					'spinner' => [
-						'esf:absolute',
+						'esf:sticky',
 						'esf:left-1/2',
 						'esf:top-1/2',
 						'esf:-translate-x-1/2',
@@ -600,7 +619,7 @@ class Theme implements ServiceInterface
 						'esf:h-40',
 						'esf:flex',
 						'esf:border-3',
-						'esf:border-x-accent-500',
+						'esf:border-x-accent',
 						'esf:border-y-transparent',
 						'esf:rounded-full',
 					],

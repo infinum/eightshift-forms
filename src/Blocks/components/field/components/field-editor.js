@@ -48,7 +48,7 @@ export const FieldEditor = (attributes) => {
 		<div className={clsx('esf:w-full esf:flex! esf:flex-col! esf:gap-4!', fieldHidden && 'esf-field-hidden')}>
 			{fieldLabel && !fieldHideLabel && (
 				<div
-					className='esf:text-base! esf:text-secondary-900!'
+					className='esf:text-base! esf:text-gray-900!'
 					dangerouslySetInnerHTML={{ __html: fieldLabel }}
 				/>
 			)}

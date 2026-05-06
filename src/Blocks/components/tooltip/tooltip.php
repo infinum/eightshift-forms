@@ -30,7 +30,7 @@ $tooltipClass = Helpers::clsx([
 	Helpers::selector($selectorClass, $selectorClass, $componentClass),
 	Helpers::selector($additionalTooltipClass, $additionalTooltipClass),
 	'esf:relative esf:cursor-pointer esf:inline-flex esf:group/tooltip',
-	'esf:hover:text-accent-600',
+	'esf:hover:text-accent',
 ]);
 
 ?>
@@ -38,7 +38,7 @@ $tooltipClass = Helpers::clsx([
 <span class="<?php echo esc_attr($tooltipClass); ?>">
 	<?php echo UtilsHelper::getUtilsIcons('tooltip'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>
-	<span class="<?php echo esc_attr("{$componentClass}__inner"); ?> <?php echo esc_attr($tooltipInnerPositionClass); ?> esf:bg-accent-600 esf:text-white esf:rounded esf:hidden esf:group-hover/tooltip:block esf:p-[5px_10px] esf:absolute esf:z-[999] esf:w-150 esf:text-[11px] esf:leading-snug">
+	<span class="<?php echo esc_attr("{$componentClass}__inner"); ?> <?php echo esc_attr($tooltipInnerPositionClass); ?> esf:bg-accent esf:text-white esf:rounded esf:hidden esf:group-hover/tooltip:block esf:p-[5px_10px] esf:absolute esf:z-[999] esf:w-150 esf:text-[11px] esf:leading-snug">
 		<?php echo esc_html($tooltipContent); ?>
 	</span>
 </span>

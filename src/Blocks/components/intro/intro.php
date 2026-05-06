@@ -37,7 +37,7 @@ $introSubtitleClass = Helpers::clsx([
 ]);
 
 $introIconClass = Helpers::clsx([
-	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-accent-600',
+	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-accent',
 ]);
 
 ?>
