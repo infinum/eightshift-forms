@@ -241,7 +241,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 								'textareaIsPreventSubmit' => true,
 								'textareaIsReadOnly' => true,
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput') . ' esf:min-h-800',
 							],
 							[
 								'component' => 'button',

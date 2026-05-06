@@ -43,7 +43,7 @@ $additionalAttributes = [
 	?>
 
 	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo esc_attr(UtilsHelper::getStateSelectorAdmin('listingBulkItems')); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
-		<div class="esf:bg-white esf:rounded-md esf:flex-1">
+		<div class="esf:bg-white esf:rounded-md esf:flex-1 esf:border esf:border-border">
 			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-border">
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
 					<?php
@@ -76,7 +76,7 @@ $additionalAttributes = [
 		</div>
 
 		<div class="esf:max-w-sm esf:flex esf:flex-col esf:gap-20">
-			<div class="esf:bg-white esf:rounded-md esf:p-20">
+			<div class="esf:bg-white esf:rounded-md esf:p-20 esf:border esf:border-border">
 				<?php
 				echo Helpers::render('intro', [
 					'introTitle' => __('Need help?', 'eightshift-forms'),
@@ -93,7 +93,7 @@ $additionalAttributes = [
 				?>
 			</div>
 
-			<div class="esf:bg-white esf:rounded-md esf:p-20">
+			<div class="esf:bg-white esf:rounded-md esf:p-20 esf:border esf:border-border">
 				<?php
 				echo Helpers::render('intro', [
 					'introTitle' => __('Search filters', 'eightshift-forms'),

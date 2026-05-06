@@ -195,7 +195,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 						'textareaIsPreventSubmit' => true,
 						'textareaIsReadOnly' => true,
-						'additionalClass' => UtilsHelper::getStateSelectorAdmin('migrationOutput'),
+						'additionalClass' => UtilsHelper::getStateSelectorAdmin('migrationOutput') . ' esf:min-h-800',
 					],
 				],
 			],

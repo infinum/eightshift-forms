@@ -386,6 +386,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'queue',
 								'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+								'additionalClass' => 'esf:min-h-800',
 							],
 						],
 					],

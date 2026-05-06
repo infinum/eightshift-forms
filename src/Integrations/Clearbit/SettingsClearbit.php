@@ -280,6 +280,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'textareaIsPreventSubmit' => true,
 									'textareaName' => 'queue',
 									'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+									'additionalClass' => 'esf:min-h-800',
 								],
 							],
 						],
