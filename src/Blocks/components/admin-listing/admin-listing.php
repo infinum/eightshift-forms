@@ -75,7 +75,7 @@ $additionalAttributes = [
 			<?php } ?>
 		</div>
 
-		<div class="esf:max-w-sm">
+		<div class="esf:max-w-sm esf:flex esf:flex-col esf:gap-20">
 			<div class="esf:bg-white esf:rounded-md esf:p-20">
 				<?php
 				echo Helpers::render('intro', [
@@ -89,6 +89,22 @@ $additionalAttributes = [
 						'buttonUrl' => 'https://eightshift.com/forms/welcome/',
 						'buttonNewTab' => true,
 					]),
+				]);
+				?>
+			</div>
+
+			<div class="esf:bg-white esf:rounded-md esf:p-20">
+				<?php
+				echo Helpers::render('intro', [
+					'introTitle' => __('Search filters', 'eightshift-forms'),
+					'introSubtitle' => __('
+					You can use the following filters to search for specific items:
+					<ul>
+						<li><code>ID:123</code> - Search by ID</li>
+						<li><code>STATUS:draft</code> - Search by status</li>
+						<li><code>Hubspot</code> - Search by integration</li>
+					</ul>
+					', 'eightshift-forms'),
 				]);
 				?>
 			</div>

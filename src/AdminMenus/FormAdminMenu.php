@@ -203,10 +203,21 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
-				if ($formId) {
-					$data = EntriesHelper::getEntries($formId, $page, $perPage, $search);
+				$adminListingEntriesCustomSearch = $this->getCustomSearchQueryForItems(['s' => $search]);
+
+				if (isset($adminListingEntriesCustomSearch['p'])) {
+					$data = [
+						'items' => [
+							EntriesHelper::getEntry((string) $adminListingEntriesCustomSearch['p'])
+						],
+						'count' => 1
+					];
 				} else {
-					$data = EntriesHelper::getEntriesAll($page, $perPage, $search);
+					if ($formId) {
+						$data = EntriesHelper::getEntries($formId, $page, $perPage, $search);
+					} else {
+						$data = EntriesHelper::getEntriesAll($page, $perPage, $search);
+					}
 				}
 
 				$items = $data['items'] ?? [];
@@ -220,10 +231,19 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
-				if ($formId) {
-					$data = ActivityLogHelper::getActivityLogs($formId, $page, $perPage, $search);
+				$adminListingActivityLogsCustomSearch = $this->getCustomSearchQueryForItems(['s' => $search]);
+
+				if (isset($adminListingActivityLogsCustomSearch['p'])) {
+					$data = [
+						'items' => [ActivityLogHelper::getActivityLog((string) $adminListingActivityLogsCustomSearch['p'])],
+						'count' => 1
+					];
 				} else {
-					$data = ActivityLogHelper::getActivityLogsAll($page, $perPage, $search);
+					if ($formId) {
+						$data = ActivityLogHelper::getActivityLogs($formId, $page, $perPage, $search);
+					} else {
+						$data = ActivityLogHelper::getActivityLogsAll($page, $perPage, $search);
+					}
 				}
 
 				$items = $data['items'] ?? [];
@@ -237,13 +257,13 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
-				$data = $this->formsListing->getFormsList([
+				$data = $this->formsListing->getFormsList($this->getCustomSearchQueryForItems([
 					'post_type' => $parent === Config::SLUG_ADMIN_LISTING_RESULTS ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG,
 					'post_status' => 'trash',
 					'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 					'paged' => $page,
 					's' => $search,
-				], true);
+				]));
 
 				$items = $data['items'] ?? [];
 				$count = $data['count'] ?? 0;
@@ -338,16 +358,16 @@ class FormAdminMenu extends AbstractAdminMenu
 			return $query;
 		}
 
-		if (\str_starts_with($search, 'status:')) {
-			$status = \substr($search, \strlen('status:'));
+		if (\str_starts_with($search, 'STATUS:')) {
+			$status = \substr($search, \strlen('STATUS:'));
 			if ($status && \array_key_exists($status, \get_post_stati())) {
 				$query['post_status'] = $status;
 				unset($query['s']);
 			}
 		}
 
-		if (\str_starts_with($search, 'id:')) {
-			$id = (int) \substr($search, \strlen('id:'));
+		if (\str_starts_with($search, 'ID:')) {
+			$id = (int) \substr($search, \strlen('ID:'));
 			if ($id > 0) {
 				$query['p'] = $id;
 				unset($query['s']);

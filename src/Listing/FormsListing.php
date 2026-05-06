@@ -26,17 +26,22 @@ class FormsListing implements FormListingInterface
 	 * Get Forms List.
 	 *
 	 * @param array<string, mixed> $additionalQuery Additional query arguments.
-	 * @param bool $showTrash Whether to show trash posts.
 	 *
 	 * @return array<mixed>
 	 */
-	public function getFormsList(array $additionalQuery = [], bool $showTrash = false): array
+	public function getFormsList(array $additionalQuery = []): array
 	{
 		// Prepare query args.
 		$args = \array_merge([
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 		], $additionalQuery);
+
+		$showTrash = false;
+
+		if (isset($additionalQuery['post_status']) && $additionalQuery['post_status'] === 'trash') {
+			$showTrash = true;
+		}
 
 		$theQuery = new WP_Query($args);
 

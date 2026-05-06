@@ -17,18 +17,19 @@ if (!$tableContent) {
 }
 
 $classes = Helpers::clsx([
-	'esf:relative esf:overflow-auto esf:[&_table]:w-full esf:[&_table]:border-spacing-0 esf:[&_thead]:bg-secondary-100 esf:[&_th]:p-8 esf:[&_th]:text-left esf:[&_th]:border-r esf:[&_th]:border-b esf:[&_th]:border-secondary-200 esf:[&_td]:p-8 esf:[&_td]:text-left esf:[&_td]:border-r esf:[&_td]:border-b esf:[&_td]:border-secondary-200',
+	'esf:relative',
+	'esf:overflow-auto',
 	$additionalClass,
 ]);
 ?>
 
 <div class="<?php echo esc_attr($classes); ?>">
-	<table>
+	<table class="esf:border-spacing-0 esf:w-full">
 		<?php if ($tableHead) { ?>
-			<thead>
+			<thead class="esf:bg-secondary-100">
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
-						<th>
+						<th class="esf:border-r esf:border-b esf:border-border esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
 							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 							?>
@@ -41,7 +42,7 @@ $classes = Helpers::clsx([
 			<?php foreach ($tableContent as $row) { ?>
 				<tr>
 					<?php foreach ($tableHead as $headKey => $headValue) { ?>
-						<td>
+						<td class="esf:border-r esf:border-b esf:border-border esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
 							echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 							?>
