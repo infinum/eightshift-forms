@@ -120,8 +120,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
 
-		$checkStyleEnqueue = SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
-
 		// Iterate blocks an children by passing them form ID.
 		foreach ($blocks as $block) {
 			if ($block['blockName'] !== "{$formsNamespace}/form-selector") {
@@ -154,7 +152,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					'variationData' => $formsVariationData,
 					'variationDataFiles' => $formsVariationDataFiles,
 					'conditionalTags' => \wp_json_encode($formsConditionalTagsRulesForms),
-					'disabledDefaultStyles' => $checkStyleEnqueue,
 					'dataTypeSelector' => $formsFormDataTypeSelector,
 					'postId' => $formsFormPostId,
 					'formType' => $blockName,

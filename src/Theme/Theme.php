@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Theme;
 
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -19,11 +21,21 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class Theme implements ServiceInterface
 {
 	/**
+	 * @var array<string, mixed>|null
+	 */
+	private ?array $adminSelectorsCache = null;
+
+	/**
+	 * @var array<string, mixed>|null
+	 */
+	private ?array $frontendSelectorsCache = null;
+
+	/**
 	 * Admin selectors.
 	 *
 	 * @var array<string, array<string>>
 	 */
-	public const THEME_ADMIN_SELECTORS = [
+	public const THEME_SELECTORS = [
 		'input' => [
 			'esf:w-full',
 			'esf:border',
@@ -66,15 +78,168 @@ class Theme implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectorsAdmin']), [$this, 'getBlockFormsTailwindSelectors']);
+		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectorsAdmin']), [$this, 'getBlockFormsTailwindSelectorsAdmin']);
+		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), [$this, 'getBlockFormsTailwindSelectorsFrontend']);
 	}
 
 	/**
-	 * Get the block forms tailwind selectors.
+	 * Get the block forms tailwind selectors for admin.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getBlockFormsTailwindSelectors(): array
+	public function getBlockFormsTailwindSelectorsAdmin(): array
+	{
+		if ($this->adminSelectorsCache !== null) {
+			return $this->adminSelectorsCache;
+		}
+
+		$this->adminSelectorsCache = \array_merge_recursive(
+			$this->getTheme(),
+			[
+				'checkboxes' => [
+					'parts' => [
+						'field-label' => [
+							'esf:font-semibold',
+						],
+					],
+				],
+				'field' => [
+					'parts' => [
+						'content' => [
+							'esf:group-[&.esf-input-with-suffix]/field:flex',
+							'esf:group-[&.esf-input-with-suffix]/field:items-center',
+						],
+						'content-wrap' => [
+							'esf:group-[&.esf-input-with-suffix]/field:flex-grow-1',
+						],
+						'after-content' => [
+							'esf:group-[&.esf-input-with-suffix]/field:px-10',
+							'esf:group-[&.esf-input-with-suffix]/field:flex',
+							'esf:group-[&.esf-input-with-suffix]/field:items-center',
+							'esf:group-[&.esf-input-with-suffix]/field:justify-center',
+							'esf:group-[&.esf-input-with-suffix]/field:border',
+							'esf:group-[&.esf-input-with-suffix]/field:border-border',
+							'esf:group-[&.esf-input-with-suffix]/field:h-42',
+							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-md',
+							'esf:group-[&.esf-input-with-suffix]/field:-mx-5',
+							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-50',
+							'esf:group-[&.esf-input-with-suffix]/field:transition-colors',
+							'esf:group-[&.esf-input-with-suffix]/field:duration-300',
+						],
+					],
+				],
+				'checkbox' => [
+					'base' => [
+						'esf:[&.es-checkbox-toggle]:bg-transparent',
+					],
+					'parts' => [
+						'label' => [
+							'esf:[.es-checkbox-toggle__label]:relative',
+							'esf:[.es-checkbox-toggle__label]:block',
+							'esf:[.es-checkbox-toggle__label]:w-full',
+							'esf:[.es-checkbox-toggle__label]:pr-50',
+							'esf:[.es-checkbox-toggle__label]:min-h-24',
+							'esf:[.es-checkbox-toggle__label]:before:content-[\'\']',
+							'esf:[.es-checkbox-toggle__label]:before:absolute',
+							'esf:[.es-checkbox-toggle__label]:before:top-0',
+							'esf:[.es-checkbox-toggle__label]:before:end-0',
+							'esf:[.es-checkbox-toggle__label]:before:bg-white',
+							'esf:[.es-checkbox-toggle__label]:before:border-1',
+							'esf:[.es-checkbox-toggle__label]:before:border-border',
+							'esf:[.es-checkbox-toggle__label]:before:w-44',
+							'esf:[.es-checkbox-toggle__label]:before:h-22',
+							'esf:[.es-checkbox-toggle__label]:before:rounded-full',
+							'esf:[.es-checkbox-toggle__label]:before:transition-colors',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:bg-accent',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:border-accent',
+
+							'esf:[.es-checkbox-toggle__label]:after:content-[\'\']',
+							'esf:[.es-checkbox-toggle__label]:after:absolute',
+							'esf:[.es-checkbox-toggle__label]:after:top-[3px]',
+							'esf:[.es-checkbox-toggle__label]:after:end-[24px]',
+							'esf:[.es-checkbox-toggle__label]:after:rounded-full',
+							'esf:[.es-checkbox-toggle__label]:after:bg-gray-300',
+							'esf:[.es-checkbox-toggle__label]:after:h-16',
+							'esf:[.es-checkbox-toggle__label]:after:w-16',
+							'esf:[.es-checkbox-toggle__label]:after:transition-all',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:translate-x-21',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-white',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:transition-all',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:duration-300',
+							'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-accent',
+						],
+						'help' => [
+							'esf:[.es-checkbox-toggle__help]:pr-50',
+						],
+					],
+				],
+				'submit' => [
+					'base' => [
+						'esf-button-primary',
+					],
+					'parts' => [
+						'field-content-wrap' => [
+							'esf:items-end',
+						],
+					],
+				],
+				'global-msg' => [
+					'base' => [
+						'esf:fixed',
+						'esf:right-32',
+						'esf:bottom-32',
+						'esf:z-100',
+						'esf:max-w-288',
+						'esf:max-h-[80vh]',
+						'esf:overflow-x-hidden',
+						'esf:border',
+
+						'esf:rounded-md',
+						'esf:px-16',
+						'esf:py-12',
+						'esf:opacity-0',
+						'esf:translate-x-32',
+
+						'esf:[&.es-form-is-active]:translate-x-0',
+						'esf:[&.es-form-is-active]:opacity-100',
+						'esf:data-[status="error"]:bg-red-100 esf:data-[status="error"]:border-red-500 esf:data-[status="error"]:text-red-950',
+						'esf:data-[status="success"]:bg-green-100 esf:data-[status="success"]:border-green-500 esf:data-[status="success"]:text-green-950',
+						'esf:data-[status="warning"]:bg-yellow-100 esf:data-[status="warning"]:border-yellow-500 esf:data-[status="warning"]:text-yellow-950',
+						'esf:data-[status="info"]:bg-sky-100 esf:data-[status="info"]:border-sky-500 esf:data-[status="info"]:text-sky-950',
+					],
+				],
+			]
+		);
+
+		return $this->adminSelectorsCache;
+	}
+
+	/**
+	 * Get the block forms tailwind selectors for frontend.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getBlockFormsTailwindSelectorsFrontend(): array
+	{
+		if ($this->frontendSelectorsCache !== null) {
+			return $this->frontendSelectorsCache;
+		}
+
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SELECTORS_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+			return [];
+		}
+
+		$this->frontendSelectorsCache = $this->getTheme();
+
+		return $this->frontendSelectorsCache;
+	}
+
+	/**
+	 * Get the theme selectors for admin and frontend.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getTheme(): array
 	{
 		return [
 			'form' => [
@@ -86,30 +251,53 @@ class Theme implements ServiceInterface
 			],
 			'field' => [
 				'base' => [
+					'esf:group/field',
+					'esf:relative',
 					'esf:flex esf:flex-col esf:gap-10',
 					'esf:border-none',
 					'esf:mx-0',
 					'esf:p-0',
 				],
 				'parts' => [
-					'inner' => ['esf:flex esf:flex-col esf:gap-5', 'esf:max-w-[850px]'],
+					'inner' => [
+						'esf:flex esf:flex-col esf:gap-5',
+					],
 					'content-wrap' => [
 						'esf:flex esf:flex-col esf:gap-10',
 					],
 					'label' => [
-						...Theme::THEME_ADMIN_SELECTORS['label'],
+						...Theme::THEME_SELECTORS['label'],
 					],
-					'help' => Theme::THEME_ADMIN_SELECTORS['help'],
+					'help' => Theme::THEME_SELECTORS['help'],
+					'debug' => [
+						'esf:opacity-0',
+						'esf:text-xs',
+						'esf:text-gray-500',
+						'esf:p-10',
+						'esf:border',
+						'esf:border-border',
+						'esf:rounded-md',
+						'esf:bg-gray-100',
+						'esf:pointer-events-none',
+						'esf:absolute',
+						'esf:right-0',
+						'esf:top-0',
+						'esf:z-10',
+						'esf:bg-white',
+						'esf:transition-opacity',
+						'esf:duration-300',
+						'esf:group-hover/field:opacity-100',
+					]
 				],
 			],
 			'input' => [
 				'base' => [
-					...Theme::THEME_ADMIN_SELECTORS['input'],
+					...Theme::THEME_SELECTORS['input'],
 				],
 			],
 			'textarea' => [
 				'base' => [
-					...Theme::THEME_ADMIN_SELECTORS['input'],
+					...Theme::THEME_SELECTORS['input'],
 					'esf:min-h-200',
 					'esf:h-auto',
 				],
@@ -121,27 +309,14 @@ class Theme implements ServiceInterface
 					'esf:pt-5',
 				],
 			],
-			'submit' => [
-				'base' => [
-					'esf-button-primary',
-				],
-				'parts' => [
-					'field-content-wrap' => [
-						'esf:items-end',
-					],
-				],
-			],
 			'checkbox' => [
-				'base' => [
-					'esf:[&.es-checkbox-toggle]:bg-transparent',
-				],
 				'parts' => [
 					'input' => [
 						'esf:peer/checkbox',
 						'esf:sr-only',
 					],
 					'label' => [
-						...Theme::THEME_ADMIN_SELECTORS['label'],
+						...Theme::THEME_SELECTORS['label'],
 						'esf:cursor-pointer',
 
 						'esf:[.es-checkbox__label]:relative',
@@ -172,55 +347,13 @@ class Theme implements ServiceInterface
 						'esf:[.es-checkbox__label]:before:border-border',
 						'esf:[.es-checkbox__label]:before:w-20',
 						'esf:[.es-checkbox__label]:before:h-20',
-						'esf:[.es-checkbox__label]:before:rounded-sm',
+						'esf:[.es-checkbox__label]:before:rounded-md',
 						'esf:[.es-checkbox__label]:before:transition-colors',
 						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:bg-accent',
 						'esf:[.es-checkbox__label]:peer-checked/checkbox:before:border-accent',
-
-						'esf:[.es-checkbox-toggle__label]:relative',
-						'esf:[.es-checkbox-toggle__label]:block',
-						'esf:[.es-checkbox-toggle__label]:w-full',
-						'esf:[.es-checkbox-toggle__label]:pr-50',
-						'esf:[.es-checkbox-toggle__label]:min-h-24',
-						'esf:[.es-checkbox-toggle__label]:before:content-[\'\']',
-						'esf:[.es-checkbox-toggle__label]:before:absolute',
-						'esf:[.es-checkbox-toggle__label]:before:top-0',
-						'esf:[.es-checkbox-toggle__label]:before:end-0',
-						'esf:[.es-checkbox-toggle__label]:before:bg-white',
-						'esf:[.es-checkbox-toggle__label]:before:border-1',
-						'esf:[.es-checkbox-toggle__label]:before:border-border',
-						'esf:[.es-checkbox-toggle__label]:before:w-44',
-						'esf:[.es-checkbox-toggle__label]:before:h-22',
-						'esf:[.es-checkbox-toggle__label]:before:rounded-full',
-						'esf:[.es-checkbox-toggle__label]:before:transition-colors',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:bg-accent',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:before:border-accent',
-
-						'esf:[.es-checkbox-toggle__label]:after:content-[\'\']',
-						'esf:[.es-checkbox-toggle__label]:after:absolute',
-						'esf:[.es-checkbox-toggle__label]:after:top-[3px]',
-						'esf:[.es-checkbox-toggle__label]:after:end-[24px]',
-						'esf:[.es-checkbox-toggle__label]:after:rounded-full',
-						'esf:[.es-checkbox-toggle__label]:after:bg-gray-300',
-						'esf:[.es-checkbox-toggle__label]:after:h-16',
-						'esf:[.es-checkbox-toggle__label]:after:w-16',
-						'esf:[.es-checkbox-toggle__label]:after:transition-all',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:translate-x-21',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-white',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:transition-all',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:duration-300',
-						'esf:[.es-checkbox-toggle__label]:peer-checked/checkbox:after:bg-accent',
 					],
 					'help' => [
-						...Theme::THEME_ADMIN_SELECTORS['help'],
-						'esf:[.es-checkbox-toggle__help]:pr-50',
-					],
-				],
-			],
-			'checkboxes' => [
-				'parts' => [
-					'field-label' => [
-						'esf:font-semibold',
+						...Theme::THEME_SELECTORS['help'],
 					],
 				],
 			],
@@ -261,31 +394,6 @@ class Theme implements ServiceInterface
 						'esf:border-y-transparent',
 						'esf:rounded-full',
 					],
-				],
-			],
-			'global-msg' => [
-				'base' => [
-					'esf:fixed',
-					'esf:right-32',
-					'esf:bottom-32',
-					'esf:z-100',
-					'esf:max-w-288',
-					'esf:max-h-[80vh]',
-					'esf:overflow-x-hidden',
-					'esf:border',
-
-					'esf:rounded-md',
-					'esf:px-16',
-					'esf:py-12',
-					'esf:opacity-0',
-					'esf:translate-x-32',
-
-					'esf:[&.es-form-is-active]:translate-x-0',
-					'esf:[&.es-form-is-active]:opacity-100',
-					'esf:data-[status="error"]:bg-red-100 esf:data-[status="error"]:border-red-500 esf:data-[status="error"]:text-red-950',
-					'esf:data-[status="success"]:bg-green-100 esf:data-[status="success"]:border-green-500 esf:data-[status="success"]:text-green-950',
-					'esf:data-[status="warning"]:bg-yellow-100 esf:data-[status="warning"]:border-yellow-500 esf:data-[status="warning"]:text-yellow-950',
-					'esf:data-[status="info"]:bg-sky-100 esf:data-[status="info"]:border-sky-500 esf:data-[status="info"]:text-sky-950',
 				],
 			],
 			'file' => [

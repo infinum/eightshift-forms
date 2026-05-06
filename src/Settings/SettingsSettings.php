@@ -37,6 +37,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY = 'scripts';
 	public const SETTINGS_GENERAL_DISABLE_AUTO_INIT_ENQUEUE_SCRIPT_KEY = 'autoinit';
 	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY = 'styles';
+	public const SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SELECTORS_KEY = 'selectors';
 
 	/**
 	 * Disable scroll settings key.
@@ -99,16 +100,25 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 									],
 									[
 										'component' => 'checkbox',
+										'checkboxLabel' => \__('Disable default selectors', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SELECTORS_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SELECTORS_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('Includes all frontend Tailwind CSS selectors.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerSeparator' => true,
+									],
+									[
+										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable default scripts', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Includes all frontend logic, e.g. validation and form submission.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'divider',
-										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -184,6 +194,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
+								'additionalFieldClass' => 'esf-input-with-suffix'
 							],
 						],
 					],

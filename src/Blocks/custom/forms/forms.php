@@ -34,7 +34,7 @@ $formsStyleOutput = [];
 if ($formsStyle && gettype($formsStyle) === 'array') {
 	$formsStyleOutput = array_map(
 		static function ($item) use ($blockClass) {
-			return Helpers::selector(true, $blockClass, '', $item);
+			return Helpers::bem($blockClass, '', $item);
 		},
 		$formsStyle
 	);

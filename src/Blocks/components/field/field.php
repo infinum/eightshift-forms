@@ -72,7 +72,7 @@ if (has_filter($filterName)) {
 if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	$fieldStyleOutput = array_map(
 		static function ($item) use ($componentClass) {
-			return Helpers::selector(true, $componentClass, '', $item);
+			return Helpers::bem($componentClass, '', $item);
 		},
 		$fieldStyle
 	);
@@ -190,6 +190,10 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 		'debug-field-details',
 		[
 			'name' => Helpers::checkAttr('fieldName', $attributes, $manifest),
+			'additionalClass' => Helpers::clsx([
+				FormsHelper::getTwPart($twClasses, 'field', 'debug'),
+				FormsHelper::getTwPart($twClasses, $selectorClass, 'field-debug'),
+			]),
 		],
 		'components',
 		false,

@@ -42,7 +42,6 @@ $formSecureData = Helpers::checkAttr('formSecureData', $attributes, $manifest);
 $formCustomName = $formParentSettings['customName'] ?? '';
 $formPostId = $formParentSettings['postId'] ?? '';
 $formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
-$formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
 $formType = $formParentSettings['formType'] ?? '';
 $formMultistepSkipScroll = $formParentSettings['multistepSkipScroll'] ?? false;
 
@@ -133,7 +132,6 @@ if ($formMethod) {
 }
 
 $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
-$formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_encode($formDisabledDefaultStyles);
 
 ?>
 

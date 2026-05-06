@@ -456,7 +456,6 @@
 			"phoneDisablePicker": "data-phone-disable-picker",
 			"saveAsJson": "data-save-as-json",
 			"blockSsr": "data-block-ssr",
-			"disabledDefaultStyles": "data-disabled-default-styles",
 			"globalMsgHeadingSuccess": "data-msg-heading-success",
 			"globalMsgHeadingError": "data-msg-heading-error",
 			"globalMsgHideOnSuccess": "data-msg-hide-on-success",

@@ -41,7 +41,7 @@
 		"lint-staged": "^16.4.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs-tailwind": "^3.1.1",
+		"@eightshift/frontend-libs-tailwind": "^3.1.2",
 		"@eightshift/ui-components": "^7.3.0",
 		"@tailwindcss/postcss": "^4.2.4",
 		"@tailwindcss/typography": "^0.5.19",

@@ -54,7 +54,7 @@ body :is(#wpwrap) {
 	@apply esf:gap-10;
 	@apply esf:items-center;
 
-	&:before {
+	&::before {
 		@apply esf:content-[''];
 		@apply esf:block;
 		@apply esf:size-15;
@@ -64,7 +64,7 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset-radio {
-	&:before {
+	&::before {
 		@apply esf:rounded-full;
 	}
 }

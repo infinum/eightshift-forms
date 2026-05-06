@@ -1231,7 +1231,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						]),
 					]),
 					'selectPlaceholder' => \__('Per page', 'eightshift-forms'),
-					'additionalClass' => Helpers::clsx([...Theme::THEME_ADMIN_SELECTORS['input'], $perPageSelector, 'esf:w-95!']),
+					'additionalClass' => Helpers::clsx([...Theme::THEME_SELECTORS['input'], $perPageSelector, 'esf:w-95!']),
 				]),
 			] : []),
 		];
