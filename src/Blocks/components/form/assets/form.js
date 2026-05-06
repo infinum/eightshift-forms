@@ -2,7 +2,6 @@
 
 import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 import { debounce } from '@eightshift/ui-components/utilities';
-import selectManifest from './../../select/manifest.json';
 import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm } from './state-init';
 
 /**
@@ -1428,6 +1427,9 @@ export class Form {
 				this.state.getStateAttribute('selectOptionIsHidden'),
 			];
 
+			const twSelectorsData =
+				JSON.parse(input.getAttribute(this.state.getStateAttribute('selectTwSelectorsData'))) ?? {};
+
 			const choices = new Choices.default(input, {
 				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
@@ -1446,8 +1448,22 @@ export class Form {
 					`customProperties.${this.state.getStateAttribute('countryUnlocalizedName')}`,
 				],
 				itemSelectText: '',
+				removeItemIconText: '✖',
 				classNames: {
-					containerOuter: ['choices', `${selectManifest.componentClass}`],
+					containerOuter: ['choices', ...(twSelectorsData.containerOuter ?? [])],
+					containerInner: ['choices__inner', ...(twSelectorsData.containerInner ?? [])],
+					input: ['choices__input', ...(twSelectorsData.input ?? [])],
+					inputCloned: ['choices__input--cloned', ...(twSelectorsData.inputCloned ?? [])],
+					list: ['choices__list', ...(twSelectorsData.list ?? [])],
+					listItems: ['choices__list--multiple', ...(twSelectorsData.listMultiple ?? [])],
+					listSingle: ['choices__list--single', ...(twSelectorsData.listSingle ?? [])],
+					listDropdown: ['choices__list--dropdown', ...(twSelectorsData.listDropdown ?? [])],
+					item: ['choices__item', ...(twSelectorsData.item ?? [])],
+					itemSelectable: ['choices__item--selectable', ...(twSelectorsData.itemSelectable ?? [])],
+					itemDisabled: ['choices__item--disabled', ...(twSelectorsData.itemDisabled ?? [])],
+					itemChoice: ['choices__item--choice', ...(twSelectorsData.itemChoice ?? [])],
+					placeholder: ['choices__placeholder', ...(twSelectorsData.placeholder ?? [])],
+					button: ['choices__button', ...(twSelectorsData.button ?? [])],
 				},
 				callbackOnCreateTemplates: function () {
 					return {

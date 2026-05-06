@@ -33,6 +33,7 @@ $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder',
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
 $selectMinCount = Helpers::checkAttr('selectMinCount', $attributes, $manifest);
 $selectMaxCount = Helpers::checkAttr('selectMaxCount', $attributes, $manifest);
+$selectTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
 
@@ -63,6 +64,10 @@ if ($selectIsMultiple) {
 	}
 }
 
+if ($selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [])) {
+	$selectAttrs[UtilsHelper::getStateAttribute('selectTwSelectorsData')] = $selectOutput;
+}
+
 $placeholderLabel = '';
 
 // Placeholder input value.
@@ -91,7 +96,6 @@ if ($selectIsRequired) {
 
 $selectAttrs['aria-invalid'] = 'false';
 
-
 // Additional content filter.
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('select', $attributes);
 
@@ -113,7 +117,7 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectId,
 	'fieldName' => $selectName,
-	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
+	'fieldTwSelectorsData' => $selectTwSelectorsData,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),

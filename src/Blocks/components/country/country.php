@@ -38,6 +38,7 @@ $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $m
 $countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
 $countryIsMultiple = Helpers::checkAttr('countryIsMultiple', $attributes, $manifest);
 $countryValue = Helpers::checkAttr('countryValue', $attributes, $manifest);
+$countryTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $countryId = $countryName . '-' . Helpers::getUnique();
 
@@ -66,6 +67,10 @@ if ($countryIsRequired) {
 }
 
 $countryAttrs['aria-invalid'] = 'false';
+
+if ($countryOutput = FormsHelper::getTwSelectorsOutput($countryTwSelectorsData['country'] ?? [])) {
+	$countryAttrs[UtilsHelper::getStateAttribute('selectTwSelectorsData')] = $countryOutput;
+}
 
 $placeholderLabel = '';
 
@@ -151,7 +156,7 @@ $fieldOutput = [
 	'fieldId' => $countryId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
 	'fieldName' => $countryName,
-	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
+	'fieldTwSelectorsData' => $countryTwSelectorsData,
 	'fieldIsRequired' => $countryIsRequired,
 	'fieldDisabled' => !empty($countryIsDisabled),
 	'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

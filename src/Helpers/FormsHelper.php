@@ -254,6 +254,33 @@ final class FormsHelper
 	}
 
 	/**
+	 * Return Tailwind selectors output.
+	 *
+	 * @param array<string, string> $data Data to get output from.
+	 *
+	 * @return string
+	 */
+	public static function getTwSelectorsOutput(array $data): string
+	{
+		return \wp_json_encode([
+			'containerOuter' => $data['base'] ?? [],
+			'containerInner' => $data['parts']['choices-inner'] ?? [],
+			'input' => $data['parts']['input'] ?? [],
+			'inputCloned' => $data['parts']['input-cloned'] ?? [],
+			'list' => $data['parts']['list'] ?? [],
+			'listMultiple' => $data['parts']['list-multiple'] ?? [],
+			'listSingle' => $data['parts']['list-single'] ?? [],
+			'listDropdown' => $data['parts']['list-dropdown'] ?? [],
+			'item' => $data['parts']['item'] ?? [],
+			'itemSelectable' => $data['parts']['item-selectable'] ?? [],
+			'itemDisabled' => $data['parts']['item-disabled'] ?? [],
+			'itemChoice' => $data['parts']['item-choice'] ?? [],
+			'placeholder' => $data['parts']['placeholder'] ?? [],
+			'button' => $data['parts']['button'] ?? [],
+		]);
+	}
+
+	/**
 	 * Get unique form hash.
 	 *
 	 * @return string

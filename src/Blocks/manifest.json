@@ -434,6 +434,7 @@
 			"dateOutputFormat": "data-output-format",
 			"dateMode": "data-mode",
 
+			"selectTwSelectorsData": "data-tw-selectors-data",
 			"selectAllowSearch": "data-allow-search",
 			"selectIsMultiple": "data-is-multiple",
 			"selectMinCount": "data-min-count",

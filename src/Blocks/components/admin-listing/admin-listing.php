@@ -60,7 +60,7 @@ $additionalAttributes = [
 					?>
 				</div>
 			</div>
-			<?php
+			<?
 			if ($adminListingShowNoItems) { ?>
 				<div class="esf:px-20 esf:py-60">
 					<?php echo wp_kses_post(Helpers::ensureString($adminListingNoItems)); ?>
@@ -69,8 +69,8 @@ $additionalAttributes = [
 				<?php
 				echo wp_kses_post(Helpers::ensureString($adminListingItems));
 				echo Helpers::render('pagination', [
-					'data' => $adminListingPagination,
-				], 'components', false, 'admin-listing/partials');
+					'adminListingPagination' => $adminListingPagination,
+				], 'components', true);
 				?>
 			<?php } ?>
 		</div>

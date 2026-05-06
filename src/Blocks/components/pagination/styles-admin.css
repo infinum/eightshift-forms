@@ -1,0 +1,22 @@
+.esf-pagination {
+	@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
+
+	& ul {
+		@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0;
+	}
+
+	& li {
+		@apply esf:m-0;
+	}
+
+	& a,
+	& span.current {
+		@apply esf:text-inherit esf:bg-transparent esf:border esf:border-border;
+		@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+		@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+	}
+
+	& span.current {
+		@apply esf:text-white esf:bg-accent esf:border-accent;
+	}
+}

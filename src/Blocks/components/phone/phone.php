@@ -130,6 +130,10 @@ if (has_filter($filterName)) {
 
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
 
+if ($phoneOutput = FormsHelper::getTwSelectorsOutput($phoneTwSelectorsData['phone'] ?? [])) {
+	$phoneAttrsSelect[UtilsHelper::getStateAttribute('selectTwSelectorsData')] = $phoneOutput;
+}
+
 if ($phoneIsRequired) {
 	$phoneAttrs['aria-required'] = 'true';
 }

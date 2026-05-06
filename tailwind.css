@@ -1,19 +1,15 @@
-/* stylelint-disable at-rule-no-unknown */
+/* stylelint-disable at-rule-no-unknown, selector-max-specificity */
 
 @source '/src/*.{html,js,php,json,css}';
 @source '/*.php';
 
 @theme {
 	--spacing: 0.0625rem; /* 1px */
-
 	--default-font-family: var(--es-font-sans, 'Geist Variable', system-ui, sans-serif);
 	--default-mono-font-family: var(--es-font-mono, 'Geist Mono Variable', ui-monospace, monospace);
-
 	--color-*: initial;
-
 	--color-black: #181818;
 	--color-white: #ffffff;
-
 	--color-secondary-50: var(--esf-color-zinc-50);
 	--color-secondary-100: var(--esf-color-zinc-100);
 	--color-secondary-200: var(--esf-color-zinc-200);
@@ -25,7 +21,6 @@
 	--color-secondary-800: var(--esf-color-zinc-800);
 	--color-secondary-900: var(--esf-color-zinc-900);
 	--color-secondary-950: var(--esf-color-zinc-950);
-
 	--color-accent-50: var(--esf-color-teal-50);
 	--color-accent-100: var(--esf-color-teal-100);
 	--color-accent-200: var(--esf-color-teal-200);
@@ -36,27 +31,21 @@
 	--color-accent-700: var(--esf-color-teal-700);
 	--color-accent-800: var(--esf-color-teal-800);
 	--color-accent-900: var(--esf-color-teal-900);
-
 	--color-accent: #29a3a3;
 	--color-accent-dark: #218282;
-
 	--color-accent-05: #29a3a30d;
 	--color-accent-10: #29a3a31a;
 	--color-accent-30: #29a3a333;
 	--color-accent-50: #29a3a380;
-
 	--color-border: #dedede;
-
 	--color-yellow-100: #fef3c7;
 	--color-yellow-500: #eab308;
 	--color-yellow-950: #451a03;
-
 	--color-sky-50: #f0f9ff;
 	--color-sky-100: #e0f2fe;
 	--color-sky-200: #bae6fd;
 	--color-sky-500: #0ea5e9;
 	--color-sky-950: #082f49;
-
 	--color-gray-50: #f9fafb;
 	--color-gray-100: #f3f4f6;
 	--color-gray-200: #e5e7eb;
@@ -65,9 +54,7 @@
 	--color-gray-500: #6b7280;
 	--color-gray-600: #4b5563;
 	--color-gray-950: #030712;
-
 	--color-red-50: #fef2f2;
-
 	--color-red-100: #fee2e2;
 	--color-red-200: #fecaca;
 	--color-red-500: #ef4444;
@@ -75,7 +62,6 @@
 	--color-red-600: #dc2626;
 	--color-red-800: #991b1b;
 	--color-red-950: #450a0a;
-
 	--color-green-50: #f0fdf4;
 	--color-green-100: #dcfce7;
 	--color-green-200: #bbf7d0;
@@ -121,7 +107,6 @@ body {
 	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
 	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
 	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
-
 	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
 	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
@@ -159,7 +144,6 @@ body {
 	@apply esf:mt-5;
 	@apply esf:w-fit;
 	@apply esf:cursor-pointer;
-
 	@apply esf:[&_ul]:mt-5 esf:[&_ul]:text-gray-400;
 }
 
@@ -170,6 +154,7 @@ body {
 }
 
 .esf-main-container {
+	/* stylelint-disable-next-line selector-type-no-unknown */
 	button:not(disabled),
 	a,
 	.choices {
@@ -180,31 +165,8 @@ body {
 		@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed esf:disabled:pointer-events-none;
 	}
 
-	.es-checkbox-toggle__input:focus + .es-checkbox-toggle__label:before {
+	.es-checkbox-toggle__input:focus + .es-checkbox-toggle__label::before {
 		@apply esf:outline-2 esf:outline-offset-2 esf:outline-accent esf:shadow-none;
-	}
-}
-
-.esf-pagination {
-	@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
-
-	& ul {
-		@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0;
-	}
-
-	& li {
-		@apply esf:m-0;
-	}
-
-	& a,
-	& span.current {
-		@apply esf:text-inherit esf:bg-transparent esf:border esf:border-border;
-		@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
-		@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
-	}
-
-	& span.current {
-		@apply esf:text-white esf:bg-accent esf:border-accent;
 	}
 }
 

@@ -3,6 +3,9 @@
 	"componentName": "admin-listing",
 	"title": "Admin Listing",
 	"componentClass": "es-admin-listing",
+	"components": {
+		"pagination": "pagination"
+	},
 	"attributes": {
 		"adminListingPageTitle": {
 			"type": "string"
