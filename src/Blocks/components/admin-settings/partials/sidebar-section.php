@@ -47,6 +47,7 @@ foreach ($items as $key => $innerItems) { ?>
 						'buttonUrl' => $url,
 						'additionalClass' => Helpers::clsx([
 							'esf:w-full',
+							'esf:justify-start',
 							$isActive ? 'is-active' : '',
 						]),
 					]);

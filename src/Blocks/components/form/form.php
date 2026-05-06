@@ -142,15 +142,13 @@ $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSs
 	novalidate
 	onsubmit="event.preventDefault();">
 	<?php
-	if (is_user_logged_in() && !is_admin()) {
-		echo Helpers::render(
-			'form-edit-actions',
-			Helpers::props('formEditActions', $attributes, [
-				'formPostId' => $formPostId,
-				'formHasSteps' => $formHasSteps,
-			])
-		);
-	}
+	echo Helpers::render(
+		'form-edit-actions',
+		Helpers::props('formEditActions', $attributes, [
+			'formPostId' => $formPostId,
+			'formHasSteps' => $formHasSteps,
+		])
+	);
 
 	echo Helpers::render(
 		'global-msg',

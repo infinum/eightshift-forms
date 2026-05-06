@@ -217,7 +217,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputFieldAfterContent' => 'MB',
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputPlaceholder' => self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,

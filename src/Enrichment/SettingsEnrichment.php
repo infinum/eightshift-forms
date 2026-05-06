@@ -156,7 +156,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'inputStep' => 1,
 								'inputPlaceholder' => Enrichment::ENRICHMENT_EXPIRATION,
 								'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 							],
 							[
@@ -267,7 +267,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 									'inputStep' => 1,
 									'inputPlaceholder' => Enrichment::ENRICHMENT_PREFILL_EXPIRATION,
 									'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-									'inputFieldInlineBeforeAfterContent' => true,
+									'additionalFieldClass' => 'esf-input-with-suffix',
 									'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
 								],
 							] : []),

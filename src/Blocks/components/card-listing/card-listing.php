@@ -59,7 +59,7 @@ $classes = Helpers::clsx([
 		</div>
 
 		<?php if ($cardListingRightContent) { ?>
-			<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:invisible esf:group-hover/card-listing:visible">
+			<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:invisible esf:pointer-events-none esf:group-hover/card-listing:visible esf:group-hover/card-listing:pointer-events-auto">
 				<?php echo wp_kses_post($cardListingRightContent); ?>
 			</div>
 		<?php } ?>

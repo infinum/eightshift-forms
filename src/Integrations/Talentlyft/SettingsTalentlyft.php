@@ -268,7 +268,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements Setting
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputFieldAfterContent' => 'MB',
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputPlaceholder' => self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,

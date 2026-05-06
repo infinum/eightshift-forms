@@ -294,7 +294,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 										'inputIsNumber' => true,
 										'inputPlaceholder' => self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_DEFAULT_VALUE,
 										'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-										'inputFieldInlineBeforeAfterContent' => true,
+										'additionalFieldClass' => 'esf-input-with-suffix',
 										'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId),
 									],
 								] : [])

@@ -192,7 +192,6 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 								'inputStep' => 1,
 								'inputPlaceholder' => 15,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
 								'additionalFieldClass' => 'esf-input-with-suffix'
 							],

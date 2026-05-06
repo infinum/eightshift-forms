@@ -128,7 +128,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputFieldLabel' => \__('Rate limit (submission attempts / seconds)', 'eightshift-forms'),
 								'inputFieldHelp' => \__('If set, the form will be rate limited based on the provided value, in addition to global rate limits.', 'eightshift-forms'),
 								'inputFieldAfterContent' => \__('per second', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputMax' => 1000,
@@ -194,7 +194,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputStep' => 1,
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 							],
 							[
@@ -208,7 +208,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputStep' => 1,
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
 							],
 							[
@@ -222,7 +222,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputStep' => 1,
 								'inputPlaceholder' => Security::RATE_LIMIT_WINDOW,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 							],
 							[

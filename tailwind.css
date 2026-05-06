@@ -33,3 +33,58 @@
 	--color-green-500: #22c55e;
 	--color-green-950: #052e16;
 }
+
+/* Frontend facing helpers */
+.es-form-is-hidden {
+	@apply esf:hidden!;
+	@apply esf:pointer-events-none!;
+}
+
+.esf-button-disabled {
+	@apply esf:opacity-50 esf:cursor-not-allowed esf:pointer-events-none;
+}
+
+.esf-button-primary {
+	@apply esf:text-white esf:bg-accent esf:border-accent;
+	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
+	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
+	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-primary-outline {
+	@apply esf:text-accent esf:bg-transparent esf:border esf:border-accent;
+	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
+	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
+	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
+	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-primary-ghost {
+	@apply esf:text-accent esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:hover:text-accent esf:hover:bg-accent-30;
+	@apply esf:active:text-accent esf:active:bg-accent-30;
+	@apply esf:focus:text-accent esf:focus:bg-accent-30;
+	@apply esf:[&.is-active]:bg-accent-30;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-secondary-ghost {
+	@apply esf:text-inherit esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:hover:text-inherit esf:hover:bg-accent-30;
+	@apply esf:active:text-inherit esf:active:bg-accent-30;
+	@apply esf:focus:text-inherit esf:focus:bg-accent-30;
+	@apply esf:[&.is-active]:bg-accent-30;
+	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+}
+
+.esf-button-primary-basic {
+	@apply esf:text-inherit esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:hover:text-inherit;
+	@apply esf:active:text-inherit;
+	@apply esf:focus:text-inherit;
+	@apply esf:[&.is-active]:text-accent;
+	@apply esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:items-center esf:justify-center esf:gap-10 esf:transition-colors esf:duration-300;
+}

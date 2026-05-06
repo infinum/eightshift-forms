@@ -257,26 +257,27 @@ final class FormsHelper
 	 * Return Tailwind selectors output.
 	 *
 	 * @param array<string, string> $data Data to get output from.
+	 * @param string $type Type of the selectors.
 	 *
 	 * @return string
 	 */
-	public static function getTwSelectorsOutput(array $data): string
+	public static function getTwSelectorsOutput(array $data, string $type = 'select'): string
 	{
 		return \wp_json_encode([
-			'containerOuter' => $data['base'] ?? [],
-			'containerInner' => $data['parts']['choices-inner'] ?? [],
-			'input' => $data['parts']['input'] ?? [],
-			'inputCloned' => $data['parts']['input-cloned'] ?? [],
-			'list' => $data['parts']['list'] ?? [],
-			'listMultiple' => $data['parts']['list-multiple'] ?? [],
-			'listSingle' => $data['parts']['list-single'] ?? [],
-			'listDropdown' => $data['parts']['list-dropdown'] ?? [],
-			'item' => $data['parts']['item'] ?? [],
-			'itemSelectable' => $data['parts']['item-selectable'] ?? [],
-			'itemDisabled' => $data['parts']['item-disabled'] ?? [],
-			'itemChoice' => $data['parts']['item-choice'] ?? [],
-			'placeholder' => $data['parts']['placeholder'] ?? [],
-			'button' => $data['parts']['button'] ?? [],
+			'containerOuter' => $type === 'phone' ? $data['parts']['select'] ?? [] : $data['base'] ?? [],
+			'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+			'input' => $data['parts']['select-input'] ?? [],
+			'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
+			'list' => $data['parts']['select-list'] ?? [],
+			'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
+			'listSingle' => $data['parts']['select-list-single'] ?? [],
+			'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
+			'item' => $data['parts']['select-item'] ?? [],
+			'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
+			'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
+			'itemChoice' => $data['parts']['select-item-choice'] ?? [],
+			'placeholder' => $data['parts']['select-placeholder'] ?? [],
+			'button' => $data['parts']['select-button'] ?? [],
 		]);
 	}
 

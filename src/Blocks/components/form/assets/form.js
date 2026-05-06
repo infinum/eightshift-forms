@@ -1448,7 +1448,7 @@ export class Form {
 					`customProperties.${this.state.getStateAttribute('countryUnlocalizedName')}`,
 				],
 				itemSelectText: '',
-				removeItemIconText: '✖',
+				removeItemIconText: '✕',
 				classNames: {
 					containerOuter: ['choices', ...(twSelectorsData.containerOuter ?? [])],
 					containerInner: ['choices__inner', ...(twSelectorsData.containerInner ?? [])],

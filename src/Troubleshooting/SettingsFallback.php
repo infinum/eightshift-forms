@@ -411,7 +411,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 										'inputIsNumber' => true,
 										'inputPlaceholder' => self::SETTINGS_FALLBACK_AUTO_DELETE_RETENTION_DEFAULT_VALUE,
 										'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-										'inputFieldInlineBeforeAfterContent' => true,
+										'additionalFieldClass' => 'esf-input-with-suffix',
 										'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_FALLBACK_AUTO_DELETE_RETENTION_KEY),
 									],
 								] : []),

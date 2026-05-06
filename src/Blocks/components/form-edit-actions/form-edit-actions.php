@@ -15,6 +15,14 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
+if (!is_user_logged_in()) {
+	return;
+}
+
+if (is_admin()) {
+	return;
+}
+
 $componentClass = $manifest['componentClass'] ?? '';
 
 $formEditActionsFormPostId = Helpers::checkAttr('formEditActionsFormPostId', $attributes, $manifest);
@@ -31,7 +39,7 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
 			href="<?php echo esc_url(GeneralHelpers::getFormEditPageUrl($formEditActionsFormPostId)) ?>"
 			title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
-			tabindex="-1">
+			tabindex="-1" target="_blank" rel="noopener noreferrer">
 			<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 		</a>
@@ -42,7 +50,7 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
 			href="<?php echo esc_url(GeneralHelpers::getSettingsPageUrl($formEditActionsFormPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
 			title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
-			tabindex="-1">
+			tabindex="-1" target="_blank" rel="noopener noreferrer">
 			<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 		</a>
@@ -53,7 +61,7 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
 			href="<?php echo esc_url(GeneralHelpers::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
 			title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
-			tabindex="-1">
+			tabindex="-1" target="_blank" rel="noopener noreferrer">
 			<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 		</a>

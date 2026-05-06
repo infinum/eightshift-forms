@@ -205,7 +205,7 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements Setting
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
 								'inputFieldAfterContent' => 'MB',
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputIsRequired' => true,
