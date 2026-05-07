@@ -74,9 +74,7 @@ if ($formSecureData) {
 	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = $formSecureData; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }
 
-if ($formPhoneDisablePicker) {
-	$formAttrs[UtilsHelper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
-}
+$formAttrs[UtilsHelper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
 
 if ($formCustomName) {
 	$formAttrs[UtilsHelper::getStateAttribute('formCustomName')] = esc_attr($formCustomName);

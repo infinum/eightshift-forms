@@ -1357,6 +1357,8 @@ export class Form {
 		const field = state.getStateElementField(name, formId);
 		const fieldName = field.getAttribute(this.state.getStateAttribute('fieldName'), formId);
 
+		const twSelectorsData = JSON.parse(input.getAttribute(state.getStateAttribute('tailwindSelectorsData'))) ?? [];
+
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
 				enableTime: state.getStateElementTypeField(name, formId) === 'dateTime',
@@ -1369,6 +1371,7 @@ export class Form {
 					const id = instance.element.id;
 
 					instance.calendarContainer.classList.add(fieldName);
+					instance.calendarContainer.classList.add(...twSelectorsData);
 					instance.element.setAttribute('tabindex', '-1');
 					instance.element.setAttribute('role', 'group');
 					instance.element.setAttribute('aria-hidden', 'true');
@@ -1428,7 +1431,7 @@ export class Form {
 			];
 
 			const twSelectorsData =
-				JSON.parse(input.getAttribute(this.state.getStateAttribute('selectTwSelectorsData'))) ?? {};
+				JSON.parse(input.getAttribute(this.state.getStateAttribute('tailwindSelectorsData'))) ?? {};
 
 			const choices = new Choices.default(input, {
 				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),

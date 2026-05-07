@@ -1,6 +1,0 @@
-@import 'tailwindcss' prefix(esf);
-@import '../../../../tailwind.css';
-
-.es-global-msg:empty {
-	@apply esf:hidden;
-}

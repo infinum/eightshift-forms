@@ -219,7 +219,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Countries in dataset', 'eightshift-forms'),
 								'textareaFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
-								'textareaIsReadOnly' => true,
+								'textareaIsDisabled' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'country',
 								'textareaValue' => \wp_json_encode($this->countries->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),

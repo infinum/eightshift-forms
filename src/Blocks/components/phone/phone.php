@@ -131,7 +131,7 @@ if (has_filter($filterName)) {
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
 
 if ($phoneOutput = FormsHelper::getTwSelectorsOutput($phoneTwSelectorsData['phone'] ?? [], 'phone')) {
-	$phoneAttrsSelect[UtilsHelper::getStateAttribute('selectTwSelectorsData')] = $phoneOutput;
+	$phoneAttrsSelect[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $phoneOutput;
 }
 
 if ($phoneIsRequired) {

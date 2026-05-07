@@ -240,7 +240,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'textareaName' => 'debug-encrypt-output',
 								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 								'textareaIsPreventSubmit' => true,
-								'textareaIsReadOnly' => true,
+								'textareaIsDisabled' => true,
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput') . ' esf:min-h-800',
 							],
 							[

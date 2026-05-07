@@ -261,24 +261,55 @@ final class FormsHelper
 	 *
 	 * @return string
 	 */
-	public static function getTwSelectorsOutput(array $data, string $type = 'select'): string
+	public static function getTwSelectorsOutput(array $data, string $type): string
 	{
-		return \wp_json_encode([
-			'containerOuter' => $type === 'phone' ? $data['parts']['select'] ?? [] : $data['base'] ?? [],
-			'containerInner' => $data['parts']['select-choices-inner'] ?? [],
-			'input' => $data['parts']['select-input'] ?? [],
-			'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
-			'list' => $data['parts']['select-list'] ?? [],
-			'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
-			'listSingle' => $data['parts']['select-list-single'] ?? [],
-			'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
-			'item' => $data['parts']['select-item'] ?? [],
-			'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
-			'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
-			'itemChoice' => $data['parts']['select-item-choice'] ?? [],
-			'placeholder' => $data['parts']['select-placeholder'] ?? [],
-			'button' => $data['parts']['select-button'] ?? [],
-		]);
+		switch ($type) {
+			case 'select':
+			case 'country':
+				$output = [
+					'containerOuter' => $data['base'] ?? [],
+					'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+					'input' => $data['parts']['select-input'] ?? [],
+					'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
+					'list' => $data['parts']['select-list'] ?? [],
+					'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
+					'listSingle' => $data['parts']['select-list-single'] ?? [],
+					'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
+					'item' => $data['parts']['select-item'] ?? [],
+					'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
+					'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
+					'itemChoice' => $data['parts']['select-item-choice'] ?? [],
+					'placeholder' => $data['parts']['select-placeholder'] ?? [],
+					'button' => $data['parts']['select-button'] ?? [],
+				];
+				break;
+			case 'phone':
+				$output = [
+					'containerOuter' => $data['parts']['select'] ?? [],
+					'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+					'input' => $data['parts']['select-input'] ?? [],
+					'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
+					'list' => $data['parts']['select-list'] ?? [],
+					'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
+					'listSingle' => $data['parts']['select-list-single'] ?? [],
+					'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
+					'item' => $data['parts']['select-item'] ?? [],
+					'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
+					'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
+					'itemChoice' => $data['parts']['select-item-choice'] ?? [],
+					'placeholder' => $data['parts']['select-placeholder'] ?? [],
+					'button' => $data['parts']['select-button'] ?? [],
+				];
+				break;
+			case 'date':
+				$output = $data['parts']['picker'] ?? [];
+				break;
+			default:
+				$output = [];
+				break;
+		}
+
+		return \wp_json_encode($output);
 	}
 
 	/**

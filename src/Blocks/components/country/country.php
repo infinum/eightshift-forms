@@ -68,8 +68,8 @@ if ($countryIsRequired) {
 
 $countryAttrs['aria-invalid'] = 'false';
 
-if ($countryOutput = FormsHelper::getTwSelectorsOutput($countryTwSelectorsData['country'] ?? [])) {
-	$countryAttrs[UtilsHelper::getStateAttribute('selectTwSelectorsData')] = $countryOutput;
+if ($countryOutput = FormsHelper::getTwSelectorsOutput($countryTwSelectorsData['country'] ?? [], 'country')) {
+	$countryAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $countryOutput;
 }
 
 $placeholderLabel = '';

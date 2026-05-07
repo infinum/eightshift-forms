@@ -71,6 +71,10 @@ if ($dateIsRequired) {
 
 $dateAttrs['aria-invalid'] = 'false';
 
+if ($dateOutput = FormsHelper::getTwSelectorsOutput($dateTwSelectorsData['date'] ?? [], 'date')) {
+	$dateAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $dateOutput;
+}
+
 // Additional content filter.
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('date', $attributes);
 

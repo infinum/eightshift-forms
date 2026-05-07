@@ -276,7 +276,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'component' => 'textarea',
 									'textareaFieldLabel' => \__('Queue jobs', 'eightshift-forms'),
 									'textareaFieldHelp' => \__('Emails in queue that are still not processed.', 'eightshift-forms'),
-									'textareaIsReadOnly' => true,
+									'textareaIsDisabled' => true,
 									'textareaIsPreventSubmit' => true,
 									'textareaName' => 'queue',
 									'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),

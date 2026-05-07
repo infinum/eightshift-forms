@@ -429,12 +429,12 @@
 			"settingsType": "data-settings-type",
 			"groupSaveAsOneField": "data-group-save-as-one-field",
 			"multistepSkipScroll": "data-multistep-skip-scroll",
+			"tailwindSelectorsData": "data-tw-selectors-data",
 
 			"datePreviewFormat": "data-preview-format",
 			"dateOutputFormat": "data-output-format",
 			"dateMode": "data-mode",
 
-			"selectTwSelectorsData": "data-tw-selectors-data",
 			"selectAllowSearch": "data-allow-search",
 			"selectIsMultiple": "data-is-multiple",
 			"selectMinCount": "data-min-count",

@@ -64,8 +64,8 @@ if ($selectIsMultiple) {
 	}
 }
 
-if ($selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [])) {
-	$selectAttrs[UtilsHelper::getStateAttribute('selectTwSelectorsData')] = $selectOutput;
+if ($selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [], 'select')) {
+	$selectAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $selectOutput;
 }
 
 $placeholderLabel = '';

@@ -382,7 +382,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Queue jobs', 'eightshift-forms'),
 								'textareaFieldHelp' => \__('Subscriptions in queue that are still not processed.', 'eightshift-forms'),
-								'textareaIsReadOnly' => true,
+								'textareaIsDisabled' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'queue',
 								'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
