@@ -8,7 +8,9 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -26,23 +28,23 @@ $globalMsgClass = Helpers::clsx([
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);
 
-$headings = [
-	'success' => '',
-	'error' => '',
-];
+$headings = apply_filters(
+	HooksHelpers::getFilterName(['block', 'form', 'globalMsgHeadings']),
+	[
+		'success' => SettingsHelpers::getOptionValue(SettingsSettings::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_SUCCESS),
+		'error' => SettingsHelpers::getOptionValue(SettingsSettings::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_ERROR),
+	]
+);
 
-$filterName = HooksHelpers::getFilterName(['block', 'form', 'globalMsgHeadings']);
+$globalMsgHeadingSuccess = $headings['success'] ?? '';
+$globalMsgHeadingError = $headings['error'] ?? '';
 
-if (has_filter($filterName) && !is_admin()) {
-	$headings = apply_filters($filterName, []);
+if ($globalMsgHeadingSuccess) {
+	$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingSuccess')] = $globalMsgHeadingSuccess;
+}
 
-	if (isset($headings['success'])) {
-		$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingSuccess')] = $headings['success'];
-	}
-
-	if (isset($headings['error'])) {
-		$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingError')] = $headings['error'];
-	}
+if ($globalMsgHeadingError) {
+	$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingError')] = $globalMsgHeadingError;
 }
 
 ?>

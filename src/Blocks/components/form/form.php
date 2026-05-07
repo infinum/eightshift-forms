@@ -10,7 +10,9 @@ use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -133,6 +135,12 @@ if ($formMethod) {
 
 $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
 
+$globalMsgOnBottom = SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_A11Y_GLOBAL_MSG_ON_BOTTOM_KEY, SettingsSettings::SETTINGS_GENERAL_A11Y_KEY);
+$globalMsg = Helpers::render(
+	'global-msg',
+	Helpers::props('globalMsg', $attributes)
+);
+
 ?>
 
 <form
@@ -150,10 +158,9 @@ $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSs
 		])
 	);
 
-	echo Helpers::render(
-		'global-msg',
-		Helpers::props('globalMsg', $attributes)
-	);
+	if (!$globalMsgOnBottom) {
+		echo $globalMsg;
+	}
 
 	echo Helpers::render(
 		'progress-bar',
@@ -162,14 +169,17 @@ $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSs
 	?>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
-		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-		?>
-
-		<?php echo GeneralHelpers::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php
+		echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		echo GeneralHelpers::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>
 	</div>
 
 	<?php
+	if ($globalMsgOnBottom) {
+		echo $globalMsg;
+	}
+
 	echo Helpers::render(
 		'loader',
 		Helpers::props('loader', $attributes)

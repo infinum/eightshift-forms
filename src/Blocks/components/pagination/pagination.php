@@ -29,6 +29,6 @@ $output = paginate_links([
 ]);
 ?>
 
-<div class="esf-pagination">
+<div class="esf-pagination esf-focus-ring">
 	<?php echo wp_kses_post($output); ?>
 </div>

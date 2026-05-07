@@ -25,15 +25,15 @@
 	button:not(disabled),
 	a,
 	.choices {
-		@apply esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none;
+		/* @apply esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none; */
 	}
 
 	button {
-		@apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed esf:disabled:pointer-events-none;
+		/* @apply esf:disabled:opacity-50 esf:disabled:cursor-not-allowed esf:disabled:pointer-events-none; */
 	}
 
 	.es-checkbox-toggle__input:focus + .es-checkbox-toggle__label::before {
-		@apply esf:outline-2 esf:outline-offset-2 esf:outline-accent esf:shadow-none;
+		/* @apply esf:outline-2 esf:outline-offset-2 esf:outline-accent esf:shadow-none; */
 	}
 }
 

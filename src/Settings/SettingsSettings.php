@@ -51,11 +51,14 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_GENERAL_A11Y_KEY = 'general-a11y';
 	public const SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY = 'disable-scroll-to-field-key';
+	public const SETTINGS_GENERAL_A11Y_GLOBAL_MSG_ON_BOTTOM_KEY = 'global-msg-on-bottom-key';
 
 	/**
 	 * Hide global message timeout key.
 	 */
 	public const SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT = 'hide-global-msg-timeout';
+	public const SETTINGS_GENERAL_GLOBAL_MSG_HEADING_ERROR = 'global-msg-heading-error';
+	public const SETTINGS_GENERAL_GLOBAL_MSG_HEADING_SUCCESS = 'global-msg-heading-success';
 
 	/**
 	 * Register all the hooks
@@ -180,12 +183,21 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Global message on the bottom of the form', 'eightshift-forms'),
+										'checkboxHelp' => \__('If enabled, the global message will be displayed at the bottom of the form.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_A11Y_GLOBAL_MSG_ON_BOTTOM_KEY, self::SETTINGS_GENERAL_A11Y_KEY),
+										'checkboxValue' => self::SETTINGS_GENERAL_A11Y_GLOBAL_MSG_ON_BOTTOM_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+									],
 								],
 							],
 							[
 								'component' => 'input',
 								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
-								'inputFieldLabel' => \__('Hide global message timeout', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Global message hide timeout', 'eightshift-forms'),
 								'inputFieldHelp' => \__("The amount of time the global message is displayed. If you don't want to hide the global message, set it to a high value.", 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
@@ -194,6 +206,22 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_HIDE_GLOBAL_MSG_TIMEOUT),
 								'additionalFieldClass' => 'esf-input-with-suffix'
+							],
+							[
+								'component' => 'input',
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_ERROR),
+								'inputFieldLabel' => \__('Global message heading error', 'eightshift-forms'),
+								'inputFieldHelp' => \__("The heading for the global message when the form has an error.", 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_ERROR),
+							],
+							[
+								'component' => 'input',
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_SUCCESS),
+								'inputFieldLabel' => \__('Global message heading success', 'eightshift-forms'),
+								'inputFieldHelp' => \__("The heading for the global message when the form has a success.", 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_SUCCESS),
 							],
 						],
 					],

@@ -2,10 +2,17 @@
 @import '../../../../tailwind.css';
 
 .esf-pagination {
-	@apply esf:border-t esf:border-border esf:px-10 esf:py-20;
+	@apply esf:border-t;
+	@apply esf:border-border;
+	@apply esf:px-10;
+	@apply esf:py-20;
 
 	& ul {
-		@apply esf:flex esf:items-center esf:justify-center esf:gap-8 esf:list-none esf:m-0;
+		@apply esf:flex;
+		@apply esf:items-center;
+		@apply esf:justify-center;
+		@apply esf:gap-8;
+		@apply esf:list-none esf:m-0;
 	}
 
 	& li {
@@ -14,12 +21,30 @@
 
 	& a,
 	& span.current {
-		@apply esf:text-inherit esf:bg-transparent esf:border esf:border-border;
-		@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
-		@apply esf:min-w-40 esf:justify-center esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+		@apply esf:text-inherit;
+		@apply esf:bg-transparent;
+		@apply esf:border;
+		@apply esf:border-border;
+		@apply esf:hover:text-white;
+		@apply esf:hover:bg-accent-dark;
+		@apply esf:hover:border-accent-dark;
+		@apply esf:min-w-40;
+		@apply esf:justify-center;
+		@apply esf:text-nowrap;
+		@apply esf:cursor-pointer;
+		@apply esf:no-underline;
+		@apply esf:inline-flex;
+		@apply esf:p-10;
+		@apply esf:items-center;
+		@apply esf:rounded-md;
+		@apply esf:gap-10;
+		@apply esf:transition-colors;
+		@apply esf:duration-300;
 	}
 
 	& span.current {
-		@apply esf:text-white esf:bg-accent esf:border-accent;
+		@apply esf:text-white;
+		@apply esf:bg-accent;
+		@apply esf:border-accent;
 	}
 }

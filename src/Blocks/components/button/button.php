@@ -72,6 +72,7 @@ switch ($buttonIconSize) {
 
 $class = Helpers::clsx([
 	$buttonClass,
+	'esf-button',
 	$buttonIconSizeClass,
 	$additionalClass,
 	Helpers::selector($buttonIsDisabled && $outputTag === 'a', 'esf-button-disabled'),

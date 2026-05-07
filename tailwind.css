@@ -34,6 +34,16 @@
 	--color-green-950: #052e16;
 }
 
+.esf-focus-ring,
+.esf-focus-ring a,
+.esf-focus-ring button {
+	@apply esf:focus:outline-2;
+	@apply esf:focus:outline-offset-2;
+	@apply esf:focus:outline-accent;
+	@apply esf:focus:shadow-none;
+	@apply esf:focus:rounded-md;
+}
+
 /* Frontend facing helpers */
 .es-form-is-hidden {
 	@apply esf:hidden!;
@@ -41,50 +51,102 @@
 }
 
 .esf-button-disabled {
-	@apply esf:opacity-50 esf:cursor-not-allowed esf:pointer-events-none;
+	@apply esf:opacity-50;
+	@apply esf:cursor-not-allowed;
+	@apply esf:pointer-events-none;
+}
+
+.esf-button {
+	@apply esf:bg-transparent;
+	@apply esf:inline-flex;
+	@apply esf:cursor-pointer;
+	@apply esf:text-nowrap;
+	@apply esf:no-underline;
+	@apply esf:items-center;
+	@apply esf:justify-center;
+	@apply esf:gap-10;
+	@apply esf:rounded-md;
+	@apply esf:p-10;
+	@apply esf:text-sm;
+	@apply esf:font-medium;
+	@apply esf:border;
+	@apply esf:duration-300;
+	@apply esf:transition-colors;
+	@apply esf:focus:outline-2;
+	@apply esf:focus:outline-offset-2;
+	@apply esf:focus:outline-accent;
+	@apply esf:focus:shadow-none;
+	@apply esf:focus:rounded-md;
+	@apply esf:disabled:opacity-50;
+	@apply esf:disabled:cursor-not-allowed;
+	@apply esf:disabled:pointer-events-none;
 }
 
 .esf-button-primary {
-	@apply esf:text-white esf:bg-accent esf:border-accent;
-	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
-	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
-	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
-	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
-	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+	@apply esf:text-white;
+	@apply esf:bg-accent;
+	@apply esf:border-accent;
+	@apply esf:hover:text-white;
+	@apply esf:hover:bg-accent-dark;
+	@apply esf:hover:border-accent-dark;
+	@apply esf:active:text-white;
+	@apply esf:active:bg-accent-dark;
+	@apply esf:active:border-accent-dark;
+	@apply esf:focus:text-white;
+	@apply esf:focus:bg-accent-dark;
+	@apply esf:focus:border-accent-dark;
+	@apply esf:[&.is-active]:text-white;
+	@apply esf:[&.is-active]:bg-accent-dark;
+	@apply esf:[&.is-active]:border-accent-dark;
 }
 
 .esf-button-primary-outline {
-	@apply esf:text-accent esf:bg-transparent esf:border esf:border-accent;
-	@apply esf:hover:text-white esf:hover:bg-accent-dark esf:hover:border-accent-dark;
-	@apply esf:active:text-white esf:active:bg-accent-dark esf:active:border-accent-dark;
-	@apply esf:focus:text-white esf:focus:bg-accent-dark esf:focus:border-accent-dark;
-	@apply esf:[&.is-active]:text-white esf:[&.is-active]:bg-accent-dark esf:[&.is-active]:border-accent-dark;
-	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
+	@apply esf:text-accent;
+	@apply esf:border-accent;
+	@apply esf:hover:text-white;
+	@apply esf:hover:bg-accent-dark;
+	@apply esf:hover:border-accent-dark;
+	@apply esf:active:text-white;
+	@apply esf:active:bg-accent-dark;
+	@apply esf:active:border-accent-dark;
+	@apply esf:focus:text-white;
+	@apply esf:focus:bg-accent-dark;
+	@apply esf:focus:border-accent-dark;
+	@apply esf:[&.is-active]:text-white;
+	@apply esf:[&.is-active]:bg-accent-dark;
+	@apply esf:[&.is-active]:border-accent-dark;
 }
 
 .esf-button-primary-ghost {
-	@apply esf:text-accent esf:bg-transparent esf:border esf:border-transparent;
-	@apply esf:hover:text-accent esf:hover:bg-accent-30;
-	@apply esf:active:text-accent esf:active:bg-accent-30;
-	@apply esf:focus:text-accent esf:focus:bg-accent-30;
+	@apply esf:text-accent;
+	@apply esf:border-transparent;
+	@apply esf:hover:text-accent;
+	@apply esf:hover:bg-accent-30;
+	@apply esf:active:text-accent;
+	@apply esf:active:bg-accent-30;
+	@apply esf:focus:text-accent;
+	@apply esf:focus:bg-accent-30;
 	@apply esf:[&.is-active]:bg-accent-30;
-	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
 
 .esf-button-secondary-ghost {
-	@apply esf:text-inherit esf:bg-transparent esf:border esf:border-transparent;
-	@apply esf:hover:text-inherit esf:hover:bg-accent-30;
-	@apply esf:active:text-inherit esf:active:bg-accent-30;
-	@apply esf:focus:text-inherit esf:focus:bg-accent-30;
+	@apply esf:text-inherit;
+	@apply esf:border-transparent;
+	@apply esf:hover:text-inherit;
+	@apply esf:hover:bg-accent-30;
+	@apply esf:active:text-inherit;
+	@apply esf:active:bg-accent-30;
+	@apply esf:focus:text-inherit;
+	@apply esf:focus:bg-accent-30;
 	@apply esf:[&.is-active]:bg-accent-30;
-	@apply esf:text-sm esf:font-medium esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:p-10 esf:items-center esf:justify-center esf:rounded-md esf:gap-10 esf:transition-colors esf:duration-300;
 }
 
 .esf-button-primary-basic {
-	@apply esf:text-inherit esf:bg-transparent esf:border esf:border-transparent;
+	@apply esf:p-0;
+	@apply esf:text-inherit;
+	@apply esf:border-transparent;
 	@apply esf:hover:text-inherit;
 	@apply esf:active:text-inherit;
 	@apply esf:focus:text-inherit;
 	@apply esf:[&.is-active]:text-accent;
-	@apply esf:text-nowrap esf:cursor-pointer esf:no-underline esf:inline-flex esf:items-center esf:justify-center esf:gap-10 esf:transition-colors esf:duration-300;
 }
