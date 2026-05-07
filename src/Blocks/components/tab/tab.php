@@ -27,7 +27,7 @@ if (!$tabLabel || !$tabContent) {
 						$tabWithBg ? 'esf:bg-white esf:border esf:border-border esf:rounded-md' : '',
 					])); ?>"
 	data-hash="<?php echo rawurlencode($tabLabel); ?>"
-	data-btn-class="js-es-tabs-btn esf:cursor-pointer esf:border-b-2 esf:border-transparent esf:inline-flex esf:items-center esf:py-5 esf:text-sm! esf:transition-colors esf:duration-300 esf:hover:border-border esf:aria-selected:border-accent esf:focus:outline-2 esf:focus:outline-offset-2 esf:focus:outline-accent esf:focus:shadow-none esf:focus:rounded-md">
+	data-btn-class="js-es-tabs-btn esf:cursor-pointer esf:border-b-2 esf:border-transparent esf:inline-flex esf:items-center esf:py-5 esf:text-sm! esf:transition-colors esf:duration-300 esf:hover:border-border esf:aria-selected:border-accent esf-focus-ring">
 
 	<summary class="esf:text-sm! esf:flex esf:items-center esf:justify-between esf:p-20 esf:cursor-pointer esf:select-none esf:md:hidden esf:[&::-webkit-details-marker]:hidden">
 		<?php echo esc_html($tabLabel); ?>
