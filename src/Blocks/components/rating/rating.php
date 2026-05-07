@@ -64,7 +64,7 @@ $stars = '';
 $iconFilterName = HooksHelpers::getFilterName(['block', 'rating', 'starIcon']);
 
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
-	$stars .= '
+	$input = '
 		<input
 			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
 			type="radio"
@@ -79,7 +79,9 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$ariaLabel = sprintf(__('Star rating %s', 'eightshift-forms'), $i);
 
 	$stars .= '
+' . $input . '
 		<label
+			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'label', "{$componentClass}__label")) . '"
 			for="' . esc_attr($ratingId . $i) . '"
 			aria-label="' . esc_attr($ariaLabel) . '"
 		>

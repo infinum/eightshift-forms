@@ -592,7 +592,7 @@ class Theme implements ServiceInterface
 				'parts' => [
 					'input' => [
 						'esf:peer/radio',
-						'esf:sr-only',
+						// 'esf:sr-only',
 					],
 					'label' => [
 						...Theme::THEME_SELECTORS['label'],
@@ -660,6 +660,30 @@ class Theme implements ServiceInterface
 						'esf:gap-10',
 						'esf:grid-cols-[min(120px)_1fr]',
 					]
+				],
+			],
+			'rating' => [
+				'base' => [
+					'esf:flex',
+					'esf:flex-row',
+					'esf:gap-5',
+				],
+				'parts' => [
+					'star' => [
+						'esf:peer/rating',
+						// 'esf:sr-only',
+					],
+					'label' => [
+						'esf:text-gray-400',
+						'esf:cursor-pointer',
+						'esf:peer-checked/rating:text-accent',
+
+						// 'esf:peer-focus/rating:outline-2',
+						// 'esf:peer-focus/rating:outline-offset-2',
+						// 'esf:peer-focus/rating:outline-accent',
+						// 'esf:peer-focus/rating:shadow-none',
+						// 'esf:peer-focus/rating:rounded-full',
+					],
 				],
 			],
 			'loader' => [
