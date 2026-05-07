@@ -43,9 +43,9 @@ class Theme implements ServiceInterface
 			'esf:bg-white',
 			'esf:p-10',
 			'esf:rounded-md',
-			'esf:text-sm',
+			'esf:text-base',
 			'esf:text-black',
-			'esf:h-42',
+			'esf:h-46',
 			'esf:shadow-none',
 			'esf:text-black',
 			'esf:placeholder:text-gray-400',
@@ -55,16 +55,13 @@ class Theme implements ServiceInterface
 			'esf:group-[&.es-form-has-error]/field:border-red-500',
 		],
 		'help' => [
-			'esf:text-gray-400 esf:text-xs',
-			'esf:[&_code]:text-gray-400',
-			'esf:[&_code]:text-xs/17',
-			'esf:[&_code]:m-0',
-			'esf:[&_code]:px-3',
-			'esf:[&_code]:py-1',
-			'esf:[&_code]:bg-gray-100',
+			'esf:text-gray-400',
+			'esf:text-xs',
 			'esf:[&_a]:text-accent',
 			'esf:[&_a]:underline',
 			'esf:[&_a]:hover:text-accent-dark',
+		],
+		'help-extended' => [
 			'esf:[&_ul]:list-disc',
 			'esf:[&_ul]:list-inside',
 			'esf:[&_ul]:m-0',
@@ -73,12 +70,19 @@ class Theme implements ServiceInterface
 			'esf:[&_ul]:flex',
 			'esf:[&_ul]:flex-col',
 			'esf:[&_li]:m-0',
+			'esf:[&_code]:text-gray-400',
+			'esf:[&_code]:text-xs',
+			'esf:[&_code]:m-0',
+			'esf:[&_code]:px-3',
+			'esf:[&_code]:py-1',
+			'esf:[&_code]:bg-gray-100',
 		],
 		'after-content' => [
-			'esf:text-gray-600 esf:text-xs',
+			'esf:text-gray-600',
+			'esf:text-xs',
 		],
 		'label' => [
-			'esf:text-sm',
+			'esf:text-base',
 			'esf:block',
 			'esf:p-0',
 		],
@@ -87,12 +91,12 @@ class Theme implements ServiceInterface
 				'esf:group/select',
 				'esf:relative',
 				'esf:overflow-hidden',
-				'esf:text-sm',
+				'esf:text-base',
 				'esf:text-black',
 				'esf:[&.is-open]:overflow-visible',
 				'esf-focus-ring',
 
-				'esf:data-[type=select-one]:[&_.choices\_\_inner]:h-42',
+				'esf:data-[type=select-one]:[&_.choices\_\_inner]:h-46',
 				'esf:data-[type=select-one]:[&_.choices\_\_inner]:flex',
 				'esf:data-[type=select-one]:[&_.choices\_\_inner]:items-center',
 				'esf:data-[type=select-one]:[&_.choices\_\_inner]:p-10',
@@ -103,7 +107,7 @@ class Theme implements ServiceInterface
 				'esf:data-[type=select-one]:[&_.choices\_\_inner]:[&_.choices\_\_item]:truncate',
 
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:w-full',
-				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:min-h-42',
+				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:min-h-46',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:inline-block',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:pt-6',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:pl-10',
@@ -136,13 +140,13 @@ class Theme implements ServiceInterface
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:focus:outline-none',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:focus:shadow-none',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:placeholder:text-gray-400',
-				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:text-sm',
+				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:text-base',
 			],
 			'parts' => [
 				'select-choices-inner' => [
 					'esf:group/select-inner',
 					'esf:relative',
-					'esf:text-sm',
+					'esf:text-base',
 					'esf:text-black',
 					'esf:bg-white',
 					'esf:border',
@@ -165,7 +169,7 @@ class Theme implements ServiceInterface
 					"esf:after:border-7",
 					"esf:after:absolute",
 					"esf:after:right-10",
-					"esf:after:top-17",
+					"esf:after:top-19",
 					"esf:after:pointer-events-none",
 
 					'esf:group-[&.es-form-has-error]/field:border-red-500!',
@@ -232,11 +236,11 @@ class Theme implements ServiceInterface
 					'esf:cursor-pointer',
 					'esf:p-0',
 					'esf:absolute',
-					'esf:top-4',
-					'esf:right-20',
+					'esf:top-8',
+					'esf:right-30',
 					'esf:text-lg',
-					'esf:w-32',
-					'esf:h-32',
+					'esf:w-29',
+					'esf:h-29',
 					'esf:flex',
 					'esf:items-center',
 					'esf:justify-center',
@@ -273,6 +277,41 @@ class Theme implements ServiceInterface
 		$this->adminSelectorsCache = \array_merge_recursive(
 			$this->getTheme(),
 			[
+				'form' => [
+					'base' => [
+						'esf:text-sm',
+					],
+					'parts' => [
+						'picker' => [
+							'esf:text-sm',
+						],
+					],
+				],
+				'input' => [
+					'base' => [
+						'esf:text-sm',
+					],
+				],
+				'date' => [
+					'base' => [
+						'esf:text-sm',
+					]
+				],
+				'textarea' => [
+					'base' => [
+						'esf:text-sm',
+					]
+				],
+				'phone' => [
+					'base' => [
+						'esf:text-sm',
+					],
+					'parts' => [
+						'select' => [
+							'esf:text-sm',
+						],
+					],
+				],
 				'checkboxes' => [
 					'parts' => [
 						'field-label' => [
@@ -285,9 +324,13 @@ class Theme implements ServiceInterface
 						'content' => [
 							'esf:group-[&.esf-input-with-suffix]/field:flex',
 							'esf:group-[&.esf-input-with-suffix]/field:items-center',
+							'esf:group-[&.esf-input-with-suffix]/field:flex-row',
 						],
 						'content-wrap' => [
 							'esf:group-[&.esf-input-with-suffix]/field:flex-grow-1',
+						],
+						'label' => [
+							'esf:text-sm',
 						],
 						'after-content' => [
 							'esf:group-[&.esf-input-with-suffix]/field:px-10',
@@ -296,11 +339,12 @@ class Theme implements ServiceInterface
 							'esf:group-[&.esf-input-with-suffix]/field:justify-center',
 							'esf:group-[&.esf-input-with-suffix]/field:border',
 							'esf:group-[&.esf-input-with-suffix]/field:border-border',
-							'esf:group-[&.esf-input-with-suffix]/field:h-42',
+							'esf:group-[&.esf-input-with-suffix]/field:h-46',
 							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-md',
-							'esf:group-[&.esf-input-with-suffix]/field:-mx-5',
+							'esf:group-[&.esf-input-with-suffix]/field:-mx-8',
 							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-50',
 						],
+						'help' => Theme::THEME_SELECTORS['help-extended'],
 					],
 				],
 				'checkbox' => [
@@ -309,6 +353,8 @@ class Theme implements ServiceInterface
 					],
 					'parts' => [
 						'label' => [
+							'esf:text-sm',
+
 							'esf:[.es-checkbox-toggle\_\_label]:relative',
 							'esf:[.es-checkbox-toggle\_\_label]:block',
 							'esf:[.es-checkbox-toggle\_\_label]:w-full',
@@ -348,12 +394,44 @@ class Theme implements ServiceInterface
 						],
 						'help' => [
 							'esf:[.es-checkbox-toggle\_\_help]:pr-50',
+							...Theme::THEME_SELECTORS['help-extended'],
+						],
+					],
+				],
+				'radio' => [
+					'parts' => [
+						'label' => [
+							'esf:text-sm',
+						],
+						'help' => [
+							...Theme::THEME_SELECTORS['help-extended'],
+						],
+					],
+				],
+				'select' => [
+					'base' => [
+						'esf:text-sm',
+					],
+					'parts' => [
+						'select-choices-inner' => [
+							'esf:text-sm',
+						],
+					],
+				],
+				'country' => [
+					'base' => [
+						'esf:text-sm',
+					],
+					'parts' => [
+						'select-choices-inner' => [
+							'esf:text-sm',
 						],
 					],
 				],
 				'submit' => [
 					'base' => [
 						'esf-button-primary',
+						'esf:text-sm',
 					],
 					'parts' => [
 						'field-content-wrap' => [
@@ -440,6 +518,7 @@ class Theme implements ServiceInterface
 					'esf:flex',
 					'esf:flex-col',
 					'esf:gap-10',
+					'esf:text-base',
 					'esf:[&_*]:transition-colors',
 					'esf:[&_*]:duration-300',
 				],
@@ -447,7 +526,7 @@ class Theme implements ServiceInterface
 					'fields' => [
 						'esf:flex',
 						'esf:flex-col',
-						'esf:gap-10',
+						'esf:gap-20',
 					],
 				],
 			],
@@ -532,7 +611,7 @@ class Theme implements ServiceInterface
 					],
 					'error' => [
 						'esf:text-red-500',
-						'esf:text-xs',
+						'esf:text-sm',
 						'esf:hidden',
 						'esf:group-[&.es-form-has-error]/field:block',
 					],
@@ -558,7 +637,7 @@ class Theme implements ServiceInterface
 						'esf:rounded-md',
 						'esf:border',
 						'esf:border-border',
-						'esf:text-sm',
+						'esf:text-base',
 						'esf:[&_.flatpickr-day]:hover:bg-accent-30',
 						'esf:[&_.flatpickr-day]:hover:border-accent-30',
 						'esf:[&_.flatpickr-day]:focus:bg-accent-30',
@@ -730,7 +809,7 @@ class Theme implements ServiceInterface
 						'esf:sr-only',
 					],
 					'label' => [
-						'esf:text-gray-400',
+						'esf:text-gray-300',
 						'esf:cursor-pointer',
 						'esf:[&:has(~_input:checked)]:text-accent',
 						'esf:[input:checked_+_&]:text-accent',
@@ -790,17 +869,51 @@ class Theme implements ServiceInterface
 					'field' => [
 						'esf:group/file',
 						'esf:[&_.dz-image]:hidden',
-						'esf:[&_.dz-progress]:hidden',
 						'esf:[&_.dz-success-mark]:hidden',
 						'esf:[&_.dz-error-mark]:hidden',
-						'esf:[&_.dz-progress]:hidden',
+						'esf:[&_.dz-progress]:col-span-2',
+						'esf:[&_.dz-progress]:row-start-2',
+						'esf:[&_.dz-progress]:bg-gray-100',
+						'esf:[&_.dz-progress]:rounded-md',
+						'esf:[&_.dz-progress]:h-5',
+						'esf:[&_.dz-progress]:w-full',
+						'esf:[&_.dz-progress]:overflow-hidden',
+						'esf:[&_.dz-progress]:relative',
+						'esf:[&_.dz-upload]:h-full',
+						'esf:[&_.dz-upload]:absolute',
+						'esf:[&_.dz-upload]:start-0',
+						'esf:[&_.dz-upload]:top-0',
+						'esf:[&_.dz-upload]:rounded-md',
+						'esf:[&_.dz-upload]:bg-accent',
+						'esf:[&_.dz-upload]:transition-width',
+						'esf:[&_.dz-error-message]:row-start-3',
+						'esf:[&_.dz-error-message]:col-span-2',
 						'esf:[&_.dz-error-message]:text-red-500',
-						'esf:[&_.dz-error-message]:text-xs',
+						'esf:[&_.dz-error-message]:text-base',
 						'esf:[&_.dz-error-message]:pt-5',
+						'esf:[&_.dz-details]:flex',
+						'esf:[&_.dz-details]:flex-col',
+						'esf:[&_.dz-details]:text-base',
+						'esf:[&_.dz-details]:col-start-1',
+						'esf:[&_.dz-details]:row-start-1',
+						'esf:[&_.dz-filename]:order-1',
+						'esf:[&_.dz-filename]:truncate',
+						'esf:[&_.dz-size]:order-2',
+						'esf:[&_.dz-preview]:grid',
+						'esf:[&_.dz-preview]:gap-5',
+						'esf:[&_.dz-remove]:col-start-2',
+						'esf:[&_.dz-remove]:flex',
+						'esf:[&_.dz-remove]:items-center',
+						'esf:[&_.dz-remove]:justify-end',
 						'esf:[&_.dz-remove]:text-accent',
 						'esf:[&_.dz-remove]:underline',
+						'esf:[&_.dz-remove]:text-xs',
 						'esf:[&_.dz-remove]:hover:text-accent-dark',
-						'esf:[&_.dz-remove]:cursor-pointer',
+						'esf:[&_.dz-remove]:focus:outline-2',
+						'esf:[&_.dz-remove]:focus:outline-offset-2',
+						'esf:[&_.dz-remove]:focus:outline-accent',
+						'esf:[&_.dz-remove]:focus:shadow-none',
+						'esf:[&_.dz-remove]:focus:rounded-md',
 					],
 					'button' => [
 						'esf-button',

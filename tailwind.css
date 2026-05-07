@@ -67,7 +67,7 @@
 	@apply esf:gap-10;
 	@apply esf:rounded-md;
 	@apply esf:p-10;
-	@apply esf:text-sm;
+	@apply esf:text-base;
 	@apply esf:font-medium;
 	@apply esf:border;
 	@apply esf:duration-300;

@@ -23,8 +23,8 @@
 .esf-is-filter-applied {
 	@apply esf:bg-accent-10 esf:text-accent;
 	@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
-	@apply esf:mt-5;
 	@apply esf:w-fit;
 	@apply esf:cursor-pointer;
+	@apply esf:block;
 	@apply esf:[&_ul]:mt-5 esf:[&_ul]:text-gray-400;
 }

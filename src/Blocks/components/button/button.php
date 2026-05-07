@@ -77,6 +77,7 @@ $class = Helpers::clsx([
 	$additionalClass,
 	Helpers::selector($buttonIsDisabled && $outputTag === 'a', 'esf-button-disabled'),
 	'esf:w-fit',
+	Helpers::selector(is_admin(), 'esf:text-sm'),
 ]);
 
 ?>
