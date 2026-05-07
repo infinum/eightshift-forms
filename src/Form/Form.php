@@ -14,7 +14,6 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\EncryptionHelpers;

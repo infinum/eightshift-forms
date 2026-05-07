@@ -21,11 +21,15 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class Theme implements ServiceInterface
 {
 	/**
+	 * Admin selectors cache.
+	 *
 	 * @var array<string, mixed>|null
 	 */
 	private ?array $adminSelectorsCache = null;
 
 	/**
+	 * Frontend selectors cache.
+	 *
 	 * @var array<string, mixed>|null
 	 */
 	private ?array $frontendSelectorsCache = null;
@@ -33,7 +37,7 @@ class Theme implements ServiceInterface
 	/**
 	 * Admin selectors.
 	 *
-	 * @var array<string, array<string, array<string, string>>>
+	 * @var array<mixed>
 	 */
 	public const THEME_SELECTORS = [
 		'input' => [
@@ -788,15 +792,14 @@ class Theme implements ServiceInterface
 				'base' => [
 					...Theme::THEME_SELECTORS['input'],
 				],
-				'parts' => [
-					...Theme::THEME_SELECTORS['select']['parts'],
+				'parts' => \array_merge(Theme::THEME_SELECTORS['select']['parts'], [
 					'select' => Theme::THEME_SELECTORS['select']['base'],
 					'field-content-wrap' => [
 						"esf:group-[[data-phone-disable-picker='']]/form:grid",
 						"esf:group-[[data-phone-disable-picker='']]/form:gap-10",
 						"esf:group-[[data-phone-disable-picker='']]/form:grid-cols-[min(120px)_1fr]",
 					]
-				],
+				]),
 			],
 			'rating' => [
 				'base' => [

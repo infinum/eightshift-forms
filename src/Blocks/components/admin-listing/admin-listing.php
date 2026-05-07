@@ -60,7 +60,7 @@ $additionalAttributes = [
 					?>
 				</div>
 			</div>
-			<?
+			<?php
 			if ($adminListingShowNoItems) { ?>
 				<div class="esf:px-20 esf:py-60">
 					<?php echo wp_kses_post(Helpers::ensureString($adminListingNoItems)); ?>
