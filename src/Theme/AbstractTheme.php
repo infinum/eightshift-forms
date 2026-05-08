@@ -1,39 +1,20 @@
 <?php
 
 /**
- * Theme class.
+ * Abstract theme class.
  *
- * @package EightshiftForms\Theme
+ * @package EightshiftForms
  */
 
 declare(strict_types=1);
 
 namespace EightshiftForms\Theme;
 
-use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Settings\SettingsSettings;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
-
 /**
- * Theme class.
+ * Abstract theme class.
  */
-class Theme implements ServiceInterface
+abstract class AbstractTheme
 {
-	/**
-	 * Admin selectors cache.
-	 *
-	 * @var array<string, mixed>|null
-	 */
-	private ?array $adminSelectorsCache = null;
-
-	/**
-	 * Frontend selectors cache.
-	 *
-	 * @var array<string, mixed>|null
-	 */
-	private ?array $frontendSelectorsCache = null;
-
 	/**
 	 * Admin selectors.
 	 *
@@ -257,253 +238,6 @@ class Theme implements ServiceInterface
 	];
 
 	/**
-	 * Register the hooks.
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectorsAdmin']), [$this, 'getBlockFormsTailwindSelectorsAdmin']);
-		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), [$this, 'getBlockFormsTailwindSelectorsFrontend']);
-	}
-
-	/**
-	 * Get the block forms tailwind selectors for admin.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getBlockFormsTailwindSelectorsAdmin(): array
-	{
-		if ($this->adminSelectorsCache !== null) {
-			return $this->adminSelectorsCache;
-		}
-
-		$this->adminSelectorsCache = \array_merge_recursive(
-			$this->getTheme(),
-			[
-				'form' => [
-					'base' => [
-						'esf:text-sm',
-					],
-					'parts' => [
-						'picker' => [
-							'esf:text-sm',
-						],
-					],
-				],
-				'input' => [
-					'base' => [
-						'esf:text-sm',
-					],
-				],
-				'date' => [
-					'base' => [
-						'esf:text-sm',
-					]
-				],
-				'textarea' => [
-					'base' => [
-						'esf:text-sm',
-					]
-				],
-				'phone' => [
-					'base' => [
-						'esf:text-sm',
-					],
-					'parts' => [
-						'select' => [
-							'esf:text-sm',
-						],
-					],
-				],
-				'checkboxes' => [
-					'parts' => [
-						'field-label' => [
-							'esf:font-semibold',
-						],
-					],
-				],
-				'field' => [
-					'parts' => [
-						'content' => [
-							'esf:group-[&.esf-input-with-suffix]/field:flex',
-							'esf:group-[&.esf-input-with-suffix]/field:items-center',
-							'esf:group-[&.esf-input-with-suffix]/field:flex-row',
-						],
-						'content-wrap' => [
-							'esf:group-[&.esf-input-with-suffix]/field:flex-grow-1',
-						],
-						'label' => [
-							'esf:text-sm',
-						],
-						'after-content' => [
-							'esf:group-[&.esf-input-with-suffix]/field:px-10',
-							'esf:group-[&.esf-input-with-suffix]/field:flex',
-							'esf:group-[&.esf-input-with-suffix]/field:items-center',
-							'esf:group-[&.esf-input-with-suffix]/field:justify-center',
-							'esf:group-[&.esf-input-with-suffix]/field:border',
-							'esf:group-[&.esf-input-with-suffix]/field:border-border',
-							'esf:group-[&.esf-input-with-suffix]/field:h-46',
-							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-md',
-							'esf:group-[&.esf-input-with-suffix]/field:-mx-8',
-							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-50',
-						],
-						'help' => Theme::THEME_SELECTORS['help-extended'],
-					],
-				],
-				'checkbox' => [
-					'base' => [
-						'esf:[&.es-checkbox-toggle]:bg-transparent',
-					],
-					'parts' => [
-						'label' => [
-							'esf:text-sm',
-
-							'esf:[.es-checkbox-toggle\_\_label]:relative',
-							'esf:[.es-checkbox-toggle\_\_label]:block',
-							'esf:[.es-checkbox-toggle\_\_label]:w-full',
-							'esf:[.es-checkbox-toggle\_\_label]:pl-0',
-							'esf:[.es-checkbox-toggle\_\_label]:pr-44',
-							'esf:[.es-checkbox-toggle\_\_label]:min-h-24',
-							"esf:[.es-checkbox-toggle\_\_label]:before:content-['']",
-							'esf:[.es-checkbox-toggle\_\_label]:before:absolute',
-							'esf:[.es-checkbox-toggle\_\_label]:before:top-0',
-							'esf:[.es-checkbox-toggle\_\_label]:before:start-auto',
-							'esf:[.es-checkbox-toggle\_\_label]:before:end-0',
-							'esf:[.es-checkbox-toggle\_\_label]:before:bg-white',
-							'esf:[.es-checkbox-toggle\_\_label]:before:border-1',
-							'esf:[.es-checkbox-toggle\_\_label]:before:border-border',
-							'esf:[.es-checkbox-toggle\_\_label]:before:w-44',
-							'esf:[.es-checkbox-toggle\_\_label]:before:h-22',
-							'esf:[.es-checkbox-toggle\_\_label]:before:rounded-full',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:before:bg-accent',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:before:border-accent',
-
-							"esf:[.es-checkbox-toggle\_\_label]:after:content-['']",
-							'esf:[.es-checkbox-toggle\_\_label]:after:opacity-100',
-							'esf:[.es-checkbox-toggle\_\_label]:after:absolute',
-							'esf:[.es-checkbox-toggle\_\_label]:after:top-3',
-							'esf:[.es-checkbox-toggle\_\_label]:after:start-auto',
-							'esf:[.es-checkbox-toggle\_\_label]:after:end-25',
-							'esf:[.es-checkbox-toggle\_\_label]:after:rounded-full',
-							'esf:[.es-checkbox-toggle\_\_label]:after:bg-gray-300',
-							'esf:[.es-checkbox-toggle\_\_label]:after:h-16',
-							'esf:[.es-checkbox-toggle\_\_label]:after:w-16',
-							'esf:[.es-checkbox-toggle\_\_label]:after:transition-all',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:translate-x-22',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:bg-white',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:transition-all',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:duration-300',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:bg-accent',
-						],
-						'help' => [
-							'esf:[.es-checkbox-toggle\_\_help]:pr-50',
-							...Theme::THEME_SELECTORS['help-extended'],
-						],
-					],
-				],
-				'radio' => [
-					'parts' => [
-						'label' => [
-							'esf:text-sm',
-						],
-						'help' => [
-							...Theme::THEME_SELECTORS['help-extended'],
-						],
-					],
-				],
-				'select' => [
-					'base' => [
-						'esf:text-sm',
-					],
-					'parts' => [
-						'select-choices-inner' => [
-							'esf:text-sm',
-						],
-					],
-				],
-				'country' => [
-					'base' => [
-						'esf:text-sm',
-					],
-					'parts' => [
-						'select-choices-inner' => [
-							'esf:text-sm',
-						],
-					],
-				],
-				'submit' => [
-					'base' => [
-						'esf-button-primary',
-						'esf:text-sm',
-					],
-					'parts' => [
-						'field-content-wrap' => [
-							'esf:items-end',
-						],
-					],
-				],
-				'global-msg' => [
-					'base' => [
-						'esf:fixed',
-						'esf:right-32',
-						'esf:bottom-32',
-						'esf:z-100',
-						'esf:max-w-288',
-						'esf:max-h-[80vh]',
-						'esf:overflow-x-hidden',
-						'esf:rounded-md',
-						'esf:translate-x-32',
-						'esf:[&.es-form-is-active]:translate-x-0',
-						// Other statuses added by frontend.
-						'esf:data-[status="warning"]:bg-yellow-100',
-						'esf:data-[status="warning"]:border-yellow-500',
-						'esf:data-[status="warning"]:text-yellow-950',
-						'esf:data-[status="info"]:bg-sky-100',
-						'esf:data-[status="info"]:border-sky-500',
-						'esf:data-[status="info"]:text-sky-950',
-					],
-				],
-				'loader' => [
-					'base' => [
-						'esf:z-99999',
-						'esf:fixed!',
-						'esf:w-screen!',
-						'esf:h-screen!',
-					],
-					'parts' => [
-						'overlay' => [
-							'esf:fixed!',
-						],
-					],
-				],
-			]
-		);
-
-		return $this->adminSelectorsCache;
-	}
-
-	/**
-	 * Get the block forms tailwind selectors for frontend.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getBlockFormsTailwindSelectorsFrontend(): array
-	{
-		if ($this->frontendSelectorsCache !== null) {
-			return $this->frontendSelectorsCache;
-		}
-
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SELECTORS_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
-			return [];
-		}
-
-		$this->frontendSelectorsCache = $this->getTheme();
-
-		return $this->frontendSelectorsCache;
-	}
-
-	/**
 	 * Get the theme selectors for admin and frontend.
 	 *
 	 * @return array<string, mixed>
@@ -514,6 +248,10 @@ class Theme implements ServiceInterface
 			'forms' => [
 				'base' => [
 					'esf:relative',
+					'esf:box-border',
+					'esf:[&_*]:box-border',
+					'esf:[&_:after]:box-border',
+					'esf:[&_:before]:box-border',
 				],
 			],
 			'form' => [
@@ -528,37 +266,8 @@ class Theme implements ServiceInterface
 				],
 				'parts' => [
 					'fields' => [
-						'esf:flex',
-						'esf:flex-col',
+						'esf:grid',
 						'esf:gap-20',
-					],
-				],
-			],
-			'form-edit-actions' => [
-				'base' => [
-					'esf:absolute',
-					'esf:top-20',
-					'esf:right-20',
-					'esf:z-100',
-					'esf:bg-white',
-					'esf:rounded-md',
-					'esf:border',
-					'esf:border-border',
-					'esf:overflow-hidden',
-					'esf:invisible',
-					'esf:group-hover/form:visible',
-				],
-				'parts' => [
-					'link' => [
-						'esf:w-40',
-						'esf:h-40',
-						'esf:flex',
-						'esf:items-center',
-						'esf:justify-center',
-						'esf:text-accent',
-						'esf:cursor-pointer',
-						'esf:hover:bg-accent-dark',
-						'esf:hover:text-white',
 					],
 				],
 			],
@@ -570,8 +279,7 @@ class Theme implements ServiceInterface
 					'esf:flex-col',
 					'esf:gap-10',
 					'esf:border-none',
-					'esf:mx-0',
-					'esf:p-0',
+					'esf:col-span-[var(--es-field-width-tw,12)]',
 				],
 				'parts' => [
 					'inner' => [
@@ -589,11 +297,11 @@ class Theme implements ServiceInterface
 						'esf:flex-col',
 						'esf:gap-10',
 					],
-					'label' => Theme::THEME_SELECTORS['label'],
-					'help' => Theme::THEME_SELECTORS['help'],
-					'suffix-content' => Theme::THEME_SELECTORS['after-content'],
-					'before-content' => Theme::THEME_SELECTORS['after-content'],
-					'after-content' => Theme::THEME_SELECTORS['after-content'],
+					'label' => self::THEME_SELECTORS['label'],
+					'help' => self::THEME_SELECTORS['help'],
+					'suffix-content' => self::THEME_SELECTORS['after-content'],
+					'before-content' => self::THEME_SELECTORS['after-content'],
+					'after-content' => self::THEME_SELECTORS['after-content'],
 					'debug' => [
 						'esf:opacity-0',
 						'esf:text-xs',
@@ -622,10 +330,10 @@ class Theme implements ServiceInterface
 				],
 			],
 			'input' => [
-				'base' => Theme::THEME_SELECTORS['input'],
+				'base' => self::THEME_SELECTORS['input'],
 			],
 			'date' => [
-				'base' => Theme::THEME_SELECTORS['input'],
+				'base' => self::THEME_SELECTORS['input'],
 				'parts' => [
 					'picker' => [
 						// Picker is not part of the form.
@@ -666,7 +374,7 @@ class Theme implements ServiceInterface
 			],
 			'textarea' => [
 				'base' => [
-					...Theme::THEME_SELECTORS['input'],
+					...self::THEME_SELECTORS['input'],
 					'esf:min-h-200',
 					'esf:h-auto',
 				],
@@ -678,7 +386,7 @@ class Theme implements ServiceInterface
 						'esf:sr-only',
 					],
 					'label' => [
-						...Theme::THEME_SELECTORS['label'],
+						...self::THEME_SELECTORS['label'],
 						'esf:cursor-pointer',
 
 						'esf:relative',
@@ -722,7 +430,7 @@ class Theme implements ServiceInterface
 						'esf:peer-focus/checkbox:before:shadow-none',
 						'esf:peer-focus/checkbox:before:rounded-md',
 					],
-					'help' => Theme::THEME_SELECTORS['help'],
+					'help' => self::THEME_SELECTORS['help'],
 				],
 			],
 			'radio' => [
@@ -732,7 +440,7 @@ class Theme implements ServiceInterface
 						'esf:sr-only',
 					],
 					'label' => [
-						...Theme::THEME_SELECTORS['label'],
+						...self::THEME_SELECTORS['label'],
 						'esf:cursor-pointer',
 
 						'esf:relative',
@@ -777,27 +485,27 @@ class Theme implements ServiceInterface
 						'esf:peer-focus/radio:before:shadow-none',
 						'esf:peer-focus/radio:before:rounded-full',
 					],
-					'help' => Theme::THEME_SELECTORS['help'],
+					'help' => self::THEME_SELECTORS['help'],
 				],
 			],
 			'select' => [
-				'base' => Theme::THEME_SELECTORS['select']['base'],
-				'parts' => Theme::THEME_SELECTORS['select']['parts'],
+				'base' => self::THEME_SELECTORS['select']['base'],
+				'parts' => self::THEME_SELECTORS['select']['parts'],
 			],
 			'country' => [
-				'base' => Theme::THEME_SELECTORS['select']['base'],
-				'parts' => Theme::THEME_SELECTORS['select']['parts'],
+				'base' => self::THEME_SELECTORS['select']['base'],
+				'parts' => self::THEME_SELECTORS['select']['parts'],
 			],
 			'phone' => [
 				'base' => [
-					...Theme::THEME_SELECTORS['input'],
+					...self::THEME_SELECTORS['input'],
 				],
-				'parts' => \array_merge(Theme::THEME_SELECTORS['select']['parts'], [
-					'select' => Theme::THEME_SELECTORS['select']['base'],
+				'parts' => \array_merge(self::THEME_SELECTORS['select']['parts'], [
+					'select' => self::THEME_SELECTORS['select']['base'],
 					'field-content-wrap' => [
 						"esf:group-[[data-phone-disable-picker='']]/form:grid",
 						"esf:group-[[data-phone-disable-picker='']]/form:gap-10",
-						"esf:group-[[data-phone-disable-picker='']]/form:grid-cols-[min(120px)_1fr]",
+						"esf:group-[[data-phone-disable-picker='']]/form:grid-cols-[min(140px)_1fr]",
 					]
 				]),
 			],
@@ -949,6 +657,66 @@ class Theme implements ServiceInterface
 				'base' => [
 					'esf-button',
 					'esf-button-primary',
+				],
+			],
+			'progress-bar' => [
+				'base' => '',
+				'parts' => [
+					'item' => '',
+					'item-inner' => '',
+					'multiflow' => '',
+					'multistep' => '',
+				],
+			],
+			'step-navigation-prev' => [
+				'base' => '',
+				'parts' => [
+					'inner' => '',
+				],
+			],
+			'step-navigation-next' => [
+				'base' => '',
+				'parts' => [
+					'inner' => '',
+				],
+			],
+			'step' => [
+				'base' => '',
+				'parts' => [
+					'debug-details' => '',
+					'inner' => '',
+					'navigation' => '',
+					'navigation-inner' => '',
+					'navigation-prev'	=> '',
+					'navigation-next'	=> '',
+				],
+			],
+			'form-edit-actions' => [
+				'base' => [
+					'esf:absolute',
+					'esf:top-20',
+					'esf:right-20',
+					'esf:z-100',
+					'esf:bg-white',
+					'esf:rounded-md',
+					'esf:border',
+					'esf:border-border',
+					'esf:overflow-hidden',
+					'esf:invisible',
+					'esf:group-hover/form:visible',
+				],
+				'parts' => [
+					'link' => [
+						'esf:w-40',
+						'esf:h-40',
+						'esf:flex',
+						'esf:items-center',
+						'esf:justify-center',
+						'esf:text-accent',
+						'esf:cursor-pointer',
+						'esf:hover:bg-accent-dark',
+						'esf:hover:text-white',
+					],
 				],
 			],
 			'global-msg' => [

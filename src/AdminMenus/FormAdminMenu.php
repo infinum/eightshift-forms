@@ -22,7 +22,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Theme\Theme;
+use EightshiftForms\Theme\AbstractTheme;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
@@ -1231,7 +1231,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						]),
 					]),
 					'selectPlaceholder' => \__('Per page', 'eightshift-forms'),
-					'additionalClass' => Helpers::clsx([...Theme::THEME_SELECTORS['input'], $perPageSelector, 'esf:w-95!']),
+					'additionalClass' => Helpers::clsx([...AbstractTheme::THEME_SELECTORS['input'], $perPageSelector, 'esf:w-95!']),
 				]),
 			] : []),
 		];

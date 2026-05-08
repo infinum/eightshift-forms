@@ -157,7 +157,7 @@ $globalMsg = Helpers::render(
 	);
 
 	if (!$globalMsgOnBottom) {
-		echo esc_html($globalMsg);
+		echo wp_kses_post($globalMsg);
 	}
 
 	echo Helpers::render(
@@ -175,7 +175,7 @@ $globalMsg = Helpers::render(
 
 	<?php
 	if ($globalMsgOnBottom) {
-		echo esc_html($globalMsg);
+		echo wp_kses_post($globalMsg);
 	}
 
 	echo Helpers::render(

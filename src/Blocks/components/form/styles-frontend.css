@@ -1,0 +1,8 @@
+@import 'tailwindcss' prefix(esf);
+@import '../../../../tailwind.css';
+
+.es-form__fields {
+	> .es-field {
+		/* @apply esf:flex-[0_0_var(--es-field-width,100%)]; */
+	}
+}
