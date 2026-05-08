@@ -409,6 +409,7 @@
 			"fieldPreventSubmit": "data-field-prevent-submit",
 			"fieldTypeCustom": "data-type-custom",
 			"fieldUncheckedValue": "data-unchecked-value",
+			"fieldHasCustomRangeInput": "data-has-custom-range-input",
 
 			"formSecureData": "data-secure-data",
 			"trackingEventName": "data-tracking-event-name",

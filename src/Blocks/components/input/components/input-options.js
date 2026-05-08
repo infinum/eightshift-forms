@@ -147,26 +147,28 @@ export const InputOptions = (attributes) => {
 				})}
 			/>
 
-			<>
-				<Toggle
-					icon={fieldPlaceholder}
-					label={__('Use label as placeholder', 'eightshift-forms')}
-					checked={inputUseLabelAsPlaceholder}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: undefined });
-						setAttributes({ [getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value });
-					}}
-				/>
-				{!inputUseLabelAsPlaceholder && (
-					<InputField
-						placeholder={__('Enter placeholder', 'eightshift-forms')}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={inputPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
+			{inputType !== 'range' && (
+				<>
+					<Toggle
+						icon={fieldPlaceholder}
+						label={__('Use label as placeholder', 'eightshift-forms')}
+						checked={inputUseLabelAsPlaceholder}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: undefined });
+							setAttributes({ [getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value });
+						}}
 					/>
-				)}
-			</>
+					{!inputUseLabelAsPlaceholder && (
+						<InputField
+							placeholder={__('Enter placeholder', 'eightshift-forms')}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={inputPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
+						/>
+					)}
+				</>
+			)}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {

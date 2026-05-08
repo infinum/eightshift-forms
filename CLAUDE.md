@@ -55,3 +55,7 @@ E2E only, Playwright + WP Playground (`tests/e2e/`). No PHP unit suite — don't
 bun run test:e2e:playground   # boot WP Playground with dataset
 bun run test:e2e:ui           # interactive
 ```
+
+## Styling
+
+- All Tailwind CSS classes should be prefixed with `esf:`.
