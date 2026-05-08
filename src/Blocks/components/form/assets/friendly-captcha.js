@@ -32,7 +32,10 @@ export class FriendlyCaptcha {
 			return;
 		}
 
-		if (!this.state.getStateCaptchaLoadOnInit() && !document.querySelectorAll(this.state.getStateSelector('form', true))?.length) {
+		if (
+			!this.state.getStateCaptchaLoadOnInit() &&
+			!document.querySelectorAll(this.state.getStateSelector('form', true))?.length
+		) {
 			return;
 		}
 

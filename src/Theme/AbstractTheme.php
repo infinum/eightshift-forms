@@ -158,6 +158,9 @@ abstract class AbstractTheme
 					"esf:after:pointer-events-none",
 
 					'esf:group-[&.es-form-has-error]/field:border-red-500!',
+
+					'esf:group-[&.is-disabled]/select:text-gray-400',
+					'esf:group-[&.is-disabled]/select:bg-gray-100',
 				],
 				'select-list' => [
 					'esf:m-0',
@@ -180,6 +183,7 @@ abstract class AbstractTheme
 					'esf:break-all',
 
 					'esf:group-[&.is-open]/select:block',
+					'esf:group-[&.is-disabled]/select:hidden!',
 
 					'esf:[&_.choices\_\_list]:relative',
 					'esf:[&_.choices\_\_list]:max-h-300',
@@ -207,6 +211,10 @@ abstract class AbstractTheme
 					'esf:[&_.choices\_\_item--selectable]:[&.is-highlighted]:bg-accent-30',
 					'esf:[&_.choices\_\_item--selectable]:[&.is-selected]:bg-accent',
 					'esf:[&_.choices\_\_item--selectable]:[&.is-selected]:text-white',
+
+					// THIS!!!
+					"esf:[&_.choices\_\_item--selectable:[data-option-is-disabled='1']]:hidden!",
+					"esf:[&_.choices\_\_item--selectable:[data-option-is-disabled='1']]:pointer-events-none!",
 				],
 				'select-item-disabled' => [
 					'esf:opacity-50',
@@ -268,6 +276,8 @@ abstract class AbstractTheme
 					'fields' => [
 						'esf:grid',
 						'esf:gap-20',
+						'esf:grid-cols-12',
+						'esf:[&>*]:col-span-12',
 					],
 				],
 			],
@@ -297,7 +307,16 @@ abstract class AbstractTheme
 						'esf:flex-col',
 						'esf:gap-10',
 					],
-					'label' => self::THEME_SELECTORS['label'],
+					'label' => [
+						...self::THEME_SELECTORS['label'],
+						'esf:group/label',
+					],
+					'label-inner' => [
+						"esf:group-[&.es-field\_\_label--is-required]/label:after:content-['*']",
+						"esf:group-[&.es-field\_\_label--is-required]/label:after:text-red-500",
+						"esf:group-[&.es-field\_\_label--is-required]/label:after:text-base",
+						"esf:group-[&.es-field\_\_label--is-required]/label:after:font-semibold",
+					],
 					'help' => self::THEME_SELECTORS['help'],
 					'suffix-content' => self::THEME_SELECTORS['after-content'],
 					'before-content' => self::THEME_SELECTORS['after-content'],
@@ -422,6 +441,7 @@ abstract class AbstractTheme
 						'esf:before:rounded-md',
 						'esf:before:transition-colors',
 						'esf:before:duration-300',
+						'esf:peer-disabled/checkbox:before:bg-gray-100',
 						'esf:peer-checked/checkbox:before:bg-accent',
 						'esf:peer-checked/checkbox:before:border-accent',
 						'esf:peer-focus/checkbox:before:outline-2',
@@ -559,18 +579,14 @@ abstract class AbstractTheme
 						'esf:items-center',
 						'esf:justify-between',
 						'esf:gap-5',
+						'esf:text-sm',
 					],
 					'custom' => self::THEME_SELECTORS['input'],
-					'field' => '',
-					'field-inner' => '',
-					'field-label' => '',
-					'field-label-inner' => '',
-					'field-before-content' => '',
-					'field-content' => '',
-					'field-content-wrap' => [],
-					'field-after-content' => '',
-					'field-help' => '',
-					'field-error' => '',
+					'field-content-wrap' => [
+						"esf:group-[[data-has-custom-range-input='1']]/field:grid",
+						"esf:group-[[data-has-custom-range-input='1']]/field:gap-10",
+						"esf:group-[[data-has-custom-range-input='1']]/field:grid-cols-[1fr_min(140px)]",
+					],
 				],
 			],
 			'select' => [
@@ -685,13 +701,14 @@ abstract class AbstractTheme
 						'esf:[&_.dz-error-message]:row-start-3',
 						'esf:[&_.dz-error-message]:col-span-2',
 						'esf:[&_.dz-error-message]:text-red-500',
-						'esf:[&_.dz-error-message]:text-base',
+						'esf:[&_.dz-error-message]:text-sm',
 						'esf:[&_.dz-error-message]:pt-5',
 						'esf:[&_.dz-details]:flex',
 						'esf:[&_.dz-details]:flex-col',
 						'esf:[&_.dz-details]:text-base',
 						'esf:[&_.dz-details]:col-start-1',
 						'esf:[&_.dz-details]:row-start-1',
+						'esf:[&_.dz-details]:text-sm',
 						'esf:[&_.dz-filename]:order-1',
 						'esf:[&_.dz-filename]:truncate',
 						'esf:[&_.dz-size]:order-2',

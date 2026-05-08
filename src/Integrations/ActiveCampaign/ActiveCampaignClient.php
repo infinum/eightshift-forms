@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * ActiveCampaignClient integration class.
@@ -396,7 +397,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			case 'activeCampaignForbidden':
 				return 'activeCampaignForbiddenError';
 			default:
-				return 'submitWpError';
+				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
 		}
 	}
 

@@ -658,6 +658,7 @@ class Mailer implements MailerInterface
 
 					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ICON]);
 
+					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_PARAMS]);
 					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS]);
 					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS_ONLY]);
 					unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES]);

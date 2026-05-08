@@ -449,6 +449,7 @@ class Config
 	// Form details keys
 	// ------------------------------------------------------------------
 
+	public const FD_FORM_DETAILS = 'formDetails';
 	public const FD_ITEM_ID = 'itemId';
 	public const FD_INNER_ID = 'innerId';
 	public const FD_TYPE = 'type';
