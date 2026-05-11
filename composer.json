@@ -28,7 +28,7 @@
 	},
 	"type": "wordpress-plugin",
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "1.2.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "1.2.1",
 		"infinum/eightshift-coding-standards": "3.1.0",
 		"php-parallel-lint/php-parallel-lint": "v1.4.0",
 		"php-stubs/wordpress-stubs": "6.9.1",
