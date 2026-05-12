@@ -26,7 +26,6 @@ if (!$phoneName) {
 $phoneValue = Helpers::checkAttr('phoneValue', $attributes, $manifest);
 $phonePlaceholder = Helpers::checkAttr('phonePlaceholder', $attributes, $manifest);
 $phoneIsDisabled = Helpers::checkAttr('phoneIsDisabled', $attributes, $manifest);
-$phoneIsReadOnly = Helpers::checkAttr('phoneIsReadOnly', $attributes, $manifest);
 $phoneIsRequired = Helpers::checkAttr('phoneIsRequired', $attributes, $manifest);
 $phoneTracking = Helpers::checkAttr('phoneTracking', $attributes, $manifest);
 $phoneAttrs = Helpers::checkAttr('phoneAttrs', $attributes, $manifest);
@@ -146,6 +145,7 @@ $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
+		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrsSelect)) . '
 	>' . implode('', $options) . '</select>
 	<input
@@ -155,7 +155,6 @@ $phone = '
 		type="tel"
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
-		' . wp_readonly($phoneIsReadOnly, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrs)) . '
 	/>
 	' . $additionalContent . '

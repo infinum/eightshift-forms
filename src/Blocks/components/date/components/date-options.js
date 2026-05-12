@@ -38,7 +38,6 @@ export const DateOptions = (attributes) => {
 	const dateValue = checkAttr('dateValue', attributes, manifest);
 	const datePlaceholder = checkAttr('datePlaceholder', attributes, manifest);
 	const dateIsDisabled = checkAttr('dateIsDisabled', attributes, manifest);
-	const dateIsReadOnly = checkAttr('dateIsReadOnly', attributes, manifest);
 	const dateIsRequired = checkAttr('dateIsRequired', attributes, manifest);
 	const dateTracking = checkAttr('dateTracking', attributes, manifest);
 	const dateValidationPattern = checkAttr('dateValidationPattern', attributes, manifest);
@@ -146,14 +145,6 @@ export const DateOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: dateDisabledOptions,
 				})}
-			/>
-
-			<Toggle
-				icon={readOnly}
-				label={__('Read-only', 'eightshift-forms')}
-				checked={dateIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('dateIsReadOnly', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateIsReadOnly', attributes, manifest), dateDisabledOptions)}
 			/>
 
 			<Toggle

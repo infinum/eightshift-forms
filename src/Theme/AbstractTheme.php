@@ -34,8 +34,9 @@ abstract class AbstractTheme
 			'esf:shadow-none',
 			'esf:text-black',
 			'esf:placeholder:text-gray-400',
-			'esf:disabled:bg-gray-100',
-			'esf:disabled:text-gray-400',
+			'esf:group-[&.es-form-is-disabled]/field:bg-gray-100',
+			'esf:group-[&.es-form-is-disabled]/field:text-gray-400',
+			'esf:group-[&.es-form-is-disabled]/field:cursor-not-allowed',
 			'esf-focus-ring',
 			'esf:group-[&.es-form-has-error]/field:border-red-500',
 		],
@@ -118,8 +119,8 @@ abstract class AbstractTheme
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_item]:[&_.choices\_\_button]:text-white',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_item]:[&_.choices\_\_button]:hover:text-accent-dark',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:border-0',
-				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:min-h-28',
-				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:h-28',
+				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:min-h-30',
+				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:h-30',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:p-0',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:m-0',
 				'esf:data-[type=select-multiple]:[&_.choices\_\_inner]:[&_.choices\_\_input--cloned]:focus:outline-none',
@@ -140,10 +141,10 @@ abstract class AbstractTheme
 					'esf:overflow-hidden',
 					'esf:cursor-pointer',
 
-					'esf:[&_select]:absolute',
-					'esf:[&_select]:inset-0',
+					'esf:[&_select]:hidden',
+					'esf:[&_select]:invisible',
+					'esf:[&_select]:select-none',
 					'esf:[&_select]:pointer-events-none',
-					'esf:[&_select]:opacity-0',
 
 					"esf:after:content-['']",
 					"esf:after:h-0",
@@ -157,10 +158,11 @@ abstract class AbstractTheme
 					"esf:after:top-19",
 					"esf:after:pointer-events-none",
 
-					'esf:group-[&.es-form-has-error]/field:border-red-500!',
+					'esf:group-[&.es-form-has-error]/field:border-red-500',
 
-					'esf:group-[&.is-disabled]/select:text-gray-400',
-					'esf:group-[&.is-disabled]/select:bg-gray-100',
+					'esf:group-[&.es-form-is-disabled]/field:text-gray-400',
+					'esf:group-[&.es-form-is-disabled]/field:bg-gray-100',
+					'esf:group-[&.es-form-is-disabled]/field:cursor-not-allowed',
 				],
 				'select-list' => [
 					'esf:m-0',
@@ -183,7 +185,7 @@ abstract class AbstractTheme
 					'esf:break-all',
 
 					'esf:group-[&.is-open]/select:block',
-					'esf:group-[&.is-disabled]/select:hidden!',
+					'esf:group-[&.es-form-is-disabled]/field:hidden!',
 
 					'esf:[&_.choices\_\_list]:relative',
 					'esf:[&_.choices\_\_list]:max-h-300',
@@ -194,6 +196,9 @@ abstract class AbstractTheme
 					'esf:[&_.choices\_\_item]:p-10',
 
 					'esf:[&_.choices\_\_placeholder]:hidden',
+					'esf:[&_.choices\_\_placeholder]:invisible',
+					'esf:[&_.choices\_\_placeholder]:select-none',
+					'esf:[&_.choices\_\_placeholder]:pointer-events-none',
 
 					'esf:[&_.choices\_\_input]:w-full!',
 					'esf:[&_.choices\_\_input]:min-w-full!',
@@ -212,9 +217,10 @@ abstract class AbstractTheme
 					'esf:[&_.choices\_\_item--selectable]:[&.is-selected]:bg-accent',
 					'esf:[&_.choices\_\_item--selectable]:[&.is-selected]:text-white',
 
-					// THIS!!!
-					"esf:[&_.choices\_\_item--selectable:[data-option-is-disabled='1']]:hidden!",
-					"esf:[&_.choices\_\_item--selectable:[data-option-is-disabled='1']]:pointer-events-none!",
+					"esf:[&_.choices\_\_item[data-option-is-hidden='1']]:hidden",
+					"esf:[&_.choices\_\_item[data-option-is-hidden='1']]:select-none",
+					"esf:[&_.choices\_\_item[data-option-is-hidden='1']]:invisible",
+					"esf:[&_.choices\_\_item[data-option-is-hidden='1']]:pointer-events-none",
 				],
 				'select-item-disabled' => [
 					'esf:opacity-50',
@@ -277,7 +283,6 @@ abstract class AbstractTheme
 						'esf:grid',
 						'esf:gap-20',
 						'esf:grid-cols-12',
-						'esf:[&>*]:col-span-12',
 					],
 				],
 			],
@@ -497,6 +502,7 @@ abstract class AbstractTheme
 						'esf:before:rounded-full',
 						'esf:before:transition-colors',
 						'esf:before:duration-300',
+						'esf:peer-disabled/radio:before:bg-gray-100',
 						'esf:peer-checked/radio:before:bg-accent',
 						'esf:peer-checked/radio:before:border-accent',
 						'esf:peer-focus/radio:before:outline-2',
@@ -518,18 +524,25 @@ abstract class AbstractTheme
 					'esf:bg-none',
 					'esf:focus:outline-none',
 					'esf:focus:shadow-none',
+					'esf:group-[&.es-form-is-disabled]/field:cursor-not-allowed',
 
 					'esf:[&::-webkit-slider-runnable-track]:appearance-none',
-					'esf:[&::-webkit-slider-runnable-track]:bg-gray-300',
+					'esf:[&::-webkit-slider-runnable-track]:bg-white',
+					'esf:[&::-webkit-slider-runnable-track]:border',
+					'esf:[&::-webkit-slider-runnable-track]:border-border',
 					'esf:[&::-webkit-slider-runnable-track]:rounded-full',
 					'esf:[&::-webkit-slider-runnable-track]:h-10',
 					'esf:[&::-webkit-slider-runnable-track]:w-full',
+					'esf:group-[&.es-form-is-disabled]/field:[&::-webkit-slider-runnable-track]:border-gray-100',
 
 					'esf:[&::-moz-range-track]:appearance-none',
-					'esf:[&::-moz-range-track]:bg-gray-300',
+					'esf:[&::-moz-range-track]:bg-white',
+					'esf:[&::-moz-range-track]:border',
+					'esf:[&::-moz-range-track]:border-border',
 					'esf:[&::-moz-range-track]:rounded-full',
 					'esf:[&::-moz-range-track]:h-10',
 					'esf:[&::-moz-range-track]:w-full',
+					'esf:group-[&.es-form-is-disabled]/field:[&::-moz-range-track]:border-gray-100',
 
 					'esf:[&::-webkit-slider-thumb]:appearance-none',
 					'esf:[&::-webkit-slider-thumb]:bg-accent',
@@ -568,6 +581,7 @@ abstract class AbstractTheme
 					'esf:[&::-moz-range-progress]:rounded-full',
 					'esf:[&::-moz-range-progress]:h-10',
 					'esf:[&::-moz-range-progress]:w-full',
+					'esf:disabled:[&::-moz-range-progress]:bg-gray-100',
 				],
 				'parts' => [
 					'min' => '',
@@ -606,7 +620,7 @@ abstract class AbstractTheme
 					'field-content-wrap' => [
 						"esf:group-[[data-phone-disable-picker='']]/form:grid",
 						"esf:group-[[data-phone-disable-picker='']]/form:gap-10",
-						"esf:group-[[data-phone-disable-picker='']]/form:grid-cols-[min(140px)_1fr]",
+						"esf:group-[[data-phone-disable-picker='']]/form:grid-cols-[min(160px)_1fr]",
 					]
 				]),
 			],
@@ -630,6 +644,8 @@ abstract class AbstractTheme
 						'esf:[input:focus-visible_+_&]:outline-accent',
 						'esf:[input:focus-visible_+_&]:shadow-none',
 						'esf:[input:focus-visible_+_&]:rounded-full',
+						'esf:group-[&.es-form-is-disabled]/field:cursor-not-allowed',
+						'esf:group-[&.es-form-is-disabled]/field:text-gray-100',
 					],
 				],
 			],
@@ -675,11 +691,12 @@ abstract class AbstractTheme
 			],
 			'file' => [
 				'base' => [
+					'esf:group/file',
 					'esf:sr-only',
 				],
 				'parts' => [
 					'field' => [
-						'esf:group/file',
+						'esf:group/file-item',
 						'esf:[&_.dz-image]:hidden',
 						'esf:[&_.dz-success-mark]:hidden',
 						'esf:[&_.dz-error-mark]:hidden',
@@ -731,11 +748,12 @@ abstract class AbstractTheme
 					'button' => [
 						'esf-button',
 						'esf-button-primary-outline',
+						'esf:group-[&.es-form-is-disabled]/field:pointer-events-none',
 					],
 					'custom-wrap' => [
-						'esf:group-[&.dz-max-files-reached]/file:opacity-50',
-						'esf:group-[&.dz-max-files-reached]/file:pointer-events-none',
-						'esf:group-[&.es-form-has-error]/file:border-red-500!',
+						'esf:group-[&.dz-max-files-reached]/file-item:opacity-50',
+						'esf:group-[&.dz-max-files-reached]/file-item:pointer-events-none',
+						'esf:group-[&.es-form-has-error]/file-item:border-red-500',
 						'esf:w-full',
 						'esf:rounded-md',
 						'esf:p-20',
@@ -749,6 +767,10 @@ abstract class AbstractTheme
 						'esf:border',
 						'esf:border-border',
 						'esf-focus-ring',
+
+						'esf:group-[&.es-form-is-disabled]/field:bg-gray-100',
+						'esf:group-[&.es-form-is-disabled]/field:text-gray-400',
+						'esf:group-[&.es-form-is-disabled]/field:cursor-not-allowed',
 					],
 					'info' => [
 						'esf:text-gray-500',
@@ -860,7 +882,7 @@ abstract class AbstractTheme
 						'esf:items-center',
 						'esf:gap-20',
 					],
-					'navigation-next'	=> [
+					'navigation-next' => [
 						'esf:ml-auto',
 					],
 				],

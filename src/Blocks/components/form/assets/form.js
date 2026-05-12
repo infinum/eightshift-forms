@@ -2067,7 +2067,7 @@ export class Form {
 				this.utils.setManualCountryValue(formId, name, options, true, false);
 				break;
 			case 'select':
-				this.utils.setManualSelectValue(formId, name, options, true, false);
+				this.utils.setManualSelectValue(formId, name, options, true);
 				break;
 		}
 

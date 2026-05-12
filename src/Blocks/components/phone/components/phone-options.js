@@ -43,7 +43,6 @@ export const PhoneOptions = (attributes) => {
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
 	const phoneIsNumber = checkAttr('phoneIsNumber', attributes, manifest); // Used in validation class to validate if the input is a number.
 	const phoneIsDisabled = checkAttr('phoneIsDisabled', attributes, manifest);
-	const phoneIsReadOnly = checkAttr('phoneIsReadOnly', attributes, manifest);
 	const phoneIsRequired = checkAttr('phoneIsRequired', attributes, manifest);
 	const phoneTracking = checkAttr('phoneTracking', attributes, manifest);
 	const phoneValidationPattern = checkAttr('phoneValidationPattern', attributes, manifest);
@@ -145,14 +144,6 @@ export const PhoneOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: phoneDisabledOptions,
 				})}
-			/>
-
-			<Toggle
-				icon={readOnly}
-				label={__('Read-only', 'eightshift-forms')}
-				checked={phoneIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('phoneIsReadOnly', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('phoneIsReadOnly', attributes, manifest), phoneDisabledOptions)}
 			/>
 
 			<Toggle

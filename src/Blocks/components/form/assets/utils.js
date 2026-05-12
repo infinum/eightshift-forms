@@ -1083,7 +1083,12 @@ export class Utils {
 					newValue.forEach((item, index) => {
 						const option = [...custom.passedElement?.element?.options].find((option) => option.value === item);
 
-						if (option) {
+						const isOptionHidden = Boolean(option?.getAttribute(this.state.getStateAttribute('selectOptionIsHidden')));
+						const isOptionDisabled = Boolean(
+							option?.getAttribute(this.state.getStateAttribute('disabled')) || option?.disabled,
+						);
+
+						if (option && !isOptionHidden && !isOptionDisabled) {
 							custom.setChoiceByValue(item);
 						} else {
 							newValue.splice(index, 1);

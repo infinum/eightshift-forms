@@ -40,7 +40,7 @@ if ($conditionalTags) {
 <option
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
-	<?php disabled($selectOptionIsDisabled); ?>
+	<?php disabled(($selectOptionIsDisabled || $selectOptionIsHidden)); ?>
 	<?php echo wp_kses_post(Helpers::getAttrsOutput($customAttributes));
 	?>>
 	<?php echo esc_attr($selectOptionLabel); ?>

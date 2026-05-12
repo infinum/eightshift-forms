@@ -33,7 +33,6 @@ export const RatingOptions = (attributes) => {
 	const ratingName = checkAttr('ratingName', attributes, manifest);
 	const ratingValue = checkAttr('ratingValue', attributes, manifest);
 	const ratingIsDisabled = checkAttr('ratingIsDisabled', attributes, manifest);
-	const ratingIsReadOnly = checkAttr('ratingIsReadOnly', attributes, manifest);
 	const ratingIsRequired = checkAttr('ratingIsRequired', attributes, manifest);
 	const ratingTracking = checkAttr('ratingTracking', attributes, manifest);
 	const ratingDisabledOptions = checkAttr('ratingDisabledOptions', attributes, manifest);
@@ -98,14 +97,6 @@ export const RatingOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: ratingDisabledOptions,
 				})}
-			/>
-
-			<Toggle
-				icon={readOnly}
-				label={__('Read-only', 'eightshift-forms')}
-				checked={ratingIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('ratingIsReadOnly', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('ratingIsReadOnly', attributes, manifest), ratingDisabledOptions)}
 			/>
 
 			<Toggle

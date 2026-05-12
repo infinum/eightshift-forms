@@ -9,7 +9,6 @@
 			"dateValue": "Value",
 			"datePlaceholder": "Placeholder",
 			"dateIsDisabled": false,
-			"dateIsReadOnly": false,
 			"dateIsRequired": false
 		}
 	},
@@ -43,10 +42,6 @@
 			"default": false
 		},
 		"dateUseLabelAsPlaceholder": {
-			"type": "boolean",
-			"default": false
-		},
-		"dateIsReadOnly": {
 			"type": "boolean",
 			"default": false
 		},

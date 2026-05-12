@@ -14,7 +14,6 @@ export const InputEditor = (attributes) => {
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
-	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
 	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
@@ -50,7 +49,6 @@ export const InputEditor = (attributes) => {
 			statusSlot={[
 				!inputName && 'missingName',
 				inputIsDisabled && 'disabled',
-				inputIsReadOnly && 'readonly',
 				inputIsRequired && 'required',
 				attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
 			].filter(Boolean)}

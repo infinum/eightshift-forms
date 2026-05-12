@@ -24,7 +24,6 @@ $inputPlaceholder = Helpers::checkAttr('inputPlaceholder', $attributes, $manifes
 $inputType = Helpers::checkAttr('inputType', $attributes, $manifest);
 $inputTypeCustom = Helpers::checkAttr('inputTypeCustom', $attributes, $manifest);
 $inputIsDisabled = Helpers::checkAttr('inputIsDisabled', $attributes, $manifest);
-$inputIsReadOnly = Helpers::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputIsRequired = Helpers::checkAttr('inputIsRequired', $attributes, $manifest);
 $inputTracking = Helpers::checkAttr('inputTracking', $attributes, $manifest);
 $inputMin = Helpers::checkAttr('inputMin', $attributes, $manifest);
@@ -131,7 +130,6 @@ if ($inputType === 'range') {
 			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'range', 'custom', "{$componentClass}__range-custom")) . '"
 			type="number"
 			' . disabled($inputIsDisabled, true, false) . '
-			' . wp_readonly($inputIsReadOnly, true, false) . '
 			' . wp_kses_post(Helpers::getAttrsOutput($inputAttrs)) . '
 		/>';
 
@@ -162,7 +160,6 @@ $input = '
 		id="' . esc_attr($inputId) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
-		' . wp_readonly($inputIsReadOnly, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($inputAttrs)) . '
 	/>
 ';

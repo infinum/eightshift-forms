@@ -9,7 +9,6 @@
 			"textareaValue": "Value",
 			"textareaPlaceholder": "Placeholder",
 			"textareaIsDisabled": false,
-			"textareaIsReadOnly": false,
 			"textareaIsRequired": false
 		}
 	},
@@ -32,10 +31,6 @@
 			"default": false
 		},
 		"textareaIsDisabled": {
-			"type": "boolean",
-			"default": false
-		},
-		"textareaIsReadOnly": {
 			"type": "boolean",
 			"default": false
 		},

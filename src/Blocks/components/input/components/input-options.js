@@ -50,7 +50,6 @@ export const InputOptions = (attributes) => {
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
 	const inputType = checkAttr('inputType', attributes, manifest);
 	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
-	const inputIsReadOnly = checkAttr('inputIsReadOnly', attributes, manifest);
 	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 	const inputTracking = checkAttr('inputTracking', attributes, manifest);
 	const inputIsEmail = checkAttr('inputIsEmail', attributes, manifest);
@@ -195,14 +194,6 @@ export const InputOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: inputDisabledOptions,
 				})}
-			/>
-
-			<Toggle
-				icon={readOnly}
-				label={__('Read-only', 'eightshift-forms')}
-				checked={inputIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('inputIsReadOnly', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('inputIsReadOnly', attributes, manifest), inputDisabledOptions)}
 			/>
 
 			<Toggle

@@ -10,7 +10,6 @@
 			"inputPlaceholder": "Placeholder",
 			"inputType": "text",
 			"inputIsDisabled": false,
-			"inputIsReadOnly": false,
 			"inputIsRequired": false
 		}
 	},
@@ -40,10 +39,6 @@
 			"default": false
 		},
 		"inputUseLabelAsPlaceholder": {
-			"type": "boolean",
-			"default": false
-		},
-		"inputIsReadOnly": {
 			"type": "boolean",
 			"default": false
 		},

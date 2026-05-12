@@ -46,7 +46,7 @@
 		"@tailwindcss/postcss": "^4.2.4",
 		"@tailwindcss/typography": "^0.5.19",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.25",
+		"baseline-browser-mapping": "^2.10.27",
 		"caniuse-lite": "^1.0.30001791",
 		"choices.js": "^11.2.3",
 		"dropzone": "^6.0.0-beta.2",

@@ -54,6 +54,9 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 						'esf:text-sm',
 					],
 					'parts' => [
+						'fields' => [
+							'esf:[&>*]:col-span-12',
+						],
 						'picker' => [
 							'esf:text-sm',
 						],

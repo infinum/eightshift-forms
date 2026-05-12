@@ -22,7 +22,6 @@ if (!$dateName) {
 $dateValue = Helpers::checkAttr('dateValue', $attributes, $manifest);
 $datePlaceholder = Helpers::checkAttr('datePlaceholder', $attributes, $manifest);
 $dateIsDisabled = Helpers::checkAttr('dateIsDisabled', $attributes, $manifest);
-$dateIsReadOnly = Helpers::checkAttr('dateIsReadOnly', $attributes, $manifest);
 $dateIsRequired = Helpers::checkAttr('dateIsRequired', $attributes, $manifest);
 $dateTracking = Helpers::checkAttr('dateTracking', $attributes, $manifest);
 $dateType = Helpers::checkAttr('dateType', $attributes, $manifest);
@@ -85,7 +84,6 @@ $date = '
 		id="' . esc_attr($dateId) . '"
 		type="' . esc_attr($dateType) . '"
 		' . disabled($dateIsDisabled, true, false) . '
-		' . wp_readonly($dateIsReadOnly, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($dateAttrs)) . '
 	/>
 	' . $additionalContent . '

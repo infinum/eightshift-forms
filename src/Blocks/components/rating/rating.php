@@ -23,7 +23,6 @@ if (!$ratingName) {
 $ratingValue = Helpers::checkAttr('ratingValue', $attributes, $manifest);
 $ratingTypeCustom = Helpers::checkAttr('ratingTypeCustom', $attributes, $manifest);
 $ratingIsDisabled = Helpers::checkAttr('ratingIsDisabled', $attributes, $manifest);
-$ratingIsReadOnly = Helpers::checkAttr('ratingIsReadOnly', $attributes, $manifest);
 $ratingIsRequired = Helpers::checkAttr('ratingIsRequired', $attributes, $manifest);
 $ratingTracking = Helpers::checkAttr('ratingTracking', $attributes, $manifest);
 $ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);

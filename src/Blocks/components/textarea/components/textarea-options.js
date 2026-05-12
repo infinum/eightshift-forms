@@ -48,7 +48,6 @@ export const TextareaOptions = (attributes) => {
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
 	const textareaIsDisabled = checkAttr('textareaIsDisabled', attributes, manifest);
-	const textareaIsReadOnly = checkAttr('textareaIsReadOnly', attributes, manifest);
 	const textareaIsRequired = checkAttr('textareaIsRequired', attributes, manifest);
 	const textareaTracking = checkAttr('textareaTracking', attributes, manifest);
 	const textareaValidationPattern = checkAttr('textareaValidationPattern', attributes, manifest);
@@ -132,14 +131,6 @@ export const TextareaOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: textareaDisabledOptions,
 				})}
-			/>
-
-			<Toggle
-				icon={readOnly}
-				label={__('Read-only', 'eightshift-forms')}
-				checked={textareaIsReadOnly}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsReadOnly', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('textareaIsReadOnly', attributes, manifest), textareaDisabledOptions)}
 			/>
 
 			<Toggle

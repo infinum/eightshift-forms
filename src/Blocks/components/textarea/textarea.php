@@ -22,7 +22,6 @@ if (!$textareaName) {
 $textareaValue = Helpers::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Helpers::checkAttr('textareaPlaceholder', $attributes, $manifest);
 $textareaIsDisabled = Helpers::checkAttr('textareaIsDisabled', $attributes, $manifest);
-$textareaIsReadOnly = Helpers::checkAttr('textareaIsReadOnly', $attributes, $manifest);
 $textareaIsRequired = Helpers::checkAttr('textareaIsRequired', $attributes, $manifest);
 $textareaTracking = Helpers::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaAttrs = Helpers::checkAttr('textareaAttrs', $attributes, $manifest);
@@ -86,7 +85,6 @@ $textarea = '<textarea
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
-		' . wp_readonly($textareaIsReadOnly, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($textareaAttrs)) . '
 	>' . $textareaValue . '</textarea>
 	' . $additionalContent . '
