@@ -35,6 +35,7 @@ $textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $m
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
 $textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
+$textareaAlternativeOutputEscape = Helpers::checkAttr('textareaAlternativeOutputEscape', $attributes, $manifest);
 
 $textareaId = $textareaName . '-' . Helpers::getUnique();
 
@@ -79,6 +80,13 @@ $textareaAttrs['aria-invalid'] = 'false';
 // Additional content filter.
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('textarea', $attributes);
 
+// For outputting textarea value as HTML, we need to escape the value.
+if ($textareaAlternativeOutputEscape) {
+	$textareaValue = esc_html($textareaValue);
+} else {
+	$textareaValue = wp_kses_post($textareaValue);
+}
+
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
@@ -86,7 +94,7 @@ $textarea = '<textarea
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . wp_readonly($textareaIsReadOnly, true, false) . '
 		' . Helpers::getAttrsOutput($textareaAttrs) . '
-	>' . wp_kses_post($textareaValue) . '</textarea>
+	>' . $textareaValue . '</textarea>
 	' . $additionalContent . '
 ';
 

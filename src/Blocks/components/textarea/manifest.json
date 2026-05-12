@@ -57,6 +57,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaAlternativeOutputEscape": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaLimitHeight": {
 			"type": "boolean",
 			"default": false
