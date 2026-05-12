@@ -11,7 +11,6 @@ import {
 	fieldValue,
 	googleTagManager,
 	options as optionsIcon,
-	readOnly,
 	regex,
 	resetToZero,
 	tools,

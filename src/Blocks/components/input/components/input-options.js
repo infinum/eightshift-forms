@@ -22,7 +22,6 @@ import {
 	googleTagManager,
 	optionListAlt,
 	options as optionsIcon,
-	readOnly,
 	regex,
 	resetToZero,
 	titleGeneric,

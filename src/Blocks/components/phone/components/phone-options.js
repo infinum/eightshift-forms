@@ -15,7 +15,6 @@ import {
 	migrationAlt,
 	options,
 	order,
-	readOnly,
 	regex,
 	search,
 	titleGeneric,

@@ -16,7 +16,6 @@ import {
 	fieldRequired,
 	googleTagManager,
 	options,
-	readOnly,
 	star,
 	titleGeneric,
 	tools,

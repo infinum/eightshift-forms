@@ -21,7 +21,6 @@ import {
 	googleTagManager,
 	optionListAlt,
 	options,
-	readOnly,
 	regex,
 	tools,
 } from '@eightshift/ui-components/icons';
