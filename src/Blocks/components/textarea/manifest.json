@@ -53,6 +53,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaAlternativeOutputEscape": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaTracking": {
 			"type": "string"
 		},
