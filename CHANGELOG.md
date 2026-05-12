@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.3.0]
+
+### Added
+
+- Added `textareaAlternativeOutputEscape` attribute to the textarea component. When enabled, textarea value output uses `esc_html` instead of `wp_kses_post`, useful when the value must be rendered as plain text inside an HTML context.
+
 ## [9.2.0]
 
 ### Added
@@ -1819,6 +1825,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.3.0]: https://github.com/infinum/eightshift-forms/compare/9.2.0...9.3.0
 [9.2.0]: https://github.com/infinum/eightshift-forms/compare/9.1.6...9.2.0
 [9.1.6]: https://github.com/infinum/eightshift-forms/compare/9.1.5...9.1.6
 [9.1.5]: https://github.com/infinum/eightshift-forms/compare/9.1.4...9.1.5
