@@ -846,6 +846,7 @@ abstract class AbstractTheme
 				'base' => [
 					'esf:hidden',
 					'esf:[&.es-form-is-active]:block',
+					'esf:col-span-12',
 					'esf:group-[&.es-form-is-step-preview-active]/form:block',
 					'esf:group-[&.es-form-is-step-preview-active]/form:border',
 					'esf:group-[&.es-form-is-step-preview-active]/form:border-border',

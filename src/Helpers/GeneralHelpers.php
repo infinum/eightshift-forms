@@ -221,6 +221,12 @@ final class GeneralHelpers
 	 */
 	public static function getFormDetails(string $formId): array
 	{
+		static $cache = [];
+
+		if (isset($cache[$formId])) {
+			return $cache[$formId];
+		}
+
 		$output = [
 			Config::FD_FORM_ID => $formId,
 			Config::FD_IS_VALID => false,
@@ -309,8 +315,14 @@ final class GeneralHelpers
 			'submit' => 1,
 		];
 
+		$hasSteps = false;
+
 		foreach ($output[Config::FD_FIELDS_ONLY] as $item) {
 			$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+
+			if (!$hasSteps && $blockItemName === 'step') {
+				$hasSteps = true;
+			}
 
 			$value = $item['attrs'][Helpers::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
 
@@ -326,10 +338,6 @@ final class GeneralHelpers
 
 			$output[Config::FD_FIELD_NAMES][] = $value;
 		}
-
-		// Check if this form uses steps.
-		$hasSteps = \array_search($namespace . '/step', \array_column($output[Config::FD_FIELDS_ONLY], 'blockName'), true);
-		$hasSteps = $hasSteps !== false;
 
 		if ($hasSteps) {
 			$stepCurrent = 'step-init';
@@ -386,6 +394,8 @@ final class GeneralHelpers
 
 			$output[Config::FD_STEPS_SETUP]['multiflow'] = $output[Config::FD_FIELDS]['innerBlocks'][0]['attrs']["{$type}StepMultiflowRules"] ?? [];
 		}
+
+		$cache[$formId] = $output;
 
 		return $output;
 	}

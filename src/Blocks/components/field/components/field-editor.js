@@ -45,7 +45,7 @@ export const FieldEditor = (attributes) => {
 	const statusFieldData = [fieldHidden && 'hidden', ...statusSlot].filter(Boolean);
 
 	return (
-		<div className={clsx('esf:w-full esf:flex! esf:flex-col! esf:gap-4!', fieldHidden && 'esf-field-hidden')}>
+		<div className={clsx('esf:w-full esf:flex! esf:flex-col! esf:gap-4 esf:mb-20!', fieldHidden && 'esf-field-hidden')}>
 			{fieldLabel && !fieldHideLabel && (
 				<div
 					className='esf:text-base! esf:text-gray-900!'

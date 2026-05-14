@@ -56,13 +56,15 @@ export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 				</Placeholder>
 			)}
 
-			<InnerBlocks
-				templateLock={false}
-				allowedBlocks={[
-					...globalSettings.allowedBlocksList.integrationsBuilder,
-					...globalSettings.allowedBlocksList.integrationsNoBuilder,
-				]}
-			/>
+			<div className='esf:max-w-3xl esf:mx-auto'>
+				<InnerBlocks
+					templateLock={false}
+					allowedBlocks={[
+						...globalSettings.allowedBlocksList.integrationsBuilder,
+						...globalSettings.allowedBlocksList.integrationsNoBuilder,
+					]}
+				/>
+			</div>
 		</>
 	);
 };
