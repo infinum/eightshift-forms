@@ -1367,8 +1367,19 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	private function secureApiParams(array $params): array
 	{
+		$alternativeParamsSecurityCheck = \apply_filters(HooksHelpers::getFilterName(['validation', 'alternativeParamsSecurityCheck']), []);
+
+		if (!empty($alternativeParamsSecurityCheck)) {
+			$alternativeParamsSecurityCheck = \array_map(
+				static function ($item) {
+					return SettingsHelpers::getSettingName($item);
+				},
+				$alternativeParamsSecurityCheck
+			);
+		}
+
 		return \array_map(
-			static function ($item) {
+			static function ($item) use ($alternativeParamsSecurityCheck) {
 				// Check if array then output only value that is not empty.
 				if (\is_array($item)) {
 					// Loop all items and decode.
@@ -1418,7 +1429,22 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				// Try to clean the string.
 				// Parts of the code taken from https://developer.wordpress.org/reference/functions/_sanitize_text_fields/.
 				$item = \wp_check_invalid_utf8($item);
-				$item = \wp_strip_all_tags($item);
+
+				if ($alternativeParamsSecurityCheck) {
+					\preg_match('/"name":"([^"]+)"/', $item, $matches);
+
+					if (\in_array($matches[1] ?? null, $alternativeParamsSecurityCheck, true)) {
+						$item = \json_decode($item, true) ?? [];
+						if (isset($item['value']) && !empty($item['value']) && \is_string($item['value'])) {
+							$item['value'] = \esc_html($item['value']);
+						}
+						$item = \wp_json_encode($item);
+					} else {
+						$item = \wp_strip_all_tags($item);
+					}
+				} else {
+					$item = \wp_strip_all_tags($item);
+				}
 
 				$filtered = \trim($item);
 

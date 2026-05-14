@@ -328,6 +328,7 @@ final class Filters
 			],
 			'validation' => [
 				'forceMimetypeFromFs',
+				'alternativeParamsSecurityCheck',
 			],
 			'encryption' => [
 				'secretKey',

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.4.0]
+
+### Added
+
+- Added `alternativeParamsSecurityCheck` filter to the validation filter group. Allows specifying form field keys whose values should be sanitized with `esc_html` instead of `wp_strip_all_tags` during API param security checks.
+- Added `SettingsHelpers::getSettingValueUnescaped()` helper that returns a setting value with HTML entities decoded via `html_entity_decode`.
+
 ## [9.3.0]
 
 ### Added
@@ -1825,6 +1832,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.4.0]: https://github.com/infinum/eightshift-forms/compare/9.3.0...9.4.0
 [9.3.0]: https://github.com/infinum/eightshift-forms/compare/9.2.0...9.3.0
 [9.2.0]: https://github.com/infinum/eightshift-forms/compare/9.1.6...9.2.0
 [9.1.6]: https://github.com/infinum/eightshift-forms/compare/9.1.5...9.1.6
