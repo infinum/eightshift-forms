@@ -34,6 +34,19 @@ final class SettingsHelpers
 	}
 
 	/**
+	 * Get settings value.
+	 *
+	 * @param string $key Key to find in db settings.
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public static function getSettingValueUnescaped(string $key, string $formId): string
+	{
+		return \html_entity_decode(self::getSettingValue($key, $formId), \ENT_QUOTES, 'UTF-8');
+	}
+
+	/**
 	 * Get option value string saved as json array - used for textarea with : delimiter.
 	 *
 	 * @param string $key Providing string to append to.
@@ -389,7 +402,7 @@ final class SettingsHelpers
 
 			$value = \array_filter(
 				$value,
-				fn ($item) => $item <= $useNumber - 1,
+				fn($item) => $item <= $useNumber - 1,
 				\ARRAY_FILTER_USE_KEY
 			);
 
