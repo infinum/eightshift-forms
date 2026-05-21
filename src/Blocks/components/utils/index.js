@@ -17,7 +17,6 @@ import {
 	info,
 	layoutAlt,
 	lightBulb,
-	loader,
 	magic,
 	options,
 	tagAlt,
