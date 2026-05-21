@@ -14,17 +14,21 @@ import {
 	fieldRequired,
 	globe,
 	hide,
-	idCard,
+	info,
 	layoutAlt,
+	lightBulb,
+	magic,
 	notebook,
 	options,
+	tagAlt,
 	warning,
 } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
-import { AnimatedVisibility, RichLabel, Notice, Button, InputField, Tooltip } from '@eightshift/ui-components';
+import { RichLabel, Button, InputField, Tooltip, Container, ContainerGroup } from '@eightshift/ui-components';
 import { camelCase, clsx } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
+import { HelpTooltip } from '../../assets/scripts/help-tooltip';
 import globalSettings from './../../manifest.json';
 
 /**
@@ -425,54 +429,6 @@ export const NameField = ({
 }) => {
 	const isDisabled = isOptionDisabled(attribute, disabledOptions);
 
-	const NameFieldLabel = () => {
-		let labelTipText = !isOptional
-			? __('The form may not work correctly.', 'eightshift-forms')
-			: __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms');
-
-		if (type === 'resultOutputItem') {
-			labelTipText = __(
-				`Variable name you can use is "${globalSettings.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`,
-				'eightshift-forms',
-			);
-		}
-
-		return (
-			<div>
-				<RichLabel
-					icon={idCard}
-					label={label ? label : __('Name', 'eightshift-forms')}
-				/>
-
-				<AnimatedVisibility visible={!value}>
-					<Tooltip text={labelTipText}>
-						{!isOptional ? (
-							<span>{__('Required', 'eightshift-forms')}</span>
-						) : (
-							<span>{__('Optional', 'eightshift-forms')}</span>
-						)}
-					</Tooltip>
-				</AnimatedVisibility>
-
-				{!value && !isDisabled && (
-					<Button
-						onClick={() => {
-							setIsChanged(true);
-
-							const valueName =
-								type === 'resultOutputItem'
-									? globalSettings.enums.successRedirectUrlKeys.variation
-									: `${type}-${getUnique()}`;
-							setAttributes({ [attribute]: valueName });
-						}}
-					>
-						{type === 'resultOutputItem' ? __('Set name', 'eightshift-forms') : __('Generate name', 'eightshift-forms')}
-					</Button>
-				)}
-			</div>
-		);
-	};
-
 	let helpText = sprintf(
 		__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'),
 		type,
@@ -486,29 +442,90 @@ export const NameField = ({
 		);
 	}
 
-	return (
-		<>
-			{show && (
-				<>
-					<InputField
-						label={<NameFieldLabel />}
-						placeholder={__('Enter name', 'eightshift-forms')}
-						help={helpText}
-						value={value}
-						onChange={(value) => {
-							setIsChanged(true);
-							setAttributes({ [attribute]: value });
-						}}
-						disabled={isDisabled}
-					/>
+	if (!show) {
+		return null;
+	}
 
-					<NameChangeWarning
-						isChanged={isChanged}
-						type={type}
-					/>
-				</>
+	return (
+		<ContainerGroup>
+			<Container>
+				<InputField
+					icon={tagAlt}
+					label={label || __('Name', 'eightshift-forms')}
+					placeholder={!value && !isOptional && __('Required', 'eightshift-forms')}
+					actions={
+						<>
+							{!value && !isDisabled && (
+								<Button
+									onClick={() => {
+										setIsChanged(false);
+
+										const valueName =
+											type === 'resultOutputItem'
+												? globalSettings.enums.successRedirectUrlKeys.variation
+												: `${type}-${getUnique()}`;
+										setAttributes({ [attribute]: valueName });
+									}}
+									icon={magic}
+									size='small'
+									type='selectedGhost'
+									className='esf:h-24!'
+								>
+									{type === 'resultOutputItem' ? __('Set', 'eightshift-forms') : __('Generate', 'eightshift-forms')}
+								</Button>
+							)}
+
+							<HelpTooltip hidden={!value && !isDisabled}>
+								{helpText}
+
+								{isOptional &&
+									type !== 'resultOutputItem' &&
+									__(
+										'Name field is required only if you are using conditional tags on this field.',
+										'eightshift-forms',
+									)}
+							</HelpTooltip>
+						</>
+					}
+					value={value}
+					onChange={(value) => {
+						setIsChanged(true);
+						setAttributes({ [attribute]: value });
+					}}
+					disabled={isDisabled}
+				/>
+			</Container>
+
+			<Container
+				hidden={isOptional || value}
+				className='es-uic-theme-orange'
+				elevated
+				centered
+				accent
+			>
+				<RichLabel
+					icon={warning}
+					label={__('Form may not work correctly!', 'eightshift-forms')}
+				/>
+			</Container>
+
+			<Container hidden={type !== 'resultOutputItem'}>
+				<RichLabel
+					icon={info}
+					label={__(
+						`Variable name you can use is "${globalSettings.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`,
+						'eightshift-forms',
+					)}
+				/>
+			</Container>
+
+			{value && (
+				<NameChangeWarning
+					isChanged={isChanged}
+					type={type}
+				/>
 			)}
-		</>
+		</ContainerGroup>
 	);
 };
 
@@ -521,7 +538,7 @@ export const NameField = ({
  *
  * @returns void
  */
-export const preventSaveOnMissingProps = (blockClientId, key, value) => {
+export const usePreventSaveOnMissingProps = (blockClientId, key, value) => {
 	useEffect(() => {
 		// Allows triggering this action only when the block is inserted in the editor.
 		if (select('core/block-editor').getBlock(blockClientId)) {
@@ -553,36 +570,31 @@ export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 
 	switch (type) {
 		case 'value':
-			text = __(
-				'After changing the field value, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.',
-				'eightshift-forms',
-			);
+			text = __('Review conditional tags and form multi-flow configurations to avoid errors', 'eightshift-forms');
 			break;
 		case 'step':
-			text = __(
-				'After changing the step name, ensure that you review forms multi-flow configurations to avoid any errors.',
-				'eightshift-forms',
-			);
+			text = __('Review multi-flow configurations to avoid errors', 'eightshift-forms');
 			break;
 		case 'resultOutputItem':
-			text = __(
-				'After changing the result item variable name, ensure that you provide the correct variation name via form settings.',
-				'eightshift-forms',
-			);
+			text = __('Check that the correct variation name is provided in form settings', 'eightshift-forms');
 			break;
 		default:
-			text = __(
-				'After changing the field name, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.',
-				'eightshift-forms',
-			);
+			text = __('Review conditional tags and form multi-flow configurations to avoid errors.', 'eightshift-forms');
 			break;
 	}
 
 	return (
-		<Notice
-			label={text}
-			type={'warning'}
-		/>
+		<Container
+			className='es-uic-theme-blue'
+			elevated
+			centered
+			accent
+		>
+			<RichLabel
+				icon={lightBulb}
+				label={text}
+			/>
+		</Container>
 	);
 };
 

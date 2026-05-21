@@ -140,48 +140,55 @@
 		"inputType": [
 			{
 				"label": "Plain text",
-				"value": "text"
+				"value": "text",
+				"endIcon": "textAbc"
 			},
 			{
 				"label": "E-mail",
-				"value": "email"
+				"value": "email",
+				"endIcon": "email"
 			},
 			{
-				"label": "URL",
-				"value": "url"
+				"label": "Link",
+				"subtitle": "(URL)",
+				"value": "url",
+				"endIcon": "link"
 			},
 			{
 				"label": "Number",
-				"value": "number"
+				"value": "number",
+				"endIcon": "num8Square"
 			},
 			{
-				"label": "Range",
-				"value": "range"
+				"label": "Slider",
+				"subtitle": "(range)",
+				"value": "range",
+				"endIcon": "slider"
 			}
 		],
 		"inputMinLength": {
 			"min": 0,
-			"max": 999999,
+			"max": 30,
 			"step": 1
 		},
 		"inputMaxLength": {
 			"min": 1,
-			"max": 999999,
+			"max": 30,
 			"step": 1
 		},
 		"inputMin": {
 			"min": 0,
-			"max": 999999,
+			"max": 999999999,
 			"step": 0.01
 		},
 		"inputMax": {
 			"min": 0,
-			"max": 999999,
+			"max": 999999999,
 			"step": 0.01
 		},
 		"inputStep": {
 			"min": 0.01,
-			"max": 1,
+			"max": 999999,
 			"step": 0.01
 		}
 	}

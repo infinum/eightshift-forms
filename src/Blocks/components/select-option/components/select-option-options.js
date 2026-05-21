@@ -1,12 +1,22 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { a11yWarning, checkSquare, cursorDisabled, hide, options, tools } from '@eightshift/ui-components/icons';
+import { a11yWarning, checkSquare, hide, none, sliders, tag, moreH } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
-import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import {
+	ContainerPanel,
+	InputField,
+	Toggle,
+	Tab,
+	TabList,
+	Tabs,
+	TabPanel,
+	Container,
+	ContainerGroup,
+	RichLabel,
+} from '@eightshift/ui-components';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
-import { Notice } from '@eightshift/ui-components';
 
 export const SelectOptionOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -21,85 +31,131 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionDisabledOptions = checkAttr('selectOptionDisabledOptions', attributes, manifest);
 
 	return (
-		<ContainerPanel>
-			<Spacer
-				border
-				icon={options}
-				text={__('General', 'eightshift-forms')}
-			/>
-
-			<NameField
-				value={selectOptionValue}
-				attribute={getAttrKey('selectOptionValue', attributes, manifest)}
-				disabledOptions={selectOptionDisabledOptions}
-				setAttributes={setAttributes}
-				type='select-option'
-				label={__('Value', 'eightshift-forms')}
-				isChanged={isNameChanged}
-				setIsChanged={setIsNameChanged}
-			/>
-
-			<InputField
-				type='multiline'
-				placeholder={__('Enter label', 'eightshift-forms')}
-				value={selectOptionLabel}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
-			/>
-
-			{selectOptionLabel === '' && (
-				<Notice
-					label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
-					icon={a11yWarning}
-					type='warning'
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={sliders}
+					label={__('General', 'eightshift-forms')}
 				/>
-			)}
 
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
+				<Tab
+					icon={tag}
+					label={__('Labels', 'eightshift-forms')}
+				/>
 
-			<Toggle
-				icon={checkSquare}
-				label={__('Selected', 'eightshift-forms')}
-				checked={selectOptionIsSelected}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(
-					getAttrKey('selectOptionIsSelected', attributes, manifest),
-					selectOptionDisabledOptions,
-				)}
-			/>
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
 
-			<Toggle
-				icon={cursorDisabled}
-				label={__('Disabled', 'eightshift-forms')}
-				checked={selectOptionIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(
-					getAttrKey('selectOptionIsDisabled', attributes, manifest),
-					selectOptionDisabledOptions,
-				)}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<NameField
+						value={selectOptionValue}
+						attribute={getAttrKey('selectOptionValue', attributes, manifest)}
+						disabledOptions={selectOptionDisabledOptions}
+						setAttributes={setAttributes}
+						type='select-option'
+						label={__('Value', 'eightshift-forms')}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
+					/>
 
-			<Toggle
-				icon={hide}
-				label={__('Hidden', 'eightshift-forms')}
-				checked={selectOptionIsHidden}
-				onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(
-					getAttrKey('selectOptionIsHidden', attributes, manifest),
-					selectOptionDisabledOptions,
-				)}
-			/>
+					<Container standalone>
+						<Toggle
+							icon={checkSquare}
+							label={__('Selected', 'eightshift-forms')}
+							checked={selectOptionIsSelected}
+							onChange={(value) =>
+								setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })
+							}
+							disabled={isOptionDisabled(
+								getAttrKey('selectOptionIsSelected', attributes, manifest),
+								selectOptionDisabledOptions,
+							)}
+						/>
+					</Container>
 
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsBlockName: selectOptionValue,
-					conditionalTagsIsHidden: selectOptionIsHidden,
-				})}
-			/>
-		</ContainerPanel>
+					<ContainerGroup>
+						<Container>
+							<Toggle
+								icon={hide}
+								label={__('Hidden', 'eightshift-forms')}
+								checked={selectOptionIsHidden}
+								onChange={(value) =>
+									setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })
+								}
+								disabled={isOptionDisabled(
+									getAttrKey('selectOptionIsHidden', attributes, manifest),
+									selectOptionDisabledOptions,
+								)}
+							/>
+						</Container>
+
+						<Container>
+							<Toggle
+								icon={none}
+								label={__('Disabled', 'eightshift-forms')}
+								checked={selectOptionIsDisabled}
+								onChange={(value) =>
+									setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })
+								}
+								disabled={isOptionDisabled(
+									getAttrKey('selectOptionIsDisabled', attributes, manifest),
+									selectOptionDisabledOptions,
+								)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ContainerGroup>
+						<Container>
+							<InputField
+								icon={tag}
+								label={__('Option label', 'eightshift-forms')}
+								type='multiline'
+								value={selectOptionLabel}
+								onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(
+									getAttrKey('selectOptionLabel', attributes, manifest),
+									selectOptionDisabledOptions,
+								)}
+								rows={1}
+							/>
+						</Container>
+
+						<Container
+							hidden={selectOptionLabel?.length > 0}
+							className='es-uic-theme-orange'
+							elevated
+							centered
+							accent
+						>
+							<RichLabel
+								label={__('Label should not be empty', 'eightshift-forms')}
+								icon={a11yWarning}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					{' '}
+					<ConditionalTagsOptions
+						{...props('conditionalTags', attributes, {
+							conditionalTagsBlockName: selectOptionValue,
+							conditionalTagsIsHidden: selectOptionIsHidden,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

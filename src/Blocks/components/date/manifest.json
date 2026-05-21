@@ -87,7 +87,7 @@
 				"value": "date"
 			},
 			{
-				"label": "Date & time",
+				"label": "Date and time",
 				"value": "datetime-local"
 			}
 		],

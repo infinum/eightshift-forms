@@ -10,19 +10,30 @@ import {
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import {
-	alignHorizontalVertical,
 	checks,
-	cursorDisabled,
-	fieldRequired,
 	googleTagManager,
-	options,
+	none,
+	requiredAlt,
 	star,
 	titleGeneric,
-	tools,
+	moreH,
+	sliders,
+	tag,
+	design,
 } from '@eightshift/ui-components/icons';
-import { ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import {
+	ContainerPanel,
+	InputField,
+	Toggle,
+	NumberPicker,
+	Container,
+	ContainerGroup,
+	Tab,
+	TabList,
+	Tabs,
+	TabPanel,
+} from '@eightshift/ui-components';
 import manifest from '../manifest.json';
-import { Slider } from '@eightshift/ui-components';
 
 export const RatingOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -38,114 +49,157 @@ export const RatingOptions = (attributes) => {
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 
 	return (
-		<ContainerPanel>
-			<Spacer
-				border
-				icon={options}
-				text={__('General', 'eightshift-forms')}
-			/>
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={sliders}
+					label={__('General', 'eightshift-forms')}
+				/>
 
-			<NameField
-				value={ratingName}
-				attribute={getAttrKey('ratingName', attributes, manifest)}
-				disabledOptions={ratingDisabledOptions}
-				setAttributes={setAttributes}
-				type={'rating'}
-				isChanged={isNameChanged}
-				setIsChanged={setIsNameChanged}
-			/>
+				<Tab
+					icon={tag}
+					label={__('Labels', 'eightshift-forms')}
+				/>
 
-			<Slider
-				icon={star}
-				label={__('Amount of stars', 'eightshift-forms')}
-				value={ratingAmount}
-				onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
-				min={1}
-				max={10}
-				disabled={isOptionDisabled(getAttrKey('ratingAmount', attributes, manifest), ratingDisabledOptions)}
-			/>
+				<Tab
+					icon={design}
+					label={__('Design', 'eightshift-forms')}
+				/>
 
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: ratingDisabledOptions,
-				})}
-			/>
+				<Tab
+					icon={checks}
+					label={__('Validation', 'eightshift-forms')}
+				/>
 
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					fieldDisabledOptions: ratingDisabledOptions,
-				})}
-			/>
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
 
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<NameField
+						value={ratingName}
+						attribute={getAttrKey('ratingName', attributes, manifest)}
+						disabledOptions={ratingDisabledOptions}
+						setAttributes={setAttributes}
+						type={'rating'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
+					/>
 
-			<InputField
-				icon={titleGeneric}
-				label={__('Initial value', 'eightshift-forms')}
-				placeholder={__('Enter initial value', 'eightshift-forms')}
-				value={ratingValue}
-				onChange={(value) => setAttributes({ [getAttrKey('ratingValue', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('ratingValue', attributes, manifest), ratingDisabledOptions)}
-			/>
+					<Container standalone>
+						<NumberPicker
+							icon={star}
+							label={__('Number of stars', 'eightshift-forms')}
+							value={ratingAmount}
+							onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('ratingAmount', attributes, manifest), ratingDisabledOptions)}
+							min={1}
+							max={10}
+							inline
+						/>
+					</Container>
 
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: ratingDisabledOptions,
-				})}
-			/>
+					<Container standalone>
+						<NumberPicker
+							icon={titleGeneric}
+							label={__('Initial value', 'eightshift-forms')}
+							placeholder={__('Enter initial value', 'eightshift-forms')}
+							value={ratingValue}
+							onChange={(value) => setAttributes({ [getAttrKey('ratingValue', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('ratingValue', attributes, manifest), ratingDisabledOptions)}
+							min={0}
+							max={ratingAmount}
+							fixedWidth={2}
+							inline
+						/>
+					</Container>
 
-			<Toggle
-				icon={cursorDisabled}
-				label={__('Disabled', 'eightshift-forms')}
-				checked={ratingIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('ratingIsDisabled', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('ratingIsDisabled', attributes, manifest), ratingDisabledOptions)}
-			/>
-			<Spacer
-				border
-				icon={checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
+					<ContainerGroup>
+						<FieldOptionsVisibility
+							{...props('field', attributes, {
+								fieldDisabledOptions: ratingDisabledOptions,
+							})}
+						/>
 
-			<Toggle
-				icon={fieldRequired}
-				label={__('Required', 'eightshift-forms')}
-				checked={ratingIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('ratingIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('ratingIsRequired', attributes, manifest), ratingDisabledOptions)}
-			/>
+						<Container>
+							<Toggle
+								icon={none}
+								label={__('Disabled', 'eightshift-forms')}
+								checked={ratingIsDisabled}
+								onChange={(value) => setAttributes({ [getAttrKey('ratingIsDisabled', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('ratingIsDisabled', attributes, manifest), ratingDisabledOptions)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
 
-			<Spacer
-				border
-				icon={alignHorizontalVertical}
-				text={__('Tracking', 'eightshift-forms')}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptions
+						{...props('field', attributes, {
+							fieldDisabledOptions: ratingDisabledOptions,
+						})}
+					/>
 
-			<InputField
-				icon={googleTagManager}
-				label={__('GTM tracking code', 'eightshift-forms')}
-				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
-				value={ratingTracking}
-				onChange={(value) => setAttributes({ [getAttrKey('ratingTracking', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('ratingTracking', attributes, manifest), ratingDisabledOptions)}
-			/>
+					<FieldOptionsMore
+						{...props('field', attributes, {
+							fieldDisabledOptions: ratingDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<FieldOptionsMore
-				{...props('field', attributes, {
-					fieldDisabledOptions: ratingDisabledOptions,
-				})}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptionsLayout
+						{...props('field', attributes, {
+							fieldDisabledOptions: ratingDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsBlockName: ratingName,
-					conditionalTagsIsHidden: checkAttr('ratingFieldHidden', attributes, manifest),
-				})}
-			/>
-		</ContainerPanel>
+			<TabPanel>
+				<ContainerPanel>
+					<Container standalone>
+						<Toggle
+							icon={requiredAlt}
+							label={__('Required', 'eightshift-forms')}
+							checked={ratingIsRequired}
+							onChange={(value) => setAttributes({ [getAttrKey('ratingIsRequired', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('ratingIsRequired', attributes, manifest), ratingDisabledOptions)}
+						/>
+					</Container>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ConditionalTagsOptions
+						{...props('conditionalTags', attributes, {
+							conditionalTagsBlockName: ratingName,
+							conditionalTagsIsHidden: checkAttr('ratingFieldHidden', attributes, manifest),
+						})}
+					/>
+
+					<ContainerGroup label={__('Tracking', 'eightshift-forms')}>
+						<Container>
+							<InputField
+								icon={googleTagManager}
+								label={__('GTM tracking code', 'eightshift-forms')}
+								value={ratingTracking}
+								onChange={(value) => setAttributes({ [getAttrKey('ratingTracking', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('ratingTracking', attributes, manifest), ratingDisabledOptions)}
+								monospaceFont
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

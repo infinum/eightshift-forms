@@ -3,7 +3,18 @@ import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { Select, ContainerPanel, InputField, Toggle, Spacer } from '@eightshift/ui-components';
+import {
+	ContainerPanel,
+	InputField,
+	Toggle,
+	Tab,
+	TabList,
+	Tabs,
+	TabPanel,
+	Container,
+	ContainerGroup,
+	OptionSelect,
+} from '@eightshift/ui-components';
 import {
 	FieldOptions,
 	FieldOptionsMore,
@@ -11,18 +22,22 @@ import {
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
 import {
+	buttonGhost,
 	checks,
+	design,
 	fieldPlaceholder,
-	fieldRequired,
+	moreH,
 	optionListAlt,
-	options as optionsIcon,
-	tools,
+	requiredAlt,
+	sliders,
+	tag,
 } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
 import { NumberPicker } from '@eightshift/ui-components';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 
 export const CheckboxesOptions = (attributes) => {
 	const { options } = manifest;
@@ -54,136 +69,217 @@ export const CheckboxesOptions = (attributes) => {
 	}, [countInnerBlocksCheck]);
 
 	return (
-		<ContainerPanel>
-			<Spacer
-				border
-				icon={optionsIcon}
-				text={__('General', 'eightshift-forms')}
-			/>
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={sliders}
+					label={__('General', 'eightshift-forms')}
+				/>
 
-			<NameField
-				value={checkboxesName}
-				attribute={getAttrKey('checkboxesName', attributes, manifest)}
-				disabledOptions={checkboxesDisabledOptions}
-				setAttributes={setAttributes}
-				type={'checkboxes'}
-				isChanged={isNameChanged}
-				setIsChanged={setIsNameChanged}
-			/>
+				<Tab
+					icon={tag}
+					label={__('Labels', 'eightshift-forms')}
+				/>
 
-			<Select
-				icon={optionListAlt}
-				label={__('Show as', 'eightshift-forms')}
-				value={checkboxesShowAs}
-				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'checkboxes')}
-				disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
-				onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
-				simpleValue
-				noSearch
-				clearable
-				placeholder={__('Choose an alternative', 'eightshift-forms')}
-			/>
+				<Tab
+					icon={design}
+					label={__('Design', 'eightshift-forms')}
+				/>
 
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: checkboxesDisabledOptions,
-				})}
-			/>
+				<Tab
+					icon={checks}
+					label={__('Validation', 'eightshift-forms')}
+				/>
 
-			{checkboxesShowAs === 'select' && (
-				<>
-					{!checkboxesUseLabelAsPlaceholder && (
-						<InputField
-							help={__('Shown when the field is empty', 'eightshift-forms')}
-							value={checkboxesPlaceholder}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })
-							}
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
+
+			<TabPanel>
+				<ContainerPanel>
+					<NameField
+						value={checkboxesName}
+						attribute={getAttrKey('checkboxesName', attributes, manifest)}
+						disabledOptions={checkboxesDisabledOptions}
+						setAttributes={setAttributes}
+						type='checkboxes'
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
+					/>
+
+					<Container standalone>
+						<OptionSelect
+							icon={optionListAlt}
+							label={__('Show as', 'eightshift-forms')}
+							value={checkboxesShowAs}
+							options={globalManifest.showAsMap.options.map((item) =>
+								item.value === 'checkboxes' ? { ...item, value: '' } : item,
+							)}
 							disabled={isOptionDisabled(
-								getAttrKey('checkboxesPlaceholder', attributes, manifest),
+								getAttrKey('checkboxesShowAs', attributes, manifest),
 								checkboxesDisabledOptions,
 							)}
+							onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
+							type='menu'
+							inline
 						/>
-					)}
-					<Toggle
-						icon={fieldPlaceholder}
-						label={__('Use label as a placeholder', 'eightshift-forms')}
-						checked={checkboxesUseLabelAsPlaceholder}
-						onChange={(value) => {
-							setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });
-							setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
+					</Container>
+
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: checkboxesDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptions
+						{...props('field', attributes, {
+							fieldDisabledOptions: checkboxesDisabledOptions,
+						})}
+						additionalControls={(hasLabel) => {
+							if (!hasLabel || checkboxesShowAs !== 'select' || checkboxesUseLabelAsPlaceholder) {
+								return null;
+							}
+
+							return (
+								<Container>
+									<InputField
+										actions={<HelpTooltip>{__('Shown when the field is empty', 'eightshift-forms')}</HelpTooltip>}
+										icon={fieldPlaceholder}
+										label={__('Placeholder', 'eightshift-forms')}
+										value={checkboxesPlaceholder}
+										onChange={(value) =>
+											setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })
+										}
+										disabled={isOptionDisabled(
+											getAttrKey('checkboxesPlaceholder', attributes, manifest),
+											checkboxesDisabledOptions,
+										)}
+									/>
+								</Container>
+							);
+						}}
+						additionalControlsInner={(hasLabel) => {
+							if (!hasLabel || checkboxesShowAs !== 'select') {
+								return null;
+							}
+
+							return (
+								<Container>
+									<Toggle
+										icon={buttonGhost}
+										label={__('Show as placeholder', 'eightshift-forms')}
+										checked={checkboxesUseLabelAsPlaceholder}
+										onChange={(value) => {
+											setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });
+											setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
+										}}
+									/>
+								</Container>
+							);
 						}}
 					/>
-				</>
-			)}
 
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					fieldDisabledOptions: checkboxesDisabledOptions,
-				})}
-			/>
+					{checkboxesShowAs === 'select' && (
+						<>
+							{!checkboxesUseLabelAsPlaceholder && (
+								<InputField
+									help={__('Shown when the field is empty', 'eightshift-forms')}
+									value={checkboxesPlaceholder}
+									onChange={(value) =>
+										setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })
+									}
+									disabled={isOptionDisabled(
+										getAttrKey('checkboxesPlaceholder', attributes, manifest),
+										checkboxesDisabledOptions,
+									)}
+								/>
+							)}
 
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
-
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: checkboxesDisabledOptions,
-				})}
-			/>
-
-			<Spacer
-				border
-				icon={checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
-
-			<Toggle
-				icon={fieldRequired}
-				label={__('Required', 'eightshift-forms')}
-				checked={checkboxesIsRequired}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
-
-					if (!value) {
-						setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
-					}
-				}}
-			/>
-
-			{checkboxesIsRequired && (
-				<NumberPicker
-					aria-label={__('At least', 'eightshift-forms')}
-					value={checkboxesIsRequiredCount}
-					onChange={(value) =>
-						setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })
-					}
-					min={options.checkboxesIsRequiredCount.min}
-					max={countInnerBlocks}
-					disabled={isOptionDisabled(
-						getAttrKey('checkboxesIsRequiredCount', attributes, manifest),
-						checkboxesDisabledOptions,
+							<Toggle
+								icon={fieldPlaceholder}
+								label={__('Use label as a placeholder', 'eightshift-forms')}
+								checked={checkboxesUseLabelAsPlaceholder}
+								onChange={(value) => {
+									setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });
+									setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
+								}}
+							/>
+						</>
 					)}
-					prefix={__('At least', 'eightshift-forms')}
-					suffix={__('needs to be checked', 'eightshift-forms')}
-				/>
-			)}
 
-			<FieldOptionsMore
-				{...props('field', attributes, {
-					fieldDisabledOptions: checkboxesDisabledOptions,
-				})}
-			/>
+					<FieldOptionsMore
+						{...props('field', attributes, {
+							fieldDisabledOptions: checkboxesDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsBlockName: checkboxesName,
-					conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
-				})}
-			/>
-		</ContainerPanel>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptionsLayout
+						{...props('field', attributes, {
+							fieldDisabledOptions: checkboxesDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ContainerGroup>
+						<Container>
+							<Toggle
+								icon={requiredAlt}
+								label={__('Required', 'eightshift-forms')}
+								checked={checkboxesIsRequired}
+								onChange={(value) => {
+									setAttributes({ [getAttrKey('checkboxesIsRequired', attributes, manifest)]: value });
+
+									if (!value) {
+										setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: 1 });
+									}
+								}}
+							/>
+						</Container>
+
+						<Container hidden={!checkboxesIsRequired || checkboxesShowAs === 'radio'}>
+							<NumberPicker
+								icon={optionListAlt}
+								label={__('Minimum selections', 'eightshift-forms')}
+								value={checkboxesIsRequiredCount}
+								onChange={(value) =>
+									setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })
+								}
+								min={options.checkboxesIsRequiredCount.min}
+								max={countInnerBlocks}
+								disabled={isOptionDisabled(
+									getAttrKey('checkboxesIsRequiredCount', attributes, manifest),
+									checkboxesDisabledOptions,
+								)}
+								inline
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ConditionalTagsOptions
+						{...props('conditionalTags', attributes, {
+							conditionalTagsBlockName: checkboxesName,
+							conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

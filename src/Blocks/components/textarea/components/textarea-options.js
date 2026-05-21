@@ -3,28 +3,34 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import {
-	alignHorizontalVertical,
+	buttonGhost,
 	checks,
-	cursorDisabled,
+	design,
 	fieldPlaceholder,
-	fieldRequired,
-	fieldValue,
 	googleTagManager,
-	options as optionsIcon,
+	moreH,
+	none,
 	regex,
-	resetToZero,
-	tools,
+	sliders,
+	tag,
+	titleGeneric,
+	requiredAlt,
+	chevronRight,
+	chevronLeft,
 } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	Select,
 	NumberPicker,
-	HStack,
 	InputField,
 	Toggle,
 	ContainerPanel,
-	Spacer,
-	Button,
+	Tab,
+	TabList,
+	Tabs,
+	TabPanel,
+	Container,
+	ContainerGroup,
+	OptionSelect,
 } from '@eightshift/ui-components';
 import {
 	FieldOptions,
@@ -35,6 +41,7 @@ import {
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 
 export const TextareaOptions = (attributes) => {
 	const { options } = manifest;
@@ -57,192 +64,265 @@ export const TextareaOptions = (attributes) => {
 
 	let textareaValidationPatternOptions = [];
 
+	textareaValidationPatternOptions = [
+		{
+			label: __('Off', 'eightshift-forms'),
+			value: '',
+			separator: 'below',
+		},
+	];
+
 	if (typeof esFormsLocalization !== 'undefined') {
 		textareaValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
+		textareaValidationPatternOptions = [
+			{
+				label: __('Off', 'eightshift-forms'),
+				value: '',
+				separator: 'below',
+			},
+			...textareaValidationPatternOptions,
+		];
 	}
 
 	return (
-		<ContainerPanel>
-			<Spacer
-				border
-				icon={optionsIcon}
-				text={__('General', 'eightshift-forms')}
-			/>
-
-			<NameField
-				value={textareaName}
-				attribute={getAttrKey('textareaName', attributes, manifest)}
-				disabledOptions={textareaDisabledOptions}
-				setAttributes={setAttributes}
-				type='textarea'
-				isChanged={isNameChanged}
-				setIsChanged={setIsNameChanged}
-			/>
-
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: textareaDisabledOptions,
-				})}
-			/>
-
-			<Toggle
-				icon={fieldPlaceholder}
-				label={__('Use label as placeholder', 'eightshift-forms')}
-				checked={textareaUseLabelAsPlaceholder}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined });
-					setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
-				}}
-			/>
-
-			{!textareaUseLabelAsPlaceholder && (
-				<InputField
-					placeholder={__('Enter placeholder', 'eightshift-forms')}
-					help={__('Shown when the field is empty', 'eightshift-forms')}
-					value={textareaPlaceholder}
-					onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('textareaPlaceholder', attributes, manifest), textareaDisabledOptions)}
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={sliders}
+					label={__('General', 'eightshift-forms')}
 				/>
-			)}
 
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					fieldDisabledOptions: textareaDisabledOptions,
-				})}
-			/>
+				<Tab
+					icon={tag}
+					label={__('Labels', 'eightshift-forms')}
+				/>
 
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
+				<Tab
+					icon={design}
+					label={__('Design', 'eightshift-forms')}
+				/>
 
-			<InputField
-				icon={fieldValue}
-				label={__('Initial value', 'eightshift-forms')}
-				placeholder={__('Enter initial value', 'eightshift-forms')}
-				value={textareaValue}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
-			/>
+				<Tab
+					icon={checks}
+					label={__('Validation', 'eightshift-forms')}
+				/>
 
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: textareaDisabledOptions,
-				})}
-			/>
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
 
-			<Toggle
-				icon={cursorDisabled}
-				label={__('Disabled', 'eightshift-forms')}
-				checked={textareaIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('textareaIsDisabled', attributes, manifest), textareaDisabledOptions)}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<NameField
+						value={textareaName}
+						attribute={getAttrKey('textareaName', attributes, manifest)}
+						disabledOptions={textareaDisabledOptions}
+						setAttributes={setAttributes}
+						type='textarea'
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
+					/>
 
-			<Spacer
-				border
-				icon={checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
+					<Container standalone>
+						<InputField
+							icon={titleGeneric}
+							label={__('Initial value', 'eightshift-forms')}
+							value={textareaValue}
+							onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
+							inline
+						/>
+					</Container>
 
-			<Toggle
-				icon={fieldRequired}
-				label={__('Required', 'eightshift-forms')}
-				checked={textareaIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('textareaIsRequired', attributes, manifest), textareaDisabledOptions)}
-			/>
+					<ContainerGroup>
+						<FieldOptionsVisibility
+							{...props('field', attributes, {
+								fieldDisabledOptions: textareaDisabledOptions,
+							})}
+						/>
 
-			<Select
-				icon={regex}
-				label={__('Match pattern', 'eightshift-forms')}
-				options={textareaValidationPatternOptions}
-				value={textareaValidationPattern}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(
-					getAttrKey('textareaValidationPattern', attributes, manifest),
-					textareaDisabledOptions,
-				)}
-				placeholder='–'
-				clearable
-			/>
+						<Container>
+							<Toggle
+								icon={none}
+								label={__('Disabled', 'eightshift-forms')}
+								checked={textareaIsDisabled}
+								onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(
+									getAttrKey('textareaIsDisabled', attributes, manifest),
+									textareaDisabledOptions,
+								)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
 
-			<HStack>
-				<NumberPicker
-					label={__('Min length', 'eightshift-forms')}
-					value={textareaMinLength}
-					onChange={(value) => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: value })}
-					min={options.textareaMinLength.min}
-					step={options.textareaMinLength.step}
-					disabled={isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions)}
-					placeholder='–'
-					fixedWidth={4}
-					prefix={__('Min length', 'eightshift-forms')}
-				>
-					<Button
-						icon={resetToZero}
-						tooltip={__('Reset', 'eightshift-forms')}
-						onClick={() => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: undefined })}
-						disabled={textareaMinLength === 0}
-						type='ghost'
-						slot={null}
-					>
-						{__('x', 'eightshift-forms')}
-					</Button>
-				</NumberPicker>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptions
+						{...props('field', attributes, {
+							fieldDisabledOptions: textareaDisabledOptions,
+						})}
+						additionalControls={(hasLabel) => {
+							if (!hasLabel || textareaUseLabelAsPlaceholder) {
+								return null;
+							}
 
-				<NumberPicker
-					label={__('Max length', 'eightshift-forms')}
-					value={textareaMaxLength}
-					onChange={(value) => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: value })}
-					min={options.textareaMaxLength.min}
-					step={options.textareaMaxLength.step}
-					disabled={isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions)}
-					placeholder='–'
-					fixedWidth={4}
-					prefix={__('Max length', 'eightshift-forms')}
-				>
-					<Button
-						icon={resetToZero}
-						tooltip={__('Reset', 'eightshift-forms')}
-						onClick={() => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: undefined })}
-						disabled={textareaMaxLength === 0}
-						type='ghost'
-						slot={null}
-					>
-						{__('x', 'eightshift-forms')}
-					</Button>
-				</NumberPicker>
-			</HStack>
+							return (
+								<Container>
+									<InputField
+										actions={<HelpTooltip>{__('Shown when the field is empty', 'eightshift-forms')}</HelpTooltip>}
+										icon={fieldPlaceholder}
+										label={__('Placeholder', 'eightshift-forms')}
+										value={textareaPlaceholder}
+										onChange={(value) =>
+											setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })
+										}
+										disabled={isOptionDisabled(
+											getAttrKey('textareaPlaceholder', attributes, manifest),
+											textareaDisabledOptions,
+										)}
+									/>
+								</Container>
+							);
+						}}
+						additionalControlsInner={(hasLabel) => {
+							if (!hasLabel) {
+								return null;
+							}
 
-			<Spacer
-				border
-				icon={alignHorizontalVertical}
-				text={__('Tracking', 'eightshift-forms')}
-			/>
+							return (
+								<Container>
+									<Toggle
+										icon={buttonGhost}
+										label={__('Show as placeholder', 'eightshift-forms')}
+										checked={textareaUseLabelAsPlaceholder}
+										onChange={(value) => {
+											setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined });
+											setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
+										}}
+									/>
+								</Container>
+							);
+						}}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<InputField
-				icon={googleTagManager}
-				label={__('GTM tracking code', 'eightshift-forms')}
-				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
-				value={textareaTracking}
-				onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('textareaTracking', attributes, manifest), textareaDisabledOptions)}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptionsLayout
+						{...props('field', attributes, {
+							fieldDisabledOptions: textareaDisabledOptions,
+						})}
+					/>
 
-			<FieldOptionsMore
-				{...props('field', attributes, {
-					fieldDisabledOptions: textareaDisabledOptions,
-				})}
-			/>
+					<FieldOptionsMore
+						{...props('field', attributes, {
+							fieldDisabledOptions: textareaDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsBlockName: textareaName,
-					conditionalTagsIsHidden: checkAttr('textareaFieldHidden', attributes, manifest),
-				})}
-			/>
-		</ContainerPanel>
+			<TabPanel>
+				<ContainerPanel>
+					<Container standalone>
+						<Toggle
+							icon={requiredAlt}
+							label={__('Required', 'eightshift-forms')}
+							checked={textareaIsRequired}
+							onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(
+								getAttrKey('textareaIsRequired', attributes, manifest),
+								textareaDisabledOptions,
+							)}
+						/>
+					</Container>
+
+					<Container standalone>
+						<OptionSelect
+							icon={regex}
+							label={__('Match pattern', 'eightshift-forms')}
+							options={textareaValidationPatternOptions}
+							value={textareaValidationPattern}
+							onChange={(value) =>
+								setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })
+							}
+							disabled={isOptionDisabled(
+								getAttrKey('textareaValidationPattern', attributes, manifest),
+								textareaDisabledOptions,
+							)}
+							type='menu'
+							inline
+						/>
+					</Container>
+
+					<ContainerGroup>
+						<Container>
+							<NumberPicker
+								icon={chevronRight}
+								label={__('Min. length', 'eightshift-forms')}
+								value={textareaMinLength}
+								onChange={(value) => setAttributes({ [getAttrKey('textareaMinLength', attributes, manifest)]: value })}
+								min={options.textareaMinLength.min}
+								max={options.textareaMinLength.max}
+								step={options.textareaMinLength.step}
+								disabled={isOptionDisabled(
+									getAttrKey('textareaMinLength', attributes, manifest),
+									textareaDisabledOptions,
+								)}
+								inline
+							/>
+						</Container>
+
+						<Container>
+							<NumberPicker
+								icon={chevronLeft}
+								label={__('Max. length', 'eightshift-forms')}
+								value={textareaMaxLength}
+								onChange={(value) => setAttributes({ [getAttrKey('textareaMaxLength', attributes, manifest)]: value })}
+								min={options.textareaMaxLength.min}
+								max={options.textareaMaxLength.max}
+								step={options.textareaMaxLength.step}
+								disabled={isOptionDisabled(
+									getAttrKey('textareaMaxLength', attributes, manifest),
+									textareaDisabledOptions,
+								)}
+								inline
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ConditionalTagsOptions
+						{...props('conditionalTags', attributes, {
+							conditionalTagsBlockName: textareaName,
+							conditionalTagsIsHidden: checkAttr('textareaFieldHidden', attributes, manifest),
+						})}
+					/>
+
+					<ContainerGroup label={__('Tracking', 'eightshift-forms')}>
+						<Container>
+							<InputField
+								icon={googleTagManager}
+								label={__('GTM tracking code', 'eightshift-forms')}
+								value={textareaTracking}
+								onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(
+									getAttrKey('textareaTracking', attributes, manifest),
+									textareaDisabledOptions,
+								)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

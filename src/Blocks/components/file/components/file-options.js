@@ -2,15 +2,17 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	BaseControl,
 	ContainerPanel,
 	InputField,
 	Toggle,
-	Spacer,
-	Button,
-	HStack,
 	NumberPicker,
-	Notice,
+	ContainerGroup,
+	Container,
+	RichLabel,
+	Tab,
+	TabList,
+	Tabs,
+	TabPanel,
 } from '@eightshift/ui-components';
 import {
 	FieldOptions,
@@ -21,21 +23,24 @@ import {
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import {
-	alignHorizontalVertical,
 	buttonOutline,
 	checks,
-	cursorDisabled,
-	fieldRequired,
-	fileSize,
 	fileType,
 	files,
 	googleTagManager,
 	infoCircle,
-	options,
-	resetToZero,
-	tools,
+	lightBulbAlt,
+	none,
+	requiredAlt,
+	design,
+	moreH,
+	sliders,
+	tag,
+	chevronRight,
+	chevronLeft,
 } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 
 export const FileOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -55,201 +60,238 @@ export const FileOptions = (attributes) => {
 	const fileIsDisabled = checkAttr('fileIsDisabled', attributes, manifest);
 
 	return (
-		<ContainerPanel>
-			<Spacer
-				border
-				icon={options}
-				text={__('General', 'eightshift-forms')}
-			/>
-
-			<NameField
-				value={fileName}
-				attribute={getAttrKey('fileName', attributes, manifest)}
-				disabledOptions={fileDisabledOptions}
-				setAttributes={setAttributes}
-				type='file'
-				isChanged={isNameChanged}
-				setIsChanged={setIsNameChanged}
-			/>
-
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: fileDisabledOptions,
-				})}
-			/>
-
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					fieldDisabledOptions: fileDisabledOptions,
-				})}
-			/>
-
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
-
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: fileDisabledOptions,
-				})}
-			/>
-
-			<Toggle
-				icon={cursorDisabled}
-				label={__('Disabled', 'eightshift-forms')}
-				checked={fileIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
-			/>
-
-			<Toggle
-				icon={files}
-				label={__('Allow multi-file upload', 'eightshift-forms')}
-				checked={fileIsMultiple}
-				onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('fileIsMultiple', attributes, manifest), fileDisabledOptions)}
-			/>
-
-			<InputField
-				value={fileCustomInfoText}
-				icon={infoCircle}
-				label={__('Prompt text', 'eightshift-forms')}
-				placeholder={__('Drag and drop files here', 'eightshift-forms')}
-				onChange={(value) =>
-					setAttributes({
-						[getAttrKey('fileCustomInfoText', attributes, manifest)]: value,
-						[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
-					})
-				}
-				disabled={
-					isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions) ||
-					isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
-				}
-			/>
-
-			<InputField
-				icon={buttonOutline}
-				label={__('Upload button text', 'eightshift-forms')}
-				value={fileCustomInfoButtonText}
-				placeholder={__('Add files', 'eightshift-forms')}
-				onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('fileCustomInfoButtonText', attributes, manifest), fileDisabledOptions)}
-			/>
-
-			<Spacer
-				border
-				icon={checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
-
-			<Toggle
-				icon={fieldRequired}
-				label={__('Required', 'eightshift-forms')}
-				checked={fileIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('fileIsRequired', attributes, manifest), fileDisabledOptions)}
-			/>
-
-			<InputField
-				icon={fileType}
-				label={__('Accepted file types', 'eightshift-forms')}
-				value={fileAccept}
-				help={__('Separate items with a comma.', 'eightshift-forms')}
-				placeholder={__('e.g. .jpg,.png,.pdf', 'eightshift-forms')}
-				onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
-			/>
-
-			{fileAccept && (
-				<Notice
-					type='info'
-					label={__(
-						'Make sure the file types you have entered are supported by WordPress uploader.',
-						'eightshift-forms',
-					)}
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={sliders}
+					label={__('General', 'eightshift-forms')}
 				/>
-			)}
 
-			<BaseControl
-				icon={fileSize}
-				label={__('File size limits', 'eightshift-forms')}
-				help={__('1MB = 1000 KB', 'eightshift-forms')}
-			>
-				<HStack>
-					<NumberPicker
-						aria-label={__('Min (KB)', 'eightshift-forms')}
-						value={fileMinSize}
-						type='number'
-						onChange={(value) => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('fileMinSize', attributes, manifest), fileDisabledOptions)}
-						placeholder='–'
-						prefix={__('Min', 'eightshift-forms')}
-						suffix={__('KB', 'eightshift-forms')}
-					>
-						<Button
-							icon={resetToZero}
-							tooltip={__('Reset', 'eightshift-forms')}
-							onClick={() => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: undefined })}
-							disabled={fileMinSize === 0}
-							type='ghost'
-							slot={null}
+				<Tab
+					icon={tag}
+					label={__('Labels', 'eightshift-forms')}
+				/>
+
+				<Tab
+					icon={design}
+					label={__('Design', 'eightshift-forms')}
+				/>
+
+				<Tab
+					icon={checks}
+					label={__('Validation', 'eightshift-forms')}
+				/>
+
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
+
+			<TabPanel>
+				<ContainerPanel>
+					<NameField
+						value={fileName}
+						attribute={getAttrKey('fileName', attributes, manifest)}
+						disabledOptions={fileDisabledOptions}
+						setAttributes={setAttributes}
+						type='file'
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
+					/>
+
+					<ContainerGroup>
+						<Container>
+							<InputField
+								icon={fileType}
+								label={__('Accepted file types', 'eightshift-forms')}
+								value={fileAccept}
+								actions={<HelpTooltip>{__('Separate items with a comma', 'eightshift-forms')}</HelpTooltip>}
+								placeholder={__('e.g. .jpg,.png,.pdf', 'eightshift-forms')}
+								onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
+								monospaceFont
+							/>
+						</Container>
+
+						<Container
+							hidden={!fileAccept}
+							className='es-uic-theme-blue'
+							centered
+							elevated
+							accent
 						>
-							{__('x', 'eightshift-forms')}
-						</Button>
-					</NumberPicker>
-					<NumberPicker
-						aria-label={__('Max (KB)', 'eightshift-forms')}
-						value={fileMaxSize}
-						type='number'
-						onChange={(value) => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('fileMaxSize', attributes, manifest), fileDisabledOptions)}
-						placeholder='–'
-						prefix={__('Max', 'eightshift-forms')}
-						suffix={__('KB', 'eightshift-forms')}
-					>
-						<Button
-							icon={resetToZero}
-							tooltip={__('Reset', 'eightshift-forms')}
-							onClick={() => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: undefined })}
-							disabled={fileMaxSize === 0}
-							type='ghost'
-							slot={null}
-						>
-							{__('x', 'eightshift-forms')}
-						</Button>
-					</NumberPicker>
-				</HStack>
-			</BaseControl>
+							<RichLabel
+								icon={lightBulbAlt}
+								label={__(
+									'Specified file types should be uploadable through the WordPress uploader',
+									'eightshift-forms',
+								)}
+							/>
+						</Container>
+					</ContainerGroup>
 
-			<Spacer
-				border
-				icon={alignHorizontalVertical}
-				text={__('Tracking', 'eightshift-forms')}
-			/>
+					<ContainerGroup>
+						<Container>
+							<Toggle
+								icon={files}
+								label={__('Allow uploading multiple files', 'eightshift-forms')}
+								checked={fileIsMultiple}
+								onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileIsMultiple', attributes, manifest), fileDisabledOptions)}
+							/>
+						</Container>
+					</ContainerGroup>
 
-			<InputField
-				icon={googleTagManager}
-				label={__('GTM tracking code', 'eightshift-forms')}
-				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
-				value={fileTracking}
-				onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}
-			/>
+					<ContainerGroup>
+						<FieldOptionsVisibility
+							{...props('field', attributes, {
+								fieldDisabledOptions: fileDisabledOptions,
+							})}
+						/>
 
-			<FieldOptionsMore
-				{...props('field', attributes, {
-					fieldDisabledOptions: fileDisabledOptions,
-				})}
-			/>
+						<Container>
+							<Toggle
+								icon={none}
+								label={__('Disabled', 'eightshift-forms')}
+								checked={fileIsDisabled}
+								onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
 
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsBlockName: fileName,
-					conditionalTagsIsHidden: checkAttr('fileFieldHidden', attributes, manifest),
-				})}
-			/>
-		</ContainerPanel>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptions
+						{...props('field', attributes, {
+							fieldDisabledOptions: fileDisabledOptions,
+						})}
+					/>
+
+					<FieldOptionsMore
+						{...props('field', attributes, {
+							fieldDisabledOptions: fileDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptionsLayout
+						{...props('field', attributes, {
+							fieldDisabledOptions: fileDisabledOptions,
+						})}
+					/>
+
+					<ContainerGroup label={__('Labels', 'eightshift-forms')}>
+						<Container>
+							<InputField
+								value={fileCustomInfoText}
+								icon={infoCircle}
+								label={__('Instructions', 'eightshift-forms')}
+								placeholder={__('Drag and drop files here', 'eightshift-forms')}
+								onChange={(value) =>
+									setAttributes({
+										[getAttrKey('fileCustomInfoText', attributes, manifest)]: value,
+										[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
+									})
+								}
+								disabled={
+									isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions) ||
+									isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
+								}
+								inline
+							/>
+						</Container>
+
+						<Container>
+							<InputField
+								icon={buttonOutline}
+								label={__('Upload button', 'eightshift-forms')}
+								value={fileCustomInfoButtonText}
+								placeholder={__('Add files', 'eightshift-forms')}
+								onChange={(value) =>
+									setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })
+								}
+								disabled={isOptionDisabled(
+									getAttrKey('fileCustomInfoButtonText', attributes, manifest),
+									fileDisabledOptions,
+								)}
+								inline
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<Container standalone>
+						<Toggle
+							icon={requiredAlt}
+							label={__('Required', 'eightshift-forms')}
+							checked={fileIsRequired}
+							onChange={(value) => setAttributes({ [getAttrKey('fileIsRequired', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('fileIsRequired', attributes, manifest), fileDisabledOptions)}
+						/>
+					</Container>
+
+					<ContainerGroup>
+						<Container>
+							<NumberPicker
+								icon={chevronRight}
+								label={__('Min. file size', 'eightshift-forms')}
+								value={fileMinSize}
+								type='number'
+								onChange={(value) => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileMinSize', attributes, manifest), fileDisabledOptions)}
+								suffix='kB'
+								inline
+							/>
+						</Container>
+
+						<Container>
+							<NumberPicker
+								icon={chevronLeft}
+								label={__('Max. file size', 'eightshift-forms')}
+								value={fileMaxSize}
+								type='number'
+								onChange={(value) => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileMaxSize', attributes, manifest), fileDisabledOptions)}
+								suffix='kB'
+								inline
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ConditionalTagsOptions
+						{...props('conditionalTags', attributes, {
+							conditionalTagsBlockName: fileName,
+							conditionalTagsIsHidden: checkAttr('fileFieldHidden', attributes, manifest),
+						})}
+					/>
+
+					<ContainerGroup label={__('Tracking', 'eightshift-forms')}>
+						<Container>
+							<InputField
+								icon={googleTagManager}
+								label={__('GTM tracking code', 'eightshift-forms')}
+								value={fileTracking}
+								onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

@@ -9,24 +9,42 @@ import {
 	FieldOptionsLayout,
 	FieldOptionsVisibility,
 } from '../../field/components/field-options';
-import { Select, Button, ContainerPanel, InputField, Toggle, ContainerGroup, Spacer } from '@eightshift/ui-components';
 import {
-	alignHorizontalVertical,
+	ContainerPanel,
+	InputField,
+	Toggle,
+	ContainerGroup,
+	Tab,
+	TabList,
+	Tabs,
+	TabPanel,
+	Container,
+	OptionSelect,
+	BaseControl,
+} from '@eightshift/ui-components';
+import {
 	checks,
-	cursorDisabled,
-	dateTime,
 	fieldPlaceholder,
-	fieldRequired,
 	fieldValue,
 	googleTagManager,
-	optionListAlt,
 	options,
 	regex,
-	tools,
+	buttonGhost,
+	design,
+	moreH,
+	requiredAlt,
+	sliders,
+	tag,
+	itemSelect,
+	none,
+	visible,
+	codeVariable,
+	externalLink,
 } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 
 export const DateOptions = (attributes) => {
 	const { setAttributes } = attributes;
@@ -47,192 +65,289 @@ export const DateOptions = (attributes) => {
 	const dateOutputFormat = checkAttr('dateOutputFormat', attributes, manifest);
 	const dateMode = checkAttr('dateMode', attributes, manifest);
 
-	let dateValidationPatternOptions = [];
+	let dateValidationPatternOptions = [
+		{
+			label: __('Off', 'eightshift-forms'),
+			value: '',
+			separator: 'below',
+		},
+	];
 
 	if (typeof esFormsLocalization !== 'undefined') {
-		dateValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
+		dateValidationPatternOptions = [...dateValidationPatternOptions, ...esFormsLocalization.validationPatternsOptions];
 	}
 
 	return (
-		<ContainerPanel>
-			<Spacer
-				border
-				icon={options}
-				text={__('General', 'eightshift-forms')}
-			/>
-
-			<NameField
-				value={dateName}
-				attribute={getAttrKey('dateName', attributes, manifest)}
-				disabledOptions={dateDisabledOptions}
-				setAttributes={setAttributes}
-				type='date'
-				isChanged={isNameChanged}
-				setIsChanged={setIsNameChanged}
-			/>
-
-			<Select
-				icon={optionListAlt}
-				label={__('Type', 'eightshift-forms')}
-				value={dateType}
-				options={getOption('dateType', attributes, manifest)}
-				disabled={isOptionDisabled(getAttrKey('dateType', attributes, manifest), dateDisabledOptions)}
-				onChange={(value) => setAttributes({ [getAttrKey('dateType', attributes, manifest)]: value })}
-				simpleValue
-				noSearch
-			/>
-
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: dateDisabledOptions,
-				})}
-			/>
-
-			<ContainerGroup>
-				<Toggle
-					icon={fieldPlaceholder}
-					label={__('Use label as placeholder', 'eightshift-forms')}
-					checked={dateUseLabelAsPlaceholder}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: undefined });
-						setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value });
-					}}
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={sliders}
+					label={__('General', 'eightshift-forms')}
 				/>
-				{!dateUseLabelAsPlaceholder && (
-					<InputField
-						placeholder={__('Enter placeholder', 'eightshift-forms')}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={datePlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
+
+				<Tab
+					icon={tag}
+					label={__('Labels', 'eightshift-forms')}
+				/>
+
+				<Tab
+					icon={design}
+					label={__('Design', 'eightshift-forms')}
+				/>
+
+				<Tab
+					icon={checks}
+					label={__('Validation', 'eightshift-forms')}
+				/>
+
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
+
+			<TabPanel>
+				<ContainerPanel>
+					<NameField
+						value={dateName}
+						attribute={getAttrKey('dateName', attributes, manifest)}
+						disabledOptions={dateDisabledOptions}
+						setAttributes={setAttributes}
+						type='date'
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-				)}
-			</ContainerGroup>
 
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					fieldDisabledOptions: dateDisabledOptions,
-				})}
-			/>
+					<ContainerGroup>
+						<Container>
+							<OptionSelect
+								icon={options}
+								label={__('Mode', 'eightshift-forms')}
+								value={dateType}
+								options={getOption('dateType', attributes, manifest)}
+								disabled={isOptionDisabled(getAttrKey('dateType', attributes, manifest), dateDisabledOptions)}
+								onChange={(value) => setAttributes({ [getAttrKey('dateType', attributes, manifest)]: value })}
+								inline
+							/>
+						</Container>
 
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
+						<Container>
+							<OptionSelect
+								icon={itemSelect}
+								label={__('Selection', 'eightshift-forms')}
+								value={dateMode}
+								options={getOption('dateMode', attributes, manifest)}
+								disabled={isOptionDisabled(getAttrKey('dateMode', attributes, manifest), dateDisabledOptions)}
+								onChange={(value) => setAttributes({ [getAttrKey('dateMode', attributes, manifest)]: value })}
+								inline
+							/>
+						</Container>
+					</ContainerGroup>
 
-			<InputField
-				icon={fieldValue}
-				label={__('Initial value', 'eightshift-forms')}
-				placeholder={__('Enter initial value', 'eightshift-forms')}
-				value={dateValue}
-				onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
-			/>
+					<Container standalone>
+						<InputField
+							icon={fieldValue}
+							label={__('Initial value', 'eightshift-forms')}
+							placeholder={
+								dateType === 'date'
+									? __('e.g. 2026-05-20', 'eightshift-forms')
+									: __('e.g. 2026-05-20 14:30', 'eightshift-forms')
+							}
+							value={dateValue}
+							onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
+							monospaceFont
+							inline
+						/>
+					</Container>
 
-			<Select
-				label={__('Mode', 'eightshift-forms')}
-				value={dateMode}
-				options={getOption('dateMode', attributes, manifest)}
-				disabled={isOptionDisabled(getAttrKey('dateMode', attributes, manifest), dateDisabledOptions)}
-				onChange={(value) => setAttributes({ [getAttrKey('dateMode', attributes, manifest)]: value })}
-				simpleValue
-				noSearch
-			/>
+					<ContainerGroup>
+						<FieldOptionsVisibility
+							{...props('field', attributes, {
+								fieldDisabledOptions: dateDisabledOptions,
+							})}
+						/>
 
-			<FieldOptionsVisibility
-				{...props('field', attributes, {
-					fieldDisabledOptions: dateDisabledOptions,
-				})}
-			/>
+						<Container>
+							<Toggle
+								icon={none}
+								label={__('Disabled', 'eightshift-forms')}
+								checked={dateIsDisabled}
+								onChange={(value) => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('dateIsDisabled', attributes, manifest), dateDisabledOptions)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
 
-			<Toggle
-				icon={cursorDisabled}
-				label={__('Disabled', 'eightshift-forms')}
-				checked={dateIsDisabled}
-				onChange={(value) => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateIsDisabled', attributes, manifest), dateDisabledOptions)}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptions
+						{...props('field', attributes, {
+							fieldDisabledOptions: dateDisabledOptions,
+						})}
+						additionalControls={(hasLabel) => {
+							if (!hasLabel || dateUseLabelAsPlaceholder) {
+								return null;
+							}
 
-			<Button
-				href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format`}
-				target='_blank'
-			>
-				{__('View valid formats', 'eightshift-forms')}
-			</Button>
+							return (
+								<Container>
+									<InputField
+										actions={<HelpTooltip>{__('Shown when the field is empty', 'eightshift-forms')}</HelpTooltip>}
+										icon={fieldPlaceholder}
+										label={__('Placeholder', 'eightshift-forms')}
+										value={datePlaceholder}
+										onChange={(value) =>
+											setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })
+										}
+										disabled={isOptionDisabled(
+											getAttrKey('datePlaceholder', attributes, manifest),
+											dateDisabledOptions,
+										)}
+									/>
+								</Container>
+							);
+						}}
+						additionalControlsInner={(hasLabel) => {
+							if (!hasLabel) {
+								return null;
+							}
 
-			<InputField
-				label={__('Preview format', 'eightshift-forms')}
-				icon={dateTime}
-				value={datePreviewFormat}
-				placeholder={manifest.formats[dateType].preview}
-				help={__('Define format of date/time the user will see', 'eightshift-forms')}
-				onChange={(value) => setAttributes({ [getAttrKey('datePreviewFormat', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('datePreviewFormat', attributes, manifest), dateDisabledOptions)}
-			/>
+							return (
+								<Container>
+									<Toggle
+										icon={buttonGhost}
+										label={__('Show as placeholder', 'eightshift-forms')}
+										checked={dateUseLabelAsPlaceholder}
+										onChange={(value) => {
+											setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: undefined });
+											setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value });
+										}}
+									/>
+								</Container>
+							);
+						}}
+					/>
 
-			<InputField
-				icon={dateTime}
-				label={__('Output format', 'eightshift-forms')}
-				value={dateOutputFormat}
-				placeholder={manifest.formats[dateType].output}
-				help={__('Define format of date/time that will be sent when form is processed', 'eightshift-forms')}
-				onChange={(value) => setAttributes({ [getAttrKey('dateOutputFormat', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateOutputFormat', attributes, manifest), dateDisabledOptions)}
-			/>
+					<FieldOptionsMore
+						{...props('field', attributes, {
+							fieldDisabledOptions: dateDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<Spacer
-				border
-				icon={checks}
-				text={__('Validation', 'eightshift-forms')}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<FieldOptionsLayout
+						{...props('field', attributes, {
+							fieldDisabledOptions: dateDisabledOptions,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
 
-			<Toggle
-				icon={fieldRequired}
-				label={__('Required', 'eightshift-forms')}
-				checked={dateIsRequired}
-				onChange={(value) => setAttributes({ [getAttrKey('dateIsRequired', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateIsRequired', attributes, manifest), dateDisabledOptions)}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<Container standalone>
+						<Toggle
+							icon={requiredAlt}
+							label={__('Required', 'eightshift-forms')}
+							checked={dateIsRequired}
+							onChange={(value) => setAttributes({ [getAttrKey('dateIsRequired', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('dateIsRequired', attributes, manifest), dateDisabledOptions)}
+						/>
+					</Container>
 
-			<Select
-				icon={regex}
-				label={__('Match pattern', 'eightshift-forms')}
-				options={dateValidationPatternOptions}
-				value={dateValidationPattern}
-				onChange={(value) => setAttributes({ [getAttrKey('dateValidationPattern', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateValidationPattern', attributes, manifest), dateDisabledOptions)}
-				placeholder='–'
-				clearable
-			/>
+					<Container standalone>
+						<OptionSelect
+							icon={regex}
+							label={__('Match pattern', 'eightshift-forms')}
+							options={dateValidationPatternOptions}
+							value={dateValidationPattern}
+							onChange={(value) =>
+								setAttributes({ [getAttrKey('dateValidationPattern', attributes, manifest)]: value })
+							}
+							disabled={isOptionDisabled(
+								getAttrKey('dateValidationPattern', attributes, manifest),
+								dateDisabledOptions,
+							)}
+							type='menu'
+							inline
+						/>
+					</Container>
+				</ContainerPanel>
+			</TabPanel>
 
-			<Spacer
-				border
-				icon={alignHorizontalVertical}
-				text={__('Tracking', 'eightshift-forms')}
-			/>
+			<TabPanel>
+				<ContainerPanel>
+					<ContainerGroup label={__('Formats', 'eightshift-forms')}>
+						<Container>
+							<InputField
+								label={__('Display', 'eightshift-forms')}
+								icon={visible}
+								value={datePreviewFormat}
+								placeholder={manifest.formats[dateType].preview}
+								onChange={(value) => setAttributes({ [getAttrKey('datePreviewFormat', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('datePreviewFormat', attributes, manifest), dateDisabledOptions)}
+								monospaceFont
+								inline
+							/>
+						</Container>
 
-			<InputField
-				icon={googleTagManager}
-				label={__('GTM tracking code', 'eightshift-forms')}
-				placeholder={__('Enter GTM tracking code', 'eightshift-forms')}
-				value={dateTracking}
-				onChange={(value) => setAttributes({ [getAttrKey('dateTracking', attributes, manifest)]: value })}
-				disabled={isOptionDisabled(getAttrKey('dateTracking', attributes, manifest), dateDisabledOptions)}
-			/>
+						<Container>
+							<InputField
+								icon={codeVariable}
+								label={__('Output', 'eightshift-forms')}
+								value={dateOutputFormat}
+								placeholder={manifest.formats[dateType].output}
+								onChange={(value) => setAttributes({ [getAttrKey('dateOutputFormat', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('dateOutputFormat', attributes, manifest), dateDisabledOptions)}
+								monospaceFont
+								inline
+							/>
+						</Container>
 
-			<FieldOptionsMore
-				{...props('field', attributes, {
-					fieldDisabledOptions: dateDisabledOptions,
-				})}
-			/>
+						<Container compact>
+							<BaseControl
+								label={__('More about date formats', 'eightshift-forms')}
+								controlContainerClassName='esf:min-h-28'
+								inline
+							>
+								<a
+									href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format'
+									target='_blank'
+									className='esf:flex esf:items-center esf:gap-4 esf:[&_svg]:size-16 esf:[&_svg]:stroke-[1.5]'
+								>
+									{externalLink}
+									{__('Docs', 'eightshift-forms')}
+								</a>
+							</BaseControl>
+						</Container>
+					</ContainerGroup>
 
-			<ConditionalTagsOptions
-				{...props('conditionalTags', attributes, {
-					conditionalTagsBlockName: dateName,
-					conditionalTagsIsHidden: checkAttr('dateFieldHidden', attributes, manifest),
-				})}
-			/>
-		</ContainerPanel>
+					<ConditionalTagsOptions
+						{...props('conditionalTags', attributes, {
+							conditionalTagsBlockName: dateName,
+							conditionalTagsIsHidden: checkAttr('dateFieldHidden', attributes, manifest),
+						})}
+					/>
+
+					<ContainerGroup label={__('Tracking', 'eightshift-forms')}>
+						<Container>
+							<InputField
+								icon={googleTagManager}
+								label={__('GTM tracking code', 'eightshift-forms')}
+								value={dateTracking}
+								onChange={(value) => setAttributes({ [getAttrKey('dateTracking', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('dateTracking', attributes, manifest), dateDisabledOptions)}
+							/>
+						</Container>
+					</ContainerGroup>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

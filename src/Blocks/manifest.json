@@ -67,16 +67,19 @@
 	"showAsMap": {
 		"options": [
 			{
-				"label": "Select",
-				"value": "select"
+				"label": "Checkboxes",
+				"value": "checkboxes",
+				"endIcon": "checkSquare"
 			},
 			{
 				"label": "Radios",
-				"value": "radios"
+				"value": "radios",
+				"endIcon": "listUnordered"
 			},
 			{
-				"label": "Checkboxes",
-				"value": "checkboxes"
+				"label": "Dropdown menu",
+				"value": "select",
+				"endIcon": "dropdown"
 			}
 		],
 		"checkboxes-select": {
