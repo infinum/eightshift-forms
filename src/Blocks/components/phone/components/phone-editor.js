@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps } from './../../utils';
+import { usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const PhoneEditor = (attributes) => {
@@ -11,7 +11,7 @@ export const PhoneEditor = (attributes) => {
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
 	const phoneName = checkAttr('phoneName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
 	const phone = (
 		<div className='esf:flex! esf:flex-row! esf:gap-10!'>

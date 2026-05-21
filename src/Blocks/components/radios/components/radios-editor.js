@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps } from './../../utils';
+import { usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const RadiosEditor = (attributes) => {
@@ -9,7 +9,7 @@ export const RadiosEditor = (attributes) => {
 	const radiosContent = checkAttr('radiosContent', attributes, manifest);
 	const radiosName = checkAttr('radiosName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('radiosName', attributes, manifest), radiosName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('radiosName', attributes, manifest), radiosName);
 
 	const radios = <div className='esf-fieldset'>{radiosContent}</div>;
 

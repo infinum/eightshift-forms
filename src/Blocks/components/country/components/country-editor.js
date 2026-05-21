@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { props, checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps } from '../../utils';
+import { usePreventSaveOnMissingProps } from '../../utils';
 import manifest from '../manifest.json';
 
 export const CountryEditor = (attributes) => {
@@ -9,7 +9,7 @@ export const CountryEditor = (attributes) => {
 
 	const countryName = checkAttr('countryName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('countryName', attributes, manifest), countryName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('countryName', attributes, manifest), countryName);
 
 	const country = (
 		<>

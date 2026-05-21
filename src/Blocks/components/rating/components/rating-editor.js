@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps } from '../../utils';
+import { usePreventSaveOnMissingProps } from '../../utils';
 import { getUtilsIcons } from '../../form/assets/state-init';
 import manifest from '../manifest.json';
 
@@ -11,7 +11,7 @@ export const RatingEditor = (attributes) => {
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 	const ratingValue = checkAttr('ratingValue', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
 
 	const rating = (
 		<div

@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { StatusFieldOutput, preventSaveOnMissingProps } from './../../utils';
+import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
 
@@ -12,7 +12,7 @@ export const CheckboxEditor = (attributes) => {
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
 	return (
 		<div

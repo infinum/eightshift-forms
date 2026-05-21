@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { preventSaveOnMissingProps } from './../../utils';
+import { usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
@@ -10,7 +10,7 @@ export const TextareaEditor = (attributes) => {
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
 	const textareaName = checkAttr('textareaName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
 	const textarea = (
 		<textarea

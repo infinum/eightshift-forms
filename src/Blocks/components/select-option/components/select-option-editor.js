@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { StatusFieldOutput, preventSaveOnMissingProps } from './../../utils';
+import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
 
@@ -12,7 +12,7 @@ export const SelectOptionEditor = (attributes) => {
 	const selectOptionIsHidden = checkAttr('selectOptionIsHidden', attributes, manifest);
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
 	return (
 		<div

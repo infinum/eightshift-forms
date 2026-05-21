@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { preventSaveOnMissingProps } from './../../utils';
+import { usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const DateEditor = (attributes) => {
@@ -11,7 +11,7 @@ export const DateEditor = (attributes) => {
 	const dateType = checkAttr('dateType', attributes, manifest);
 	const dateName = checkAttr('dateName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('dateName', attributes, manifest), dateName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('dateName', attributes, manifest), dateName);
 
 	const date = (
 		<>

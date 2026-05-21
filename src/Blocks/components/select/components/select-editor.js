@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { preventSaveOnMissingProps } from './../../utils';
+import { usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
@@ -9,7 +9,7 @@ export const SelectEditor = (attributes) => {
 	const selectContent = checkAttr('selectContent', attributes, manifest);
 	const selectName = checkAttr('selectName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('selectName', attributes, manifest), selectName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('selectName', attributes, manifest), selectName);
 
 	const selectComponent = <div className='esf-fieldset'>{selectContent}</div>;
 

@@ -1,6 +1,6 @@
 import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { preventSaveOnMissingProps } from './../../utils';
+import { usePreventSaveOnMissingProps } from './../../utils';
 import manifest from '../manifest.json';
 
 export const InputEditor = (attributes) => {
@@ -16,7 +16,7 @@ export const InputEditor = (attributes) => {
 	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
 	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
 
 	let additionalProps = {};
 
