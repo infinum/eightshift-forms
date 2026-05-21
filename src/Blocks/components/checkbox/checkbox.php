@@ -34,6 +34,7 @@ $checkboxHideLabel = Helpers::checkAttr('checkboxHideLabel', $attributes, $manif
 $checkboxHelp = Helpers::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Helpers::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 $checkboxIcon = Helpers::checkAttr('checkboxIcon', $attributes, $manifest);
+$checkboxIconId = Helpers::checkAttr('checkboxIconId', $attributes, $manifest);
 $checkboxIsHidden = Helpers::checkAttr('checkboxIsHidden', $attributes, $manifest);
 $checkboxTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
@@ -101,8 +102,14 @@ if ($checkboxTracking) {
 			<label
 				for="<?php echo esc_attr($checkboxName); ?>"
 				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label', "{$componentClass}__label")); ?>">
-				<?php if ($checkboxIcon) { ?>
-					<img class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-icon', "{$componentClass}__label-icon")); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
+				<?php if ($checkboxIcon) {
+					$iconAltText = get_post_meta($checkboxIconId ?? 0, '_wp_attachment_image_alt', true) ?: '';
+					?>
+					<img
+						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-icon', "{$componentClass}__label-icon")); ?>"
+						src="<?php echo esc_url($checkboxIcon); ?>"
+						alt="<?php echo esc_attr($iconAltText); ?>"
+					/>
 				<?php } ?>
 
 				<?php if (!$checkboxHideLabelText) { ?>
@@ -115,7 +122,7 @@ if ($checkboxTracking) {
 	</div>
 	<?php if ($checkboxHelp) { ?>
 		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'help', "{$componentClass}__help")); ?>">
-			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?>
 		</div>
 	<?php } ?>
