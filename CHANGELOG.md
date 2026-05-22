@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.4.1]
+
+### Fixed
+
+- Mailerlite will now show all groups from the API response.
+
 ## [9.4.0]
 
 ### Added
@@ -1832,6 +1838,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.4.1]: https://github.com/infinum/eightshift-forms/compare/9.4.0...9.4.1
 [9.4.0]: https://github.com/infinum/eightshift-forms/compare/9.3.0...9.4.0
 [9.3.0]: https://github.com/infinum/eightshift-forms/compare/9.2.0...9.3.0
 [9.2.0]: https://github.com/infinum/eightshift-forms/compare/9.1.6...9.2.0
