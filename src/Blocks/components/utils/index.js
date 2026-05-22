@@ -17,8 +17,8 @@ import {
 	info,
 	layoutAlt,
 	lightBulb,
+	loader,
 	magic,
-	notebook,
 	options,
 	tagAlt,
 	warning,
@@ -637,8 +637,10 @@ export const SettingsButton = ({ formId = null }) => {
 				window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank');
 			}}
 			icon={options}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Edit settings', 'eightshift-forms')}
+			{__('Settings', 'eightshift-forms')}
 		</Button>
 	);
 };
@@ -654,6 +656,8 @@ export const GlobalSettingsButton = () => {
 				window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank');
 			}}
 			icon={globe}
+			className='esf:grow'
+			size='large'
 		>
 			{__('Edit global settings', 'eightshift-forms')}
 		</Button>
@@ -678,9 +682,11 @@ export const LocationsButton = ({ formId = null }) => {
 			onPress={() => {
 				window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank');
 			}}
-			icon={notebook}
+			icon={loader}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Locations', 'eightshift-forms')}
+			{__('Places used', 'eightshift-forms')}
 		</Button>
 	);
 };

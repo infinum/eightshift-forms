@@ -1,66 +1,93 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { InputField, Toggle, Spacer } from '@eightshift/ui-components';
-import { externalLink, gears, id, options, tag, tools } from '@eightshift/ui-components/icons';
+import { InputField, Toggle, Container, HStack } from '@eightshift/ui-components';
+import { externalLink, gears, id, tag } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 
 export const FormOptions = (attributes) => {
 	const { setAttributes } = attributes;
 
 	const formName = checkAttr('formName', attributes, manifest);
+
+	return (
+		<Container standalone>
+			<InputField
+				icon={tag}
+				label={
+					<HStack>
+						{__('Name', 'eightshift-forms')}
+
+						<HelpTooltip>
+							{__('Used as a name attribute for form element.', 'eightshift-forms')}
+
+							<br />
+							<br />
+
+							{__('Useful if you want to add additional code style for the form.', 'eightshift-forms')}
+						</HelpTooltip>
+					</HStack>
+				}
+				value={formName}
+				onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
+				monospaceFont
+				inline
+			/>
+		</Container>
+	);
+};
+
+export const FormOptionsAdvanced = (attributes) => {
+	const { setAttributes } = attributes;
+
 	const formAction = checkAttr('formAction', attributes, manifest);
 	const formActionExternal = checkAttr('formActionExternal', attributes, manifest);
 	const formId = checkAttr('formId', attributes, manifest);
 
 	return (
 		<>
-			<Spacer
-				border
-				icon={options}
-				text={__('General', 'eightshift-forms')}
-			/>
-			<InputField
-				icon={tag}
-				label={__('Form name', 'eightshift-forms')}
-				help={__(
-					'Used as a name attribute for form element Useful if you want to add additional code style for the form.',
-					'eightshift-forms',
-				)}
-				value={formName}
-				onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
-			/>
+			<Container standalone>
+				<InputField
+					icon={gears}
+					label={__('Custom action', 'eightshift-forms')}
+					value={formAction}
+					onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
+					actions={
+						<HelpTooltip>{__('Custom form action that will process form data.', 'eightshift-forms')}</HelpTooltip>
+					}
+					monospaceFont
+				/>
+			</Container>
 
-			<Spacer
-				border
-				icon={tools}
-				text={__('Advanced', 'eightshift-forms')}
-			/>
+			<Container standalone>
+				<Toggle
+					icon={externalLink}
+					label={
+						<HStack>
+							{__('Process form externally', 'eightshift-forms')}
 
-			<InputField
-				icon={gears}
-				label={__('Custom action', 'eightshift-forms')}
-				value={formAction}
-				help={__('Custom form action that will process form data.', 'eightshift-forms')}
-				onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
-			/>
+							<HelpTooltip>
+								{__(
+									'If enabled, after a successful submission the user will be redirected to the external site, which should be set up to process the form entry.',
+									'eightshift-forms',
+								)}
+							</HelpTooltip>
+						</HStack>
+					}
+					checked={formActionExternal}
+					onChange={(value) => setAttributes({ [getAttrKey('formActionExternal', attributes, manifest)]: value })}
+				/>
+			</Container>
 
-			<Toggle
-				icon={externalLink}
-				label={__('Process form externally', 'eightshift-forms')}
-				checked={formActionExternal}
-				help={__(
-					'If enabled, after a successful submission the user will be redirected to the external site, which should be set up to process the form entry.',
-					'eightshift-forms',
-				)}
-				onChange={(value) => setAttributes({ [getAttrKey('formActionExternal', attributes, manifest)]: value })}
-			/>
-
-			<InputField
-				icon={id}
-				label={__('Unique identifier', 'eightshift-forms')}
-				value={formId}
-				onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}
-			/>
+			<Container standalone>
+				<InputField
+					icon={id}
+					label={__('Unique identifier', 'eightshift-forms')}
+					value={formId}
+					onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}
+					monospaceFont
+				/>
+			</Container>
 		</>
 	);
 };

@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { scrollbarH, tag } from '@eightshift/ui-components/icons';
-import { InputField, Toggle } from '@eightshift/ui-components';
+import { itemLimit, positionHStart, tag } from '@eightshift/ui-components/icons';
+import { Container, ContainerGroup, NumberPicker, Toggle } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const ProgressBarOptions = (attributes) => {
-	const { setAttributes } = attributes;
+	const { setAttributes, additionalControls, additionalControlsAfter } = attributes;
 
 	const progressBarUse = checkAttr('progressBarUse', attributes, manifest);
 	const progressBarHideLabels = checkAttr('progressBarHideLabels', attributes, manifest);
@@ -14,35 +14,48 @@ export const ProgressBarOptions = (attributes) => {
 
 	return (
 		<>
-			<Toggle
-				icon={scrollbarH}
-				label={__('Show progress bar', 'eightshift-forms')}
-				checked={progressBarUse}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('progressBarUse', attributes, manifest)]: value });
-				}}
-			/>
+			<ContainerGroup>
+				<Container>
+					<Toggle
+						icon={positionHStart}
+						label={__('Progress indicator', 'eightshift-forms')}
+						checked={progressBarUse}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('progressBarUse', attributes, manifest)]: value });
+						}}
+					/>
+				</Container>
 
-			<Toggle
-				icon={tag}
-				label={__('Hide progress bar labels', 'eightshift-forms')}
-				help={__('This will hide the labels on the progress bar.', 'eightshift-forms')}
-				checked={progressBarHideLabels}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('progressBarHideLabels', attributes, manifest)]: value });
-				}}
-			/>
+				<Container hidden={!progressBarUse}>
+					<Toggle
+						icon={tag}
+						label={__('Step labels', 'eightshift-forms')}
+						help={__('This will hide the labels on the progress bar.', 'eightshift-forms')}
+						checked={!progressBarHideLabels}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('progressBarHideLabels', attributes, manifest)]: !value });
+						}}
+					/>
+				</Container>
+			</ContainerGroup>
 
-			{progressBarMultiflowUse && (
-				<InputField
-					type={'number'}
-					label={__('Progress bar initial steps number', 'eightshift-forms')}
-					value={progressBarMultiflowInitCount}
-					onChange={(value) =>
-						setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })
-					}
-				/>
-			)}
+			<ContainerGroup>
+				{additionalControls}
+
+				<Container hidden={!progressBarMultiflowUse}>
+					<NumberPicker
+						icon={itemLimit}
+						label={__('Initial number of steps', 'eightshift-forms')}
+						value={progressBarMultiflowInitCount}
+						onChange={(value) =>
+							setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })
+						}
+						inline
+					/>
+				</Container>
+
+				{additionalControlsAfter}
+			</ContainerGroup>
 		</>
 	);
 };

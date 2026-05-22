@@ -350,7 +350,7 @@ final class GeneralHelpers
 						'blockName' => "{$namespace}/step",
 						'attrs' => [
 							'stepStepName' => $stepCurrent,
-							'stepStepLabel' => \__('Step init', 'eightshift-forms'),
+							'stepStepLabel' => \__('Starting step', 'eightshift-forms'),
 							'stepStepContent' => '',
 						],
 						'innerBlocks' => [],
