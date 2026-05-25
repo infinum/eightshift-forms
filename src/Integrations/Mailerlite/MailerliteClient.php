@@ -290,7 +290,7 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function getTestApi(): array
 	{
-		$url = self::BASE_URL . "groups";
+		$url = self::BASE_URL . "groups?limit=1000";
 
 		$response = \wp_remote_get(
 			$url,
