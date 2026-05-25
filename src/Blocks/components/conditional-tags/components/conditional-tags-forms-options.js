@@ -1,28 +1,90 @@
 import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { getAttrKey, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	Select,
-	RichLabel,
-	Notice,
 	OptionSelect,
 	Button,
-	ContainerPanel,
 	ContainerGroup,
-	Modal,
+	Container,
+	Toggle,
+	BaseControl,
+	ItemCollection,
+	HStack,
 } from '@eightshift/ui-components';
-import { conditionH, lightBulb, plusCircleFillAlt, trash, visibilityAlt } from '@eightshift/ui-components/icons';
-import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
+import { optionListAlt, plusCircle, trash, visibilityAlt } from '@eightshift/ui-components/icons';
+import { CONDITIONAL_TAGS_ACTIONS_SHORT_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 import manifest from '../manifest.json';
-import { conditionalVisibility } from '@eightshift/ui-components/icons';
+import { upperFirst } from '@eightshift/ui-components/utilities';
+
+const ConditionalTagsItem = ({ item, formFields }) => {
+	const { field, action, fieldOption, updateData, deleteItem } = item;
+
+	const optionsItem = formFields?.find((item) => item.value === field)?.subItems ?? [];
+
+	return (
+		<Container className='esf:group'>
+			<HStack noWrap>
+				<OptionSelect
+					value={action}
+					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_SHORT_LABELS).map((option) => ({
+						...option,
+						label: upperFirst(option.label),
+					}))}
+					onChange={(value) => updateData({ action: value })}
+					type='menu'
+				/>
+
+				<OptionSelect
+					aria-label={__('Field', 'eightshift-forms')}
+					value={field}
+					options={formFields}
+					onChange={(value) => updateData({ field: value })}
+					type='menu'
+					disabled={!formFields}
+					inline
+				/>
+
+				{optionsItem?.length > 0 && <span>&ndash;</span>}
+
+				<OptionSelect
+					hidden={optionsItem?.length < 1}
+					aria-label={__('Sub-items', 'eightshift-forms')}
+					value={fieldOption}
+					options={optionsItem.map((item) => {
+						if (item.value === '') {
+							return {
+								...item,
+								label: __('All options', 'eightshift-forms'),
+								separator: 'below',
+							};
+						}
+
+						return item;
+					})}
+					onChange={(value) => updateData({ fieldOption: value })}
+					type='menu'
+				/>
+
+				<Button
+					icon={trash}
+					onClick={deleteItem}
+					label={__('Remove', 'eightshift-forms')}
+					size='small'
+					type='dangerGhost'
+					className='esf:ml-auto esf:not-group-hover:not-group-has-focus-visible:opacity-0'
+				/>
+			</HStack>
+		</Container>
+	);
+};
 
 export const ConditionalTagsFormsOptions = (attributes) => {
 	const { setAttributes } = attributes;
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
@@ -37,179 +99,105 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 		});
 	}, [conditionalTagsPostId]);
 
-	const ConditionalTagsItem = ({ index }) => {
-		if (!formFields) {
-			return null;
-		}
-
-		const fieldValue = conditionalTagsRulesForms?.[index]?.[0];
-		const optionsItem = formFields?.find((item) => item.value === fieldValue)?.subItems ?? [];
-
-		return (
-			<>
-				<Select
-					value={fieldValue}
-					options={formFields}
-					onChange={(value) => {
-						conditionalTagsRulesForms[index][0] = value;
-						setAttributes({
-							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms],
-						});
-					}}
-					simpleValue
-					noSearch
-				/>
-
-				{optionsItem?.length > 0 && (
-					<Select
-						value={conditionalTagsRulesForms?.[index]?.[2]}
-						options={optionsItem.map((item) => {
-							if (item.value === '') {
-								return {
-									...item,
-									label: __('All fields', 'eightshift-forms'),
-								};
-							}
-
-							return item;
-						})}
-						onChange={(value) => {
-							conditionalTagsRulesForms[index][2] = value;
-							setAttributes({
-								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms],
-							});
-						}}
-						simpleValue
-						noSearch
-					/>
-				)}
-
-				<OptionSelect
-					value={conditionalTagsRulesForms?.[index]?.[1]}
-					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_LABELS)}
-					onChange={(value) => {
-						conditionalTagsRulesForms[index][1] = value;
-						setAttributes({
-							[getAttrKey('conditionalTagsAction', attributes, manifest)]: [...conditionalTagsRulesForms],
-						});
-					}}
-				/>
-
-				<Button
-					icon={trash}
-					onClick={() => {
-						conditionalTagsRulesForms.splice(index, 1);
-						setAttributes({
-							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms],
-						});
-					}}
-					label={__('Remove', 'eightshift-forms')}
-				/>
-			</>
-		);
-	};
-
 	return (
-		<ContainerPanel
-			title={__('Field visibility overrides', 'eightshift-forms')}
-			icon={conditionalVisibility}
-			use={conditionalTagsUse}
-			closable
-			onUseChange={(value) => {
-				setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });
-
-				if (!value) {
-					setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined });
-					setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: undefined });
-				} else {
-					setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [] });
-				}
-			}}
-			actions={
-				<Button onClick={() => setIsModalOpen(true)}>
-					{conditionalTagsRulesForms?.length > 0
-						? __('Edit rules', 'eightshift-forms')
-						: __('Add rule', 'eightshift-forms')}
-				</Button>
-			}
-		>
-			<ContainerGroup hidden={!conditionalTagsUse}>
-				<RichLabel
-					icon={conditionH}
-					label={__('Rules', 'eightshift-forms')}
-					// Translators: %d refers to the number of active rules
-					subtitle={
-						conditionalTagsRulesForms?.length > 0 &&
-						sprintf(__('%d added', 'eightshift-forms'), conditionalTagsRulesForms.length)
-					}
-				/>
-			</ContainerGroup>
-
-			<Modal
-				open={isModalOpen}
-				onOpenChange={(value) => setIsModalOpen(value)}
-				title={
-					<RichLabel
-						icon={visibilityAlt}
-						label={__('Field visibility overrides', 'eightshift-forms')}
-					/>
-				}
-				actions={
-					<Button
-						type='selected'
-						slot='close'
-					>
-						{__('Close', 'eightshift-forms')}
-					</Button>
-				}
+		<>
+			<Container
+				standalone
+				elevated
+				accent
 			>
-				<Notice
-					label={__(
-						'It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.',
-						'eightshift-forms',
-					)}
-					type={'warning'}
+				<Toggle
+					icon={visibilityAlt}
+					label={__('Field visibility overrides', 'eightshift-forms')}
+					onChange={(value) => {
+						if (value) {
+							setAttributes({
+								[getAttrKey('conditionalTagsUse', attributes, manifest)]: value,
+								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [],
+							});
+						} else {
+							setAttributes({
+								[getAttrKey('conditionalTagsUse', attributes, manifest)]: value,
+								[getAttrKey('conditionalTagsAction', attributes, manifest)]: undefined,
+								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: undefined,
+							});
+						}
+					}}
+					checked={conditionalTagsUse}
 				/>
+			</Container>
 
-				{conditionalTagsRulesForms.length > 0 && (
-					<div>
-						<span>{__('Field', 'eightshift-forms')}</span>
-						<span>{__('Visibility', 'eightshift-forms')}</span>
-					</div>
-				)}
+			<ContainerGroup>
+				<Container centered>
+					<BaseControl
+						icon={optionListAlt}
+						label={__('Rules', 'eightshift-forms')}
+						className='esf:w-full'
+						inline
+					>
+						<HelpTooltip>
+							{__(
+								'It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.',
+								'eightshift-forms',
+							)}
 
-				<div>
-					{conditionalTagsRulesForms?.map((_, index) => {
-						return (
-							<div key={index}>
-								<ConditionalTagsItem index={index} />
-							</div>
-						);
-					})}
-				</div>
+							<br />
+							<br />
 
-				<Button
-					icon={plusCircleFillAlt}
-					onClick={() =>
+							{__(
+								"If you can't find a field, make sure the form is saved, and all fields have a name set.",
+								'eightshift-forms',
+							)}
+						</HelpTooltip>
+					</BaseControl>
+				</Container>
+
+				<ItemCollection
+					hidden={!formFields}
+					items={conditionalTagsRulesForms.map(([field, action, fieldOption]) => ({
+						field,
+						action,
+						fieldOption,
+					}))}
+					onChange={(items) => {
 						setAttributes({
-							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [
-								...conditionalTagsRulesForms,
-								[formFields?.[0]?.value ?? '', 'show', ''],
-							],
-						})
-					}
+							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: items.map((item) => [
+								item.field,
+								item.action,
+								item.fieldOption,
+							]),
+						});
+					}}
 				>
-					{__('Add visibility rule', 'eightshift-forms')}
-				</Button>
-
-				<RichLabel
-					icon={lightBulb}
-					label={__(
-						"If you can't find a field, make sure the form is saved, and all fields have a name set.",
-						'eightshift-forms',
+					{(item) => (
+						<ConditionalTagsItem
+							item={item}
+							formFields={formFields}
+						/>
 					)}
-				/>
-			</Modal>
-		</ContainerPanel>
+				</ItemCollection>
+
+				<Container
+					lessSpaceStart
+					lessSpaceEnd
+				>
+					<Button
+						aria-label={__('Add rule', 'eightshift-forms')}
+						icon={plusCircle}
+						onClick={() =>
+							setAttributes({
+								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [
+									...conditionalTagsRulesForms,
+									[formFields?.[0]?.value ?? '', 'show', ''],
+								],
+							})
+						}
+						className='esf:w-full'
+					>
+						{__('Rule', 'eightshift-forms')}
+					</Button>
+				</Container>
+			</ContainerGroup>
+		</>
 	);
 };

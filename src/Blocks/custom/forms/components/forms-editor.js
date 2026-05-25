@@ -1,11 +1,12 @@
 import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
-import { form } from '@eightshift/ui-components/icons';
-import { __, sprintf } from '@wordpress/i18n';
-import { Placeholder } from '@wordpress/components';
+import { form, globeAnchor } from '@eightshift/ui-components/icons';
+import { __ } from '@wordpress/i18n';
 import { FormEditButton } from '../../../components/utils';
+import { Container, ContainerGroup, Notice, RichLabel, BaseControl } from '@eightshift/ui-components';
+import { upperFirst } from '@eightshift/ui-components/utilities';
 import manifest from '../manifest.json';
 
-export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOptions }) => {
+export const FormsEditor = ({ attributes, preview }) => {
 	const { isGeoPreview } = preview;
 
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
@@ -14,55 +15,83 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 
 	if (formsFormPostId?.length < 1) {
 		return (
-			<Placeholder
-				icon={form}
-				label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-			/>
+			<div className='esf:p-8 es:font-sans'>
+				<Notice
+					type='placeholder'
+					icon={form}
+					label={__('Eightshift Forms', 'eightshift-forms')}
+					subtitle={__('Select a form in the block options', 'eightshift-forms')}
+					className='esf:w-fit'
+				/>
+			</div>
 		);
 	}
 
+	const formId = formsFormPostIdRaw?.id ?? formsFormPostIdRaw?.value;
+
 	return (
-		<>
-			{isGeoPreview && <div>{__('Original form', 'eightshift-forms')}</div>}
+		<div className='esf:p-8 es:font-sans'>
+			<ContainerGroup className='esf:max-w-sm'>
+				<Container
+					elevated
+					centered
+					compact
+					accent
+				>
+					<span className='esf:text-xs esf:font-stretch-110% esf:font-normal!'>
+						{__('Eightshift Forms', 'eightshift-forms')}
+					</span>
+				</Container>
 
-			<Placeholder
-				icon={form}
-				label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-				isColumnLayout={true}
+				<Container centered>
+					<BaseControl
+						icon={form}
+						label={formsFormPostIdRaw?.label}
+						subtitle={upperFirst(formsFormPostIdRaw?.metadata)}
+						className='esf:w-full'
+						inline
+					>
+						<FormEditButton formId={formId} />
+					</BaseControl>
+				</Container>
+
+				<Container
+					hidden={!isGeoPreview}
+					centered
+				>
+					<RichLabel
+						icon={globeAnchor}
+						label={__('Original form', 'eightshift-forms')}
+						subtitle={__('Geolocation', 'eightshift-forms')}
+					/>
+				</Container>
+			</ContainerGroup>
+
+			<ContainerGroup
+				hidden={!isGeoPreview || formsFormGeolocationAlternatives?.length < 1}
+				label={__('Geolocation alternatives', 'eightshift-forms')}
+				className='esf:max-w-sm'
 			>
-				{sprintf(
-					__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'),
-					formsFormPostIdRaw?.label,
-					formsFormPostIdRaw?.metadata,
-				)}
-				<br />
-				<FormEditButton formId={formsFormPostIdRaw?.id} />
-			</Placeholder>
-
-			{isGeoPreview && (
-				<>
-					<div>{__('Geolocation alternatives', 'eightshift-forms')}</div>
-					{formsFormGeolocationAlternatives.map((item, index) => {
-						return (
-							<Placeholder
-								key={index}
+				{formsFormGeolocationAlternatives.map((item, index) => {
+					return (
+						<Container
+							key={index}
+							icon={form}
+							label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
+						>
+							<BaseControl
 								icon={form}
-								label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
+								label={`${item?.form?.label} (${item?.form?.metadata})`}
+								subtitle={item.geoLocation.join(', ')}
+								subtitleClassName='es:font-mono'
+								inline
 							>
-								{sprintf(
-									__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'),
-									item?.form?.label,
-									item?.form?.metadata,
-								)}
-								<br />
-								{sprintf(__('Geolocation used: "%s"', 'eightshift-forms'), item.geoLocation.join(', '))}
-								<br />
-								<FormEditButton formId={item?.form?.id} />
-							</Placeholder>
-						);
-					})}
-				</>
-			)}
-		</>
+								<FormEditButton formId={item?.form?.id ?? item?.form?.value} />
+							</BaseControl>
+						</Container>
+					);
+				})}
+			</ContainerGroup>
+		</div>
 	);
 };

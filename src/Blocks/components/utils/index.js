@@ -610,10 +610,12 @@ export const FormEditButton = ({ formId }) => {
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${editFormUrl}&post=${formId}`}
+			onPress={() => window.open(`${wpAdminUrl}${editFormUrl}&post=${formId}`, '_blank')}
 			icon={edit}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Edit fields', 'eightshift-forms')}
+			{__('Edit', 'eightshift-forms')}
 		</Button>
 	);
 };

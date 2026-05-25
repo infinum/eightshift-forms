@@ -2,42 +2,96 @@
 
 import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
-import { MediaPlaceholder } from '@wordpress/block-editor';
+import { __ } from '@wordpress/i18n';
 import { ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { getAttrKey, checkAttr, props, fetchFromWpRest } from '@eightshift/frontend-libs-tailwind/scripts';
+import {
+	getAttrKey,
+	checkAttr,
+	props,
+	fetchFromWpRest,
+	ManageFileButton,
+} from '@eightshift/frontend-libs-tailwind/scripts';
 import {
 	BaseControl,
 	MultiSelect,
 	AsyncSelect,
-	RichLabel,
-	Toggle,
 	Repeater,
 	RepeaterItem,
 	Button,
 	ContainerPanel,
 	InputField,
-	Modal,
+	Container,
+	Tabs,
+	TabList,
+	Tab,
+	TabPanel,
+	ButtonGroup,
+	ContainerGroup,
+	OptionSelect,
+	FilePickerShell,
+	ToggleButton,
+	ItemCollection,
+	HStack,
 } from '@eightshift/ui-components';
 import {
+	blockParts,
 	codeVariable,
-	emptyCircle,
+	design,
 	file,
-	image,
+	form,
 	locationSettings,
-	paletteColor,
-	plusCircleFillAlt,
-	tools,
+	moreH,
 	trash,
 	visible,
+	branch,
+	link,
+	optionListAlt,
+	plusCircle,
+	locationAllow,
+	fieldReadonly,
 } from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton } from '../../../components/utils';
 import { getRestUrl, getUtilsIcons } from '../../../components/form/assets/state-init';
 import manifest from '../manifest.json';
-import { Spacer } from '@eightshift/ui-components';
 import { location } from '@eightshift/ui-components/icons';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
+
+const FilePicker = ({ onChange, fileUrl, fileId }) => {
+	return (
+		<FilePickerShell
+			url={fileUrl}
+			type='file'
+			noUrlContent={
+				<>
+					<ManageFileButton onChange={onChange} />
+
+					<ManageFileButton
+						onChange={onChange}
+						type='upload'
+					/>
+				</>
+			}
+		>
+			<ManageFileButton
+				type='replace'
+				onChange={onChange}
+				currentId={fileId}
+				buttonProps={{
+					className: 'es:grow',
+				}}
+			/>
+
+			<Button
+				onPress={() => onChange({ id: undefined, url: undefined })}
+				className='es:grow'
+			>
+				{__('Remove', 'eightshift-frontend-libs-tailwind')}
+			</Button>
+		</FilePickerShell>
+	);
+};
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const { isGeoPreview, setIsGeoPreview } = preview;
@@ -52,8 +106,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsVariationData = checkAttr('formsVariationData', attributes, manifest);
 	const formsVariationDataFiles = checkAttr('formsVariationDataFiles', attributes, manifest);
 
-	const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
-	const [isResultOutputModalOpen, setIsResultOutputModalOpen] = useState(false);
 	const [geoFormFields, setGeoFormFields] = useState([]);
 
 	useEffect(() => {
@@ -92,536 +144,562 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 	return (
 		<>
-			<ContainerPanel>
-				<AsyncSelect
-					value={Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : { id: formsFormPostId }}
-					fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
-						noCache: true,
-						processLabel: ({ title: { rendered: label } }) => label,
-						fields: 'id,title,integration_type',
-						processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
-							id,
-							value: id,
-							label,
-							metadata,
-						}),
-					})}
-					customValueDisplay={(item) => (
-						<span className='esf:flex esf:items-center esf:gap-10'>
-							<span
-								dangerouslySetInnerHTML={{
-									__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
-								}}
-							/>
-							{item?.label}
-						</span>
-					)}
-					customMenuOption={(item) => (
-						<span className='esf:flex esf:items-center esf:gap-10'>
-							<span
-								dangerouslySetInnerHTML={{
-									__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
-								}}
-							/>
-							{item?.label}
-						</span>
-					)}
-					onChange={(value) => {
-						setAttributes({
-							[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
-								id: value?.id,
-								label: value?.metadata?.label,
-								value: value?.metadata?.value,
-								metadata: value?.metadata?.metadata,
-							},
-							[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value.toString()}`,
-						});
-					}}
-				/>
+			<Tabs>
+				<TabList>
+					<Tab
+						icon={form}
+						label={__('Form', 'eightshift-forms')}
+					/>
 
-				{formsFormPostId && (
-					<BaseControl>
-						<div>
+					<Tab
+						icon={blockParts}
+						label={__('Result outputs', 'eightshift-forms')}
+						invisible={!formsUseCustomResultOutputFeature || !formsFormPostId}
+					/>
+
+					<Tab
+						icon={location}
+						label={__('Geolocation', 'eightshift-forms')}
+						invisible={!formsUseGeolocation || !formsFormPostId}
+					/>
+
+					<Tab
+						icon={fieldReadonly}
+						label={__('Field visibility', 'eightshift-forms')}
+						invisible={!formsFormPostId}
+					/>
+
+					<Tab
+						icon={moreH}
+						label={__('Advanced', 'eightshift-forms')}
+						invisible={!formsFormPostId}
+					/>
+				</TabList>
+
+				<TabPanel>
+					<ContainerPanel>
+						<AsyncSelect
+							aria-label={__('Form to display', 'eightshift-forms')}
+							value={Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : { id: formsFormPostId }}
+							fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
+								noCache: true,
+								processLabel: ({ title: { rendered: label } }) => label,
+								fields: 'id,title,integration_type',
+								processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+									id,
+									value: id,
+									label,
+									metadata,
+								}),
+							})}
+							customValueDisplay={(item) => (
+								<span className='esf:flex esf:items-center esf:gap-10'>
+									<span
+										dangerouslySetInnerHTML={{
+											__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+										}}
+									/>
+									{item?.label}
+								</span>
+							)}
+							customMenuOption={(item) => (
+								<span className='esf:flex esf:items-center esf:gap-10'>
+									<span
+										dangerouslySetInnerHTML={{
+											__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+										}}
+									/>
+									{item?.label}
+								</span>
+							)}
+							onChange={(value) => {
+								setAttributes({
+									[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
+										id: value?.id,
+										label: value?.metadata?.label,
+										value: value?.metadata?.value,
+										metadata: value?.metadata?.metadata,
+									},
+									[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value.toString()}`,
+								});
+							}}
+						/>
+
+						<ButtonGroup hidden={!formsFormPostId}>
 							<FormEditButton formId={formsFormPostId} />
 							<SettingsButton formId={formsFormPostId} />
 							<LocationsButton formId={formsFormPostId} />
-						</div>
-					</BaseControl>
-				)}
+						</ButtonGroup>
+					</ContainerPanel>
+				</TabPanel>
 
-				<Spacer
-					border
-					icon={tools}
-					text={__('Advanced', 'eightshift-forms')}
-				/>
+				<TabPanel>
+					<ContainerPanel>
+						<Tabs type='chips'>
+							<TabList>
+								<Tab label={__('Simple (key/value)', 'eightshift-forms')} />
+								<Tab label={__('Custom', 'eightshift-forms')} />
+							</TabList>
 
-				<InputField
-					icon={codeVariable}
-					label={__('Additional type specifier', 'eightshift-forms')}
-					help={__('Additional data type selectors', 'eightshift-forms')}
-					value={formsFormDataTypeSelector}
-					onChange={(value) =>
-						setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })
-					}
-				/>
-
-				{formsStyleOptions?.length > 0 && (
-					<MultiSelect
-						icon={paletteColor}
-						label={__('Form style preset', 'eightshift-forms')}
-						value={formsStyle}
-						options={formsStyleOptions}
-						onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
-						simpleValue
-					/>
-				)}
-			</ContainerPanel>
-
-			<Spacer border />
-
-			{formsUseCustomResultOutputFeature && (
-				<ContainerPanel
-					title={__('Results output', 'eightshift-forms')}
-					icon={paletteColor}
-					closable
-				>
-					<Repeater
-						noReordering
-						icon={paletteColor}
-						label={__('Variation', 'eightshift-forms')}
-						items={formsVariation}
-						attributeName={getAttrKey('formsVariation', attributes, manifest)}
-						setAttributes={setAttributes}
-					>
-						{formsVariation.map((item, index) => (
-							<RepeaterItem
-								key={index}
-								icon={paletteColor}
-								title={item?.title}
-							>
-								<div>
-									<InputField
-										value={item.title}
-										label={__('Key', 'eightshift-forms')}
-										onChange={(value) => {
-											const newArray = [...formsVariation];
-											newArray[index].title = value;
-
-											setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+							<TabPanel>
+								<ContainerGroup>
+									<ItemCollection
+										icon={branch}
+										label={__('Variations', 'eightshift-forms')}
+										items={formsVariation}
+										onChange={(value) => setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: value })}
+										addDefaultItem={{
+											title: '',
+											slug: '',
 										}}
-									/>
-									<InputField
-										value={item.slug}
-										label={__('Value', 'eightshift-forms')}
-										onChange={(value) => {
-											const newArray = [...formsVariation];
-											newArray[index].slug = value;
+										noExpandAllButton
+									>
+										{(item) => {
+											const { title, slug, updateData, deleteItem } = item;
 
-											setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+											return (
+												<Container className='esf:group'>
+													<HStack noWrap>
+														<InputField
+															aria-label={__('Key', 'eightshift-forms')}
+															placeholder={__('Key', 'eightshift-forms')}
+															value={title}
+															onChange={(value) => updateData({ title: value })}
+															className='esf:max-w-96!'
+															monospaceFont
+														/>
+
+														<span>:</span>
+
+														<InputField
+															aria-label={__('Value', 'eightshift-forms')}
+															placeholder={__('Value', 'eightshift-forms')}
+															value={slug}
+															onChange={(value) => updateData({ slug: value })}
+															monospaceFont
+															className='esf:max-w-120!'
+														/>
+
+														<Button
+															icon={trash}
+															onClick={deleteItem}
+															label={__('Remove', 'eightshift-forms')}
+															size='small'
+															type='dangerGhost'
+															className='esf:ml-auto esf:not-group-hover:not-group-has-focus-visible:opacity-0'
+														/>
+													</HStack>
+												</Container>
+											);
 										}}
-									/>
-								</div>
-							</RepeaterItem>
-						))}
-					</Repeater>
+									</ItemCollection>
 
-					<>
-						<Button
-							variant='secondary'
-							onClick={() => setIsResultOutputModalOpen(true)}
-						>
-							{__('Edit custom result output', 'eightshift-forms')}
-						</Button>
+									<Container
+										lessSpaceStart
+										lessSpaceEnd
+									>
+										<Button
+											aria-label={__('Add variation', 'eightshift-forms')}
+											icon={plusCircle}
+											onClick={() =>
+												setAttributes({
+													[getAttrKey('formsVariation', attributes, manifest)]: [
+														...formsVariation,
+														{ title: '', slug: '' },
+													],
+												})
+											}
+											className='esf:w-full'
+										>
+											{__('Variation', 'eightshift-forms')}
+										</Button>
+									</Container>
+								</ContainerGroup>
+							</TabPanel>
 
-						{isResultOutputModalOpen && (
-							<Modal
-								size='large'
-								title={
-									<RichLabel
-										icon={locationSettings}
-										label={__('Results output', 'eightshift-forms')}
-									/>
-								}
-								onRequestClose={() => setIsResultOutputModalOpen(false)}
-							>
-								<InputField
-									value={formsVariationData?.title}
-									placeholder={__('Title', 'eightshift-forms')}
-									onChange={(value) => {
-										const newArray = { ...formsVariationData };
-										newArray.title = value;
+							<TabPanel>
+								<ContainerGroup title={__('Custom variation', 'eightshift-forms')}>
+									<Container>
+										<InputField
+											label={__('Title', 'eightshift-forms')}
+											value={formsVariationData?.title}
+											onChange={(value) => {
+												const newArray = { ...formsVariationData };
+												newArray.title = value;
 
-										setAttributes({ [getAttrKey('formsVariationData', attributes, manifest)]: newArray });
-									}}
-								/>
+												setAttributes({ [getAttrKey('formsVariationData', attributes, manifest)]: newArray });
+											}}
+											inline
+										/>
+									</Container>
 
-								<InputField
-									value={formsVariationData?.subtitle}
-									placeholder={__('Subtitle', 'eightshift-forms')}
-									onChange={(value) => {
-										const newArray = { ...formsVariationData };
-										newArray.subtitle = value;
+									<Container>
+										<InputField
+											label={__('Subtitle', 'eightshift-forms')}
+											value={formsVariationData?.subtitle}
+											onChange={(value) => {
+												const newArray = { ...formsVariationData };
+												newArray.subtitle = value;
 
-										setAttributes({ [getAttrKey('formsVariationData', attributes, manifest)]: newArray });
-									}}
-								/>
+												setAttributes({ [getAttrKey('formsVariationData', attributes, manifest)]: newArray });
+											}}
+											inline
+										/>
+									</Container>
+								</ContainerGroup>
 
 								<Repeater
 									noReordering
-									icon={emptyCircle}
-									label={__('Add a new item', 'eightshift-forms')}
+									label={__('Values', 'eightshift-forms')}
 									items={formsVariationDataFiles}
-									attributeName={getAttrKey('formsVariationDataFiles', attributes, manifest)}
-									setAttributes={setAttributes}
+									onChange={(value) =>
+										setAttributes({
+											[getAttrKey('formsVariationDataFiles', attributes, manifest)]: value,
+										})
+									}
 								>
-									{formsVariationDataFiles.map((item, index) => (
-										<RepeaterItem
-											key={index}
-											icon={emptyCircle}
-											title={item?.title}
-										>
-											<div>
-												<InputField
-													value={item.label}
-													placeholder={__('Label', 'eightshift-forms')}
-													onChange={(value) => {
-														const newArray = [...formsVariationDataFiles];
-														newArray[index].label = value;
+									{(item) => {
+										const { title, label, itemIndex: index, updateData } = item;
 
-														setAttributes({
-															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
-														});
-													}}
-												/>
-												<InputField
-													value={item.title}
-													placeholder={__('Title', 'eightshift-forms')}
-													onChange={(value) => {
-														const newArray = [...formsVariationDataFiles];
-														newArray[index].title = value;
+										return (
+											<RepeaterItem label={title || __('New value', 'eightshift-forms')}>
+												<ContainerGroup label={__('Variation', 'eightshift-forms')}>
+													<Container>
+														<InputField
+															label={__('Label', 'eightshift-forms')}
+															value={label}
+															onChange={(value) => updateData({ label: value })}
+															inline
+														/>
+													</Container>
 
-														setAttributes({
-															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
-														});
-													}}
-												/>
-											</div>
+													<Container>
+														<InputField
+															label={__('Title', 'eightshift-forms')}
+															value={title}
+															onChange={(value) => updateData({ title: value })}
+															inline
+														/>
+													</Container>
+												</ContainerGroup>
 
-											<Toggle
-												checked={item.asFile}
-												label={__('Use this item as a file or as a link', 'eightshift-forms')}
-												onChange={(value) => {
-													const newArray = [...formsVariationDataFiles];
-													newArray[index].asFile = value;
+												<ContainerGroup>
+													<Container>
+														<OptionSelect
+															icon={optionListAlt}
+															label={__('Type', 'eightshift-forms')}
+															value={item.asFile ? 'file' : 'url'}
+															options={[
+																{ value: 'url', label: __('Link', 'eightshift-forms'), icon: link },
+																{ value: 'file', label: __('File', 'eightshift-forms'), icon: file },
+															]}
+															onChange={(value) => {
+																if (value === 'file') {
+																	updateData({ url: undefined, asFile: true });
+																} else {
+																	updateData({ file: undefined, asFile: false });
+																}
+															}}
+															inline
+														/>
+													</Container>
 
-													if (value) {
-														delete newArray[index].url;
-													} else {
-														delete newArray[index].file;
-													}
-
-													setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
-												}}
-											/>
-
-											{!formsVariationDataFiles[index].asFile && (
-												<InputField
-													placeholder={__('Link URL', 'eightshift-forms')}
-													value={item.url}
-													onChange={(value) => {
-														const newArray = [...formsVariationDataFiles];
-														newArray[index].url = value;
-
-														setAttributes({
-															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
-														});
-													}}
-												/>
-											)}
-
-											{formsVariationDataFiles[index].asFile && (
-												<>
-													{!formsVariationDataFiles[index].file && (
-														<MediaPlaceholder
-															icon={image}
-															onSelect={(value) => {
+													<Container hidden={item.asFile}>
+														<InputField
+															icon={link}
+															label={__('URL', 'eightshift-forms')}
+															value={item.url}
+															onChange={(value) => {
 																const newArray = [...formsVariationDataFiles];
-																newArray[index].file = {
-																	id: value.id,
-																	title: value.title,
-																	url: value.url,
-																};
+																newArray[index].url = value;
 
 																setAttributes({
 																	[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
 																});
 															}}
+															monospaceFont
+															inline
 														/>
-													)}
+													</Container>
 
-													{formsVariationDataFiles[index]?.file && (
-														<div>
-															<div>
-																{file}
-																{formsVariationDataFiles[index]?.file?.title}
-															</div>
-															<Button
-																onClick={() => {
-																	const newArray = [...formsVariationDataFiles];
-																	delete newArray[index]?.file;
-																	setAttributes({
-																		[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
-																	});
-																}}
-																icon={trash}
-															/>
-														</div>
-													)}
-												</>
-											)}
+													<Container hidden={!item.asFile}>
+														<FilePicker
+															onChange={({ id, url, title }) => {
+																updateData({
+																	file: {
+																		id,
+																		url,
+																		title,
+																	},
+																});
+															}}
+															fileId={item?.file?.id}
+															fileUrl={item?.file?.url?.substring(item?.file?.url?.lastIndexOf('/') + 1)}
+														/>
+													</Container>
+												</ContainerGroup>
 
-											<div>
-												<InputField
-													placeholder={__('Field Name', 'eightshift-forms')}
-													value={item.fieldName}
-													onChange={(value) => {
-														const newArray = [...formsVariationDataFiles];
-														newArray[index].fieldName = value;
+												<ContainerGroup label={__('Field', 'eightshift-forms')}>
+													<Container>
+														<InputField
+															label={__('Name', 'eightshift-forms')}
+															value={item.fieldName}
+															onChange={(value) => {
+																const newArray = [...formsVariationDataFiles];
+																newArray[index].fieldName = value;
 
-														setAttributes({
-															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
-														});
-													}}
-												/>
-												<InputField
-													value={item.fieldValue}
-													placeholder={__('Field Value', 'eightshift-forms')}
-													onChange={(value) => {
-														const newArray = [...formsVariationDataFiles];
-														newArray[index].fieldValue = value;
+																setAttributes({
+																	[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+																});
+															}}
+															inline
+														/>
+													</Container>
 
-														setAttributes({
-															[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
-														});
-													}}
-												/>
-											</div>
-										</RepeaterItem>
-									))}
+													<Container>
+														<InputField
+															label={__('Value', 'eightshift-forms')}
+															value={item.fieldValue}
+															onChange={(value) => {
+																const newArray = [...formsVariationDataFiles];
+																newArray[index].fieldValue = value;
+
+																setAttributes({
+																	[getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray,
+																});
+															}}
+															monospaceFont
+															inline
+														/>
+													</Container>
+												</ContainerGroup>
+											</RepeaterItem>
+										);
+									}}
 								</Repeater>
-							</Modal>
-						)}
-					</>
-				</ContainerPanel>
-			)}
+							</TabPanel>
+						</Tabs>
+					</ContainerPanel>
+				</TabPanel>
 
-			{formsUseGeolocation && (
-				<ContainerPanel
-					title={__('Geolocation', 'eightshift-forms')}
-					icon={location}
-					closable
-				>
-					<MultiSelect
-						label={__('Show form only if in these countries:', 'eightshift-forms')}
-						help={
-							formsFormGeolocationAlternatives?.length < 1 &&
-							__("If you can't find a country, start typing its name while the dropdown is open.", 'eightshift-forms')
-						}
-						value={formsFormGeolocationAlternatives?.length > 0 ? [] : formsFormGeolocation}
-						options={geoFormFields}
-						onChange={(value) => setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })}
-						cacheOptions={false}
-						simpleValue
-						disabled={formsFormGeolocationAlternatives?.length > 0}
-						placeholder={
-							formsFormGeolocationAlternatives?.length > 0 && __('Overriden by advanced rules', 'eightshift-forms')
-						}
-					/>
+				<TabPanel>
+					<ContainerPanel>
+						<Container standalone>
+							<MultiSelect
+								icon={locationAllow}
+								label={__('Show form in', 'eightshift-forms')}
+								value={formsFormGeolocationAlternatives?.length > 0 ? [] : formsFormGeolocation}
+								options={geoFormFields}
+								onChange={(value) =>
+									setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })
+								}
+								disabled={formsFormGeolocationAlternatives?.length > 0}
+								placeholder={
+									formsFormGeolocationAlternatives?.length > 0
+										? __('Overriden by advanced rules', 'eightshift-forms')
+										: __('Select locations', 'eightshift-forms')
+								}
+								simpleValue
+								noMinWidth
+								inline
+							/>
+						</Container>
 
-					<BaseControl
-						icon={locationSettings}
-						label={__('Advanced rules', 'eightshift-forms')}
-						// Translators: %d refers to the number of active rules
-						subtitle={
-							formsFormGeolocationAlternatives?.length > 0 &&
-							sprintf(__('%d added', 'eightshift-forms'), formsFormGeolocationAlternatives.length)
-						}
-					>
-						<Button
-							variant='tertiary'
-							onClick={() => setIsGeoModalOpen(true)}
-						>
-							{formsFormGeolocationAlternatives?.length > 0
-								? __('Edit', 'eightshift-forms')
-								: __('Add', 'eightshift-forms')}
-						</Button>
-					</BaseControl>
-
-					{formsFormGeolocationAlternatives?.length > 0 && (
-						<Toggle
-							icon={visible}
-							label={__('Rule preview', 'eightshift-forms')}
-							checked={isGeoPreview}
-							onChange={(value) => setIsGeoPreview(value)}
-						/>
-					)}
-
-					{isGeoModalOpen && (
-						<Modal
-							title={
-								<RichLabel
+						<ContainerGroup>
+							<Container centered>
+								<BaseControl
 									icon={locationSettings}
-									label={__('Advanced rules', 'eightshift-forms')}
-								/>
-							}
-							onRequestClose={() => setIsGeoModalOpen(false)}
-						>
-							<p>
-								{__(
-									"Geolocation rules allow you to display alternate forms based on the user's location.",
-									'eightshift-forms',
-								)}
-							</p>
-							<p>
-								{__(
-									'If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.',
-									'eightshift-forms',
-								)}
-							</p>
-
-							{geolocationApi && (
-								<p>
-									{__('You can find complete list of countries and regions on this', 'eightshift-forms')}{' '}
-									<ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.
-								</p>
-							)}
-
-							<br />
-
-							{formsFormGeolocationAlternatives?.length > 0 && (
-								<div>
-									<span>{__('Form to display', 'eightshift-forms')}</span>
-									<span>{__('Countries to show the form in', 'eightshift-forms')}</span>
-								</div>
-							)}
-
-							{formsFormGeolocationAlternatives?.map((_, index) => {
-								return (
-									<div key={index}>
-										<AsyncSelect
-											value={
-												Object.keys(formsFormGeolocationAlternatives?.[index]?.form ?? {}).length
-													? formsFormGeolocationAlternatives?.[index]?.form
-													: { id: formsFormGeolocationAlternatives?.[index]?.formId }
-											}
-											fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
-												noCache: true,
-												processLabel: ({ title: { rendered: label } }) => label,
-												fields: 'id,title,integration_type',
-												processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
-													id,
-													value: id,
-													label,
-													metadata,
-												}),
-											})}
-											customValueDisplay={(item) => (
-												<span className='esf:flex esf:items-center esf:gap-10'>
-													<span
-														dangerouslySetInnerHTML={{
-															__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
-														}}
-													/>
-													{item?.label}
-												</span>
+									label={__('Advanced geolocation rules', 'eightshift-forms')}
+									className='esf:w-full'
+									inline
+								>
+									<HelpTooltip className='esf:flex esf:flex-col esf:gap-12'>
+										<span>
+											{__(
+												"Geolocation rules allow you to display alternate forms based on the user's location.",
+												'eightshift-forms',
 											)}
-											customMenuOption={(item) => (
-												<span className='esf:flex esf:items-center esf:gap-10'>
-													<span
-														dangerouslySetInnerHTML={{
-															__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
-														}}
-													/>
-													{item?.label}
-												</span>
+										</span>
+
+										<span>
+											{__(
+												'If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.',
+												'eightshift-forms',
 											)}
-											onChange={(value) => {
-												const newData = [...formsFormGeolocationAlternatives];
-												newData[index].form = {
-													id: value?.id,
-													label: value?.metadata?.label,
-													value: value?.metadata?.value,
-													metadata: value?.metadata?.metadata,
-												};
-												newData[index].formId = value.value.toString();
-												setAttributes({
-													[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: newData,
-												});
-											}}
-										/>
+										</span>
 
-										<MultiSelect
-											value={formsFormGeolocationAlternatives?.[index]?.geoLocation}
-											options={geoFormFields}
-											onChange={(value) => {
-												const newData = [...formsFormGeolocationAlternatives];
-												newData[index].geoLocation = value;
-												setAttributes({
-													[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: newData,
-												});
-											}}
-											simpleValue
-										/>
+										{geolocationApi && (
+											<span>
+												{__('You can find complete list of countries and regions on this', 'eightshift-forms')}{' '}
+												<ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.
+											</span>
+										)}
+									</HelpTooltip>
+								</BaseControl>
+							</Container>
 
-										<Button
-											icon={trash}
-											onClick={() => {
-												formsFormGeolocationAlternatives.splice(index, 1);
-												setAttributes({
-													[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [
-														...formsFormGeolocationAlternatives,
-													],
-												});
-											}}
-											label={__('Remove', 'eightshift-forms')}
-										/>
-									</div>
-								);
-							})}
-
-							<Button
-								icon={plusCircleFillAlt}
-								onClick={() =>
+							<ItemCollection
+								items={formsFormGeolocationAlternatives}
+								onChange={(value) =>
 									setAttributes({
-										[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [
-											...formsFormGeolocationAlternatives,
-											{ formId: '', geoLocation: [] },
-										],
+										[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: value,
 									})
 								}
 							>
-								{__('Add rule', 'eightshift-forms')}
-							</Button>
+								{(item) => {
+									const { form, geoLocation, updateData, deleteItem } = item;
 
-							<div>
+									return (
+										<Container lessSpaceEnd>
+											<div className='esf:grid esf:grid-cols-[auto_1fr_auto] esf:grid-rows-2 esf:gap-y-4 esf:gap-x-8 esf:items-center esf:group'>
+												<span className='esf:col-1 esf:row-1'>{__('Show', 'eightshift-forms')}</span>
+
+												<AsyncSelect
+													className='esf:col-2 esf:row-1'
+													value={Object.keys(form ?? {}).length ? form : { id: item?.formId }}
+													fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
+														noCache: true,
+														processLabel: ({ title: { rendered: label } }) => label,
+														fields: 'id,title,integration_type',
+														processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+															id,
+															value: id,
+															label,
+															metadata,
+														}),
+													})}
+													customValueDisplay={(item) => (
+														<span className='esf:flex esf:items-center esf:gap-10'>
+															<span
+																dangerouslySetInnerHTML={{
+																	__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+																}}
+															/>
+															{item?.label}
+														</span>
+													)}
+													customMenuOption={(item) => (
+														<span className='esf:flex esf:items-center esf:gap-10'>
+															<span
+																dangerouslySetInnerHTML={{
+																	__html: getUtilsIcons(item?.metadata?.metadata || 'post'),
+																}}
+															/>
+															{item?.label}
+														</span>
+													)}
+													onChange={(value) => {
+														updateData({
+															form: {
+																id: value?.id,
+																label: value?.metadata?.label,
+																value: value?.metadata?.value,
+																metadata: value?.metadata?.metadata,
+															},
+														});
+													}}
+												/>
+
+												<span className='esf:col-1 esf:row-2'>{__('if in', 'eightshift-forms')}</span>
+
+												<MultiSelect
+													className='esf:col-2 esf:row-2'
+													value={geoLocation}
+													options={geoFormFields}
+													onChange={(value) => updateData({ geoLocation: value })}
+													simpleValue
+												/>
+
+												<Button
+													icon={trash}
+													onClick={deleteItem}
+													label={__('Remove', 'eightshift-forms')}
+													className='esf:row-1 esf:col-3 esf:not-group-hover:not-group-focus-within:opacity-0'
+													type='dangerGhost'
+													size='small'
+												/>
+											</div>
+										</Container>
+									);
+								}}
+							</ItemCollection>
+
+							<Container
+								lessSpaceStart
+								lessSpaceEnd
+							>
 								<Button
-									variant='primary'
-									onClick={() => setIsGeoModalOpen(false)}
+									aria-label={__('Add rule', 'eightshift-forms')}
+									icon={plusCircle}
+									onClick={() =>
+										setAttributes({
+											[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [
+												...formsFormGeolocationAlternatives,
+												{ formId: '', geoLocation: [] },
+											],
+										})
+									}
+									className='esf:w-full'
 								>
-									{__('Close', 'eightshift-forms')}
+									{__('Rule', 'eightshift-forms')}
 								</Button>
-							</div>
-						</Modal>
-					)}
-				</ContainerPanel>
-			)}
+							</Container>
+						</ContainerGroup>
 
-			<ConditionalTagsFormsOptions
-				{...props('conditionalTags', attributes, {
-					setAttributes,
-					conditionalTagsPostId: formsFormPostId,
-				})}
-			/>
+						{formsFormGeolocationAlternatives?.length > 0 && (
+							<ToggleButton
+								icon={visible}
+								selected={isGeoPreview}
+								onChange={(value) => setIsGeoPreview(value)}
+							>
+								{__('Preview rules', 'eightshift-forms')}
+							</ToggleButton>
+						)}
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<ConditionalTagsFormsOptions
+							{...props('conditionalTags', attributes, {
+								setAttributes,
+								conditionalTagsPostId: formsFormPostId,
+							})}
+						/>
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<Container standalone>
+							<InputField
+								icon={codeVariable}
+								label={__('Additional type specifier', 'eightshift-forms')}
+								value={formsFormDataTypeSelector}
+								onChange={(value) =>
+									setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })
+								}
+								monospaceFont
+								inline
+							/>
+						</Container>
+
+						<Container
+							hidden={formsStyleOptions?.length < 1}
+							standalone
+						>
+							<MultiSelect
+								icon={design}
+								label={__('Style preset', 'eightshift-forms')}
+								value={formsStyle}
+								options={formsStyleOptions}
+								onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
+								simpleValue
+							/>
+						</Container>
+					</ContainerPanel>
+				</TabPanel>
+			</Tabs>
 		</>
 	);
 };
