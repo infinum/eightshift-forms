@@ -315,7 +315,6 @@ export const StepMultiflowOptions = (attributes) => {
 												noWrap
 											>
 												<Button
-													// icon={trash}
 													onClick={() => {
 														stepMultiflowRules.splice(index, 1);
 														setAttributes({
@@ -324,6 +323,7 @@ export const StepMultiflowOptions = (attributes) => {
 													}}
 													type='dangerGhost'
 													className='esf:ml-auto'
+													slot='close'
 												>
 													{__('Remove flow', 'eightshift-forms')}
 												</Button>
