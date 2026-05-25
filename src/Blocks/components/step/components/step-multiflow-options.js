@@ -13,6 +13,7 @@ import {
 	plusCircleFill,
 	route,
 	rows,
+	Spinner,
 	trash,
 	treeAlt,
 } from '@eightshift/ui-components/icons';
@@ -171,7 +172,7 @@ export const StepMultiflowOptions = (attributes) => {
 	const stepMultiflowPostId = checkAttr('stepMultiflowPostId', attributes, manifest);
 	const stepProgressBarUse = checkAttr('stepProgressBarUse', attributes, manifest);
 
-	const [formFields, setFormFields] = useState([]);
+	const [formFields, setFormFields] = useState(null);
 	const [formFieldsFull, setFormFieldsFull] = useState([]);
 
 	useEffect(() => {
@@ -184,6 +185,10 @@ export const StepMultiflowOptions = (attributes) => {
 			}
 		});
 	}, [stepMultiflowPostId]);
+
+	if (formFields === null) {
+		return <Spinner className='esf:size-20' />;
+	}
 
 	if (!formFields) {
 		return (
