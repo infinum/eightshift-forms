@@ -1,7 +1,8 @@
 import { TriggeredPopover } from '@eightshift/ui-components';
 import { help } from '@eightshift/ui-components/icons';
+import { clsx } from '@eightshift/ui-components/utilities';
 
-export const HelpTooltip = ({ children, icon = help, hidden = false }) => {
+export const HelpTooltip = ({ children, icon = help, hidden = false, className }) => {
 	if (!children || hidden) {
 		return null;
 	}
@@ -14,7 +15,7 @@ export const HelpTooltip = ({ children, icon = help, hidden = false }) => {
 				type: 'ghost',
 				className: 'esf:size-24!',
 			}}
-			className='esf:p-12! esf:max-w-240'
+			className={clsx('esf:p-12! esf:max-w-240', className)}
 		>
 			{children}
 		</TriggeredPopover>
