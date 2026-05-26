@@ -223,6 +223,7 @@ class Labels implements LabelsInterface
 			'validationSubmitLoggedIn' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
 			'validationFileExtensionDenied' => \__('This file type is not allowed.', 'eightshift-forms'),
 			'validationFileMimeMismatch' => \__('The file contents do not match its extension.', 'eightshift-forms'),
+			'validationFileMimeNotAllowed' => \__('This file type is not permitted on this site.', 'eightshift-forms'),
 			'validationFileScanFailed' => \__('The file could not be processed for security inspection.', 'eightshift-forms'),
 			'validationFilePdfUnsafe' => \__('This PDF contains active content (scripts, embedded files or auto-actions) and was rejected.', 'eightshift-forms'),
 			'validationFileImageUnsafe' => \__('This image is malformed or contains unexpected content.', 'eightshift-forms'),

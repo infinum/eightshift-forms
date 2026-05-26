@@ -66,6 +66,14 @@ final class FileSecurityScanner
 			return 'validationFileScanFailed';
 		}
 
+		if (!$this->isMimeRegisteredOnSite($detectedMime)) {
+			// The detected MIME is genuine, but WordPress does not register it
+			// at all (e.g. `text/xml` on a default install). Saying "contents
+			// do not match extension" would be misleading — the contents are
+			// fine, the site just does not accept this type.
+			return 'validationFileMimeNotAllowed';
+		}
+
 		if (!$this->extensionMatchesMime($extension, $detectedMime)) {
 			return 'validationFileMimeMismatch';
 		}
@@ -152,6 +160,30 @@ final class FileSecurityScanner
 		}
 
 		return '';
+	}
+
+	/**
+	 * Is the detected MIME present anywhere in the site's MIME map? Used to
+	 * separate "MIME not allowed on this site" from "MIME does not match the
+	 * extension," which would otherwise share the same misleading label.
+	 *
+	 * @param string $detectedMime MIME detected from file bytes.
+	 *
+	 * @return bool
+	 */
+	private function isMimeRegisteredOnSite(string $detectedMime): bool
+	{
+		if ($detectedMime === '') {
+			return false;
+		}
+
+		foreach (\wp_get_mime_types() as $mime) {
+			if (\strtolower($mime) === $detectedMime) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

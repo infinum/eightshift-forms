@@ -12,7 +12,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Added a "File security" settings tab under Validation that reports the availability of `qpdf`, `proc_open()`, and the required PHP extensions (`fileinfo`, `zip`, `dom`, `gd`/`imagick`).
 - Added `fileSecurityDenyExtensions` filter to extend or override the built-in deny list of executable, scriptable, and server-interpreted extensions.
 - Added `fileSecurityPdfUseQpdf` and `fileSecurityPdfQpdfBinary` filters to toggle and configure the QPDF integration used for deep PDF inspection.
-- Added validation labels for each scanner outcome: `validationFileExtensionDenied`, `validationFileMimeMismatch`, `validationFileScanFailed`, `validationFilePdfUnsafe`, `validationFileImageUnsafe`, `validationFileOfficeUnsafe`, `validationFileCsvUnsafe`, `validationFileArchiveUnsafe`, `validationFileTextUnsafe`.
+- Added validation labels for each scanner outcome: `validationFileExtensionDenied`, `validationFileMimeMismatch`, `validationFileMimeNotAllowed`, `validationFileScanFailed`, `validationFilePdfUnsafe`, `validationFileImageUnsafe`, `validationFileOfficeUnsafe`, `validationFileCsvUnsafe`, `validationFileArchiveUnsafe`, `validationFileTextUnsafe`. `validationFileMimeNotAllowed` is surfaced when the detected MIME is valid but the site has not registered it (e.g. `.xml` on a default WordPress install), instead of the misleading "contents do not match extension" message.
 - Added `errorFileUploadFailedSecurityScan` upload error so the security scanner runs again immediately before a file leaves PHP's managed tmp area.
 
 ### Changed
