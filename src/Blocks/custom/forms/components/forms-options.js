@@ -33,11 +33,11 @@ import {
 	ToggleButton,
 	ItemCollection,
 	HStack,
+	Checkbox,
 } from '@eightshift/ui-components';
 import {
 	blockParts,
 	codeVariable,
-	design,
 	file,
 	form,
 	locationSettings,
@@ -50,13 +50,13 @@ import {
 	plusCircle,
 	locationAllow,
 	fieldReadonly,
+	location,
 } from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton } from '../../../components/utils';
 import { getRestUrl, getUtilsIcons } from '../../../components/form/assets/state-init';
-import manifest from '../manifest.json';
-import { location } from '@eightshift/ui-components/icons';
 import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
+import manifest from '../manifest.json';
 
 const FilePicker = ({ onChange, fileUrl, fileId }) => {
 	return (
@@ -258,7 +258,11 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 											const { title, slug, updateData, deleteItem } = item;
 
 											return (
-												<Container className='esf:group'>
+												<Container
+													className='esf:group'
+													lessSpaceStart
+													lessSpaceEnd
+												>
 													<HStack noWrap>
 														<InputField
 															aria-label={__('Key', 'eightshift-forms')}
@@ -501,7 +505,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								}
 								simpleValue
 								noMinWidth
-								inline
+								searchable
 							/>
 						</Container>
 
@@ -608,6 +612,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 													options={geoFormFields}
 													onChange={(value) => updateData({ geoLocation: value })}
 													simpleValue
+													searchable
 												/>
 
 												<Button
@@ -684,19 +689,30 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							/>
 						</Container>
 
-						<Container
+						<ContainerGroup
 							hidden={formsStyleOptions?.length < 1}
-							standalone
+							label={__('Style presets', 'eightshift-forms')}
 						>
-							<MultiSelect
-								icon={design}
-								label={__('Style preset', 'eightshift-forms')}
-								value={formsStyle}
-								options={formsStyleOptions}
-								onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
-								simpleValue
-							/>
-						</Container>
+							{formsStyleOptions.map((option, index) => {
+								return (
+									<Container
+										key={index}
+										centered
+									>
+										<Checkbox
+											label={option.label}
+											checked={formsStyle.includes(option.value)}
+											onChange={(value) => {
+												const newValue = value
+													? [...formsStyle, option.value]
+													: formsStyle.filter((v) => v !== option.value);
+												setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: newValue });
+											}}
+										/>
+									</Container>
+								);
+							})}
+						</ContainerGroup>
 					</ContainerPanel>
 				</TabPanel>
 			</Tabs>

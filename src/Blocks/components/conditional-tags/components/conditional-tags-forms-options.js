@@ -12,8 +12,9 @@ import {
 	BaseControl,
 	ItemCollection,
 	HStack,
+	RichLabel,
 } from '@eightshift/ui-components';
-import { optionListAlt, plusCircle, trash, visibilityAlt } from '@eightshift/ui-components/icons';
+import { lightBulb, optionListAlt, plusCircle, trash, visibilityAlt, warning } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_SHORT_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
@@ -127,7 +128,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				/>
 			</Container>
 
-			<ContainerGroup>
+			<ContainerGroup hidden={!conditionalTagsUse}>
 				<Container centered>
 					<BaseControl
 						icon={optionListAlt}
@@ -136,29 +137,39 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						inline
 					>
 						<HelpTooltip>
-							{__(
-								'It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.',
-								'eightshift-forms',
-							)}
+							<RichLabel
+								icon={warning}
+								label={__('Note', 'eightshift-forms')}
+								subtitle={__(
+									'Adding field visibility overrides may result in odd behavior when used with conditional tags.',
+									'eightshift-forms',
+								)}
+								iconClassName='es:text-accent-600'
+							/>
 
 							<br />
-							<br />
 
-							{__(
-								"If you can't find a field, make sure the form is saved, and all fields have a name set.",
-								'eightshift-forms',
-							)}
+							<RichLabel
+								icon={lightBulb}
+								label={__(
+									"If you can't find a field, make sure the form is saved, and all fields have a name set.",
+									'eightshift-forms',
+								)}
+								iconClassName='es:text-accent-600'
+							/>
 						</HelpTooltip>
 					</BaseControl>
 				</Container>
 
 				<ItemCollection
 					hidden={!formFields}
-					items={conditionalTagsRulesForms.map(([field, action, fieldOption]) => ({
-						field,
-						action,
-						fieldOption,
-					}))}
+					items={
+						conditionalTagsRulesForms?.map(([field, action, fieldOption]) => ({
+							field,
+							action,
+							fieldOption,
+						})) ?? []
+					}
 					onChange={(items) => {
 						setAttributes({
 							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: items.map((item) => [

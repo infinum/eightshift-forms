@@ -5,7 +5,6 @@ import { useState } from '@wordpress/element';
 import { isObject, upperFirst } from '@eightshift/ui-components/utilities';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import {
-	MultiSelect,
 	InputField,
 	Toggle,
 	Spacer,
@@ -14,6 +13,7 @@ import {
 	RichLabel,
 	OptionSelect,
 	Switch,
+	Checkbox,
 } from '@eightshift/ui-components';
 import {
 	a11yWarning,
@@ -24,7 +24,6 @@ import {
 	hide,
 	Icon,
 	options,
-	paletteColor,
 	tag,
 	arrowsDown,
 	help,
@@ -192,19 +191,28 @@ export const FieldOptionsLayout = (attributes) => {
 					))}
 			</ContainerGroup>
 
-			<Container
-				hidden={(fieldStyleOptions ?? [])?.length < 1}
-				standalone
+			<ContainerGroup
+				hidden={fieldStyleOptions?.length < 1}
+				label={__('Style presets', 'eightshift-forms')}
 			>
-				<MultiSelect
-					icon={paletteColor}
-					label={__('Style', 'eightshift-forms')}
-					value={fieldStyle}
-					options={fieldStyleOptions}
-					onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
-					simpleValue
-				/>
-			</Container>
+				{fieldStyleOptions.map((option, index) => {
+					return (
+						<Container
+							key={index}
+							centered
+						>
+							<Checkbox
+								label={option.label}
+								checked={fieldStyle.includes(option.value)}
+								onChange={(value) => {
+									const newValue = value ? [...fieldStyle, option.value] : fieldStyle.filter((v) => v !== option.value);
+									setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: newValue });
+								}}
+							/>
+						</Container>
+					);
+				})}
+			</ContainerGroup>
 		</>
 	);
 };
@@ -299,7 +307,7 @@ export const FieldOptionsVisibility = (attributes) => {
  */
 export const getResponsiveLegacyData = (responsiveAttr, attributes, manifest, setAttributes) => ({
 	attribute: Object.fromEntries(
-		Object.entries(responsiveAttr).map(([breakpoint, attrName]) => [
+		Object.entries(responsiveAttr)?.map(([breakpoint, attrName]) => [
 			breakpoint,
 			getAttrKey(attrName, attributes, manifest),
 		]),
