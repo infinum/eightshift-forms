@@ -72,6 +72,12 @@ final class PdfScanner implements FileSecurityScannerInterface
 	/**
 	 * Does the haystack contain any of the documented dangerous PDF keys?
 	 *
+	 * Matches the key only when it is followed by a PDF name-token delimiter
+	 * (whitespace, `/`, `<`, `[`, `(`, `%`). This avoids substring-style false
+	 * positives where the key appears inside a longer PDF name — most commonly
+	 * a font subset prefix like `/AAAAAA+GentiumPlus` which would otherwise
+	 * match `/AA`.
+	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
 	 *
 	 * @return bool
@@ -79,7 +85,8 @@ final class PdfScanner implements FileSecurityScannerInterface
 	private function containsDangerousKey(string $haystack): bool
 	{
 		foreach (Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS as $key) {
-			if (\strpos($haystack, $key) !== false) {
+			$pattern = '/' . \preg_quote($key, '/') . '(?=[\s\/<\[(%])/';
+			if (\preg_match($pattern, $haystack) === 1) {
 				return true;
 			}
 		}
