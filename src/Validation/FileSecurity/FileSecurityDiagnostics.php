@@ -37,7 +37,7 @@ final class FileSecurityDiagnostics
 	{
 		$binary = \apply_filters(HooksHelpers::getFilterName(['validation', 'fileSecurityPdfQpdfBinary']), ''); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 
-		if (\is_executable($binary)) {
+		if (\is_string($binary) && $binary !== '' && \is_executable($binary)) {
 			return $binary;
 		}
 

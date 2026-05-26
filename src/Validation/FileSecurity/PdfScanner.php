@@ -148,11 +148,55 @@ final class PdfScanner implements FileSecurityScannerInterface
 		}
 
 		\fclose($pipes[0]); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-		$output = \stream_get_contents($pipes[1]);
+
+		\stream_set_blocking($pipes[1], false);
+		\stream_set_blocking($pipes[2], false);
+
+		$output = '';
+		$errorOutput = '';
+
+		while (!\feof($pipes[1]) || !\feof($pipes[2])) {
+			$read = [];
+
+			if (!\feof($pipes[1])) {
+				$read[] = $pipes[1];
+			}
+
+			if (!\feof($pipes[2])) {
+				$read[] = $pipes[2];
+			}
+
+			if ($read === []) {
+				break;
+			}
+
+			$write = null;
+			$except = null;
+			$ready = \stream_select($read, $write, $except, null);
+
+			if ($ready === false) {
+				break;
+			}
+
+			foreach ($read as $stream) {
+				$chunk = \stream_get_contents($stream);
+
+				if (!\is_string($chunk) || $chunk === '') {
+					continue;
+				}
+
+				if ($stream === $pipes[1]) {
+					$output .= $chunk;
+				} else {
+					$errorOutput .= $chunk;
+				}
+			}
+		}
+
 		\fclose($pipes[1]); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		\fclose($pipes[2]); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-		\proc_close($process);
+		$exitCode = \proc_close($process);
 
-		return \is_string($output) && $output !== '' ? $output : null;
+		return $exitCode === 0 && $output !== '' ? $output : null;
 	}
 }
