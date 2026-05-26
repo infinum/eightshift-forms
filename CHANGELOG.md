@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.5.0]
+
+### Added
+
+- Added a file upload security scanner stack covering archive, CSV, image, Office, PDF, and text files. Scanners run on every upload regardless of the field's `accept` configuration, closing the gap where a field with no allow-list received no content validation.
+- Added a "File security" settings tab under Validation that reports the availability of `qpdf`, `proc_open()`, and the required PHP extensions (`fileinfo`, `zip`, `dom`, `gd`/`imagick`).
+- Added `fileSecurityDenyExtensions` filter to extend or override the built-in deny list of executable, scriptable, and server-interpreted extensions.
+- Added `fileSecurityPdfUseQpdf` and `fileSecurityPdfQpdfBinary` filters to toggle and configure the QPDF integration used for deep PDF inspection.
+- Added validation labels for each scanner outcome: `validationFileExtensionDenied`, `validationFileMimeMismatch`, `validationFileScanFailed`, `validationFilePdfUnsafe`, `validationFileImageUnsafe`, `validationFileOfficeUnsafe`, `validationFileCsvUnsafe`, `validationFileArchiveUnsafe`, `validationFileTextUnsafe`.
+- Added `errorFileUploadFailedSecurityScan` upload error so the security scanner runs again immediately before a file leaves PHP's managed tmp area.
+
+### Changed
+
+- `AbstractValidation::isMimeTypeValid()` now detects MIME from the file contents via libmagic (`finfo`), falling back to `mime_content_type`. The client-supplied `$file['type']` is no longer trusted.
+
+### Removed
+
+- Removed the `forceMimetypeFromFs` filter. MIME type is now always determined from file contents, so the filter is no longer needed.
+
 ## [9.4.1]
 
 ### Fixed
@@ -1838,6 +1857,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.5.0]: https://github.com/infinum/eightshift-forms/compare/9.4.1...9.5.0
 [9.4.1]: https://github.com/infinum/eightshift-forms/compare/9.4.0...9.4.1
 [9.4.0]: https://github.com/infinum/eightshift-forms/compare/9.3.0...9.4.0
 [9.3.0]: https://github.com/infinum/eightshift-forms/compare/9.2.0...9.3.0

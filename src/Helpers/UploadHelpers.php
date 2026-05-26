@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Helpers;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Validation\FileSecurity\FileSecurityScanner;
 
 /**
  * UploadHelpers class
@@ -35,6 +36,7 @@ final class UploadHelpers
 			'errorFileUploadUnableToCreateFolder' => '',
 			'errorFileUploadFaultyFile' => '',
 			'errorFileUploadUnableToMoveFile' => '',
+			'errorFileUploadFailedSecurityScan' => '',
 
 			// getFilePath() method errors.
 			'errorFilePathMissingUploadFolder' => '',
@@ -125,6 +127,21 @@ final class UploadHelpers
 					'errorOutput' => 'errorFileUploadFaultyFile',
 				]
 			);
+		}
+
+		// Belt-and-braces: run the security scanner immediately before the
+		// file leaves PHP's managed tmp area. If the caller forgot to call
+		// validateFiles, the file still never reaches esforms-tmp.
+		if (\is_string($tmpName) && $tmpName !== '') {
+			$scanError = (new FileSecurityScanner())->scan($tmpName, (string) $fileName);
+			if ($scanError !== '') {
+				return \array_merge(
+					$output,
+					[
+						'errorOutput' => 'errorFileUploadFailedSecurityScan',
+					]
+				);
+			}
 		}
 
 		// Create final folder location path.

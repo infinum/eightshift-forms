@@ -18,6 +18,7 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Validation\FileSecurity\FileSecurityDiagnostics;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -242,6 +243,8 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 			$messagesOutput[] = $output;
 		}
 
+		$missingExtensions = FileSecurityDiagnostics::getMissingExtensions();
+
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -287,6 +290,41 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
 								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('File security', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introTitle' => \__('File upload security stack', 'eightshift-forms'),
+							],
+							[
+								'component' => 'card-inline',
+								'cardInlineTitle' => \__('QPDF binary', 'eightshift-forms'),
+								'cardInlineSubTitle' => FileSecurityDiagnostics::getQpdfBinary()
+									? \__('Configured and executable. Full PDF scanning is active.', 'eightshift-forms')
+									: \__('Not found or not executable. PDF scanning is limited to raw-byte checks, which are less reliable.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'card-inline',
+								'cardInlineTitle' => \__('proc_open()', 'eightshift-forms'),
+								'cardInlineSubTitle' => FileSecurityDiagnostics::isProcOpenAvailable()
+									? \__('Enabled. qpdf can be invoked when its binary path is wired.', 'eightshift-forms')
+									: \__('Disabled in php.ini. qpdf integration cannot run; raw-byte PDF scan still works.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'card-inline',
+								'cardInlineTitle' => \__('PHP extensions', 'eightshift-forms'),
+								'cardInlineSubTitle' => empty($missingExtensions)
+									? \__('All required PHP extensions are loaded (fileinfo, zip, dom, gd or imagick).', 'eightshift-forms')
+									: \sprintf(
+										// translators: %s is a comma-separated list of missing PHP extension names.
+										\__('Missing required PHP extensions: %s.', 'eightshift-forms'),
+										'<code>' . \esc_html(\implode(', ', $missingExtensions)) . '</code>'
+									),
 							],
 						],
 					],

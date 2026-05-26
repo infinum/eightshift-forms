@@ -160,6 +160,75 @@ class Config
 	 */
 	public const FILE_UPLOAD_ADMIN_TYPE_NAME = 'fileUploadAdmin';
 
+	/**
+	 * Extensions that must never be accepted by the public file upload endpoint,
+	 * regardless of the form's `accept` configuration. These are executable,
+	 * scriptable, or server-interpreted formats that have no business being
+	 * uploaded through a public contact form.
+	 *
+	 * Projects can extend or override via the
+	 * `es_forms_validation_file_security_deny_extensions` filter.
+	 *
+	 * @var array<int, string>
+	 */
+	public const FILE_UPLOAD_DENY_EXTENSIONS = [
+		// Native executables.
+		'exe', 'msi', 'bat', 'cmd', 'com', 'scr', 'pif', 'cpl', 'jar', 'app',
+		'dmg', 'pkg', 'deb', 'rpm', 'apk',
+		// Shell / scripts.
+		'sh', 'bash', 'zsh', 'csh', 'ksh', 'ps1', 'psm1', 'vbs', 'vbe', 'wsf',
+		'wsh', 'hta', 'lnk', 'reg',
+		// Server-interpreted (PHP & friends).
+		'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'php8', 'phar', 'pl',
+		'cgi', 'asp', 'aspx', 'jsp', 'jspx', 'py', 'rb',
+		// Server config that could be dropped into a webroot.
+		'htaccess', 'htpasswd', 'ini', 'conf',
+		// Browser-executable that can host script.
+		'html', 'htm', 'xhtml', 'shtml', 'svg', 'svgz',
+		// Office macro variants (the non-macro x-variants pass; macro-enabled don't).
+		'docm', 'dotm', 'xlsm', 'xltm', 'xlam', 'pptm', 'potm', 'ppam', 'ppsm',
+		'sldm',
+	];
+
+	/**
+	 * PDF dictionary keys that indicate scriptable, networked or executable
+	 * content. Presence of any of these in a PDF (compressed or otherwise) is
+	 * grounds for rejection on a public upload endpoint.
+	 *
+	 * @var array<int, string>
+	 */
+	public const FILE_UPLOAD_PDF_DANGEROUS_KEYS = [
+		'/JS',
+		'/JavaScript',
+		'/OpenAction',
+		'/AA',
+		'/Launch',
+		'/EmbeddedFile',
+		'/EmbeddedFiles',
+		'/SubmitForm',
+		'/ImportData',
+		'/RichMedia',
+		'/XFA',
+		'/GoToR',
+		'/GoToE',
+	];
+
+	/**
+	 * Maximum uncompressed size (bytes) the archive scanner will accept across
+	 * all entries combined. Defense against zip bombs.
+	 *
+	 * @var int
+	 */
+	public const FILE_UPLOAD_ARCHIVE_MAX_UNCOMPRESSED = 104857600; // 100 MB.
+
+	/**
+	 * Maximum per-entry compression ratio the archive scanner will accept.
+	 * Defense against zip bombs that fit a tiny compressed payload.
+	 *
+	 * @var int
+	 */
+	public const FILE_UPLOAD_ARCHIVE_MAX_RATIO = 100;
+
 	// ------------------------------------------------------------------
 	// WP-CLI
 	// ------------------------------------------------------------------

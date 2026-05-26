@@ -221,6 +221,15 @@ class Labels implements LabelsInterface
 			'validationMissingMandatoryParams' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'validationSubmitOnce' => \__('This form can be submitted only once.', 'eightshift-forms'),
 			'validationSubmitLoggedIn' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
+			'validationFileExtensionDenied' => \__('This file type is not allowed.', 'eightshift-forms'),
+			'validationFileMimeMismatch' => \__('The file contents do not match its extension.', 'eightshift-forms'),
+			'validationFileScanFailed' => \__('The file could not be processed for security inspection.', 'eightshift-forms'),
+			'validationFilePdfUnsafe' => \__('This PDF contains active content (scripts, embedded files or auto-actions) and was rejected.', 'eightshift-forms'),
+			'validationFileImageUnsafe' => \__('This image is malformed or contains unexpected content.', 'eightshift-forms'),
+			'validationFileOfficeUnsafe' => \__('This document contains macros, embedded objects or external references and was rejected.', 'eightshift-forms'),
+			'validationFileCsvUnsafe' => \__('This CSV/spreadsheet contains formula content that could be malicious and was rejected.', 'eightshift-forms'),
+			'validationFileArchiveUnsafe' => \__('This archive contains disallowed or unsafe content and was rejected.', 'eightshift-forms'),
+			'validationFileTextUnsafe' => \__('This text file contains script content and was rejected.', 'eightshift-forms'),
 		];
 	}
 

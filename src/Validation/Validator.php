@@ -17,6 +17,7 @@ use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Validation\FileSecurity\FileSecurityScanner;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -30,6 +31,13 @@ class Validator extends AbstractValidation
 	 * @var LabelsInterface
 	 */
 	protected $labels;
+
+	/**
+	 * File security scanner.
+	 *
+	 * @var FileSecurityScanner
+	 */
+	protected FileSecurityScanner $fileSecurityScanner;
 
 	/**
 	 * Validation Fields to check.
@@ -78,11 +86,13 @@ class Validator extends AbstractValidation
 	/**
 	 * Create a new instance.
 	 *
-	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
+	 * @param LabelsInterface     $labels              Inject documentsData which holds labels data.
+	 * @param FileSecurityScanner $fileSecurityScanner Inject the file security scanner.
 	 */
-	public function __construct(LabelsInterface $labels)
+	public function __construct(LabelsInterface $labels, FileSecurityScanner $fileSecurityScanner)
 	{
 		$this->labels = $labels;
+		$this->fileSecurityScanner = $fileSecurityScanner;
 	}
 
 	/**
@@ -372,6 +382,17 @@ class Validator extends AbstractValidation
 						$output[$id] = \sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue / 1000);
 					}
 					break;
+			}
+		}
+
+		// Unconditional security scan — runs regardless of whether the field
+		// has an `accept` configured. This is the gate that closes the
+		// "public form with no allow-list = no validation" hole.
+		$tmpName = $file['tmp_name'] ?? '';
+		if (!isset($output[$id]) && \is_string($tmpName) && $tmpName !== '') {
+			$scanError = $this->fileSecurityScanner->scan($tmpName, (string) $fileName);
+			if ($scanError !== '') {
+				$output[$id] = $this->labels->getLabel($scanError, $formId);
 			}
 		}
 
