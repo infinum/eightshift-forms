@@ -4,6 +4,16 @@ import { InnerBlocks } from '@wordpress/block-editor';
 import { BlockInserter, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { additionalBlocksIntegration, FormEditor } from './../../form/components/form-editor';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
+import { form } from '@eightshift/ui-components/icons';
+
+const InvalidPlaceholder = () => {
+	return (
+		<InvalidEditor
+			icon={form}
+			heading={__('Select a form in the sidebar', 'eightshift-forms')}
+		/>
+	);
+};
 
 export const IntegrationsEditor = ({
 	attributes,
@@ -21,18 +31,20 @@ export const IntegrationsEditor = ({
 		return blocks?.innerBlocks.length !== 0;
 	});
 
-	const InvalidPlaceholder = () => {
-		return (
-			<InvalidEditor heading={__('Please use the sidebar settings to choose your desired form.', 'eightshift-forms')} />
-		);
-	};
-
 	const OutputDefault = () => {
-		return <>{itemId ? <Output /> : <InvalidPlaceholder />}</>;
+		if (itemId) {
+			return <Output />;
+		}
+
+		return <InvalidPlaceholder />;
 	};
 
 	const OutputWithInner = () => {
-		return <>{itemId && innerId ? <Output /> : <InvalidPlaceholder />}</>;
+		if (itemId && innerId) {
+			return <Output />;
+		}
+
+		return <InvalidPlaceholder />;
 	};
 
 	const Output = () => {
@@ -52,7 +64,11 @@ export const IntegrationsEditor = ({
 	};
 
 	if (hasInnerBlocks) {
-		return useInnerId ? <OutputWithInner /> : <OutputDefault />;
+		if (useInnerId) {
+			return <OutputWithInner />;
+		}
+
+		return <OutputDefault />;
 	}
 
 	return <InvalidPlaceholder />;

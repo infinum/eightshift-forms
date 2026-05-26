@@ -1,3 +1,4 @@
+import { Toaster } from 'sonner';
 import { __ } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
@@ -14,6 +15,12 @@ export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 
 	return (
 		<>
+			<Toaster
+				richColors
+				position='bottom-center'
+				offset={40}
+			/>
+
 			{!hasInnerBlocks && (
 				<Placeholder
 					icon={form}
