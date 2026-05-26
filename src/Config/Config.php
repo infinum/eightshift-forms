@@ -196,12 +196,19 @@ class Config
 	 * (compressed or otherwise) is grounds for rejection on a public upload
 	 * endpoint.
 	 *
-	 * Only payload keys are listed. Event triggers like `/OpenAction` and
-	 * `/AA` are intentionally omitted — they are present in nearly every
-	 * browser-printed PDF as benign initial-view destinations
-	 * (e.g. `/OpenAction [3 0 R /FitH null]`). When a trigger points at a
-	 * dangerous payload, that payload (`/JS`, `/Launch`, `/EmbeddedFile`,
-	 * etc.) is what we catch directly.
+	 * Only payload keys are listed. The following are intentionally omitted
+	 * because they are event triggers or navigation actions, not payloads —
+	 * they appear in legitimate PDFs (browser print output, magazine
+	 * cross-references, academic papers) and produce constant false
+	 * positives:
+	 *
+	 *   - `/OpenAction`, `/AA`        — event triggers; whatever they invoke
+	 *                                   is what matters and is listed here.
+	 *   - `/GoToR`, `/GoToE`          — navigation to another file or
+	 *                                   embedded entry. The reader prompts
+	 *                                   before following these; the embedded
+	 *                                   payload itself is caught by
+	 *                                   `/EmbeddedFile`.
 	 *
 	 * @var array<int, string>
 	 */
@@ -215,8 +222,6 @@ class Config
 		'/ImportData',
 		'/RichMedia',
 		'/XFA',
-		'/GoToR',
-		'/GoToE',
 	];
 
 	/**
