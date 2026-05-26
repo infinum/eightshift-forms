@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- Added a file upload security scanner stack covering archive, CSV, image, Office, PDF, and text files. Scanners run on every upload regardless of the field's `accept` configuration, closing the gap where a field with no allow-list received no content validation.
+- Added a file upload security scanner stack covering archive, CSV, image, Office (both Office Open XML `.docx/.xlsx/.pptx` and legacy `.doc/.xls/.ppt` Compound File Binary Format), PDF, and text files. Scanners run on every upload regardless of the field's `accept` configuration, closing the gap where a field with no allow-list received no content validation.
 - Added a "File security" settings tab under Validation that reports the availability of `qpdf`, `proc_open()`, and the required PHP extensions (`fileinfo`, `zip`, `dom`, `gd`/`imagick`).
 - Added `fileSecurityDenyExtensions` filter to extend or override the built-in deny list of executable, scriptable, and server-interpreted extensions.
 - Added `fileSecurityPdfUseQpdf` and `fileSecurityPdfQpdfBinary` filters to toggle and configure the QPDF integration used for deep PDF inspection.
