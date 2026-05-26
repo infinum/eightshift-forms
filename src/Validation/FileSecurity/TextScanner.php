@@ -50,9 +50,8 @@ final class TextScanner implements FileSecurityScannerInterface
 			return 'validationFileScanFailed';
 		}
 
-		$lower = \strtolower($contents);
 		foreach (self::SCRIPT_PATTERNS as $pattern) {
-			if (\strpos($lower, $pattern) !== false) {
+			if (\stripos($contents, $pattern) !== false) {
 				return 'validationFileTextUnsafe';
 			}
 		}
