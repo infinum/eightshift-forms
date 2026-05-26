@@ -6,6 +6,7 @@ import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import {
+	codeVariable,
 	conditionalVisibility,
 	edit,
 	errorCircle,
@@ -14,7 +15,6 @@ import {
 	fieldRequired,
 	globe,
 	hide,
-	info,
 	layoutAlt,
 	lightBulb,
 	loader,
@@ -419,7 +419,7 @@ export const NameField = ({
 	attribute,
 	help = '',
 	disabledOptions = [],
-	label,
+	label: rawLabel,
 	setAttributes,
 	show = true,
 	type,
@@ -427,6 +427,9 @@ export const NameField = ({
 	isOptional = false,
 	setIsChanged,
 }) => {
+	let label = rawLabel || __('Name', 'eightshift-forms');
+	let icon = tagAlt;
+
 	const isDisabled = isOptionDisabled(attribute, disabledOptions);
 
 	let helpText = sprintf(
@@ -436,8 +439,10 @@ export const NameField = ({
 	);
 
 	if (type === 'resultOutputItem') {
+		icon = codeVariable;
+		label = __('Variable name', 'eightshift-forms');
 		helpText = __(
-			'Identifies the what result output item the user will see after successful submit redirect.',
+			'Identifies the what result output item the user will see after successful form submission',
 			'eightshift-forms',
 		);
 	}
@@ -450,12 +455,12 @@ export const NameField = ({
 		<ContainerGroup>
 			<Container>
 				<InputField
-					icon={tagAlt}
-					label={label || __('Name', 'eightshift-forms')}
+					icon={icon}
+					label={label}
 					placeholder={!value && !isOptional && __('Required', 'eightshift-forms')}
 					actions={
 						<>
-							{!value && !isDisabled && (
+							{!value && !isDisabled && type !== 'resultOutputItem' && (
 								<Button
 									onClick={() => {
 										setIsChanged(false);
@@ -493,6 +498,7 @@ export const NameField = ({
 						setAttributes({ [attribute]: value });
 					}}
 					disabled={isDisabled}
+					monospaceFont={type === 'resultOutputItem'}
 				/>
 			</Container>
 
@@ -506,16 +512,6 @@ export const NameField = ({
 				<RichLabel
 					icon={warning}
 					label={__('Form may not work correctly!', 'eightshift-forms')}
-				/>
-			</Container>
-
-			<Container hidden={type !== 'resultOutputItem'}>
-				<RichLabel
-					icon={info}
-					label={__(
-						`Variable name you can use is "${globalSettings.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`,
-						'eightshift-forms',
-					)}
 				/>
 			</Container>
 

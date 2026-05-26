@@ -7,7 +7,7 @@ export const InvalidEditor = ({ icon, heading, text }) => {
 	const utilsIcon = getUtilsIcons(icon);
 
 	return (
-		<div className='esf:p-8 es-uic-font-sans'>
+		<div className='esf:p-8 es:font-sans'>
 			<Container
 				standalone
 				centered
