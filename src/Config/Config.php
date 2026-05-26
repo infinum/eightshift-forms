@@ -161,6 +161,18 @@ class Config
 	public const FILE_UPLOAD_ADMIN_TYPE_NAME = 'fileUploadAdmin';
 
 	/**
+	 * Extra MIME mappings allowed only for admin file uploads (Transfer/import
+	 * etc.). The scanner uses this on top of `wp_get_mime_types()` to accept
+	 * formats WordPress core does not register by default. Each entry maps an
+	 * extension to the MIME types finfo may return for that extension.
+	 *
+	 * @var array<string, array<int, string>>
+	 */
+	public const FILE_UPLOAD_ADMIN_EXTRA_MIMES = [
+		'json' => ['application/json', 'text/plain'],
+	];
+
+	/**
 	 * Extensions that must never be accepted by the public file upload endpoint,
 	 * regardless of the form's `accept` configuration. These are executable,
 	 * scriptable, or server-interpreted formats that have no business being

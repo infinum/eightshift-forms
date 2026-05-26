@@ -390,7 +390,10 @@ class Validator extends AbstractValidation
 		// "public form with no allow-list = no validation" hole.
 		$tmpName = $file['tmp_name'] ?? '';
 		if (!isset($output[$id]) && \is_string($tmpName) && $tmpName !== '') {
-			$scanError = $this->fileSecurityScanner->scan($tmpName, (string) $fileName);
+			$extraMimes = ($formDetails[Config::FD_TYPE] ?? '') === Config::FILE_UPLOAD_ADMIN_TYPE_NAME
+				? Config::FILE_UPLOAD_ADMIN_EXTRA_MIMES
+				: [];
+			$scanError = $this->fileSecurityScanner->scan($tmpName, (string) $fileName, $extraMimes);
 			if ($scanError !== '') {
 				$output[$id] = $this->labels->getLabel($scanError, $formId);
 			}

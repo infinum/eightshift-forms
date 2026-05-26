@@ -45,12 +45,14 @@ final class FileSecurityScanner
 	 * or a label key (resolvable via Labels::getLabel) describing the
 	 * rejection reason.
 	 *
-	 * @param string $filepath     Absolute path on disk (typically the PHP $_FILES tmp_name).
-	 * @param string $declaredName Original user-supplied filename.
+	 * @param string                           $filepath         Absolute path on disk (typically the PHP $_FILES tmp_name).
+	 * @param string                           $declaredName     Original user-supplied filename.
+	 * @param array<string, array<int, string>> $extraAllowedMimes Optional `extension => [mime, ...]` map supplementing `wp_get_mime_types()`.
+	 *                                                           Lets callers (e.g. admin transfer) accept formats WP core doesn't register.
 	 *
 	 * @return string Empty string = safe; otherwise label key.
 	 */
-	public function scan(string $filepath, string $declaredName): string
+	public function scan(string $filepath, string $declaredName, array $extraAllowedMimes = []): string
 	{
 		if ($filepath === '' || !\is_readable($filepath)) {
 			return 'validationFileScanFailed';
@@ -66,7 +68,7 @@ final class FileSecurityScanner
 			return 'validationFileScanFailed';
 		}
 
-		if (!$this->isMimeRegisteredOnSite($detectedMime)) {
+		if (!$this->isMimeRegisteredOnSite($detectedMime, $extraAllowedMimes)) {
 			// The detected MIME is genuine, but WordPress does not register it
 			// at all (e.g. `text/xml` on a default install). Saying "contents
 			// do not match extension" would be misleading — the contents are
@@ -74,7 +76,7 @@ final class FileSecurityScanner
 			return 'validationFileMimeNotAllowed';
 		}
 
-		if (!$this->extensionMatchesMime($extension, $detectedMime)) {
+		if (!$this->extensionMatchesMime($extension, $detectedMime, $extraAllowedMimes)) {
 			return 'validationFileMimeMismatch';
 		}
 
@@ -167,11 +169,12 @@ final class FileSecurityScanner
 	 * separate "MIME not allowed on this site" from "MIME does not match the
 	 * extension," which would otherwise share the same misleading label.
 	 *
-	 * @param string $detectedMime MIME detected from file bytes.
+	 * @param string                           $detectedMime      MIME detected from file bytes.
+	 * @param array<string, array<int, string>> $extraAllowedMimes Caller-supplied extension → MIMEs supplement.
 	 *
 	 * @return bool
 	 */
-	private function isMimeRegisteredOnSite(string $detectedMime): bool
+	private function isMimeRegisteredOnSite(string $detectedMime, array $extraAllowedMimes = []): bool
 	{
 		if ($detectedMime === '') {
 			return false;
@@ -183,6 +186,14 @@ final class FileSecurityScanner
 			}
 		}
 
+		foreach ($extraAllowedMimes as $mimes) {
+			foreach ((array) $mimes as $mime) {
+				if (\is_string($mime) && \strtolower($mime) === $detectedMime) {
+					return true;
+				}
+			}
+		}
+
 		return false;
 	}
 
@@ -191,12 +202,13 @@ final class FileSecurityScanner
 	 * against the WordPress core MIME → extension map so that what the file
 	 * says it is and what the bytes say it is have to line up.
 	 *
-	 * @param string $extension    Lowercase extension from the declared filename.
-	 * @param string $detectedMime MIME detected from file bytes.
+	 * @param string                           $extension         Lowercase extension from the declared filename.
+	 * @param string                           $detectedMime      MIME detected from file bytes.
+	 * @param array<string, array<int, string>> $extraAllowedMimes Caller-supplied extension → MIMEs supplement.
 	 *
 	 * @return bool
 	 */
-	private function extensionMatchesMime(string $extension, string $detectedMime): bool
+	private function extensionMatchesMime(string $extension, string $detectedMime, array $extraAllowedMimes = []): bool
 	{
 		if ($extension === '' || $detectedMime === '') {
 			return false;
@@ -210,6 +222,18 @@ final class FileSecurityScanner
 
 			foreach (\explode('|', $extPattern) as $allowedExt) {
 				if (\strtolower($allowedExt) === $extension) {
+					return true;
+				}
+			}
+		}
+
+		foreach ($extraAllowedMimes as $allowedExt => $mimes) {
+			if (\strtolower((string) $allowedExt) !== $extension) {
+				continue;
+			}
+
+			foreach ((array) $mimes as $mime) {
+				if (\is_string($mime) && \strtolower($mime) === $detectedMime) {
 					return true;
 				}
 			}

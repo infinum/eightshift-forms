@@ -52,11 +52,13 @@ final class UploadHelpers
 	/**
 	 * Prepare all files and upload to uploads folder.
 	 *
-	 * @param array<string, mixed> $file File to prepare.
+	 * @param array<string, mixed>              $file              File to prepare.
+	 * @param array<string, array<int, string>> $extraAllowedMimes Optional `extension => [mime, ...]` supplement for the belt-and-braces security scan
+	 *                                                            (mirror of what the caller passed to the up-front Validator scan).
 	 *
 	 * @return array<string, array<int, array<string, mixed>>>
 	 */
-	public static function uploadFile(array $file): array
+	public static function uploadFile(array $file, array $extraAllowedMimes = []): array
 	{
 		$output = $file;
 
@@ -133,7 +135,7 @@ final class UploadHelpers
 		// file leaves PHP's managed tmp area. If the caller forgot to call
 		// validateFiles, the file still never reaches esforms-tmp.
 		if (\is_string($tmpName) && $tmpName !== '') {
-			$scanError = (new FileSecurityScanner())->scan($tmpName, (string) $fileName);
+			$scanError = (new FileSecurityScanner())->scan($tmpName, (string) $fileName, $extraAllowedMimes);
 			if ($scanError !== '') {
 				return \array_merge(
 					$output,

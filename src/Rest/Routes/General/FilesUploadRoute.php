@@ -151,7 +151,11 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 			}
 		}
 
-		$uploadFile = UploadHelpers::uploadFile($formDetails[Config::FD_FILES_UPLOAD]);
+		$extraMimes = ($formDetails[Config::FD_TYPE] ?? '') === Config::FILE_UPLOAD_ADMIN_TYPE_NAME
+			? Config::FILE_UPLOAD_ADMIN_EXTRA_MIMES
+			: [];
+
+		$uploadFile = UploadHelpers::uploadFile($formDetails[Config::FD_FILES_UPLOAD], $extraMimes);
 		$uploadError = $uploadFile['errorOutput'] ?? '';
 		$uploadFileId = $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '';
 
