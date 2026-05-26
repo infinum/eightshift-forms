@@ -191,17 +191,23 @@ class Config
 	];
 
 	/**
-	 * PDF dictionary keys that indicate scriptable, networked or executable
-	 * content. Presence of any of these in a PDF (compressed or otherwise) is
-	 * grounds for rejection on a public upload endpoint.
+	 * PDF dictionary keys whose presence indicates scriptable, networked or
+	 * executable payload content. Presence of any of these in a PDF
+	 * (compressed or otherwise) is grounds for rejection on a public upload
+	 * endpoint.
+	 *
+	 * Only payload keys are listed. Event triggers like `/OpenAction` and
+	 * `/AA` are intentionally omitted — they are present in nearly every
+	 * browser-printed PDF as benign initial-view destinations
+	 * (e.g. `/OpenAction [3 0 R /FitH null]`). When a trigger points at a
+	 * dangerous payload, that payload (`/JS`, `/Launch`, `/EmbeddedFile`,
+	 * etc.) is what we catch directly.
 	 *
 	 * @var array<int, string>
 	 */
 	public const FILE_UPLOAD_PDF_DANGEROUS_KEYS = [
 		'/JS',
 		'/JavaScript',
-		'/OpenAction',
-		'/AA',
 		'/Launch',
 		'/EmbeddedFile',
 		'/EmbeddedFiles',
