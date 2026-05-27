@@ -157,8 +157,8 @@ export const FieldOptionsLayout = (attributes) => {
 		<>
 			<ContainerGroup>
 				{Object.entries(globalManifest.globalVariables.breakpoints)
-					.toReversed()
-					.map(([breakpoint], index) => (
+					?.toReversed()
+					?.map(([breakpoint], index) => (
 						<Container
 							key={breakpoint}
 							elevated={index === 0}
@@ -195,7 +195,7 @@ export const FieldOptionsLayout = (attributes) => {
 				hidden={fieldStyleOptions?.length < 1}
 				label={__('Style presets', 'eightshift-forms')}
 			>
-				{fieldStyleOptions.map((option, index) => {
+				{fieldStyleOptions?.map((option, index) => {
 					return (
 						<Container
 							key={index}
