@@ -15,17 +15,7 @@ body :is(#wpwrap) {
 /* All editor styles should be here. */
 
 .esf-input {
-	@apply esf:w-full;
-	@apply esf:border;
-	@apply esf:border-border;
-	@apply esf:bg-white;
-	@apply esf:p-10;
-	@apply esf:rounded-md;
-	@apply esf:text-sm;
-	@apply esf:h-42;
-	@apply esf:shadow-none;
-	@apply esf:text-black;
-	@apply esf:placeholder:text-gray-400;
+	@apply esf:w-full esf:border esf:border-gray-500 esf:bg-white esf:p-10 esf:rounded-lg esf:text-sm esf:h-42 esf:shadow-none esf:text-black esf:placeholder:text-gray-400;
 }
 
 .esf-field-hidden {
@@ -33,16 +23,7 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset {
-	@apply esf:flex;
-	@apply esf:flex-col;
-	@apply esf:gap-1;
-	@apply esf:border;
-	@apply esf:border-border;
-	@apply esf:bg-white;
-	@apply esf:p-10;
-	@apply esf:rounded-md;
-	@apply esf:text-sm;
-	@apply esf:text-black;
+	@apply esf:flex esf:flex-col esf:gap-1 esf:border esf:border-dashed esf:border-gray-300 esf:bg-white esf:p-10 esf:rounded-xl esf:text-sm esf:text-black;
 }
 
 .esf-fieldset-item {
@@ -51,17 +32,10 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset-checkbox {
-	@apply esf:flex;
-	@apply esf:flex-row;
-	@apply esf:gap-10;
-	@apply esf:items-center;
+	@apply esf:flex esf:flex-row esf:gap-10 esf:items-center;
 
 	&::before {
-		@apply esf:content-[''];
-		@apply esf:block;
-		@apply esf:size-15;
-		@apply esf:border;
-		@apply esf:border-border;
+		@apply esf:content-[''] esf:block esf:size-20 esf:border esf:border-gray-500 esf:rounded-md;
 	}
 }
 
@@ -72,6 +46,5 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset-checked {
-	@apply esf:before:bg-accent;
-	@apply esf:before:border-accent;
+	@apply esf:before:bg-gray-500 esf:before:border-gray-600 esf:before:inset-ring-3 esf:before:inset-ring-white;
 }
