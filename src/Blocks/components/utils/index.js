@@ -1,13 +1,13 @@
 /* global esFormsLocalization */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { codeVariable, conditionalVisibility, edit, hide, layoutAlt, lightBulb, loader, magic, none, options, readOnly, requiredAlt, tagAlt, warning, wrench } from '@eightshift/ui-components/icons';
+import { codeVariable, conditionalVisibility, edit, hide, layoutAlt, lightBulb, loader, magic, none, options, readOnly, requiredAlt, tagAlt, warning, warningFill, wrench } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
-import { RichLabel, Button, InputField, Tooltip, Container, ContainerGroup, DecorativeTooltip } from '@eightshift/ui-components';
+import { RichLabel, Button, InputField, Container, ContainerGroup, DecorativeTooltip } from '@eightshift/ui-components';
 import { camelCase, clsx, upperFirst } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
@@ -328,9 +328,9 @@ export const MissingName = ({ value, asPlaceholder, isOptional = false }) => {
 	}
 
 	return (
-		<div>
-			<Tooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>{React.cloneElement(warning)}</Tooltip>
-		</div>
+		<DecorativeTooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>
+			<span className='esf:text-red-600'>{warningFill}</span>
+		</DecorativeTooltip>
 	);
 };
 
