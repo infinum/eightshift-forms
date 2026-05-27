@@ -1,7 +1,7 @@
 import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { StatusFieldOutput } from './../../utils';
+import { HStack } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
-import { clsx } from '@eightshift/ui-components/utilities';
 
 export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) => {
 	return (
@@ -11,12 +11,12 @@ export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) =
 					<div>
 						{children}
 
-						{/* {fieldName && (
+						{fieldName && (
 							<ConditionalTagsEditor
 								{...props('conditionalTags', attributes)}
 								conditionalTagsUse={attributes?.conditionalTagsUse}
 							/>
-						)} */}
+						)}
 					</div>
 				</div>
 			</div>
@@ -45,21 +45,26 @@ export const FieldEditor = (attributes) => {
 	const statusFieldData = [fieldHidden && 'hidden', ...statusSlot].filter(Boolean);
 
 	return (
-		<div className={clsx('esf:w-full esf:flex! esf:flex-col! esf:gap-4 esf:mb-20!', fieldHidden && 'esf-field-hidden')}>
+		<div className='esf:w-full esf:flex! esf:flex-col! esf:gap-4 esf:mb-20!'>
 			{fieldLabel && !fieldHideLabel && (
-				<div
-					className='esf:text-base! esf:text-gray-900!'
-					dangerouslySetInnerHTML={{ __html: fieldLabel }}
-				/>
+				<HStack noWrap>
+					<div
+						className='esf:text-base! esf:text-gray-900!'
+						dangerouslySetInnerHTML={{ __html: fieldLabel }}
+					/>
+
+					<StatusFieldOutput components={statusFieldData} />
+				</HStack>
 			)}
+
 			{fieldBeforeContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldBeforeContent}</div>}
 
-			<div className='esf:relative!'>
-				{fieldContent} <StatusFieldOutput components={statusFieldData} />
-			</div>
+			<div className={fieldHidden && 'esf-field-hidden'}>{fieldContent}</div>
 
 			{fieldSuffixContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldSuffixContent}</div>}
+
 			{fieldAfterContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldAfterContent}</div>}
+
 			{fieldHelp && <div className='esf:text-xs! esf:text-gray-500!'>{fieldHelp}</div>}
 		</div>
 	);

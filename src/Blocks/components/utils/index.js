@@ -9,23 +9,30 @@ import {
 	codeVariable,
 	conditionalVisibility,
 	edit,
-	errorCircle,
-	fieldDisabled,
-	fieldReadonly,
-	fieldRequired,
 	globe,
 	hide,
 	layoutAlt,
 	lightBulb,
 	loader,
 	magic,
+	none,
 	options,
+	readOnly,
+	requiredAlt,
 	tagAlt,
 	warning,
 } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
-import { RichLabel, Button, InputField, Tooltip, Container, ContainerGroup } from '@eightshift/ui-components';
-import { camelCase, clsx } from '@eightshift/ui-components/utilities';
+import {
+	RichLabel,
+	Button,
+	InputField,
+	Tooltip,
+	Container,
+	ContainerGroup,
+	DecorativeTooltip,
+} from '@eightshift/ui-components';
+import { camelCase, clsx, upperFirst } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
 import { HelpTooltip } from '../../assets/scripts/help-tooltip';
@@ -367,14 +374,23 @@ export const StatusFieldOutput = ({ components }) => {
 	const statusIcons = {
 		conditionals: conditionalVisibility,
 		hidden: hide,
-		missingName: errorCircle,
-		required: fieldRequired,
-		disabled: fieldDisabled,
-		readonly: fieldReadonly,
+		missingName: warning,
+		required: requiredAlt,
+		disabled: none,
+		readonly: readOnly,
+	};
+
+	const statusLabels = {
+		conditionals: __('Conditional visibility rules are set', 'eightshift-forms'),
+		hidden: __('Field is hidden', 'eightshift-forms'),
+		missingName: __('Name not set!', 'eightshift-forms'),
+		required: __('Field is required', 'eightshift-forms'),
+		disabled: __('Field is disabled', 'eightshift-forms'),
+		readonly: __('Field is read-only', 'eightshift-forms'),
 	};
 
 	return (
-		<div className='esf:absolute esf:-bottom-10 esf:-right-10 esf:flex esf:gap-4'>
+		<div className='esf:flex esf:gap-4 esf:justify-end esf:ml-auto'>
 			{components.map((name) => {
 				const icon = statusIcons[name];
 
@@ -383,17 +399,17 @@ export const StatusFieldOutput = ({ components }) => {
 				}
 
 				const classes = clsx(
-					'esf:bg-accent esf:rounded-full esf:p-5 esf:text-white',
-					name === 'missingName' ? 'esf:bg-red-500' : '',
+					'esf:rounded-full esf:p-5',
+					name === 'missingName' ? 'esf:bg-orange-600/5 esf:text-orange-600' : 'esf:bg-current/5 esf:text-current',
 				);
 
 				return (
-					<div
+					<DecorativeTooltip
+						text={statusLabels[name] || upperFirst(name)}
 						key={name}
-						className={classes}
 					>
-						{icon}
-					</div>
+						<div className={classes}>{icon}</div>
+					</DecorativeTooltip>
 				);
 			})}
 		</div>
