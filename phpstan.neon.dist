@@ -13,6 +13,8 @@ parameters:
 	excludePaths:
 		- src/**/*Example.php
 	ignoreErrors:
+		-
+			identifier: varTag.nativeType
 		# Block templates
 		- '/^Variable (\$attributes|\$renderContent|\$manifest|\$globalManifest) might not be defined\.$/'
 

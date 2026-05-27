@@ -327,8 +327,10 @@ final class Filters
 				'manualMap',
 			],
 			'validation' => [
-				'forceMimetypeFromFs',
 				'alternativeParamsSecurityCheck',
+				'fileSecurityDenyExtensions',
+				'fileSecurityPdfQpdfBinary',
+				'fileSecurityPdfUseQpdf',
 			],
 			'encryption' => [
 				'secretKey',

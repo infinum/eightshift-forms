@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Helpers\HooksHelpers;
+use Throwable;
+use finfo;
 
 /**
  * Class Validation
@@ -108,54 +109,78 @@ abstract class AbstractValidation implements ValidatorInterface
 	}
 
 	/**
-	 * Checks whether the mimetype for the file is valid,
-	 * i.e. that it matches the extension. If the file is written
-	 * to disk, it'll check its mime_content_type from the filesystem.
-	 * Use the validation filter failMimetypeValidationWhenFileNotOnFS
-	 * to override this behaviour.
+	 * Checks whether the mimetype for the file is valid, i.e. that what the
+	 * bytes on disk actually are (magic-byte detection via libmagic) matches
+	 * the extension claimed by the filename. The client-supplied `$file['type']`
+	 * is never trusted — it can be set to anything by an attacker.
 	 *
 	 * @param array<string|int> $file File array.
 	 * @return boolean True if mimetype matches extension, false otherwise.
 	 */
 	public function isMimeTypeValid(array $file): bool
 	{
-		$denyIfFileIsNotUploaded = \apply_filters(HooksHelpers::getFilterName(['validation', 'forceMimetypeFromFs']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
-
-		$mimeTypes = \array_flip(\wp_get_mime_types());
-
-		$fileMimetype = $file['type'];
-		if ($file['tmp_name'] ?? false) {
-			$detected = \mime_content_type($file['tmp_name']);
-			if ($detected === false) {
-				if ($denyIfFileIsNotUploaded) {
-					return false;
-				}
-			} else {
-				$fileMimetype = $detected;
-			}
-		} elseif ($denyIfFileIsNotUploaded) {
+		$tmpName = $file['tmp_name'] ?? '';
+		if (!$tmpName || !\is_readable((string) $tmpName)) {
+			// Without a real file on disk we cannot trust anything the client said.
 			return false;
 		}
 
-		// Check for the first and last item in array, this issue is due to Google Docs docx export file.
-		$fileMimetype = \explode('/', $fileMimetype);
+		$fileMimetype = $this->detectMimeFromFile((string) $tmpName);
+		if ($fileMimetype === '') {
+			return false;
+		}
 
-		if (\count($fileMimetype) > 1) {
-			$last = \end($fileMimetype);
-			$fileMimetype = "{$fileMimetype[0]}/{$last}";
+		// Google Docs exports come through with a `vnd.openxmlformats-...` MIME
+		// that contains additional slashes; normalize to type/subtype.
+		$parts = \explode('/', $fileMimetype);
+		if (\count($parts) > 1) {
+			$last = \end($parts);
+			$fileMimetype = "{$parts[0]}/{$last}";
 		} else {
-			$fileMimetype = $fileMimetype[0];
+			$fileMimetype = $parts[0];
 		}
 
 		$fileExtension = $this->getFileExtensionFromFilename($file['name']);
+		$mimeTypes = \array_flip(\wp_get_mime_types());
+		$allowedExtensionsForMimetype = \explode('|', $mimeTypes[$fileMimetype] ?? '');
 
-		$allowedExtensionsForMimetype = \array_filter(\explode('|', (string) ($mimeTypes[$fileMimetype] ?? '')));
+		return \in_array($fileExtension, $allowedExtensionsForMimetype, true);
+	}
 
-		if (\in_array($fileExtension, $allowedExtensionsForMimetype, true)) {
-			return true;
+	/**
+	 * Detect MIME from file contents (not from client headers). Uses libmagic
+	 * via `finfo` and falls back to `mime_content_type` if `finfo` is missing.
+	 *
+	 * @param string $filepath Absolute path to the file.
+	 *
+	 * @return string Lowercase MIME, or empty string when detection fails.
+	 */
+	protected function detectMimeFromFile(string $filepath): string
+	{
+		if (\class_exists(finfo::class)) {
+			try {
+				$finfo = new finfo(\FILEINFO_MIME_TYPE);
+				$mime = $finfo->file($filepath);
+				if (\is_string($mime) && $mime !== '') {
+					return \strtolower($mime);
+				}
+			} catch (Throwable $t) {
+				// Fall through to mime_content_type.
+			}
 		}
 
-		return false;
+		if (\function_exists('mime_content_type')) {
+			try {
+				$mime = \mime_content_type($filepath);
+				if (\is_string($mime) && $mime !== '') {
+					return \strtolower($mime);
+				}
+			} catch (Throwable $t) {
+				return '';
+			}
+		}
+
+		return '';
 	}
 
 	/**
