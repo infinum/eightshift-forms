@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
-import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
 export const RadioEditor = (attributes) => {
 	const { blockClientId, prefix } = attributes;
@@ -14,8 +15,12 @@ export const RadioEditor = (attributes) => {
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
+	const blockProps = useBlockProps({
+		className: clsx('esf-fieldset-radio', 'esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', radioIsHidden && 'esf-field-hidden', radioIsChecked && 'esf-fieldset-checked'),
+	});
+
 	return (
-		<div className={clsx('esf-fieldset-radio', 'esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', radioIsHidden && 'esf-field-hidden', radioIsChecked && 'esf-fieldset-checked')}>
+		<div {...blockProps}>
 			<span
 				dangerouslySetInnerHTML={{
 					__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms'),

@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
-import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
 export const SelectOptionEditor = (attributes) => {
 	const { blockClientId, prefix } = attributes;
@@ -14,8 +15,12 @@ export const SelectOptionEditor = (attributes) => {
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
+	const blockProps = useBlockProps({
+		className: clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-accent!'),
+	});
+
 	return (
-		<div className={clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-accent!')}>
+		<div {...blockProps}>
 			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}
 
 			<StatusFieldOutput components={[selectOptionIsHidden && 'hidden', !selectOptionValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />

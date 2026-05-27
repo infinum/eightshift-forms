@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
-import manifest from '../manifest.json';
 import { clsx } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
 	const { blockClientId, prefix } = attributes;
@@ -13,9 +14,12 @@ export const CheckboxEditor = (attributes) => {
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
+	const blockProps = useBlockProps({
+		className: clsx('esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', checkboxIsHidden && 'esf-field-hidden', checkboxIsChecked && 'esf-fieldset-checked'),
+	});
 
 	return (
-		<div className={clsx('esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', checkboxIsHidden && 'esf-field-hidden', checkboxIsChecked && 'esf-fieldset-checked')}>
+		<div {...blockProps}>
 			<span
 				dangerouslySetInnerHTML={{
 					__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms'),
