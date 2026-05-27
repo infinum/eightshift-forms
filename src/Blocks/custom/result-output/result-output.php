@@ -15,6 +15,10 @@ $resultOutputPostId = Helpers::checkAttr('resultOutputPostId', $attributes, $man
 $resultOutputFormPostId = Helpers::checkAttr('resultOutputFormPostId', $attributes, $manifest);
 $resultOutputHide = Helpers::checkAttr('resultOutputHide', $attributes, $manifest);
 
+if (!$resultOutputPostId) {
+	return;
+}
+
 $resultAttrs = [
 	UtilsHelper::getStateAttribute('formId') => esc_attr($resultOutputFormPostId),
 ];
