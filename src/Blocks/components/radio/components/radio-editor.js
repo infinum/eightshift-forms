@@ -12,21 +12,25 @@ export const RadioEditor = (attributes) => {
 	const radioValue = checkAttr('radioValue', attributes, manifest);
 	const radioIsHidden = checkAttr('radioIsHidden', attributes, manifest);
 	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
+	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
 	const blockProps = useBlockProps({
-		className: clsx('esf-fieldset-radio', 'esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', radioIsHidden && 'esf-field-hidden', radioIsChecked && 'esf-fieldset-checked'),
+		className: 'esf:flex esf:items-center esf:gap-12',
 	});
 
 	return (
 		<div {...blockProps}>
-			<span
-				dangerouslySetInnerHTML={{
-					__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms'),
-				}}
-			/>
-			<StatusFieldOutput components={[radioIsHidden && 'hidden', !radioValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
+			<div className={clsx('esf-fieldset-radio', 'esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', radioIsHidden && 'esf-field-hidden', radioIsChecked && 'esf-fieldset-checked')}>
+				<span
+					dangerouslySetInnerHTML={{
+						__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms'),
+					}}
+				/>
+			</div>
+
+			<StatusFieldOutput components={[radioIsHidden && 'hidden', !radioValue && 'missingName', radioIsDisabled && 'disabled', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

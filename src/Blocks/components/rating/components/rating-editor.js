@@ -10,6 +10,8 @@ export const RatingEditor = (attributes) => {
 	const ratingName = checkAttr('ratingName', attributes, manifest);
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 	const ratingValue = checkAttr('ratingValue', attributes, manifest);
+	const ratingIsDisabled = checkAttr('ratingIsDisabled', attributes, manifest);
+	const ratingIsRequired = checkAttr('ratingIsRequired', attributes, manifest);
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
 
@@ -40,7 +42,7 @@ export const RatingEditor = (attributes) => {
 				fieldContent: rating,
 				fieldIsRequired: checkAttr('ratingIsRequired', attributes, manifest),
 			})}
-			statusSlot={[!ratingName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
+			statusSlot={[!ratingName && 'missingName', ratingIsDisabled && 'disabled', ratingIsRequired && 'required', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 		/>
 	);
 };

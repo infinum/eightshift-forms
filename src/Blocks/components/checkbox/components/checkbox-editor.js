@@ -12,20 +12,24 @@ export const CheckboxEditor = (attributes) => {
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
+	const checkboxIsDisabled = checkAttr('checkboxIsDisabled', attributes, manifest);
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 	const blockProps = useBlockProps({
-		className: clsx('esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', checkboxIsHidden && 'esf-field-hidden', checkboxIsChecked && 'esf-fieldset-checked'),
+		className: 'esf:flex esf:items-center esf:gap-12',
 	});
 
 	return (
 		<div {...blockProps}>
-			<span
-				dangerouslySetInnerHTML={{
-					__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms'),
-				}}
-			/>
-			<StatusFieldOutput components={[checkboxIsHidden && 'hidden', !checkboxValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
+			<div className={clsx('esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', checkboxIsHidden && 'esf-field-hidden', checkboxIsChecked && 'esf-fieldset-checked')}>
+				<span
+					dangerouslySetInnerHTML={{
+						__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms'),
+					}}
+				/>
+			</div>
+
+			<StatusFieldOutput components={[checkboxIsHidden && 'hidden', !checkboxValue && 'missingName', checkboxIsDisabled && 'disabled', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

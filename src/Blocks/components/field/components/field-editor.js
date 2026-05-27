@@ -55,6 +55,8 @@ export const FieldEditor = (attributes) => {
 				</HStack>
 			)}
 
+			{!(fieldLabel && !fieldHideLabel) && <StatusFieldOutput components={statusFieldData} />}
+
 			{fieldBeforeContent && <div className='esf:text-xs esf:text-current/80'>{fieldBeforeContent}</div>}
 
 			<div className={fieldHidden ? 'esf-field-hidden' : ''}>{fieldContent}</div>

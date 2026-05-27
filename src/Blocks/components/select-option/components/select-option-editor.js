@@ -12,18 +12,19 @@ export const SelectOptionEditor = (attributes) => {
 	const selectOptionValue = checkAttr('selectOptionValue', attributes, manifest);
 	const selectOptionIsHidden = checkAttr('selectOptionIsHidden', attributes, manifest);
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
+	const selectOptionIsDisabled = checkAttr('selectOptionIsDisabled', attributes, manifest);
 
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
 	const blockProps = useBlockProps({
-		className: clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-accent!'),
+		className: 'esf:flex esf:items-center esf:gap-12',
 	});
 
 	return (
 		<div {...blockProps}>
-			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}
+			<div className={clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-accent!')}>{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}</div>
 
-			<StatusFieldOutput components={[selectOptionIsHidden && 'hidden', !selectOptionValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
+			<StatusFieldOutput components={[selectOptionIsHidden && 'hidden', !selectOptionValue && 'missingName', selectOptionIsDisabled && 'disabled', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };
