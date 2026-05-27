@@ -46,12 +46,7 @@ export const InputEditor = (attributes) => {
 				fieldContent: input,
 				fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
 			})}
-			statusSlot={[
-				!inputName && 'missingName',
-				inputIsDisabled && 'disabled',
-				inputIsRequired && 'required',
-				attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-			].filter(Boolean)}
+			statusSlot={[!inputName && 'missingName', inputIsDisabled && 'disabled', inputIsRequired && 'required', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 		/>
 	);
 };

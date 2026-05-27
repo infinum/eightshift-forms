@@ -3,15 +3,11 @@ import { IntegrationsEditor } from '../../../components/integrations/components/
 import manifest from '../manifest.json';
 
 export const TalentlyftEditor = ({ attributes, setAttributes, itemIdKey }) => {
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
-			<IntegrationsEditor
-				itemId={checkAttr(itemIdKey, attributes, manifest)}
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-		</div>
+		<IntegrationsEditor
+			itemId={checkAttr(itemIdKey, attributes, manifest)}
+			attributes={attributes}
+			setAttributes={setAttributes}
+		/>
 	);
 };
