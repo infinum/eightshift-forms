@@ -4,7 +4,7 @@
 	"jsxSingleQuote": true,
 	"singleQuote": true,
 	"singleAttributePerLine": true,
-	"printWidth": 120,
+	"printWidth": 300,
 	"arrowParens": "always",
 	"bracketSpacing": true,
 	"semi": true,
