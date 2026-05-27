@@ -20,14 +20,6 @@ use EightshiftForms\Helpers\HooksHelpers;
 final class FileSecurityDiagnostics
 {
 	/**
-	 * PHP extensions required for the structural scanners to function.
-	 * `gd` or `imagick` is required — checked separately.
-	 *
-	 * @var array<int, string>
-	 */
-	private const REQUIRED_EXTENSIONS = ['fileinfo', 'zip', 'dom'];
-
-	/**
 	 * Returns the qpdf binary path resolved via filter, or empty string when
 	 * the project hasn't wired one in.
 	 *
@@ -78,24 +70,45 @@ final class FileSecurityDiagnostics
 	}
 
 	/**
-	 * PHP extensions that are required but missing.
+	 * PHP extensions statuses.
 	 *
-	 * @return array<int, string>
+	 * @return array<int, array<string, mixed>>
 	 */
-	public static function getMissingExtensions(): array
+	public static function getExtensionStatuses(): array
 	{
-		$missing = [];
-		foreach (self::REQUIRED_EXTENSIONS as $ext) {
-			if (!\extension_loaded($ext)) {
-				$missing[] = $ext;
-			}
-		}
+		$extensions = [
+			[
+				'title' => 'fileinfo',
+				'subtitle' => \__('Fileinfo extension is required for file type detection.', 'eightshift-forms'),
+				'status' => \extension_loaded('fileinfo'),
+			],
+			[
+				'title' => 'zip',
+				'subtitle' => \__('Zip extension is required for handling zip archives.', 'eightshift-forms'),
+				'status' => \extension_loaded('zip'),
+			],
+			[
+				'title' => 'dom',
+				'subtitle' => \__('DOM extension is required for parsing file structure.', 'eightshift-forms'),
+				'status' => \extension_loaded('dom'),
+			],
+			[
+				'title' => 'gd or imagick',
+				'subtitle' => \__('GD or Imagick extension is required for image processing.', 'eightshift-forms'),
+				'status' => \extension_loaded('gd') || \extension_loaded('imagick'),
+			],
+			[
+				'title' => 'proc_open()',
+				'subtitle' => \__('proc_open() must be available for qpdf integration to function.', 'eightshift-forms'),
+				'status' => self::isProcOpenAvailable(),
+			],
+			[
+				'title' => 'qpdf binary',
+				'subtitle' => \__('qpdf optional binary for PDF processing.', 'eightshift-forms'),
+				'status' => self::getQpdfBinary() !== '',
+			],
+		];
 
-		// Need at least one of gd / imagick for raster image validation.
-		if (!\extension_loaded('gd') && !\extension_loaded('imagick')) {
-			$missing[] = 'gd or imagick';
-		}
-
-		return $missing;
+		return $extensions;
 	}
 }
