@@ -4,8 +4,8 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { isObject, upperFirst } from '@eightshift/ui-components/utilities';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import { InputField, Toggle, Spacer, Container, ContainerGroup, RichLabel, OptionSelect, Switch, Checkbox } from '@eightshift/ui-components';
-import { a11yWarning, fieldAfterText, fieldLabel, fieldWidth, fieldHelp as fieldHelpIcon, hide, Icon, options, tag, arrowsDown, help } from '@eightshift/ui-components/icons';
+import { InputField, Toggle, Container, ContainerGroup, RichLabel, OptionSelect, Switch, Checkbox } from '@eightshift/ui-components';
+import { a11yWarning, fieldAfterText, fieldLabel, fieldWidth, fieldHelp as fieldHelpIcon, hide, Icon, tag, arrowsDown, help } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -16,12 +16,6 @@ export const FieldOptionsExternalBlocks = ({ attributes, setAttributes }) => {
 
 	return (
 		<>
-			<Spacer
-				border
-				icon={options}
-				text={__('General', 'eightshift-forms')}
-			/>
-
 			<NameField
 				value={attributes?.fieldName}
 				attribute='fieldName'
@@ -35,6 +29,7 @@ export const FieldOptionsExternalBlocks = ({ attributes, setAttributes }) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes)}
 				setAttributes={setAttributes}
+				prefix='conditionalTags'
 				conditionalTagsUse={attributes?.conditionalTagsUse}
 				conditionalTagsRules={attributes?.conditionalTagsRules}
 				conditionalTagsBlockName={attributes?.fieldName}
