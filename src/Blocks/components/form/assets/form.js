@@ -581,7 +581,8 @@ export class Form {
 		switch (this.state.getStateCaptchaType()) {
 			case StateEnum.CAPTCHA_TYPE_FRIENDLY: {
 				const widget = window[prefix]?.friendlyCaptcha;
-				const token = widget?.getResponse() ?? '';
+				const formElement = this.state.getStateFormElement(formId);
+				const token = widget?.getResponse(formElement) ?? '';
 
 				this.setFormDataCaptcha({
 					token,

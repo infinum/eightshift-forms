@@ -57,6 +57,16 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	public const SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY = 'friendly-captcha-load-on-init';
 
 	/**
+	 * Friendly Captcha widget mode key.
+	 */
+	public const SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY = 'friendly-captcha-widget-mode';
+
+	/**
+	 * Friendly Captcha widget mode default value.
+	 */
+	public const SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT = 'smart';
+
+	/**
 	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
@@ -170,6 +180,38 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 					],
 				],
 			],
+			[
+				'component' => 'divider',
+				'dividerExtraVSpacing' => true,
+			],
+			[
+				'component' => 'select',
+				'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY),
+				'selectFieldLabel' => \__('Widget mode', 'eightshift-forms'),
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				'selectFieldHelp' => \__('Must match the <strong>Widget Mode</strong> set on your sitekey in the Friendly Captcha dashboard.', 'eightshift-forms'),
+				'selectSingleSubmit' => true,
+				'selectContent' => [
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => \__('Smart (default)', 'eightshift-forms'),
+						'selectOptionValue' => 'smart',
+						'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'smart',
+					],
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => \__('Zero-click', 'eightshift-forms'),
+						'selectOptionValue' => 'zero-click',
+						'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'zero-click',
+					],
+					[
+						'component' => 'select-option',
+						'selectOptionLabel' => \__('One-click', 'eightshift-forms'),
+						'selectOptionValue' => 'one-click',
+						'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'one-click',
+					],
+				],
+			],
 		];
 	}
 
@@ -190,7 +232,7 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 					\__('Create a new application and copy the <strong>Site key</strong>.', 'eightshift-forms'),
 					\__('Go to <strong>API Keys</strong> and create a new API key.', 'eightshift-forms'),
 					\__('Copy both keys into the fields under the Settings tab or use the global constants.', 'eightshift-forms'),
-					\__('In the Friendly Captcha dashboard, open your application settings, go to the <strong>Protection</strong> tab, and set the <strong>Widget Mode</strong> to <strong>Smart</strong>.', 'eightshift-forms'),
+					\__('In the Friendly Captcha dashboard, open your application settings, go to the <strong>Protection</strong> tab, and set the <strong>Widget Mode</strong> to match the <strong>Widget mode</strong> option in the plugin settings.', 'eightshift-forms'),
 				],
 			],
 		];
