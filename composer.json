@@ -29,7 +29,7 @@
 	"type": "wordpress-plugin",
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "1.2.1",
-		"infinum/eightshift-coding-standards": "4.0.1",
+		"infinum/eightshift-coding-standards": "4.0.2",
 		"php-stubs/wordpress-stubs": "6.9.4",
 		"phpstan/phpstan-deprecation-rules": "^2.0.4",
 		"szepeviktor/phpstan-wordpress": "2.0.3",
