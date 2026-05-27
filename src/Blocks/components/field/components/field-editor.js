@@ -5,22 +5,15 @@ import { HStack } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) => {
-	return (
-		<div>
-			<div>
-				<div>
-					<div>
-						{children}
+	const blockProps = useBlockProps();
 
-						{fieldName && (
-							<ConditionalTagsEditor
-								{...props('conditionalTags', attributes)}
-								conditionalTagsUse={attributes?.conditionalTagsUse}
-							/>
-						)}
-					</div>
-				</div>
-			</div>
+	return (
+		<div {...blockProps}>
+			<HStack>
+				<div>{children}</div>
+
+				{fieldName && <StatusFieldOutput components={attributes?.conditionalTagsUse ? ['conditionals'] : []} />}
+			</HStack>
 		</div>
 	);
 };
@@ -54,7 +47,7 @@ export const FieldEditor = (attributes) => {
 			{fieldLabel && !fieldHideLabel && (
 				<HStack noWrap>
 					<div
-						className='esf:text-base! esf:text-gray-900!'
+						className='esf:text-sm'
 						dangerouslySetInnerHTML={{ __html: fieldLabel }}
 					/>
 
@@ -62,15 +55,15 @@ export const FieldEditor = (attributes) => {
 				</HStack>
 			)}
 
-			{fieldBeforeContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldBeforeContent}</div>}
+			{fieldBeforeContent && <div className='esf:text-xs esf:text-current/80'>{fieldBeforeContent}</div>}
 
-			<div className={fieldHidden && 'esf-field-hidden'}>{fieldContent}</div>
+			<div className={fieldHidden ? 'esf-field-hidden' : ''}>{fieldContent}</div>
 
-			{fieldSuffixContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldSuffixContent}</div>}
+			{fieldSuffixContent && <div className='esf:text-xs esf:text-current/80'>{fieldSuffixContent}</div>}
 
-			{fieldAfterContent && <div className='esf:text-xs! esf:text-gray-500!'>{fieldAfterContent}</div>}
+			{fieldAfterContent && <div className='esf:text-xs esf:text-current/80 esf:mt-8'>{fieldAfterContent}</div>}
 
-			{fieldHelp && <div className='esf:text-xs! esf:text-gray-500!'>{fieldHelp}</div>}
+			{fieldHelp && <div className='esf:text-xs esf:font-medium esf:text-current/80'>{fieldHelp}</div>}
 		</div>
 	);
 };
