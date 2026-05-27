@@ -1,5 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "mailerlite",
 	"title": "MailerLite form",
 	"description" : "MailerLite subscription form",

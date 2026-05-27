@@ -1,5 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "jira",
 	"title": "Jira form",
 	"description" : "Jira issues application form",
