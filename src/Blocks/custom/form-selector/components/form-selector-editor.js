@@ -1,9 +1,8 @@
 import { Toaster } from 'sonner';
 import { __ } from '@wordpress/i18n';
-import { Placeholder } from '@wordpress/components';
-import { InnerBlocks } from '@wordpress/block-editor';
-import { form } from '@eightshift/ui-components/icons';
-import { Button } from '@eightshift/ui-components';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+import { form, JsxSvg, warningCircle } from '@eightshift/ui-components/icons';
+import { Button, VStack, HStack, RichLabel, Spacer } from '@eightshift/ui-components';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
 import { camelCase } from '@eightshift/ui-components/utilities';
 import { getUtilsIcons } from '../../../components/form/assets/state-init';
@@ -13,6 +12,72 @@ import manifest from '../manifest.json';
 export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 	const { forms } = manifest;
 
+	const blockProps = useBlockProps({
+		className: 'esf:max-w-3xl esf:mx-auto',
+	});
+
+	if (!hasInnerBlocks) {
+		return (
+			<div {...blockProps}>
+				<VStack
+					className='esf:items-center esf:py-8 es:font-sans'
+					noWrap
+				>
+					<RichLabel
+						icon={form}
+						label={__('Eightshift Forms', 'eightshift-ui-kit')}
+						className='esf:mb-24 esf:not-contrast-more:opacity-60'
+					/>
+
+					{forms.length > 0 && (
+						<RichLabel
+							labelClassName='esf:text-lg!'
+							label={__('Create a form', 'eightshift-ui-kit')}
+						/>
+					)}
+
+					{forms.length < 1 && (
+						<VStack className='esf:max-w-xs esf:items-center esf:gap-8 esf:text-center'>
+							<RichLabel
+								icon={warningCircle}
+								label={__('No integrations are active, configure one in the Dashboard', 'eightshift-forms')}
+								contentsOnly
+							/>
+
+							<Spacer />
+
+							<DashboardButton />
+						</VStack>
+					)}
+
+					<HStack className='esf:max-w-2xs esf:justify-center'>
+						{forms?.map((option) => {
+							const { label, slug, icon } = option;
+
+							let iconComponent = icon;
+
+							if (!icon) {
+								iconComponent = <JsxSvg svg={getUtilsIcons(camelCase(slug))} />;
+							}
+
+							return (
+								<Button
+									key={slug}
+									icon={iconComponent}
+									onPress={() => createBlockFromTemplate(clientId, slug, forms)}
+									size='large'
+									className='esf:size-80! esf:flex-col'
+								>
+									{label}
+								</Button>
+							);
+						})}
+					</HStack>
+				</VStack>
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<Toaster
@@ -21,55 +86,10 @@ export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 				offset={40}
 			/>
 
-			{!hasInnerBlocks && (
-				<Placeholder
-					icon={form}
-					label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-				>
-					<h4>{__('What type is your new form?', 'eightshift-forms')}</h4>
-					{forms.length > 0 && (
-						<div>
-							{forms.map((form, index) => {
-								const { label, slug, icon } = form;
-
-								let iconComponent = icon;
-
-								if (!icon) {
-									iconComponent = getUtilsIcons(camelCase(slug));
-								}
-
-								return (
-									<Button
-										key={index}
-										onClick={() => createBlockFromTemplate(clientId, slug, forms)}
-										icon={<div dangerouslySetInnerHTML={{ __html: iconComponent }} />}
-									>
-										{label}
-									</Button>
-								);
-							})}
-						</div>
-					)}
-
-					{forms.length < 1 && (
-						<>
-							{__(
-								"It appears that you don't have any active integrations set up for your project. Please go to the Eightshift Forms dashboard and configure your first integration.",
-								'eightshift-forms',
-							)}
-							<DashboardButton />
-						</>
-					)}
-				</Placeholder>
-			)}
-
-			<div className='esf:max-w-3xl esf:mx-auto'>
+			<div {...blockProps}>
 				<InnerBlocks
 					templateLock={false}
-					allowedBlocks={[
-						...globalSettings.allowedBlocksList.integrationsBuilder,
-						...globalSettings.allowedBlocksList.integrationsNoBuilder,
-					]}
+					allowedBlocks={[...globalSettings.allowedBlocksList.integrationsBuilder, ...globalSettings.allowedBlocksList.integrationsNoBuilder]}
 				/>
 			</div>
 		</>

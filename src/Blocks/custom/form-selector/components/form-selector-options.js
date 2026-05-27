@@ -1,14 +1,13 @@
-import { __ } from '@wordpress/i18n';
 import { SettingsButton, GlobalSettingsButton } from '../../../components/utils';
-import { ContainerPanel, HStack } from '@eightshift/ui-components';
+import { ButtonGroup, ContainerPanel } from '@eightshift/ui-components';
 
 export const FormSelectorOptions = () => {
 	return (
-		<ContainerPanel title={__('Eightshift Forms', 'eightshift-forms')}>
-			<HStack>
+		<ContainerPanel>
+			<ButtonGroup>
 				<SettingsButton />
 				<GlobalSettingsButton />
-			</HStack>
+			</ButtonGroup>
 		</ContainerPanel>
 	);
 };
