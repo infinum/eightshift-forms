@@ -3,37 +3,10 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { getAttrKey, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	RichLabel,
-	Notice,
-	Button,
-	InputField,
-	Toggle,
-	Container,
-	ContainerGroup,
-	Spacer,
-	Modal,
-	HStack,
-	BaseControl,
-	OptionSelect,
-} from '@eightshift/ui-components';
-import {
-	Spinner,
-	conditionalVisibility,
-	hide,
-	lightBulb,
-	play,
-	plusCircle,
-	trash,
-	treeAlt,
-	visible,
-} from '@eightshift/ui-components/icons';
+import { RichLabel, Notice, Button, InputField, Toggle, Container, ContainerGroup, Spacer, Modal, HStack, BaseControl, OptionSelect } from '@eightshift/ui-components';
+import { Spinner, conditionalVisibility, hide, lightBulb, play, plusCircle, trash, treeAlt, visible } from '@eightshift/ui-components/icons';
 import { getConstantsOptions } from '../../utils';
-import {
-	CONDITIONAL_TAGS_ACTIONS_LABELS,
-	CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS,
-	CONDITIONAL_TAGS_OPERATORS_LABELS,
-} from './conditional-tags-labels';
+import { CONDITIONAL_TAGS_ACTIONS_LABELS, CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './conditional-tags-labels';
 import { getRestUrl } from '../../form/assets/state-init';
 import { truncateMiddle, upperFirst } from '@eightshift/ui-components/utilities';
 import manifest from '../manifest.json';
@@ -79,27 +52,16 @@ export const ConditionalTagsOptions = (attributes) => {
 				>
 					<RichLabel
 						icon={conditionalTagsRules[0] === 'hide' ? hide : visible}
-						label={sprintf(
-							__('Field is %s', 'eightshift-forms'),
-							CONDITIONAL_TAGS_ACTIONS_LABELS[conditionalTagsRules[0]],
-						)}
+						label={sprintf(__('Field is %s', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_LABELS[conditionalTagsRules[0]])}
 					/>
 				</Container>
 
 				<Spacer />
 
-				<RichLabel
-					label={sprintf(
-						__('%s "%s" if', 'eightshift-forms'),
-						CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS[conditionalTagsRules[0]],
-						conditionalTagsBlockName,
-					)}
-				/>
+				<RichLabel label={sprintf(__('%s "%s" if', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS[conditionalTagsRules[0]], conditionalTagsBlockName)} />
 
 				{conditionalTagsRules?.[1]?.map((_, index) => (
-					<ContainerGroup
-						label={conditionalTagsRules?.[1]?.length > 1 && index > 0 && __('or when', 'eightshift-forms')}
-					>
+					<ContainerGroup label={conditionalTagsRules?.[1]?.length > 1 && index > 0 && __('or when', 'eightshift-forms')}>
 						{conditionalTagsRules?.[1]?.[index]?.map((_, innerIndex) => {
 							return (
 								<ConditionalTagsItem
@@ -138,11 +100,8 @@ export const ConditionalTagsOptions = (attributes) => {
 			return null;
 		}
 
-		const formFieldOptions =
-			formFields?.find((item) => item.value === conditionalTagsRules[1][parent][index][0])?.subItems ?? [];
-		const showRuleValuePicker =
-			formFieldOptions?.length > 0 &&
-			(operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
+		const formFieldOptions = formFields?.find((item) => item.value === conditionalTagsRules[1][parent][index][0])?.subItems ?? [];
+		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
 
 		return (
 			<>
@@ -235,11 +194,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					<Button
 						icon={plusCircle}
 						onClick={() => {
-							conditionalTagsRules[1][parent][index + 1] = [
-								formFields?.[0]?.value ?? '',
-								globalManifest.comparator.IS,
-								'',
-							];
+							conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', globalManifest.comparator.IS, ''];
 							setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 						}}
 					>

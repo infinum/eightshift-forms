@@ -11,14 +11,7 @@ import { camelCase, clsx, upperFirst } from '@eightshift/ui-components/utilities
 
 const { namespace, allowedBlocksList } = globalManifest;
 
-const onlyFields = [
-	...allowedBlocksList.formsCpt,
-	...allowedBlocksList.other,
-	...allowedBlocksList.fieldsIntegration,
-	...allowedBlocksList.fieldsWithChildren,
-	...allowedBlocksList.integrationsNoBuilder,
-	...allowedBlocksList.integrationsBuilder,
-];
+const onlyFields = [...allowedBlocksList.formsCpt, ...allowedBlocksList.other, ...allowedBlocksList.fieldsIntegration, ...allowedBlocksList.fieldsWithChildren, ...allowedBlocksList.integrationsNoBuilder, ...allowedBlocksList.integrationsBuilder];
 
 // Wrap none forms block with field block.
 const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit) => {
@@ -70,11 +63,7 @@ const setEditorBlockListBlock = createHigherOrderComponent((BlockListBlock) => {
 
 			const fieldWidthLarge = attributes?.[key];
 
-			const componentClass = clsx(
-				fieldWidthLarge && `esf:col-span-${fieldWidthLarge}!`,
-				attributes.blockClass,
-				globalManifest.globalVariables.customBlocksName,
-			);
+			const componentClass = clsx(fieldWidthLarge && `esf:col-span-${fieldWidthLarge}!`, attributes.blockClass, globalManifest.globalVariables.customBlocksName);
 
 			const updatedProps = {
 				...innerProps,

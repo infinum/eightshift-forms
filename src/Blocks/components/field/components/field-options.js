@@ -4,30 +4,8 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { isObject, upperFirst } from '@eightshift/ui-components/utilities';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	InputField,
-	Toggle,
-	Spacer,
-	Container,
-	ContainerGroup,
-	RichLabel,
-	OptionSelect,
-	Switch,
-	Checkbox,
-} from '@eightshift/ui-components';
-import {
-	a11yWarning,
-	fieldAfterText,
-	fieldLabel,
-	fieldWidth,
-	fieldHelp as fieldHelpIcon,
-	hide,
-	Icon,
-	options,
-	tag,
-	arrowsDown,
-	help,
-} from '@eightshift/ui-components/icons';
+import { InputField, Toggle, Spacer, Container, ContainerGroup, RichLabel, OptionSelect, Switch, Checkbox } from '@eightshift/ui-components';
+import { a11yWarning, fieldAfterText, fieldLabel, fieldWidth, fieldHelp as fieldHelpIcon, hide, Icon, options, tag, arrowsDown, help } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -112,25 +90,15 @@ export const FieldOptions = (attributes) => {
 					accent
 				>
 					<RichLabel
-						label={
-							fieldLabel === ''
-								? __('Label should not be empty', 'eightshift-forms')
-								: __('Fields should have labels for accessibility', 'eightshift-forms')
-						}
+						label={fieldLabel === '' ? __('Label should not be empty', 'eightshift-forms') : __('Fields should have labels for accessibility', 'eightshift-forms')}
 						icon={a11yWarning}
 					/>
 				</Container>
 
-				{typeof additionalControlsInner === 'function'
-					? additionalControlsInner(showFieldLabel && !(fieldHideLabel || fieldLabel === ''))
-					: additionalControlsInner}
+				{typeof additionalControlsInner === 'function' ? additionalControlsInner(showFieldLabel && !(fieldHideLabel || fieldLabel === '')) : additionalControlsInner}
 			</ContainerGroup>
 
-			<ContainerGroup hidden={!additionalControls}>
-				{typeof additionalControls === 'function'
-					? additionalControls(showFieldLabel && !(fieldHideLabel || fieldLabel === ''))
-					: additionalControls}
-			</ContainerGroup>
+			<ContainerGroup hidden={!additionalControls}>{typeof additionalControls === 'function' ? additionalControls(showFieldLabel && !(fieldHideLabel || fieldLabel === '')) : additionalControls}</ContainerGroup>
 		</>
 	);
 };
@@ -146,12 +114,7 @@ export const FieldOptionsLayout = (attributes) => {
 		fieldStyleOptions = esFormsLocalization.fieldBlockStyleOptions[blockName];
 	}
 
-	const responsiveData = getResponsiveLegacyData(
-		manifest.responsiveAttributes.fieldWidth,
-		attributes,
-		manifest,
-		setAttributes,
-	);
+	const responsiveData = getResponsiveLegacyData(manifest.responsiveAttributes.fieldWidth, attributes, manifest, setAttributes);
 
 	return (
 		<>
@@ -174,14 +137,11 @@ export const FieldOptionsLayout = (attributes) => {
 										value: undefined,
 										separator: 'below',
 									},
-									...Array.from(
-										{ length: manifest.options.fieldWidth.max - manifest.options.fieldWidth.min + 1 },
-										(_, i) => {
-											const value = manifest.options.fieldWidth.min + i;
+									...Array.from({ length: manifest.options.fieldWidth.max - manifest.options.fieldWidth.min + 1 }, (_, i) => {
+										const value = manifest.options.fieldWidth.min + i;
 
-											return { label: sprintf(_n('%d column', '%d columns', value, 'eightshift-forms'), value), value };
-										},
-									).toReversed(),
+										return { label: sprintf(_n('%d column', '%d columns', value, 'eightshift-forms'), value), value };
+									}).toReversed(),
 								].filter(Boolean)}
 								onChange={(value) => responsiveData.onChange(responsiveData.attribute[breakpoint], value)}
 								type='menu'
@@ -306,12 +266,7 @@ export const FieldOptionsVisibility = (attributes) => {
  * @returns Object
  */
 export const getResponsiveLegacyData = (responsiveAttr, attributes, manifest, setAttributes) => ({
-	attribute: Object.fromEntries(
-		Object.entries(responsiveAttr)?.map(([breakpoint, attrName]) => [
-			breakpoint,
-			getAttrKey(attrName, attributes, manifest),
-		]),
-	),
+	attribute: Object.fromEntries(Object.entries(responsiveAttr)?.map(([breakpoint, attrName]) => [breakpoint, getAttrKey(attrName, attributes, manifest)])),
 	value: attributes,
 	onChange: (attributeName, value) => setAttributes({ [attributeName]: value }),
 });

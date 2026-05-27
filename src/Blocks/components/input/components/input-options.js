@@ -3,49 +3,9 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { getOption, checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	NumberPicker,
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tabs,
-	TabList,
-	Tab,
-	TabPanel,
-	OptionSelect,
-	Container,
-	ContainerGroup,
-} from '@eightshift/ui-components';
-import {
-	buttonGhost,
-	checks,
-	chevronLeft,
-	chevronRight,
-	design,
-	fieldPlaceholder,
-	fieldValue,
-	googleTagManager,
-	moreH,
-	none,
-	positionHEnd,
-	positionHStart,
-	rangeMax,
-	rangeMid,
-	rangeMin,
-	regex,
-	rename,
-	requiredAlt,
-	sliders,
-	step,
-	tag,
-	titleGeneric,
-} from '@eightshift/ui-components/icons';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { NumberPicker, ContainerPanel, InputField, Toggle, Tabs, TabList, Tab, TabPanel, OptionSelect, Container, ContainerGroup } from '@eightshift/ui-components';
+import { buttonGhost, checks, chevronLeft, chevronRight, design, fieldPlaceholder, fieldValue, googleTagManager, moreH, none, positionHEnd, positionHStart, rangeMax, rangeMid, rangeMin, regex, rename, requiredAlt, sliders, step, tag, titleGeneric } from '@eightshift/ui-components/icons';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -95,10 +55,7 @@ export const InputOptions = (attributes) => {
 	];
 
 	if (typeof esFormsLocalization !== 'undefined') {
-		inputValidationPatternOptions = [
-			...inputValidationPatternOptions,
-			...esFormsLocalization.validationPatternsOptions,
-		];
+		inputValidationPatternOptions = [...inputValidationPatternOptions, ...esFormsLocalization.validationPatternsOptions];
 	}
 
 	// Output number to 2 decimal places if it's a float, otherwise output to fixed number.
@@ -215,9 +172,7 @@ export const InputOptions = (attributes) => {
 							icon={fieldValue}
 							label={__('Value input field', 'eightshift-forms')}
 							checked={inputRangeUseCustomField}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('inputRangeUseCustomField', attributes, manifest)]: value })
-							}
+							onChange={(value) => setAttributes({ [getAttrKey('inputRangeUseCustomField', attributes, manifest)]: value })}
 						/>
 					</Container>
 				</ContainerPanel>
@@ -241,13 +196,8 @@ export const InputOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={inputPlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('inputPlaceholder', attributes, manifest),
-											inputDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
 									/>
 								</Container>
 							);
@@ -315,13 +265,8 @@ export const InputOptions = (attributes) => {
 								icon={positionHStart}
 								label={__('Prefix', 'eightshift-forms')}
 								value={inputRangeShowMinPrefix}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputRangeShowMinPrefix', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowMinPrefix', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMinPrefix', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowMinPrefix', attributes, manifest), inputDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -331,13 +276,8 @@ export const InputOptions = (attributes) => {
 								icon={positionHEnd}
 								label={__('Suffix', 'eightshift-forms')}
 								value={inputRangeShowMinSuffix}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputRangeShowMinSuffix', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowMinSuffix', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMinSuffix', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowMinSuffix', attributes, manifest), inputDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -361,10 +301,7 @@ export const InputOptions = (attributes) => {
 										});
 									}
 								}}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowCurrent', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrent', attributes, manifest), inputDisabledOptions)}
 							/>
 						</Container>
 
@@ -373,13 +310,8 @@ export const InputOptions = (attributes) => {
 								icon={positionHStart}
 								label={__('Prefix', 'eightshift-forms')}
 								value={inputRangeShowCurrentPrefix}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest), inputDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -389,13 +321,8 @@ export const InputOptions = (attributes) => {
 								icon={positionHEnd}
 								label={__('Suffix', 'eightshift-forms')}
 								value={inputRangeShowCurrentSuffix}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest), inputDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -424,13 +351,8 @@ export const InputOptions = (attributes) => {
 								icon={positionHStart}
 								label={__('Prefix', 'eightshift-forms')}
 								value={inputRangeShowMaxPrefix}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputRangeShowMaxPrefix', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowMaxPrefix', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMaxPrefix', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowMaxPrefix', attributes, manifest), inputDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -440,13 +362,8 @@ export const InputOptions = (attributes) => {
 								icon={positionHEnd}
 								label={__('Suffix', 'eightshift-forms')}
 								value={inputRangeShowMaxSuffix}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputRangeShowMaxSuffix', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('inputRangeShowMaxSuffix', attributes, manifest),
-									inputDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMaxSuffix', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('inputRangeShowMaxSuffix', attributes, manifest), inputDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -475,13 +392,8 @@ export const InputOptions = (attributes) => {
 							label={__('Match pattern', 'eightshift-forms')}
 							options={inputValidationPatternOptions}
 							value={inputValidationPattern}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })
-							}
-							disabled={isOptionDisabled(
-								getAttrKey('inputValidationPattern', attributes, manifest),
-								inputDisabledOptions,
-							)}
+							onChange={(value) => setAttributes({ [getAttrKey('inputValidationPattern', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('inputValidationPattern', attributes, manifest), inputDisabledOptions)}
 							type='menu'
 							inline
 						/>
@@ -525,9 +437,7 @@ export const InputOptions = (attributes) => {
 								icon={chevronRight}
 								label={__('Min. value', 'eightshift-forms')}
 								value={inputMin}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: formatNumber(value) })
-								}
+								onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: formatNumber(value) })}
 								min={options.inputMin.min}
 								max={options.inputMin.max}
 								step={options.inputMin.step}
@@ -541,9 +451,7 @@ export const InputOptions = (attributes) => {
 								icon={chevronLeft}
 								label={__('Max. value', 'eightshift-forms')}
 								value={inputMax}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: formatNumber(value) })
-								}
+								onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: formatNumber(value) })}
 								min={options.inputMax.min}
 								max={options.inputMax.max}
 								step={options.inputMax.step}

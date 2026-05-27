@@ -3,17 +3,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { getAttrKey, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	OptionSelect,
-	Button,
-	ContainerGroup,
-	Container,
-	Toggle,
-	BaseControl,
-	ItemCollection,
-	HStack,
-	RichLabel,
-} from '@eightshift/ui-components';
+import { OptionSelect, Button, ContainerGroup, Container, Toggle, BaseControl, ItemCollection, HStack, RichLabel } from '@eightshift/ui-components';
 import { lightBulb, optionListAlt, plusCircle, trash, visibilityAlt, warning } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_SHORT_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
@@ -140,10 +130,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 							<RichLabel
 								icon={warning}
 								label={__('Note', 'eightshift-forms')}
-								subtitle={__(
-									'Adding field visibility overrides may result in odd behavior when used with conditional tags.',
-									'eightshift-forms',
-								)}
+								subtitle={__('Adding field visibility overrides may result in odd behavior when used with conditional tags.', 'eightshift-forms')}
 								iconClassName='es:text-accent-600'
 							/>
 
@@ -151,10 +138,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 							<RichLabel
 								icon={lightBulb}
-								label={__(
-									"If you can't find a field, make sure the form is saved, and all fields have a name set.",
-									'eightshift-forms',
-								)}
+								label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
 								iconClassName='es:text-accent-600'
 							/>
 						</HelpTooltip>
@@ -172,11 +156,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					}
 					onChange={(items) => {
 						setAttributes({
-							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: items.map((item) => [
-								item.field,
-								item.action,
-								item.fieldOption,
-							]),
+							[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: items.map((item) => [item.field, item.action, item.fieldOption]),
 						});
 					}}
 				>
@@ -197,10 +177,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						icon={plusCircle}
 						onClick={() =>
 							setAttributes({
-								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [
-									...conditionalTagsRulesForms,
-									[formFields?.[0]?.value ?? '', 'show', ''],
-								],
+								[getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms, [formFields?.[0]?.value ?? '', 'show', '']],
 							})
 						}
 						className='esf:w-full'

@@ -186,9 +186,7 @@ export class ConditionalTags {
 
 				// Select fields can have multiple or single select inner options.
 				if (type === 'select') {
-					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId)
-						? this.getFieldInnerSelectMultiple(formId, name)
-						: this.getFieldInnerSelectSingle(formId, name);
+					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ? this.getFieldInnerSelectMultiple(formId, name) : this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
 					innerOutput = this.getFieldInner(formId, name);
@@ -295,15 +293,12 @@ export class ConditionalTags {
 		// Loop all inner items.
 		for (const [fieldName, innerItems] of Object.entries(data?.inner ?? {})) {
 			// Get correct selector type.
-			let selectorType =
-				this.state.getStateElementTypeField(fieldName, formId) === 'select' ? selectValueAttr : fieldNameAttr;
+			let selectorType = this.state.getStateElementTypeField(fieldName, formId) === 'select' ? selectValueAttr : fieldNameAttr;
 
 			// Loop all inner items.
 			innerItems.forEach((inner) => {
 				// Push selector for style output.
-				output.push(
-					`${formSelector}[${formIdAttr}="${formId}"] [${fieldNameAttr}="${fieldName}"] [${selectorType}="${inner}"]`,
-				);
+				output.push(`${formSelector}[${formIdAttr}="${formId}"] [${fieldNameAttr}="${fieldName}"] [${selectorType}="${inner}"]`);
 			});
 		}
 
@@ -385,13 +380,9 @@ export class ConditionalTags {
 	 */
 	getFieldTopLevel(formId, name, isNoneFormBlock = false) {
 		// Find defaults to know what direction to use.
-		const defaultState = !isNoneFormBlock
-			? this.state.getStateElementConditionalTagsDefaults(name, formId)
-			: this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
+		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
 
-		const ref = !isNoneFormBlock
-			? this.state.getStateElementConditionalTagsRef(name, formId)
-			: this.state.getStateElementFieldConditionalTagsRef(name, formId);
+		const ref = !isNoneFormBlock ? this.state.getStateElementConditionalTagsRef(name, formId) : this.state.getStateElementFieldConditionalTagsRef(name, formId);
 
 		// Check if conditions are valid or not. This is where the magic happens.
 		const isValid = ref?.map((validItem) => validItem.every(Boolean)).some(Boolean);
@@ -619,7 +610,9 @@ export class ConditionalTags {
 		// Loop all conditional tags.
 		this.state.getStateElementConditionalTagsTagsInner(topName, innerName, formId).forEach((items, parent) => {
 			// Loop all inner fields.
-			items.forEach(([innerName, innerCondition, innerValue], index) => {
+			items.forEach(([innerName, innerConditionRaw, innerValue], index) => {
+				let innerCondition = innerConditionRaw;
+
 				// Placeholder value to check later.
 				let value = '';
 

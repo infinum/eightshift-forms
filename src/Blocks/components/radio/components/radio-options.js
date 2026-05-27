@@ -1,31 +1,8 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, MediaPicker, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	a11yWarning,
-	checkCircle,
-	hide,
-	none,
-	sliders,
-	tag,
-	design,
-	moreH,
-	iconGeneric,
-} from '@eightshift/ui-components/icons';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	RichLabel,
-	BaseControl,
-	Switch,
-} from '@eightshift/ui-components';
+import { a11yWarning, checkCircle, hide, none, sliders, tag, design, moreH, iconGeneric } from '@eightshift/ui-components/icons';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, RichLabel, BaseControl, Switch } from '@eightshift/ui-components';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import manifest from '../manifest.json';
@@ -126,18 +103,13 @@ export const RadioOptions = (attributes) => {
 								type='multiline'
 								value={radioHideLabelText ? null : radioLabel}
 								onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
-								disabled={
-									radioHideLabelText ||
-									isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)
-								}
+								disabled={radioHideLabelText || isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
 								rows={1}
 								actions={
 									<Switch
 										arial-label={__('Show option label', 'eightshift-forms')}
 										checked={!radioHideLabelText}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('radioHideLabelText', attributes, manifest)]: !value })
-										}
+										onChange={(value) => setAttributes({ [getAttrKey('radioHideLabelText', attributes, manifest)]: !value })}
 										size='medium'
 									/>
 								}
@@ -152,11 +124,7 @@ export const RadioOptions = (attributes) => {
 							accent
 						>
 							<RichLabel
-								label={
-									radioLabel === ''
-										? __('Label should not be empty', 'eightshift-forms')
-										: __('Options should have labels for accessibility', 'eightshift-forms')
-								}
+								label={radioLabel === '' ? __('Label should not be empty', 'eightshift-forms') : __('Options should have labels for accessibility', 'eightshift-forms')}
 								icon={a11yWarning}
 							/>
 						</Container>

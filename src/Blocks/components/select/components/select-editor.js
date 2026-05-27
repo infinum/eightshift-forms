@@ -20,10 +20,7 @@ export const SelectEditor = (attributes) => {
 					fieldContent: selectComponent,
 					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
-				statusSlot={[
-					!selectName && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
+				statusSlot={[!selectName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

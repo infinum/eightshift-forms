@@ -3,44 +3,9 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	ContainerGroup,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	OptionSelect,
-	BaseControl,
-} from '@eightshift/ui-components';
-import {
-	checks,
-	fieldPlaceholder,
-	fieldValue,
-	googleTagManager,
-	options,
-	regex,
-	buttonGhost,
-	design,
-	moreH,
-	requiredAlt,
-	sliders,
-	tag,
-	itemSelect,
-	none,
-	visible,
-	codeVariable,
-	externalLink,
-} from '@eightshift/ui-components/icons';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
+import { ContainerPanel, InputField, Toggle, ContainerGroup, Tab, TabList, Tabs, TabPanel, Container, OptionSelect, BaseControl } from '@eightshift/ui-components';
+import { checks, fieldPlaceholder, fieldValue, googleTagManager, options, regex, buttonGhost, design, moreH, requiredAlt, sliders, tag, itemSelect, none, visible, codeVariable, externalLink } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -148,11 +113,7 @@ export const DateOptions = (attributes) => {
 						<InputField
 							icon={fieldValue}
 							label={__('Initial value', 'eightshift-forms')}
-							placeholder={
-								dateType === 'date'
-									? __('e.g. 2026-05-20', 'eightshift-forms')
-									: __('e.g. 2026-05-20 14:30', 'eightshift-forms')
-							}
+							placeholder={dateType === 'date' ? __('e.g. 2026-05-20', 'eightshift-forms') : __('e.g. 2026-05-20 14:30', 'eightshift-forms')}
 							value={dateValue}
 							onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
@@ -199,13 +160,8 @@ export const DateOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={datePlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('datePlaceholder', attributes, manifest),
-											dateDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
 									/>
 								</Container>
 							);
@@ -267,13 +223,8 @@ export const DateOptions = (attributes) => {
 							label={__('Match pattern', 'eightshift-forms')}
 							options={dateValidationPatternOptions}
 							value={dateValidationPattern}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('dateValidationPattern', attributes, manifest)]: value })
-							}
-							disabled={isOptionDisabled(
-								getAttrKey('dateValidationPattern', attributes, manifest),
-								dateDisabledOptions,
-							)}
+							onChange={(value) => setAttributes({ [getAttrKey('dateValidationPattern', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('dateValidationPattern', attributes, manifest), dateDisabledOptions)}
 							type='menu'
 							inline
 						/>

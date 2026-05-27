@@ -1,20 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	BaseControl,
-	Button,
-	ContainerPanel,
-	HStack,
-	ButtonGroup,
-	Container,
-	TriggeredPopover,
-	RichLabel,
-	Tabs,
-	TabList,
-	Tab,
-	TabPanel,
-} from '@eightshift/ui-components';
+import { BaseControl, Button, ContainerPanel, HStack, ButtonGroup, Container, TriggeredPopover, RichLabel, Tabs, TabList, Tab, TabPanel } from '@eightshift/ui-components';
 import { LocationsButton, SettingsButton, resetInnerBlocks } from '../../utils';
 import { formAlt, moreH, reset, treeAlt2, warning } from '@eightshift/ui-components/icons';
 import { FormOptions, FormOptionsAdvanced } from '../../../components/form/components/form-options';

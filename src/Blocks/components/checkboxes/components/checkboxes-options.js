@@ -3,35 +3,9 @@ import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	OptionSelect,
-} from '@eightshift/ui-components';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
-import {
-	buttonGhost,
-	checks,
-	design,
-	fieldPlaceholder,
-	moreH,
-	optionListAlt,
-	requiredAlt,
-	sliders,
-	tag,
-} from '@eightshift/ui-components/icons';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, OptionSelect } from '@eightshift/ui-components';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
+import { buttonGhost, checks, design, fieldPlaceholder, moreH, optionListAlt, requiredAlt, sliders, tag } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -114,13 +88,8 @@ export const CheckboxesOptions = (attributes) => {
 							icon={optionListAlt}
 							label={__('Show as', 'eightshift-forms')}
 							value={checkboxesShowAs}
-							options={globalManifest.showAsMap.options.map((item) =>
-								item.value === 'checkboxes' ? { ...item, value: '' } : item,
-							)}
-							disabled={isOptionDisabled(
-								getAttrKey('checkboxesShowAs', attributes, manifest),
-								checkboxesDisabledOptions,
-							)}
+							options={globalManifest.showAsMap.options.map((item) => (item.value === 'checkboxes' ? { ...item, value: '' } : item))}
+							disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
 							onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
 							type='menu'
 							inline
@@ -153,13 +122,8 @@ export const CheckboxesOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={checkboxesPlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('checkboxesPlaceholder', attributes, manifest),
-											checkboxesDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
 									/>
 								</Container>
 							);
@@ -191,13 +155,8 @@ export const CheckboxesOptions = (attributes) => {
 								<InputField
 									help={__('Shown when the field is empty', 'eightshift-forms')}
 									value={checkboxesPlaceholder}
-									onChange={(value) =>
-										setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })
-									}
-									disabled={isOptionDisabled(
-										getAttrKey('checkboxesPlaceholder', attributes, manifest),
-										checkboxesDisabledOptions,
-									)}
+									onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
 								/>
 							)}
 
@@ -254,15 +213,10 @@ export const CheckboxesOptions = (attributes) => {
 								icon={optionListAlt}
 								label={__('Minimum selections', 'eightshift-forms')}
 								value={checkboxesIsRequiredCount}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })
-								}
+								onChange={(value) => setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })}
 								min={options.checkboxesIsRequiredCount.min}
 								max={countInnerBlocks}
-								disabled={isOptionDisabled(
-									getAttrKey('checkboxesIsRequiredCount', attributes, manifest),
-									checkboxesDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('checkboxesIsRequiredCount', attributes, manifest), checkboxesDisabledOptions)}
 								inline
 							/>
 						</Container>

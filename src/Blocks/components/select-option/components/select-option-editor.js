@@ -15,22 +15,10 @@ export const SelectOptionEditor = (attributes) => {
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
 	return (
-		<div
-			className={clsx(
-				'esf-fieldset-item',
-				selectOptionIsHidden && 'esf-field-hidden',
-				selectOptionIsSelected && 'esf:text-accent!',
-			)}
-		>
+		<div className={clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-accent!')}>
 			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}
 
-			<StatusFieldOutput
-				components={[
-					selectOptionIsHidden && 'hidden',
-					!selectOptionValue && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
-			/>
+			<StatusFieldOutput components={[selectOptionIsHidden && 'hidden', !selectOptionValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

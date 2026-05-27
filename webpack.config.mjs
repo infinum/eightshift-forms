@@ -36,10 +36,7 @@ export default (env, argv) => {
 		entry: {
 			...config.entry,
 			applicationAdmin: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-admin.js'),
-			applicationBlocksFrontendMandatory: path.join(
-				projectConfig.config.projectDir,
-				'/src/Blocks/assets/application-blocks-frontend-mandatory.js',
-			),
+			applicationBlocksFrontendMandatory: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-blocks-frontend-mandatory.js'),
 		},
 	};
 };

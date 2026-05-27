@@ -3,18 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { a11yWarning, checkSquare, hide, none, sliders, tag, moreH } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	RichLabel,
-} from '@eightshift/ui-components';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, RichLabel } from '@eightshift/ui-components';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
@@ -67,13 +56,8 @@ export const SelectOptionOptions = (attributes) => {
 							icon={checkSquare}
 							label={__('Selected', 'eightshift-forms')}
 							checked={selectOptionIsSelected}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })
-							}
-							disabled={isOptionDisabled(
-								getAttrKey('selectOptionIsSelected', attributes, manifest),
-								selectOptionDisabledOptions,
-							)}
+							onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsSelected', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('selectOptionIsSelected', attributes, manifest), selectOptionDisabledOptions)}
 						/>
 					</Container>
 
@@ -83,13 +67,8 @@ export const SelectOptionOptions = (attributes) => {
 								icon={hide}
 								label={__('Hidden', 'eightshift-forms')}
 								checked={selectOptionIsHidden}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('selectOptionIsHidden', attributes, manifest),
-									selectOptionDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('selectOptionIsHidden', attributes, manifest), selectOptionDisabledOptions)}
 							/>
 						</Container>
 
@@ -98,13 +77,8 @@ export const SelectOptionOptions = (attributes) => {
 								icon={none}
 								label={__('Disabled', 'eightshift-forms')}
 								checked={selectOptionIsDisabled}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('selectOptionIsDisabled', attributes, manifest),
-									selectOptionDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('selectOptionIsDisabled', attributes, manifest), selectOptionDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>
@@ -121,10 +95,7 @@ export const SelectOptionOptions = (attributes) => {
 								type='multiline'
 								value={selectOptionLabel}
 								onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('selectOptionLabel', attributes, manifest),
-									selectOptionDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
 								rows={1}
 							/>
 						</Container>

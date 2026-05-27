@@ -52,9 +52,7 @@ export const FormOptionsAdvanced = (attributes) => {
 					label={__('Custom action', 'eightshift-forms')}
 					value={formAction}
 					onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
-					actions={
-						<HelpTooltip>{__('Custom form action that will process form data.', 'eightshift-forms')}</HelpTooltip>
-					}
+					actions={<HelpTooltip>{__('Custom form action that will process form data.', 'eightshift-forms')}</HelpTooltip>}
 					monospaceFont
 				/>
 			</Container>
@@ -66,12 +64,7 @@ export const FormOptionsAdvanced = (attributes) => {
 						<HStack>
 							{__('Process form externally', 'eightshift-forms')}
 
-							<HelpTooltip>
-								{__(
-									'If enabled, after a successful submission the user will be redirected to the external site, which should be set up to process the form entry.',
-									'eightshift-forms',
-								)}
-							</HelpTooltip>
+							<HelpTooltip>{__('If enabled, after a successful submission the user will be redirected to the external site, which should be set up to process the form entry.', 'eightshift-forms')}</HelpTooltip>
 						</HStack>
 					}
 					checked={formActionExternal}

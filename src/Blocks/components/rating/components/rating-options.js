@@ -1,38 +1,11 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import {
-	checks,
-	googleTagManager,
-	none,
-	requiredAlt,
-	star,
-	titleGeneric,
-	moreH,
-	sliders,
-	tag,
-	design,
-} from '@eightshift/ui-components/icons';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	NumberPicker,
-	Container,
-	ContainerGroup,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-} from '@eightshift/ui-components';
+import { checks, googleTagManager, none, requiredAlt, star, titleGeneric, moreH, sliders, tag, design } from '@eightshift/ui-components/icons';
+import { ContainerPanel, InputField, Toggle, NumberPicker, Container, ContainerGroup, Tab, TabList, Tabs, TabPanel } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const RatingOptions = (attributes) => {

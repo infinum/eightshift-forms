@@ -1,42 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import {
-	checks,
-	fieldPlaceholder,
-	googleTagManager,
-	optionListAlt,
-	search,
-	design,
-	moreH,
-	requiredAlt,
-	sliders,
-	tag,
-	none,
-	optionList,
-	chevronRight,
-	chevronLeft,
-	buttonGhost,
-} from '@eightshift/ui-components/icons';
+import { checks, fieldPlaceholder, googleTagManager, optionListAlt, search, design, moreH, requiredAlt, sliders, tag, none, optionList, chevronRight, chevronLeft, buttonGhost } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	NumberPicker,
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	OptionSelect,
-} from '@eightshift/ui-components';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { NumberPicker, ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, OptionSelect } from '@eightshift/ui-components';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
@@ -109,9 +76,7 @@ export const SelectOptions = (attributes) => {
 							icon={optionListAlt}
 							label={__('Show as', 'eightshift-forms')}
 							value={selectShowAs}
-							options={globalManifest.showAsMap.options.map((item) =>
-								item.value === 'select' ? { ...item, value: '' } : item,
-							)}
+							options={globalManifest.showAsMap.options.map((item) => (item.value === 'select' ? { ...item, value: '' } : item))}
 							disabled={isOptionDisabled(getAttrKey('selectShowAs', attributes, manifest), selectDisabledOptions)}
 							onChange={(value) => setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value })}
 							type='menu'
@@ -183,13 +148,8 @@ export const SelectOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={selectPlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('selectPlaceholder', attributes, manifest),
-											selectDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
 									/>
 								</Container>
 							);

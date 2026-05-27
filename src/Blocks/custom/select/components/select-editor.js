@@ -15,9 +15,7 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 		const parentBlockIds = select('core/block-editor').getBlockParents(clientId);
 		const parents = select('core/block-editor').getBlocksByClientId(parentBlockIds);
 
-		setParentBlock(
-			parents.filter((parent) => globalManifest.allowedBlocksList.integrationsBuilder.includes(parent.name)),
-		);
+		setParentBlock(parents.filter((parent) => globalManifest.allowedBlocksList.integrationsBuilder.includes(parent.name)));
 	}, [clientId]);
 
 	return (

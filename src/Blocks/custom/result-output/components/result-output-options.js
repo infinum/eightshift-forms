@@ -45,11 +45,7 @@ export const ResultOutputOptions = ({ attributes, setAttributes }) => {
 
 			<AsyncSelect
 				label={__('Connected Form', 'eightshift-forms')}
-				value={
-					Object.keys(resultOutputFormPostIdRaw ?? {}).length
-						? resultOutputFormPostIdRaw
-						: { id: resultOutputFormPostId }
-				}
+				value={Object.keys(resultOutputFormPostIdRaw ?? {}).length ? resultOutputFormPostIdRaw : { id: resultOutputFormPostId }}
 				fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
 					noCache: true,
 					processLabel: ({ title: { rendered: label } }) => label,

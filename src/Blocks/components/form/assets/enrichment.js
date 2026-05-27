@@ -120,11 +120,7 @@ export class Enrichment {
 			[name]: typeof valueData === 'undefined' ? '' : valueData,
 		};
 
-		this.setLocalStorage(
-			newStorage,
-			this.state.getStateEnrichmentFormPrefillStorageName(formId),
-			this.state.getStateEnrichmentExpirationPrefill(),
-		);
+		this.setLocalStorage(newStorage, this.state.getStateEnrichmentFormPrefillStorageName(formId), this.state.getStateEnrichmentExpirationPrefill());
 	}
 
 	/**

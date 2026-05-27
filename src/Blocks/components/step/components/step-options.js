@@ -34,9 +34,7 @@ export const StepOptions = (attributes) => {
 					icon={tag}
 					label={__('Label', 'eightshift-forms')}
 					placeholder={__('e.g. Step 1', 'eightshift-forms')}
-					actions={
-						<HelpTooltip>{__('Not shown to users, assists with step configuration.', 'eightshift-forms')}</HelpTooltip>
-					}
+					actions={<HelpTooltip>{__('Not shown to users, assists with step configuration.', 'eightshift-forms')}</HelpTooltip>}
 					value={stepLabel}
 					onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
 				/>

@@ -20,10 +20,7 @@ export const CheckboxesEditor = (attributes) => {
 					fieldContent: checkboxes,
 					fieldIsRequired: checkAttr('checkboxesIsRequired', attributes, manifest),
 				})}
-				statusSlot={[
-					!checkboxesName && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
+				statusSlot={[!checkboxesName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

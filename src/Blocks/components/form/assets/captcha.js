@@ -107,13 +107,8 @@ export class Captcha {
 
 			const parsedResponseData = parsedResponse?.data;
 
-			if (
-				parsedResponse?.status === 'error' &&
-				!parsedResponseData?.[this.state.getStateResponseOutputKey('captchaIsSpam')]
-			) {
-				throw new Error(
-					`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response?.message} Action: ${action}`,
-				);
+			if (parsedResponse?.status === 'error' && !parsedResponseData?.[this.state.getStateResponseOutputKey('captchaIsSpam')]) {
+				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response?.message} Action: ${action}`);
 			}
 
 			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), {
@@ -139,10 +134,7 @@ export class Captcha {
 			return;
 		}
 
-		document?.body?.setAttribute(
-			this.state.getStateAttribute('hideCaptchaBadge'),
-			this.state.getStateCaptchaHideBadge(),
-		);
+		document?.body?.setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
 	}
 
 	////////////////////////////////////////////////////////////////

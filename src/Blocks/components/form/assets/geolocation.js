@@ -65,30 +65,17 @@ export class Geolocation {
 			return;
 		}
 
-		[
-			...this.state.getStateElementByTypeField('country', formId),
-			...this.state.getStateElementByTypeField('phone', formId),
-		].forEach((select) => {
+		[...this.state.getStateElementByTypeField('country', formId), ...this.state.getStateElementByTypeField('phone', formId)].forEach((select) => {
 			const name = select.name;
 
 			const type = this.state.getStateElementTypeField(name, formId);
 
 			switch (type) {
 				case 'country':
-					this.utils.setManualSelectByAttributeValue(
-						formId,
-						name,
-						[location],
-						this.state.getStateAttribute('countryCode'),
-					);
+					this.utils.setManualSelectByAttributeValue(formId, name, [location], this.state.getStateAttribute('countryCode'));
 					break;
 				case 'phone':
-					this.utils.setManualPhonePrefixByAttributeValue(
-						formId,
-						name,
-						location,
-						this.state.getStateAttribute('countryCode'),
-					);
+					this.utils.setManualPhonePrefixByAttributeValue(formId, name, location, this.state.getStateAttribute('countryCode'));
 					break;
 			}
 		});

@@ -26,7 +26,7 @@ module.exports = defineConfig({
 
 	timeout: 60_000,
 	expect: {
-		timeout: 30_000
+		timeout: 30_000,
 	},
 
 	/* Configure projects for major browsers */
@@ -37,4 +37,3 @@ module.exports = defineConfig({
 		},
 	],
 });
-

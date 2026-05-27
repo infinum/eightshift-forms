@@ -32,9 +32,7 @@ export const DateEditor = (attributes) => {
 					fieldContent: date,
 					fieldIsRequired: checkAttr('dateIsRequired', attributes, manifest),
 				})}
-				statusSlot={[!dateName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
-					Boolean,
-				)}
+				statusSlot={[!dateName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

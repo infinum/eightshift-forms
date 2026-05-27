@@ -2,42 +2,10 @@
 
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import {
-	buttonGhost,
-	checks,
-	design,
-	fieldPlaceholder,
-	googleTagManager,
-	moreH,
-	none,
-	regex,
-	sliders,
-	tag,
-	titleGeneric,
-	requiredAlt,
-	chevronRight,
-	chevronLeft,
-} from '@eightshift/ui-components/icons';
+import { buttonGhost, checks, design, fieldPlaceholder, googleTagManager, moreH, none, regex, sliders, tag, titleGeneric, requiredAlt, chevronRight, chevronLeft } from '@eightshift/ui-components/icons';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	NumberPicker,
-	InputField,
-	Toggle,
-	ContainerPanel,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	OptionSelect,
-} from '@eightshift/ui-components';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { NumberPicker, InputField, Toggle, ContainerPanel, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, OptionSelect } from '@eightshift/ui-components';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -149,10 +117,7 @@ export const TextareaOptions = (attributes) => {
 								label={__('Disabled', 'eightshift-forms')}
 								checked={textareaIsDisabled}
 								onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('textareaIsDisabled', attributes, manifest),
-									textareaDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('textareaIsDisabled', attributes, manifest), textareaDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>
@@ -177,13 +142,8 @@ export const TextareaOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={textareaPlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('textareaPlaceholder', attributes, manifest),
-											textareaDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('textareaPlaceholder', attributes, manifest), textareaDisabledOptions)}
 									/>
 								</Container>
 							);
@@ -235,10 +195,7 @@ export const TextareaOptions = (attributes) => {
 							label={__('Required', 'eightshift-forms')}
 							checked={textareaIsRequired}
 							onChange={(value) => setAttributes({ [getAttrKey('textareaIsRequired', attributes, manifest)]: value })}
-							disabled={isOptionDisabled(
-								getAttrKey('textareaIsRequired', attributes, manifest),
-								textareaDisabledOptions,
-							)}
+							disabled={isOptionDisabled(getAttrKey('textareaIsRequired', attributes, manifest), textareaDisabledOptions)}
 						/>
 					</Container>
 
@@ -248,13 +205,8 @@ export const TextareaOptions = (attributes) => {
 							label={__('Match pattern', 'eightshift-forms')}
 							options={textareaValidationPatternOptions}
 							value={textareaValidationPattern}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })
-							}
-							disabled={isOptionDisabled(
-								getAttrKey('textareaValidationPattern', attributes, manifest),
-								textareaDisabledOptions,
-							)}
+							onChange={(value) => setAttributes({ [getAttrKey('textareaValidationPattern', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('textareaValidationPattern', attributes, manifest), textareaDisabledOptions)}
 							type='menu'
 							inline
 						/>
@@ -270,10 +222,7 @@ export const TextareaOptions = (attributes) => {
 								min={options.textareaMinLength.min}
 								max={options.textareaMinLength.max}
 								step={options.textareaMinLength.step}
-								disabled={isOptionDisabled(
-									getAttrKey('textareaMinLength', attributes, manifest),
-									textareaDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -287,10 +236,7 @@ export const TextareaOptions = (attributes) => {
 								min={options.textareaMaxLength.min}
 								max={options.textareaMaxLength.max}
 								step={options.textareaMaxLength.step}
-								disabled={isOptionDisabled(
-									getAttrKey('textareaMaxLength', attributes, manifest),
-									textareaDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -314,10 +260,7 @@ export const TextareaOptions = (attributes) => {
 								label={__('GTM tracking code', 'eightshift-forms')}
 								value={textareaTracking}
 								onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('textareaTracking', attributes, manifest),
-									textareaDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('textareaTracking', attributes, manifest), textareaDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>

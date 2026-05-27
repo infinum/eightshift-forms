@@ -38,9 +38,7 @@ export const PhoneEditor = (attributes) => {
 					fieldContent: phone,
 					fieldIsRequired: checkAttr('phoneIsRequired', attributes, manifest),
 				})}
-				statusSlot={[!phoneName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
-					Boolean,
-				)}
+				statusSlot={[!phoneName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

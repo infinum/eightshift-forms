@@ -3,17 +3,7 @@ import { googleTagManager, none, sliders, tag, design, moreH } from '@eightshift
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-} from '@eightshift/ui-components';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const SubmitOptions = (attributes) => {
@@ -64,10 +54,7 @@ export const SubmitOptions = (attributes) => {
 									label={__('Disabled', 'eightshift-forms')}
 									checked={submitIsDisabled}
 									onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
-									disabled={isOptionDisabled(
-										getAttrKey('submitIsDisabled', attributes, manifest),
-										submitDisabledOptions,
-									)}
+									disabled={isOptionDisabled(getAttrKey('submitIsDisabled', attributes, manifest), submitDisabledOptions)}
 								/>
 							</Container>
 						</ContainerGroup>

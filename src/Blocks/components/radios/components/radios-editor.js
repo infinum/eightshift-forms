@@ -20,10 +20,7 @@ export const RadiosEditor = (attributes) => {
 					fieldContent: radios,
 					fieldIsRequired: checkAttr('radiosIsRequired', attributes, manifest),
 				})}
-				statusSlot={[
-					!radiosName && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
+				statusSlot={[!radiosName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

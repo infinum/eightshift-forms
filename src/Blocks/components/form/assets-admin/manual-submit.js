@@ -30,9 +30,7 @@ export class ManualSubmit {
 	async submit(target) {
 		const id = target.getAttribute(this.state.getStateAttribute('manualSubmitId'));
 		const formId = target.getAttribute(this.state.getStateAttribute('formId'));
-		const data = document.querySelector(
-			`${this.dataSelector}[${this.state.getStateAttribute('manualSubmitId')}="${id}"]`,
-		)?.innerHTML;
+		const data = document.querySelector(`${this.dataSelector}[${this.state.getStateAttribute('manualSubmitId')}="${id}"]`)?.innerHTML;
 
 		this.utils.showLoader(this.FORM_ID);
 

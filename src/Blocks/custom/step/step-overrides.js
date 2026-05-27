@@ -7,8 +7,5 @@ export const overrides = {
 	icon: {
 		src: getUtilsIcons('steps') ?? manifest.icon.src,
 	},
-	parent: [
-		...globalSettings.allowedBlocksList.integrationsBuilder,
-		...globalSettings.allowedBlocksList.integrationsNoBuilder,
-	],
+	parent: [...globalSettings.allowedBlocksList.integrationsBuilder, ...globalSettings.allowedBlocksList.integrationsNoBuilder],
 };

@@ -1,34 +1,9 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	ContainerGroup,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-} from '@eightshift/ui-components';
-import {
-	checkCircleFill,
-	checks,
-	design,
-	googleTagManager,
-	moreH,
-	multiple,
-	requiredAlt,
-	sliders,
-	tag,
-} from '@eightshift/ui-components/icons';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
+import { ContainerPanel, InputField, Toggle, ContainerGroup, Tab, TabList, Tabs, TabPanel, Container } from '@eightshift/ui-components';
+import { checkCircleFill, checks, design, googleTagManager, moreH, multiple, requiredAlt, sliders, tag } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -60,10 +35,7 @@ export const DynamicOptions = (attributes) => {
 						help={__('All dynamic fields are deactivated by default.', 'eightshift-forms')}
 						checked={!dynamicIsDeactivated}
 						onChange={(value) => setAttributes({ [getAttrKey('dynamicIsDeactivated', attributes, manifest)]: !value })}
-						disabled={isOptionDisabled(
-							getAttrKey('dynamicIsDeactivated', attributes, manifest),
-							dynamicDisabledOptions,
-						)}
+						disabled={isOptionDisabled(getAttrKey('dynamicIsDeactivated', attributes, manifest), dynamicDisabledOptions)}
 					/>
 				</Container>
 			</ContainerPanel>
@@ -119,10 +91,7 @@ export const DynamicOptions = (attributes) => {
 								onChange={(value) => {
 									setAttributes({ [getAttrKey('dynamicIsMultiple', attributes, manifest)]: value });
 								}}
-								disabled={isOptionDisabled(
-									getAttrKey('dynamicIsMultiple', attributes, manifest),
-									dynamicDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('dynamicIsMultiple', attributes, manifest), dynamicDisabledOptions)}
 							/>
 						</Container>
 
@@ -170,10 +139,7 @@ export const DynamicOptions = (attributes) => {
 								label={__('Required', 'eightshift-forms')}
 								checked={dynamicIsRequired}
 								onChange={(value) => setAttributes({ [getAttrKey('dynamicIsRequired', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('dynamicIsRequired', attributes, manifest),
-									dynamicDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('dynamicIsRequired', attributes, manifest), dynamicDisabledOptions)}
 							/>
 						</Container>
 					</ContainerPanel>
@@ -195,10 +161,7 @@ export const DynamicOptions = (attributes) => {
 									label={__('GTM tracking code', 'eightshift-forms')}
 									value={dynamicTracking}
 									onChange={(value) => setAttributes({ [getAttrKey('dynamicTracking', attributes, manifest)]: value })}
-									disabled={isOptionDisabled(
-										getAttrKey('dynamicTracking', attributes, manifest),
-										dynamicDisabledOptions,
-									)}
+									disabled={isOptionDisabled(getAttrKey('dynamicTracking', attributes, manifest), dynamicDisabledOptions)}
 								/>
 							</Container>
 						</ContainerGroup>

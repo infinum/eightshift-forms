@@ -3,10 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ContainerPanel, InputField, OptionSelect, Container, ContainerGroup } from '@eightshift/ui-components';
 import { chevronLeft, chevronRight, experiment, rename } from '@eightshift/ui-components/icons';
-import {
-	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
-	CONDITIONAL_TAGS_OPERATORS_LABELS,
-} from './../../../components/conditional-tags/components/conditional-tags-labels';
+import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../../components/conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
@@ -19,9 +16,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 	const resultOutputItemValueEnd = checkAttr('resultOutputItemValueEnd', attributes, manifest);
 	const resultOutputItemOperator = checkAttr('resultOutputItemOperator', attributes, manifest);
 
-	const [showEndValue, setShowEndValue] = useState(
-		resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended,
-	);
+	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended);
 
 	return (
 		<ContainerPanel>
@@ -71,9 +66,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 						icon={chevronLeft}
 						label={__('End value', 'eightshift-forms')}
 						value={resultOutputItemValueEnd}
-						onChange={(value) =>
-							setAttributes({ [getAttrKey('resultOutputItemValueEnd', attributes, manifest)]: value })
-						}
+						onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValueEnd', attributes, manifest)]: value })}
 						placeholder={__('(number)', 'eightshift-forms')}
 						inline
 					/>

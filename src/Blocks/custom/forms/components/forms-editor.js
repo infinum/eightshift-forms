@@ -38,9 +38,7 @@ export const FormsEditor = ({ attributes, preview }) => {
 					compact
 					accent
 				>
-					<span className='esf:text-xs esf:font-stretch-110% esf:font-normal!'>
-						{__('Eightshift Forms', 'eightshift-forms')}
-					</span>
+					<span className='esf:text-xs esf:font-stretch-110% esf:font-normal!'>{__('Eightshift Forms', 'eightshift-forms')}</span>
 				</Container>
 
 				<Container centered>

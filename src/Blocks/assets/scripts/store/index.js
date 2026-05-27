@@ -50,6 +50,8 @@ const reducer = (state = DEFAULT_STATE, action) => {
 			};
 		}
 	}
+
+	return state;
 };
 
 register(

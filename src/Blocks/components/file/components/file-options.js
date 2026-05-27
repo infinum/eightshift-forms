@@ -1,44 +1,11 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	NumberPicker,
-	ContainerGroup,
-	Container,
-	RichLabel,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-} from '@eightshift/ui-components';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { ContainerPanel, InputField, Toggle, NumberPicker, ContainerGroup, Container, RichLabel, Tab, TabList, Tabs, TabPanel } from '@eightshift/ui-components';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import {
-	buttonOutline,
-	checks,
-	fileType,
-	files,
-	googleTagManager,
-	infoCircle,
-	lightBulbAlt,
-	none,
-	requiredAlt,
-	design,
-	moreH,
-	sliders,
-	tag,
-	chevronRight,
-	chevronLeft,
-} from '@eightshift/ui-components/icons';
+import { buttonOutline, checks, fileType, files, googleTagManager, infoCircle, lightBulbAlt, none, requiredAlt, design, moreH, sliders, tag, chevronRight, chevronLeft } from '@eightshift/ui-components/icons';
 import manifest from '../manifest.json';
 import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
 
@@ -123,10 +90,7 @@ export const FileOptions = (attributes) => {
 						>
 							<RichLabel
 								icon={lightBulbAlt}
-								label={__(
-									'Specified file types should be uploadable through the WordPress uploader',
-									'eightshift-forms',
-								)}
+								label={__('Specified file types should be uploadable through the WordPress uploader', 'eightshift-forms')}
 							/>
 						</Container>
 					</ContainerGroup>
@@ -200,10 +164,7 @@ export const FileOptions = (attributes) => {
 										[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
 									})
 								}
-								disabled={
-									isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions) ||
-									isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
-								}
+								disabled={isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions) || isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)}
 								inline
 							/>
 						</Container>
@@ -214,13 +175,8 @@ export const FileOptions = (attributes) => {
 								label={__('Upload button', 'eightshift-forms')}
 								value={fileCustomInfoButtonText}
 								placeholder={__('Add files', 'eightshift-forms')}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })
-								}
-								disabled={isOptionDisabled(
-									getAttrKey('fileCustomInfoButtonText', attributes, manifest),
-									fileDisabledOptions,
-								)}
+								onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('fileCustomInfoButtonText', attributes, manifest), fileDisabledOptions)}
 								inline
 							/>
 						</Container>

@@ -28,10 +28,7 @@ export const CountryEditor = (attributes) => {
 					fieldContent: country,
 					fieldIsRequired: checkAttr('countryIsRequired', attributes, manifest),
 				})}
-				statusSlot={[
-					!countryName && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
+				statusSlot={[!countryName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

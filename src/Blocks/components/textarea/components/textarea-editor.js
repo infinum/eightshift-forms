@@ -28,10 +28,7 @@ export const TextareaEditor = (attributes) => {
 				fieldContent: textarea,
 				fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
 			})}
-			statusSlot={[
-				!textareaName && 'missingName',
-				attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-			].filter(Boolean)}
+			statusSlot={[!textareaName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 		/>
 	);
 };

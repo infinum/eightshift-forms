@@ -1,32 +1,8 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, MediaPicker, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	RichLabel,
-	BaseControl,
-	Switch,
-} from '@eightshift/ui-components';
-import {
-	a11yWarning,
-	checkSquare,
-	googleTagManager,
-	hide,
-	none,
-	sliders,
-	tag,
-	design,
-	moreH,
-	iconGeneric,
-} from '@eightshift/ui-components/icons';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, RichLabel, BaseControl, Switch } from '@eightshift/ui-components';
+import { a11yWarning, checkSquare, googleTagManager, hide, none, sliders, tag, design, moreH, iconGeneric } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -90,10 +66,7 @@ export const CheckboxOptions = (attributes) => {
 							label={__('Selected', 'eightshift-forms')}
 							checked={checkboxIsChecked}
 							onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
-							disabled={isOptionDisabled(
-								getAttrKey('checkboxIsChecked', attributes, manifest),
-								checkboxDisabledOptions,
-							)}
+							disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
 						/>
 					</Container>
 
@@ -104,10 +77,7 @@ export const CheckboxOptions = (attributes) => {
 								label={__('Hidden', 'eightshift-forms')}
 								checked={checkboxIsHidden}
 								onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('checkboxIsHidden', attributes, manifest),
-									checkboxDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
 							/>
 						</Container>
 
@@ -117,10 +87,7 @@ export const CheckboxOptions = (attributes) => {
 								label={__('Disabled', 'eightshift-forms')}
 								checked={checkboxIsDisabled}
 								onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('checkboxIsDisabled', attributes, manifest),
-									checkboxDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>
@@ -137,18 +104,13 @@ export const CheckboxOptions = (attributes) => {
 								type='multiline'
 								value={checkboxHideLabelText ? null : checkboxLabel}
 								onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
-								disabled={
-									checkboxHideLabelText ||
-									isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)
-								}
+								disabled={checkboxHideLabelText || isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
 								rows={1}
 								actions={
 									<Switch
 										arial-label={__('Show option label', 'eightshift-forms')}
 										checked={!checkboxHideLabelText}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })
-										}
+										onChange={(value) => setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })}
 										size='medium'
 									/>
 								}
@@ -163,11 +125,7 @@ export const CheckboxOptions = (attributes) => {
 							accent
 						>
 							<RichLabel
-								label={
-									checkboxLabel === ''
-										? __('Label should not be empty', 'eightshift-forms')
-										: __('Options should have labels for accessibility', 'eightshift-forms')
-								}
+								label={checkboxLabel === '' ? __('Label should not be empty', 'eightshift-forms') : __('Options should have labels for accessibility', 'eightshift-forms')}
 								icon={a11yWarning}
 							/>
 						</Container>
@@ -212,10 +170,7 @@ export const CheckboxOptions = (attributes) => {
 								label={__('GTM tracking code', 'eightshift-forms')}
 								value={checkboxTracking}
 								onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('checkboxTracking', attributes, manifest),
-									checkboxDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>

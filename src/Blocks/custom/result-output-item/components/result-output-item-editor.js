@@ -3,10 +3,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { useInnerBlocksProps } from '@wordpress/block-editor';
 import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import manifest from '../manifest.json';
-import {
-	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
-	CONDITIONAL_TAGS_OPERATORS_LABELS,
-} from '../../../components/conditional-tags/components/conditional-tags-labels';
+import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from '../../../components/conditional-tags/components/conditional-tags-labels';
 import globalManifest from '../../../manifest.json';
 import { Container, ContainerGroup, RichLabel } from '@eightshift/ui-components';
 import { visible, warningFill } from '@eightshift/ui-components/icons';
@@ -36,22 +33,11 @@ export const ResultOutputItemEditor = ({ attributes }) => {
 
 	let outputName = '';
 
-	if (
-		resultOutputItemOperator === globalManifest.comparator.GT ||
-		resultOutputItemOperator === globalManifest.comparator.LT
-	) {
+	if (resultOutputItemOperator === globalManifest.comparator.GT || resultOutputItemOperator === globalManifest.comparator.LT) {
 		outputName = `is ${operatorLabel} ${resultOutputItemValueStart}`;
-	} else if (
-		resultOutputItemOperator === globalManifest.comparator.GTE ||
-		resultOutputItemOperator === globalManifest.comparator.LTE
-	) {
+	} else if (resultOutputItemOperator === globalManifest.comparator.GTE || resultOutputItemOperator === globalManifest.comparator.LTE) {
 		outputName = `is ${operatorLabel} to ${resultOutputItemValueStart}`;
-	} else if (
-		resultOutputItemOperator === globalManifest.comparatorExtended.B ||
-		resultOutputItemOperator === globalManifest.comparatorExtended.BS ||
-		resultOutputItemOperator === globalManifest.comparatorExtended.BN ||
-		resultOutputItemOperator === globalManifest.comparatorExtended.BNS
-	) {
+	} else if (resultOutputItemOperator === globalManifest.comparatorExtended.B || resultOutputItemOperator === globalManifest.comparatorExtended.BS || resultOutputItemOperator === globalManifest.comparatorExtended.BN || resultOutputItemOperator === globalManifest.comparatorExtended.BNS) {
 		outputName = `is ${operatorLabel} between ${resultOutputItemValueStart} and ${resultOutputItemValueEnd}`;
 	} else {
 		outputName = `${operatorLabel} ${resultOutputItemValueStart}`;

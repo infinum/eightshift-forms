@@ -3,44 +3,9 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	OptionSelect,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	HStack,
-} from '@eightshift/ui-components';
-import {
-	checks,
-	fieldPlaceholder,
-	fieldRequired,
-	googleTagManager,
-	none,
-	order,
-	regex,
-	search,
-	titleGeneric,
-	visible,
-	buttonGhost,
-	design,
-	moreH,
-	sliders,
-	tag,
-	plusCircle,
-	rename,
-} from '@eightshift/ui-components/icons';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { ContainerPanel, InputField, Toggle, OptionSelect, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, HStack } from '@eightshift/ui-components';
+import { checks, fieldPlaceholder, fieldRequired, googleTagManager, none, order, regex, search, titleGeneric, visible, buttonGhost, design, moreH, sliders, tag, plusCircle, rename } from '@eightshift/ui-components/icons';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -75,10 +40,7 @@ export const PhoneOptions = (attributes) => {
 	];
 
 	if (typeof esFormsLocalization !== 'undefined') {
-		phoneValidationPatternOptions = [
-			...phoneValidationPatternOptions,
-			...esFormsLocalization.validationPatternsOptions,
-		];
+		phoneValidationPatternOptions = [...phoneValidationPatternOptions, ...esFormsLocalization.validationPatternsOptions];
 	}
 
 	return (
@@ -136,18 +98,12 @@ export const PhoneOptions = (attributes) => {
 											<br />
 											<br />
 
-											{__(
-												"Phone dropdown can't be empty, so if no value is provided the first option will be selected.",
-												'eightshift-forms',
-											)}
+											{__("Phone dropdown can't be empty, so if no value is provided the first option will be selected.", 'eightshift-forms')}
 
 											<br />
 											<br />
 
-											{__(
-												"If geolocation is enabled, it will be preselected based on the user's location.",
-												'eightshift-forms',
-											)}
+											{__("If geolocation is enabled, it will be preselected based on the user's location.", 'eightshift-forms')}
 										</HelpTooltip>
 									</HStack>
 								}
@@ -226,13 +182,8 @@ export const PhoneOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={phonePlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('phonePlaceholder', attributes, manifest),
-											phoneDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('phonePlaceholder', attributes, manifest), phoneDisabledOptions)}
 									/>
 								</Container>
 							);
@@ -321,13 +272,8 @@ export const PhoneOptions = (attributes) => {
 							label={__('Match pattern', 'eightshift-forms')}
 							options={phoneValidationPatternOptions}
 							value={phoneValidationPattern}
-							onChange={(value) =>
-								setAttributes({ [getAttrKey('phoneValidationPattern', attributes, manifest)]: value })
-							}
-							disabled={isOptionDisabled(
-								getAttrKey('phoneValidationPattern', attributes, manifest),
-								phoneDisabledOptions,
-							)}
+							onChange={(value) => setAttributes({ [getAttrKey('phoneValidationPattern', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('phoneValidationPattern', attributes, manifest), phoneDisabledOptions)}
 							type='menu'
 							inline
 						/>
@@ -362,9 +308,7 @@ export const PhoneOptions = (attributes) => {
 								checked={!phoneIsNumber && phoneValueType === 'countryNumberWithPlusPrefix'}
 								onChange={(value) =>
 									setAttributes({
-										[getAttrKey('phoneValueType', attributes, manifest)]: value
-											? 'countryNumberWithPlusPrefix'
-											: 'countryNumber',
+										[getAttrKey('phoneValueType', attributes, manifest)]: value ? 'countryNumberWithPlusPrefix' : 'countryNumber',
 									})
 								}
 								disabled={phoneIsNumber}

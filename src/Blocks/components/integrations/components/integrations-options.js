@@ -4,59 +4,15 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { select, useSelect, dispatch } from '@wordpress/data';
 import { props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	BaseControl,
-	Select,
-	RichLabel,
-	Button,
-	Container,
-	ContainerGroup,
-	ContainerPanel,
-	Modal,
-	ButtonGroup,
-	Tabs,
-	TabList,
-	Tab,
-	TabPanel,
-	TriggeredPopover,
-	HStack,
-} from '@eightshift/ui-components';
-import {
-	data,
-	formAlt,
-	loopMode,
-	reset,
-	swap,
-	warning,
-	moreH,
-	treeAlt2,
-	help,
-	plusCircleFill,
-	trashAlt,
-} from '@eightshift/ui-components/icons';
-import {
-	updateIntegrationBlocks,
-	resetInnerBlocks,
-	syncIntegrationBlocks,
-	clearTransientCache,
-	SettingsButton,
-	LocationsButton,
-} from '../../utils';
+import { BaseControl, Select, RichLabel, Button, Container, ContainerGroup, ContainerPanel, Modal, ButtonGroup, Tabs, TabList, Tab, TabPanel, TriggeredPopover, HStack } from '@eightshift/ui-components';
+import { data, formAlt, loopMode, reset, swap, warning, moreH, treeAlt2, help, plusCircleFill, trashAlt } from '@eightshift/ui-components/icons';
+import { updateIntegrationBlocks, resetInnerBlocks, syncIntegrationBlocks, clearTransientCache, SettingsButton, LocationsButton } from '../../utils';
 import { getRestUrlByType } from '../../form/assets/state-init';
 import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 import { toast } from 'sonner';
 
-export const IntegrationsOptions = ({
-	block,
-	attributes,
-	setAttributes,
-	clientId,
-	itemId,
-	itemIdKey,
-	innerId,
-	innerIdKey,
-}) => {
+export const IntegrationsOptions = ({ block, attributes, setAttributes, clientId, itemId, itemIdKey, innerId, innerIdKey }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
 	// Check if form selector has inner blocks.
@@ -310,10 +266,7 @@ export const IntegrationsOptions = ({
 											<RichLabel
 												icon={help}
 												label={__('Clear integration cache?', 'eightshift-forms')}
-												subtitle={__(
-													'Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.',
-													'eightshift-forms',
-												)}
+												subtitle={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}
 												iconClassName='esf:self-start!'
 											/>
 

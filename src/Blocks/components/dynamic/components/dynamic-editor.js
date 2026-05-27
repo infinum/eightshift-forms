@@ -20,9 +20,7 @@ export const DynamicEditor = (attributes) => {
 				fieldIsRequired: checkAttr('dynamicIsRequired', attributes, manifest),
 				fieldHidden: checkAttr('dynamicIsDeactivated', attributes, manifest),
 			})}
-			statusSlot={[!dynamicName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
-				Boolean,
-			)}
+			statusSlot={[!dynamicName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 		/>
 	);
 };

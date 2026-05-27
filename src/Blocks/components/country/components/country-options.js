@@ -1,43 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	NumberPicker,
-	ContainerPanel,
-	InputField,
-	Toggle,
-	ContainerGroup,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	OptionSelect,
-} from '@eightshift/ui-components';
-import {
-	buttonGhost,
-	checks,
-	chevronLeft,
-	chevronRight,
-	codeVariable,
-	design,
-	fieldPlaceholder,
-	googleTagManager,
-	moreH,
-	multiple,
-	none,
-	requiredAlt,
-	search,
-	sliders,
-	tag,
-	titleGeneric,
-} from '@eightshift/ui-components/icons';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { NumberPicker, ContainerPanel, InputField, Toggle, ContainerGroup, Tab, TabList, Tabs, TabPanel, Container, OptionSelect } from '@eightshift/ui-components';
+import { buttonGhost, checks, chevronLeft, chevronRight, codeVariable, design, fieldPlaceholder, googleTagManager, moreH, multiple, none, requiredAlt, search, sliders, tag, titleGeneric } from '@eightshift/ui-components/icons';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
@@ -118,10 +84,7 @@ export const CountryOptions = (attributes) => {
 									{__('Separate multiple country codes with a comma.', 'eightshift-forms')}
 									<br />
 									<br />
-									{__(
-										"If geolocation is enabled, it will be preselected based on the user's location.",
-										'eightshift-forms',
-									)}
+									{__("If geolocation is enabled, it will be preselected based on the user's location.", 'eightshift-forms')}
 								</HelpTooltip>
 							}
 							monospaceFont
@@ -137,10 +100,7 @@ export const CountryOptions = (attributes) => {
 								onChange={(value) => {
 									setAttributes({ [getAttrKey('countryIsMultiple', attributes, manifest)]: value });
 								}}
-								disabled={isOptionDisabled(
-									getAttrKey('countryIsMultiple', attributes, manifest),
-									countryDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('countryIsMultiple', attributes, manifest), countryDisabledOptions)}
 							/>
 						</Container>
 
@@ -150,10 +110,7 @@ export const CountryOptions = (attributes) => {
 								label={__('Allow searching options', 'eightshift-forms')}
 								checked={countryUseSearch}
 								onChange={(value) => setAttributes({ [getAttrKey('countryUseSearch', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('countryUseSearch', attributes, manifest),
-									countryDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('countryUseSearch', attributes, manifest), countryDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>
@@ -171,10 +128,7 @@ export const CountryOptions = (attributes) => {
 								label={__('Disabled', 'eightshift-forms')}
 								checked={countryIsDisabled}
 								onChange={(value) => setAttributes({ [getAttrKey('countryIsDisabled', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(
-									getAttrKey('countryIsDisabled', attributes, manifest),
-									countryDisabledOptions,
-								)}
+								disabled={isOptionDisabled(getAttrKey('countryIsDisabled', attributes, manifest), countryDisabledOptions)}
 							/>
 						</Container>
 					</ContainerGroup>
@@ -199,13 +153,8 @@ export const CountryOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={countryPlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('countryPlaceholder', attributes, manifest),
-											countryDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('countryPlaceholder', attributes, manifest), countryDisabledOptions)}
 									/>
 								</Container>
 							);

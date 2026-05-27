@@ -2,36 +2,9 @@ import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import {
-	arrowsRight,
-	chevronRight,
-	conditionH,
-	infoCircle,
-	lightBulb,
-	none,
-	plusCircle,
-	plusCircleFill,
-	route,
-	rows,
-	Spinner,
-	trash,
-	treeAlt,
-} from '@eightshift/ui-components/icons';
+import { arrowsRight, chevronRight, conditionH, infoCircle, lightBulb, none, plusCircle, plusCircleFill, route, rows, Spinner, trash, treeAlt } from '@eightshift/ui-components/icons';
 import { getAttrKey, checkAttr, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	BaseControl,
-	RichLabel,
-	Button,
-	InputField,
-	Toggle,
-	ContainerGroup,
-	Modal,
-	Container,
-	OptionSelect,
-	HStack,
-	VStack,
-	NumberPicker,
-} from '@eightshift/ui-components';
+import { BaseControl, RichLabel, Button, InputField, Toggle, ContainerGroup, Modal, Container, OptionSelect, HStack, VStack, NumberPicker } from '@eightshift/ui-components';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
@@ -40,16 +13,7 @@ import { MultiflowFormsReactFlow } from '../../react-flow';
 import globalManifest from '../../../manifest.json';
 import manifest from '../manifest.json';
 
-const ConditionalTagsItem = ({
-	topParent,
-	parent,
-	index,
-	total,
-	stepMultiflowRules,
-	formFields,
-	attributes,
-	setAttributes,
-}) => {
+const ConditionalTagsItem = ({ topParent, parent, index, total, stepMultiflowRules, formFields, attributes, setAttributes }) => {
 	const operatorValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[1] ?? globalManifest.comparator.IS;
 	const fieldValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[0];
 
@@ -58,9 +22,7 @@ const ConditionalTagsItem = ({
 
 	const formFieldOptions = formFields?.find((item) => item.value === stepMultiflowRules[topParent][1])?.subItems ?? [];
 	const formFieldSelectedItem = formFieldOptions?.find((item) => item.value === fieldValue)?.subItems ?? [];
-	const showRuleValuePicker =
-		formFieldSelectedItem?.length > 0 &&
-		(operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
+	const showRuleValuePicker = formFieldSelectedItem?.length > 0 && (operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
 
 	return (
 		<>
@@ -104,9 +66,7 @@ const ConditionalTagsItem = ({
 						aria-label={__('Value', 'eightshift-forms')}
 						hidden={showRuleValuePicker}
 						value={inputCheck}
-						onBlur={() =>
-							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })
-						}
+						onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
 						onChange={(value) => {
 							stepMultiflowRules[topParent][2][parent][index][2] = value;
 							setInputCheck(value);
@@ -148,11 +108,7 @@ const ConditionalTagsItem = ({
 				<Button
 					icon={plusCircle}
 					onClick={() => {
-						stepMultiflowRules[topParent][2][parent][index + 1] = [
-							formFields?.[0]?.value ?? '',
-							globalManifest.comparator.IS,
-							'',
-						];
+						stepMultiflowRules[topParent][2][parent][index + 1] = [formFields?.[0]?.value ?? '', globalManifest.comparator.IS, ''];
 						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 					}}
 					className='esf:ml-auto'
@@ -233,9 +189,7 @@ export const StepMultiflowOptions = (attributes) => {
 						icon={conditionH}
 						label={__('Flows', 'eightshift-forms')}
 						// Translators: %d refers to the number of active rules
-						subtitle={
-							stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)
-						}
+						subtitle={stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)}
 						inline
 					>
 						<Modal
@@ -304,10 +258,7 @@ export const StepMultiflowOptions = (attributes) => {
 										<HStack noWrap>
 											<RichLabel
 												icon={lightBulb}
-												label={__(
-													"If you can't find a field, make sure the form is saved, and all fields have a name set.",
-													'eightshift-forms',
-												)}
+												label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
 											/>
 
 											<HStack
@@ -347,23 +298,13 @@ export const StepMultiflowOptions = (attributes) => {
 									>
 										<RichLabel
 											icon={route}
-											label={sprintf(
-												__('Go from "%s" to "%s" if following conditions match', 'eightshift-forms'),
-												formFields.find((field) => field.value === stepMultiflowRules?.[index]?.[1])?.label ?? '',
-												formFields.find((field) => field.value === stepMultiflowRules?.[index]?.[0])?.label ?? '',
-											)}
+											label={sprintf(__('Go from "%s" to "%s" if following conditions match', 'eightshift-forms'), formFields.find((field) => field.value === stepMultiflowRules?.[index]?.[1])?.label ?? '', formFields.find((field) => field.value === stepMultiflowRules?.[index]?.[0])?.label ?? '')}
 										/>
 									</Container>
 
 									<VStack hidden={!formFields}>
 										{stepMultiflowRules?.[topParent]?.[2]?.map((_, index) => (
-											<ContainerGroup
-												label={
-													stepMultiflowRules?.[topParent]?.[2]?.length > 1 &&
-													index > 0 &&
-													__('or when', 'eightshift-forms')
-												}
-											>
+											<ContainerGroup label={stepMultiflowRules?.[topParent]?.[2]?.length > 1 && index > 0 && __('or when', 'eightshift-forms')}>
 												{stepMultiflowRules?.[topParent]?.[2]?.[index]?.map((_, innerIndex) => (
 													<ConditionalTagsItem
 														topParent={topParent}
@@ -382,9 +323,7 @@ export const StepMultiflowOptions = (attributes) => {
 										<Button
 											icon={hasRules ? treeAlt : plusCircleFill}
 											onClick={() => {
-												stepMultiflowRules[topParent][2].push([
-													[formFields?.[topParent]?.subItems?.[0]?.value ?? '', globalManifest.comparator.IS, ''],
-												]);
+												stepMultiflowRules[topParent][2].push([[formFields?.[topParent]?.subItems?.[0]?.value ?? '', globalManifest.comparator.IS, '']]);
 												setAttributes({
 													[getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules],
 												});
@@ -392,9 +331,7 @@ export const StepMultiflowOptions = (attributes) => {
 											size={hasRules ? 'default' : 'large'}
 											className='esf:mr-auto'
 										>
-											{hasRules
-												? __('Add alternate set of conditions', 'eightshift-forms')
-												: __('Add set of conditions', 'eightshift-forms')}
+											{hasRules ? __('Add alternate set of conditions', 'eightshift-forms') : __('Add set of conditions', 'eightshift-forms')}
 										</Button>
 									</VStack>
 
@@ -455,10 +392,7 @@ export const StepMultiflowOptions = (attributes) => {
 						icon={plusCircle}
 						onClick={() =>
 							setAttributes({
-								[getAttrKey('stepMultiflowRules', attributes, manifest)]: [
-									...stepMultiflowRules,
-									[formFields?.[0]?.value ?? '', formFields?.[0]?.value ?? '', []],
-								],
+								[getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules, [formFields?.[0]?.value ?? '', formFields?.[0]?.value ?? '', []]],
 							})
 						}
 						className='esf:w-full'

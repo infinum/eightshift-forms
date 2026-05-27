@@ -35,10 +35,7 @@ export class Export {
 
 		formData.append('formId', formId);
 		formData.append('type', type);
-		formData.append(
-			'ids',
-			document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')),
-		);
+		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
 
 		this.utils.showLoader(formId);
 

@@ -5,53 +5,9 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import {
-	getAttrKey,
-	checkAttr,
-	props,
-	fetchFromWpRest,
-	ManageFileButton,
-} from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	BaseControl,
-	MultiSelect,
-	AsyncSelect,
-	Repeater,
-	RepeaterItem,
-	Button,
-	ContainerPanel,
-	InputField,
-	Container,
-	Tabs,
-	TabList,
-	Tab,
-	TabPanel,
-	ButtonGroup,
-	ContainerGroup,
-	OptionSelect,
-	FilePickerShell,
-	ToggleButton,
-	ItemCollection,
-	HStack,
-	Checkbox,
-} from '@eightshift/ui-components';
-import {
-	blockParts,
-	codeVariable,
-	file,
-	form,
-	locationSettings,
-	moreH,
-	trash,
-	visible,
-	branch,
-	link,
-	optionListAlt,
-	plusCircle,
-	locationAllow,
-	fieldReadonly,
-	location,
-} from '@eightshift/ui-components/icons';
+import { getAttrKey, checkAttr, props, fetchFromWpRest, ManageFileButton } from '@eightshift/frontend-libs-tailwind/scripts';
+import { BaseControl, MultiSelect, AsyncSelect, Repeater, RepeaterItem, Button, ContainerPanel, InputField, Container, Tabs, TabList, Tab, TabPanel, ButtonGroup, ContainerGroup, OptionSelect, FilePickerShell, ToggleButton, ItemCollection, HStack, Checkbox } from '@eightshift/ui-components';
+import { blockParts, codeVariable, file, form, locationSettings, moreH, trash, visible, branch, link, optionListAlt, plusCircle, locationAllow, fieldReadonly, location } from '@eightshift/ui-components/icons';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton } from '../../../components/utils';
 import { getRestUrl, getUtilsIcons } from '../../../components/form/assets/state-init';
@@ -307,10 +263,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 											icon={plusCircle}
 											onClick={() =>
 												setAttributes({
-													[getAttrKey('formsVariation', attributes, manifest)]: [
-														...formsVariation,
-														{ title: '', slug: '' },
-													],
+													[getAttrKey('formsVariation', attributes, manifest)]: [...formsVariation, { title: '', slug: '' }],
 												})
 											}
 											className='esf:w-full'
@@ -494,15 +447,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								label={__('Show form in', 'eightshift-forms')}
 								value={formsFormGeolocationAlternatives?.length > 0 ? [] : formsFormGeolocation}
 								options={geoFormFields}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })
-								}
+								onChange={(value) => setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })}
 								disabled={formsFormGeolocationAlternatives?.length > 0}
-								placeholder={
-									formsFormGeolocationAlternatives?.length > 0
-										? __('Overriden by advanced rules', 'eightshift-forms')
-										: __('Select locations', 'eightshift-forms')
-								}
+								placeholder={formsFormGeolocationAlternatives?.length > 0 ? __('Overriden by advanced rules', 'eightshift-forms') : __('Select locations', 'eightshift-forms')}
 								simpleValue
 								noMinWidth
 								searchable
@@ -518,24 +465,13 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 									inline
 								>
 									<HelpTooltip className='esf:flex esf:flex-col esf:gap-12'>
-										<span>
-											{__(
-												"Geolocation rules allow you to display alternate forms based on the user's location.",
-												'eightshift-forms',
-											)}
-										</span>
+										<span>{__("Geolocation rules allow you to display alternate forms based on the user's location.", 'eightshift-forms')}</span>
 
-										<span>
-											{__(
-												'If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.',
-												'eightshift-forms',
-											)}
-										</span>
+										<span>{__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</span>
 
 										{geolocationApi && (
 											<span>
-												{__('You can find complete list of countries and regions on this', 'eightshift-forms')}{' '}
-												<ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.
+												{__('You can find complete list of countries and regions on this', 'eightshift-forms')} <ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.
 											</span>
 										)}
 									</HelpTooltip>
@@ -638,10 +574,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 									icon={plusCircle}
 									onClick={() =>
 										setAttributes({
-											[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [
-												...formsFormGeolocationAlternatives,
-												{ formId: '', geoLocation: [] },
-											],
+											[getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: [...formsFormGeolocationAlternatives, { formId: '', geoLocation: [] }],
 										})
 									}
 									className='esf:w-full'
@@ -681,9 +614,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 								icon={codeVariable}
 								label={__('Additional type specifier', 'eightshift-forms')}
 								value={formsFormDataTypeSelector}
-								onChange={(value) =>
-									setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })
-								}
+								onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
 								monospaceFont
 								inline
 							/>
@@ -703,9 +634,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 											label={option.label}
 											checked={formsStyle.includes(option.value)}
 											onChange={(value) => {
-												const newValue = value
-													? [...formsStyle, option.value]
-													: formsStyle.filter((v) => v !== option.value);
+												const newValue = value ? [...formsStyle, option.value] : formsStyle.filter((v) => v !== option.value);
 												setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: newValue });
 											}}
 										/>

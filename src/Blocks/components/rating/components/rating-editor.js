@@ -40,9 +40,7 @@ export const RatingEditor = (attributes) => {
 				fieldContent: rating,
 				fieldIsRequired: checkAttr('ratingIsRequired', attributes, manifest),
 			})}
-			statusSlot={[!ratingName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
-				Boolean,
-			)}
+			statusSlot={[!ratingName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 		/>
 	);
 };

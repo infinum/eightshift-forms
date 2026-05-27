@@ -1,36 +1,9 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	ContainerPanel,
-	InputField,
-	Toggle,
-	Tab,
-	TabList,
-	Tabs,
-	TabPanel,
-	Container,
-	ContainerGroup,
-	OptionSelect,
-} from '@eightshift/ui-components';
-import {
-	checks,
-	fieldPlaceholder,
-	googleTagManager,
-	optionListAlt,
-	requiredAlt,
-	buttonGhost,
-	design,
-	moreH,
-	sliders,
-	tag,
-} from '@eightshift/ui-components/icons';
-import {
-	FieldOptions,
-	FieldOptionsMore,
-	FieldOptionsLayout,
-	FieldOptionsVisibility,
-} from '../../field/components/field-options';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, OptionSelect } from '@eightshift/ui-components';
+import { checks, fieldPlaceholder, googleTagManager, optionListAlt, requiredAlt, buttonGhost, design, moreH, sliders, tag } from '@eightshift/ui-components/icons';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
@@ -96,9 +69,7 @@ export const RadiosOptions = (attributes) => {
 							icon={optionListAlt}
 							label={__('Show as', 'eightshift-forms')}
 							value={radiosShowAs}
-							options={globalManifest.showAsMap.options.map((item) =>
-								item.value === 'radios' ? { ...item, value: '' } : item,
-							)}
+							options={globalManifest.showAsMap.options.map((item) => (item.value === 'radios' ? { ...item, value: '' } : item))}
 							disabled={isOptionDisabled(getAttrKey('radiosShowAs', attributes, manifest), radiosDisabledOptions)}
 							onChange={(value) => setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value })}
 							type='menu'
@@ -134,13 +105,8 @@ export const RadiosOptions = (attributes) => {
 										icon={fieldPlaceholder}
 										label={__('Placeholder', 'eightshift-forms')}
 										value={radiosPlaceholder}
-										onChange={(value) =>
-											setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: value })
-										}
-										disabled={isOptionDisabled(
-											getAttrKey('radiosPlaceholder', attributes, manifest),
-											radiosDisabledOptions,
-										)}
+										onChange={(value) => setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: value })}
+										disabled={isOptionDisabled(getAttrKey('radiosPlaceholder', attributes, manifest), radiosDisabledOptions)}
 									/>
 								</Container>
 							);

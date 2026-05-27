@@ -15,33 +15,13 @@ export const RadioEditor = (attributes) => {
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
 	return (
-		<div
-			className={clsx(
-				'esf-fieldset-radio',
-				'esf-fieldset-checkbox',
-				'esf-fieldset-item',
-				'esf:relative!',
-				radioIsHidden && 'esf-field-hidden',
-				radioIsChecked && 'esf-fieldset-checked',
-			)}
-		>
+		<div className={clsx('esf-fieldset-radio', 'esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', radioIsHidden && 'esf-field-hidden', radioIsChecked && 'esf-fieldset-checked')}>
 			<span
 				dangerouslySetInnerHTML={{
-					__html: radioLabel
-						? radioLabel
-						: __(
-								'Please enter radio label in sidebar or this radio will not show on the frontend.',
-								'eightshift-forms',
-							),
+					__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms'),
 				}}
 			/>
-			<StatusFieldOutput
-				components={[
-					radioIsHidden && 'hidden',
-					!radioValue && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
-			/>
+			<StatusFieldOutput components={[radioIsHidden && 'hidden', !radioValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

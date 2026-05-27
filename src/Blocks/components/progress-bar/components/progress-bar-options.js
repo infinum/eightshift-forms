@@ -47,9 +47,7 @@ export const ProgressBarOptions = (attributes) => {
 						icon={itemLimit}
 						label={__('Initial number of steps', 'eightshift-forms')}
 						value={progressBarMultiflowInitCount}
-						onChange={(value) =>
-							setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })
-						}
+						onChange={(value) => setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })}
 						inline
 					/>
 				</Container>

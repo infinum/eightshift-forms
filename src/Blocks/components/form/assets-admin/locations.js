@@ -52,9 +52,7 @@ export class Locations {
 
 			if (status === 'success') {
 				target.classList.add(this.state.getStateSelector('isHidden'));
-				target
-					.closest(this.itemSelector)
-					.insertAdjacentHTML('afterend', data[this.state.getStateResponseOutputKey('adminLocations')]);
+				target.closest(this.itemSelector).insertAdjacentHTML('afterend', data[this.state.getStateResponseOutputKey('adminLocations')]);
 				target.remove();
 			}
 		} catch ({ name, message }) {

@@ -15,32 +15,13 @@ export const CheckboxEditor = (attributes) => {
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
 	return (
-		<div
-			className={clsx(
-				'esf-fieldset-checkbox',
-				'esf-fieldset-item',
-				'esf:relative!',
-				checkboxIsHidden && 'esf-field-hidden',
-				checkboxIsChecked && 'esf-fieldset-checked',
-			)}
-		>
+		<div className={clsx('esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', checkboxIsHidden && 'esf-field-hidden', checkboxIsChecked && 'esf-fieldset-checked')}>
 			<span
 				dangerouslySetInnerHTML={{
-					__html: checkboxLabel
-						? checkboxLabel
-						: __(
-								'Please enter checkbox label in sidebar or this checkbox will not show on the frontend.',
-								'eightshift-forms',
-							),
+					__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms'),
 				}}
 			/>
-			<StatusFieldOutput
-				components={[
-					checkboxIsHidden && 'hidden',
-					!checkboxValue && 'missingName',
-					attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals',
-				].filter(Boolean)}
-			/>
+			<StatusFieldOutput components={[checkboxIsHidden && 'hidden', !checkboxValue && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

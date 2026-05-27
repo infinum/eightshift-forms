@@ -22,9 +22,7 @@ export const FileEditor = (attributes) => {
 					{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
 				</div>
 
-				<div className='esf:text-xs! esf:text-gray-400!'>
-					{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}
-				</div>
+				<div className='esf:text-xs! esf:text-gray-400!'>{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}</div>
 			</div>
 		</div>
 	);
@@ -36,9 +34,7 @@ export const FileEditor = (attributes) => {
 					fieldContent: file,
 					fieldIsRequired: checkAttr('fileIsRequired', attributes, manifest),
 				})}
-				statusSlot={[!fileName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(
-					Boolean,
-				)}
+				statusSlot={[!fileName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
 			/>
 		</>
 	);

@@ -5,33 +5,9 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import {
-	codeVariable,
-	conditionalVisibility,
-	edit,
-	globe,
-	hide,
-	layoutAlt,
-	lightBulb,
-	loader,
-	magic,
-	none,
-	options,
-	readOnly,
-	requiredAlt,
-	tagAlt,
-	warning,
-} from '@eightshift/ui-components/icons';
+import { codeVariable, conditionalVisibility, edit, hide, layoutAlt, lightBulb, loader, magic, none, options, readOnly, requiredAlt, tagAlt, warning, wrench } from '@eightshift/ui-components/icons';
 import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
-import {
-	RichLabel,
-	Button,
-	InputField,
-	Tooltip,
-	Container,
-	ContainerGroup,
-	DecorativeTooltip,
-} from '@eightshift/ui-components';
+import { RichLabel, Button, InputField, Tooltip, Container, ContainerGroup, DecorativeTooltip } from '@eightshift/ui-components';
 import { camelCase, clsx, upperFirst } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
@@ -353,15 +329,7 @@ export const MissingName = ({ value, asPlaceholder, isOptional = false }) => {
 
 	return (
 		<div>
-			<Tooltip
-				text={
-					!isOptional
-						? __('Name not set!', 'eightshift-forms')
-						: __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')
-				}
-			>
-				{React.cloneElement(warning)}
-			</Tooltip>
+			<Tooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>{React.cloneElement(warning)}</Tooltip>
 		</div>
 	);
 };
@@ -398,10 +366,7 @@ export const StatusFieldOutput = ({ components }) => {
 					return null;
 				}
 
-				const classes = clsx(
-					'esf:rounded-full esf:p-5',
-					name === 'missingName' ? 'esf:bg-orange-600/5 esf:text-orange-600' : 'esf:bg-current/5 esf:text-current',
-				);
+				const classes = clsx('esf:rounded-full esf:p-5', name === 'missingName' ? 'esf:bg-orange-600/5 esf:text-orange-600' : 'esf:bg-current/5 esf:text-current');
 
 				return (
 					<DecorativeTooltip
@@ -430,37 +395,18 @@ export const StatusFieldOutput = ({ components }) => {
  *
  * @returns Component
  */
-export const NameField = ({
-	value,
-	attribute,
-	help = '',
-	disabledOptions = [],
-	label: rawLabel,
-	setAttributes,
-	show = true,
-	type,
-	isChanged = false,
-	isOptional = false,
-	setIsChanged,
-}) => {
+export const NameField = ({ value, attribute, help = '', disabledOptions = [], label: rawLabel, setAttributes, show = true, type, isChanged = false, isOptional = false, setIsChanged }) => {
 	let label = rawLabel || __('Name', 'eightshift-forms');
 	let icon = tagAlt;
 
 	const isDisabled = isOptionDisabled(attribute, disabledOptions);
 
-	let helpText = sprintf(
-		__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'),
-		type,
-		help,
-	);
+	let helpText = sprintf(__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'), type, help);
 
 	if (type === 'resultOutputItem') {
 		icon = codeVariable;
 		label = __('Variable name', 'eightshift-forms');
-		helpText = __(
-			'Identifies the what result output item the user will see after successful form submission',
-			'eightshift-forms',
-		);
+		helpText = __('Identifies the what result output item the user will see after successful form submission', 'eightshift-forms');
 	}
 
 	if (!show) {
@@ -481,10 +427,7 @@ export const NameField = ({
 									onClick={() => {
 										setIsChanged(false);
 
-										const valueName =
-											type === 'resultOutputItem'
-												? globalSettings.enums.successRedirectUrlKeys.variation
-												: `${type}-${getUnique()}`;
+										const valueName = type === 'resultOutputItem' ? globalSettings.enums.successRedirectUrlKeys.variation : `${type}-${getUnique()}`;
 										setAttributes({ [attribute]: valueName });
 									}}
 									icon={magic}
@@ -499,12 +442,7 @@ export const NameField = ({
 							<HelpTooltip hidden={!value && !isDisabled}>
 								{helpText}
 
-								{isOptional &&
-									type !== 'resultOutputItem' &&
-									__(
-										'Name field is required only if you are using conditional tags on this field.',
-										'eightshift-forms',
-									)}
+								{isOptional && type !== 'resultOutputItem' && __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms')}
 							</HelpTooltip>
 						</>
 					}
@@ -647,9 +585,7 @@ export const SettingsButton = ({ formId = null }) => {
 
 	return (
 		<Button
-			onPress={() => {
-				window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank');
-			}}
+			onPress={() => window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank')}
 			icon={options}
 			className='esf:grow'
 			size='large'
@@ -666,14 +602,12 @@ export const GlobalSettingsButton = () => {
 
 	return (
 		<Button
-			onPress={() => {
-				window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank');
-			}}
-			icon={globe}
+			onPress={() => window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank')}
+			icon={wrench}
 			className='esf:grow'
 			size='large'
 		>
-			{__('Edit global settings', 'eightshift-forms')}
+			{__('Plugin settings', 'eightshift-forms')}
 		</Button>
 	);
 };
@@ -693,9 +627,7 @@ export const LocationsButton = ({ formId = null }) => {
 
 	return (
 		<Button
-			onPress={() => {
-				window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank');
-			}}
+			onPress={() => window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank')}
 			icon={loader}
 			className='esf:grow'
 			size='large'
@@ -717,12 +649,12 @@ export const DashboardButton = () => {
 
 	return (
 		<Button
-			onPress={() => {
-				window.open(`${wpAdminUrl}${dashboardPageUrl}`, '_blank');
-			}}
+			onPress={() => window.open(`${wpAdminUrl}${dashboardPageUrl}`, '_blank')}
 			icon={layoutAlt}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Visit dashboard settings', 'eightshift-forms')}
+			{__('Open Dashboard', 'eightshift-forms')}
 		</Button>
 	);
 };
