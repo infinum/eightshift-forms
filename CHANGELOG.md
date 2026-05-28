@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.0.0]
+
+### Updated
+
+- Updated admin visuals
+- Reworked all editor options and editor components for all blocks, fields, ...
+
 ## [9.5.0]
 
 ### Added
@@ -1857,6 +1864,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.5.0...10.0.0
 [9.5.0]: https://github.com/infinum/eightshift-forms/compare/9.4.1...9.5.0
 [9.4.1]: https://github.com/infinum/eightshift-forms/compare/9.4.0...9.4.1
 [9.4.0]: https://github.com/infinum/eightshift-forms/compare/9.3.0...9.4.0
