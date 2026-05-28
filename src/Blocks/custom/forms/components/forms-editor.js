@@ -4,10 +4,15 @@ import { __ } from '@wordpress/i18n';
 import { FormEditButton } from '../../../components/utils';
 import { Container, ContainerGroup, Notice, RichLabel, BaseControl } from '@eightshift/ui-components';
 import { upperFirst } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
 import manifest from '../manifest.json';
 
 export const FormsEditor = ({ attributes, preview }) => {
 	const { isGeoPreview } = preview;
+
+	const blockProps = useBlockProps({
+		className: 'esf:p-8 es:font-sans',
+	});
 
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 	const formsFormPostIdRaw = checkAttr('formsFormPostIdRaw', attributes, manifest);
@@ -30,7 +35,7 @@ export const FormsEditor = ({ attributes, preview }) => {
 	const formId = formsFormPostIdRaw?.id ?? formsFormPostIdRaw?.value;
 
 	return (
-		<div className='esf:p-8 es:font-sans'>
+		<div {...blockProps}>
 			<ContainerGroup className='esf:max-w-sm'>
 				<Container
 					elevated
