@@ -15,7 +15,7 @@ $dividerExtraVSpacing = Helpers::checkAttr('dividerExtraVSpacing', $attributes, 
 $dividerSeparator = Helpers::checkAttr('dividerSeparator', $attributes, $manifest);
 
 $dividerClass = Helpers::clsx([
-	'esf:border-t esf:border-border',
+	'esf:border-t esf:border-mist-200',
 	$dividerExtraVSpacing ? 'esf:my-10' : '',
 	$dividerSeparator ? 'esf:-mx-20' : '',
 ]);

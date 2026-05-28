@@ -113,9 +113,8 @@ if ($checkboxTracking) {
 				<?php } ?>
 
 				<?php if (!$checkboxHideLabelText) { ?>
-					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-inner', "{$componentClass}__label-inner")); ?>">
-						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
-					</span>
+					<?php // No spacing is intentional, to avoid whitespace in output. ?>
+					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-inner', "{$componentClass}__label-inner")); ?>"><?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?></span>
 				<?php } ?>
 			</label>
 		<?php } ?>

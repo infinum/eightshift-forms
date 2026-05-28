@@ -1,7 +1,7 @@
 /* stylelint-disable selector-max-specificity */
 
-@import 'tailwindcss' prefix(esf);
 @import '../../../../tailwind.css';
+@import 'tailwindcss' prefix(esf);
 
 .es-form[data-form-type='settingsGlobal'][data-settings-type='cache'],
 .es-form[data-form-type='settingsGlobal'][data-settings-type='location'],
@@ -21,7 +21,7 @@
 }
 
 .esf-is-filter-applied {
-	@apply esf:bg-accent-10 esf:text-accent;
+	@apply esf:bg-mist-600/10 esf:text-mist-600;
 	@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
 	@apply esf:w-fit;
 	@apply esf:cursor-pointer;

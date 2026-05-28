@@ -51,39 +51,39 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 			[
 				'form' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					],
 					'parts' => [
 						'fields' => [
 							'esf:[&>*]:col-span-12',
 						],
 						'picker' => [
-							'esf:text-sm',
+							'esf:text-xs',
 						],
 					],
 				],
 				'input' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					],
 				],
 				'date' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					]
 				],
 				'textarea' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					]
 				],
 				'phone' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					],
 					'parts' => [
 						'select' => [
-							'esf:text-sm',
+							'esf:text-xs',
 						],
 					],
 				],
@@ -105,78 +105,68 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 							'esf:group-[&.esf-input-with-suffix]/field:flex-grow-1',
 						],
 						'label' => [
-							'esf:text-sm',
+							'esf:text-xs',
 						],
 						'after-content' => [
-							'esf:group-[&.esf-input-with-suffix]/field:px-10',
+							'esf:group-[&.esf-input-with-suffix]/field:px-12',
 							'esf:group-[&.esf-input-with-suffix]/field:flex',
 							'esf:group-[&.esf-input-with-suffix]/field:items-center',
 							'esf:group-[&.esf-input-with-suffix]/field:justify-center',
 							'esf:group-[&.esf-input-with-suffix]/field:border',
-							'esf:group-[&.esf-input-with-suffix]/field:border-border',
+							'esf:group-[&.esf-input-with-suffix]/field:border-gray-500',
+							'esf:group-[&.esf-input-with-suffix]/field:border-s-0',
 							'esf:group-[&.esf-input-with-suffix]/field:h-46',
-							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-md',
-							'esf:group-[&.esf-input-with-suffix]/field:-mx-8',
-							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-50',
+							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-xl',
+							'esf:group-[&.esf-input-with-suffix]/field:-ml-5',
+							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-100',
 						],
 						'help' => self::THEME_SELECTORS['help-extended'],
 					],
 				],
 				'checkbox' => [
 					'base' => [
-						'esf:[&.es-checkbox-toggle]:bg-transparent',
+						'esf:grid esf:grid-cols-[1fr_auto] esf:grid-rows-1 esf:has-[.es-checkbox-toggle__help]:grid-rows-[auto_auto] esf:not-has-[.es-checkbox\_\_label-inner:empty]:gap-x-16 esf:has-[.es-checkbox-toggle__help]:gap-y-2 esf:not-has-[.es-checkbox-toggle__help]:items-center',
 					],
+
 					'parts' => [
+						'input' => [
+							'esf:relative',
+							'esf:appearance-none',
+							'esf:is-toggle:w-40 esf:is-toggle:h-24 esf:is-check:size-24',
+							'esf:is-toggle:rounded-full esf:is-check:rounded-md',
+							'esf:bg-white esf:checked:bg-mist-500',
+							'esf:border esf:border-gray-500 esf:checked:border-mist-500',
+							'esf:shadow-none',
+							'esf:transition esf:after:transition',
+							'esf:is-toggle:after:content-[""] esf:is-check:after:content-["✓"]',
+							'esf:after:absolute esf:is-toggle:after:top-3 esf:is-toggle:after:left-3 esf:is-check:after:left-2 esf:is-check:after:top-2 esf:is-check:not-checked:after:opacity-0',
+							'esf:is-check:after:text-white',
+							'esf:is-toggle:after:size-16 esf:is-check:after:size-18 esf:is-toggle:after:scale-90 esf:is-toggle:checked:after:scale-110',
+							'esf:after:flex esf:after:items-center esf:after:justify-center esf:after:text-base',
+							'esf:is-toggle:checked:after:translate-x-16',
+							'esf:is-toggle:after:bg-gray-500 esf:is-toggle:checked:after:bg-white esf:is-toggle:after:rounded-full',
+							'esf:before:hidden!',
+							'esf:col-2 esf:row-start-1 esf:row-end-3 esf:items-center',
+							'esf:mx-0! esf:my-auto!',
+							'esf:cursor-pointer',
+						],
 						'label' => [
-							'esf:text-sm',
-
-							'esf:[.es-checkbox-toggle\_\_label]:relative',
-							'esf:[.es-checkbox-toggle\_\_label]:block',
-							'esf:[.es-checkbox-toggle\_\_label]:w-full',
-							'esf:[.es-checkbox-toggle\_\_label]:pl-0',
-							'esf:[.es-checkbox-toggle\_\_label]:pr-44',
-							'esf:[.es-checkbox-toggle\_\_label]:min-h-24',
-							"esf:[.es-checkbox-toggle\_\_label]:before:content-['']",
-							'esf:[.es-checkbox-toggle\_\_label]:before:absolute',
-							'esf:[.es-checkbox-toggle\_\_label]:before:top-0',
-							'esf:[.es-checkbox-toggle\_\_label]:before:start-auto',
-							'esf:[.es-checkbox-toggle\_\_label]:before:end-0',
-							'esf:[.es-checkbox-toggle\_\_label]:before:bg-white',
-							'esf:[.es-checkbox-toggle\_\_label]:before:border-1',
-							'esf:[.es-checkbox-toggle\_\_label]:before:border-border',
-							'esf:[.es-checkbox-toggle\_\_label]:before:w-44',
-							'esf:[.es-checkbox-toggle\_\_label]:before:h-22',
-							'esf:[.es-checkbox-toggle\_\_label]:before:rounded-full',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:before:bg-accent',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:before:border-accent',
-
-							"esf:[.es-checkbox-toggle\_\_label]:after:content-['']",
-							'esf:[.es-checkbox-toggle\_\_label]:after:opacity-100',
-							'esf:[.es-checkbox-toggle\_\_label]:after:absolute',
-							'esf:[.es-checkbox-toggle\_\_label]:after:top-3',
-							'esf:[.es-checkbox-toggle\_\_label]:after:start-auto',
-							'esf:[.es-checkbox-toggle\_\_label]:after:end-25',
-							'esf:[.es-checkbox-toggle\_\_label]:after:rounded-full',
-							'esf:[.es-checkbox-toggle\_\_label]:after:bg-gray-300',
-							'esf:[.es-checkbox-toggle\_\_label]:after:h-16',
-							'esf:[.es-checkbox-toggle\_\_label]:after:w-16',
-							'esf:[.es-checkbox-toggle\_\_label]:after:transition-all',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:translate-x-22',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:bg-white',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:transition-all',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:duration-300',
-							'esf:[.es-checkbox-toggle\_\_label]:peer-checked/checkbox:after:bg-accent',
+							'esf:text-xs',
+							'esf:col-1 esf:grid-row-1',
 						],
 						'help' => [
-							'esf:[.es-checkbox-toggle\_\_help]:pr-50',
+							'esf:col-1 esf:grid-row-2',
 							...self::THEME_SELECTORS['help-extended'],
+						],
+						'content' => [
+							'esf:contents',
 						],
 					],
 				],
 				'radio' => [
 					'parts' => [
 						'label' => [
-							'esf:text-sm',
+							'esf:text-xs',
 						],
 						'help' => [
 							...self::THEME_SELECTORS['help-extended'],
@@ -185,28 +175,28 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 				],
 				'select' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					],
 					'parts' => [
 						'select-choices-inner' => [
-							'esf:text-sm',
+							'esf:text-xs',
 						],
 					],
 				],
 				'country' => [
 					'base' => [
-						'esf:text-sm',
+						'esf:text-xs',
 					],
 					'parts' => [
 						'select-choices-inner' => [
-							'esf:text-sm',
+							'esf:text-xs',
 						],
 					],
 				],
 				'submit' => [
 					'base' => [
 						'esf-button-primary',
-						'esf:text-sm',
+						'esf:text-xs',
 					],
 					'parts' => [
 						'field-content-wrap' => [

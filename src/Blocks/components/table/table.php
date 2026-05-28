@@ -29,9 +29,9 @@ $classes = Helpers::clsx([
 			<thead class="esf:bg-gray-100">
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
-						<th class="esf:border-r esf:border-b esf:border-border esf:p-8 esf:text-left esf:last:border-r-0">
+						<th class="esf:border-r esf:border-b esf:border-mist-200 esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
-							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 							?>
 						</th>
 					<?php } ?>
@@ -42,9 +42,9 @@ $classes = Helpers::clsx([
 			<?php foreach ($tableContent as $row) { ?>
 				<tr>
 					<?php foreach ($tableHead as $headKey => $headValue) { ?>
-						<td class="esf:border-r esf:border-b esf:border-border esf:p-8 esf:text-left esf:last:border-r-0">
+						<td class="esf:border-r esf:border-b esf:border-mist-200 esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
-							echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+							echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 							?>
 						</td>
 					<?php } ?>

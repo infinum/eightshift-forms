@@ -31,7 +31,7 @@ $additionalAttributes = [
 
 ?>
 
-<div class="esf-main-container esf:css-reset esf:flex esf:flex-col esf:gap-15 esf:-ml-20 esf:p-40">
+<div class="esf-main-container es:css-reset esf:flex esf:flex-col esf:gap-12 esf:-ml-20 esf:p-40 es:font-sans">
 	<?php
 	if ($adminListingPageTitle) {
 		echo Helpers::render('intro', [
@@ -43,8 +43,8 @@ $additionalAttributes = [
 	?>
 
 	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo esc_attr(UtilsHelper::getStateSelectorAdmin('listingBulkItems')); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
-		<div class="esf:bg-white esf:rounded-md esf:flex-1 esf:border esf:border-border">
-			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-20 esf:py-20 esf:border-b esf:border-border">
+		<div class="esf:bg-white esf:rounded-xl esf:flex-1 esf:border esf:border-mist-200">
+			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-16 esf:py-20 esf:border-b esf:border-mist-200">
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
 					<?php
 					if (isset($adminListingTopItems['left'])) {
@@ -62,7 +62,7 @@ $additionalAttributes = [
 			</div>
 			<?php
 			if ($adminListingShowNoItems) { ?>
-				<div class="esf:px-20 esf:py-60">
+				<div class="esf:px-16 esf:py-60">
 					<?php echo wp_kses_post(Helpers::ensureString($adminListingNoItems)); ?>
 				</div>
 			<?php } else { ?>
@@ -77,7 +77,7 @@ $additionalAttributes = [
 		</div>
 
 		<div class="esf:max-w-sm esf:flex esf:flex-col esf:gap-20">
-			<div class="esf:bg-white esf:rounded-md esf:p-20 esf:border esf:border-border">
+			<div class="esf:bg-white esf:rounded-xl esf:p-16 esf:border esf:border-mist-200">
 				<?php
 				echo Helpers::render('intro', [
 					'introTitle' => __('Need help?', 'eightshift-forms'),
@@ -94,7 +94,7 @@ $additionalAttributes = [
 				?>
 			</div>
 
-			<div class="esf:bg-white esf:rounded-md esf:p-20 esf:border esf:border-border">
+			<div class="esf:bg-white esf:rounded-xl esf:p-16 esf:border esf:border-gray-200">
 				<?php
 				echo Helpers::render('intro', [
 					'introTitle' => __('Search filters', 'eightshift-forms'),

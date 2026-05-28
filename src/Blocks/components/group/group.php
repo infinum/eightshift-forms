@@ -17,7 +17,7 @@ $groupName = Helpers::checkAttr('groupName', $attributes, $manifest);
 $groupClass = Helpers::clsx([
 	$componentClass,
 	UtilsHelper::getStateSelector('group'),
-	'esf:flex esf:flex-col esf:gap-15',
+	'esf:flex esf:flex-col esf:gap-12',
 ]);
 
 if (!$groupName || !$groupContent) {

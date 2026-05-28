@@ -17,27 +17,26 @@ $introType = Helpers::checkAttr('introType', $attributes, $manifest);
 $introActions = Helpers::checkAttr('introActions', $attributes, $manifest);
 
 $introClasses = Helpers::clsx([
-	'esf:flex esf:flex-col esf:gap-5',
+	'esf:flex esf:flex-col esf:gap-2',
 	$introType === 'highlighted' ? 'esf:items-center esf:justify-center esf:text-center esf:gap-10' : '',
 ]);
 
 $introTitleClass = Helpers::clsx([
-	'esf:font-medium',
-	$introTitleType === 'big' ? 'esf:text-2xl' : '',
-	$introTitleType === 'default' ? 'esf:text-xl' : '',
-	$introTitleType === 'medium' ? 'esf:text-base' : '',
-	$introTitleType === 'small' ? 'esf:text-sm esf:font-normal' : '',
+	$introTitleType === 'big' ? 'esf:text-lg esf:font-medium' : '',
+	$introTitleType === 'default' ? 'esf:text-base' : '',
+	$introTitleType === 'medium' ? 'esf:text-sm' : '',
+	$introTitleType === 'small' ? 'esf:text-xs esf:font-normal' : '',
 ]);
 
 $introSubtitleClass = Helpers::clsx([
-	'esf:text-sm esf:text-gray-500',
-	'esf:[&_a]:text-accent esf:[&_a]:underline esf:[&_a]:hover:text-accent-dark esf:[&_a]:transition-colors esf:[&_a]:duration-300',
+	'esf:text-xs esf:text-gray-500',
+	'esf:[&_a]:text-mist-600 esf:[&_a]:underline esf:[&_a]:hover:text-mist-700 esf:[&_a]:transition-colors esf:[&_a]:duration-300',
 	'esf:[&_ul]:list-disc esf:[&_ul]:list-inside esf:[&_ul]:m-0 esf:[&_ul]:mt-5 esf:[&_ul]:p-0 esf:[&_ul]:gap-5 esf:[&_ul]:flex esf:[&_ul]:flex-col',
 	'esf:[&_li]:m-0',
 ]);
 
 $introIconClass = Helpers::clsx([
-	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-accent',
+	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-mist-600',
 ]);
 
 ?>

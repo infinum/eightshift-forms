@@ -1029,7 +1029,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		}
 
 		if ($status !== 'publish' && $showOnlyStatus) {
-			$output[] = '<span class="esf:text-gray-400 esf:bg-gray-100 esf:text-xs esf:px-5 esf:py-2 esf:rounded-md">' . ($status) . '</span>';
+			$output[] = '<span class="esf:text-current/90 esf:bg-current/5 esf:text-xs esf:px-5 esf:py-2 esf:rounded-md">' . ($status) . '</span>';
 		}
 
 		return $output;

@@ -1,47 +1,85 @@
-/* stylelint-disable at-rule-no-unknown, selector-max-specificity */
+/* stylelint-disable at-rule-no-unknown, selector-max-specificity, custom-property-empty-line-before, custom-property-pattern, nesting-selector-no-missing-scoping-root, no-invalid-position-declaration */
 
 @source '/src/*.{html,js,php,json,css}';
 @source '/*.php';
 
 @theme {
 	--spacing: 0.0625rem; /* 1px */
-	--default-font-family: var(--es-font-sans, 'Geist Variable', system-ui, sans-serif);
-	--default-mono-font-family: var(--es-font-mono, 'Geist Mono Variable', ui-monospace, monospace);
-	--color-*: initial;
-	--color-black: #181818;
-	--color-white: #ffffff;
-	--color-accent: #29a3a3;
-	--color-accent-dark: #218282;
-	--color-accent-10: #29a3a31a;
-	--color-accent-30: #29a3a333;
-	--color-border: #dedede;
-	--color-yellow-100: #fef3c7;
-	--color-yellow-500: #eab308;
-	--color-yellow-950: #451a03;
-	--color-sky-100: #e0f2fe;
-	--color-sky-500: #0ea5e9;
-	--color-sky-950: #082f49;
-	--color-gray-50: #f9fafb;
-	--color-gray-100: #f3f4f6;
-	--color-gray-300: #d1d5db;
-	--color-gray-400: #9ca3af;
-	--color-gray-600: #4b5563;
-	--color-red-100: #fee2e2;
-	--color-red-500: #ef4444;
-	--color-red-950: #450a0a;
-	--color-green-100: #dcfce7;
-	--color-green-500: #22c55e;
-	--color-green-950: #052e16;
+	--default-font-family: var(--es-font-sans, system-ui, sans-serif);
+	--default-mono-font-family: var(--es-font-mono, ui-monospace, monospace);
+
+	/* Easings */
+
+	--ease-spring-smooth: var(--motion-spring-smooth);
+	--ease-spring-snappy: var(--motion-spring-snappy);
+	--ease-spring-bouncy: var(--motion-spring-bouncy);
+	--ease-spring-bouncier: var(--motion-spring-bouncier);
+	--ease-spring-bounciest: var(--motion-spring-bounciest);
+	--ease-bounce: var(--motion-bounce);
+}
+
+@utility outline-auto {
+	/* stylelint-disable declaration-no-important */
+	outline: auto !important;
+	outline-offset: 2px;
+
+	/* Safari-only */
+	@supports (font: -apple-system-body) {
+		outline: 2px solid #FFFFFF !important;
+		box-shadow: 0 0 0 3px #000000 !important;
+	}
+	/* stylelint-enable declaration-no-important */
+}
+
+@custom-variant is-toggle {
+	&:is(.es-checkbox-toggle__input) {
+		@slot;
+	}
+}
+
+@custom-variant is-check {
+	&:is(.es-checkbox__input, .es-checkbox) {
+		@slot;
+	}
+}
+
+@utility font-variation-* {
+	font-variation-settings: --value([*]);
+}
+
+@utility transition-plus {
+	/* stylelint-disable-next-line @stylistic/max-line-length */
+	transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events, border-radius, font-variation-settings;
+	transition-duration: var(--es-default-transition-duration);
+	transition-timing-function: var(--es-default-transition-timing-function);
+}
+
+
+@utility text-box-trim {
+	@supports (text-box: trim-both cap alphabetic) {
+		text-box: trim-both cap alphabetic;
+	}
+}
+
+@custom-variant any-focus {
+	&:is(:focus-visible, [data-rac][data-focus-visible], :focus, [data-rac][data-focused]) {
+		@slot;
+	}
+}
+
+@custom-variant any-icon {
+	& svg {
+		@slot;
+	}
 }
 
 .esf-focus-ring,
 .esf-focus-ring a,
 .esf-focus-ring button {
-	@apply esf:focus:outline-2;
-	@apply esf:focus:outline-offset-2;
-	@apply esf:focus:outline-accent;
+	@apply esf:focus-visible:outline-auto!;
+	@apply esf:focus-visible:shadow-none;
 	@apply esf:focus:shadow-none;
-	@apply esf:focus:rounded-md;
+	@apply esf:focus:outline-hidden!;
 }
 
 /* Frontend facing helpers */
@@ -51,9 +89,10 @@
 }
 
 .esf-button-disabled {
-	@apply esf:opacity-50;
+	@apply esf:opacity-60;
 	@apply esf:cursor-not-allowed;
 	@apply esf:pointer-events-none;
+	@apply esf:grayscale;
 }
 
 .esf-button {
@@ -65,80 +104,69 @@
 	@apply esf:items-center;
 	@apply esf:justify-center;
 	@apply esf:gap-10;
-	@apply esf:rounded-md;
-	@apply esf:p-10;
-	@apply esf:text-base;
-	@apply esf:font-medium;
+	@apply esf:rounded-xl;
+	@apply esf:px-11 esf:py-9;
+	@apply esf:text-xs!;
 	@apply esf:border;
 	@apply esf:duration-300;
 	@apply esf:transition-colors;
-	@apply esf:focus:outline-2;
-	@apply esf:focus:outline-offset-2;
-	@apply esf:focus:outline-accent;
-	@apply esf:focus:shadow-none;
-	@apply esf:focus:rounded-md;
-	@apply esf:disabled:opacity-50;
+	@apply esf:focus:outline-hidden;
+	@apply esf:focus-visible:outline-auto;
+	@apply esf:disabled:opacity-60;
 	@apply esf:disabled:cursor-not-allowed;
 	@apply esf:disabled:pointer-events-none;
+	@apply esf:min-h-40;
 }
 
 .esf-button-primary {
 	@apply esf:text-white;
-	@apply esf:bg-accent;
-	@apply esf:border-accent;
+	@apply esf:bg-mist-500;
+	@apply esf:border-mist-500;
 	@apply esf:hover:text-white;
-	@apply esf:hover:bg-accent-dark;
-	@apply esf:hover:border-accent-dark;
+	@apply esf:hover:bg-mist-700;
+	@apply esf:hover:border-mist-600;
 	@apply esf:active:text-white;
-	@apply esf:active:bg-accent-dark;
-	@apply esf:active:border-accent-dark;
+	@apply esf:active:bg-mist-700;
+	@apply esf:active:border-mist-700;
 	@apply esf:focus:text-white;
-	@apply esf:focus:bg-accent-dark;
-	@apply esf:focus:border-accent-dark;
-	@apply esf:[&.is-active]:text-white;
-	@apply esf:[&.is-active]:bg-accent-dark;
-	@apply esf:[&.is-active]:border-accent-dark;
+	@apply esf:focus-visible:bg-mist-900;
+	@apply esf:focus-visible:border-mist-800;
 }
 
 .esf-button-primary-outline {
-	@apply esf:text-accent;
-	@apply esf:border-accent;
+	@apply esf:text-mist-600;
+	@apply esf:border-mist-600;
 	@apply esf:hover:text-white;
-	@apply esf:hover:bg-accent-dark;
-	@apply esf:hover:border-accent-dark;
+	@apply esf:hover:bg-mist-700;
+	@apply esf:hover:border-mist-600;
 	@apply esf:active:text-white;
-	@apply esf:active:bg-accent-dark;
-	@apply esf:active:border-accent-dark;
+	@apply esf:active:bg-mist-800;
+	@apply esf:active:border-mist-800;
 	@apply esf:focus:text-white;
-	@apply esf:focus:bg-accent-dark;
-	@apply esf:focus:border-accent-dark;
-	@apply esf:[&.is-active]:text-white;
-	@apply esf:[&.is-active]:bg-accent-dark;
-	@apply esf:[&.is-active]:border-accent-dark;
+	@apply esf:focus:bg-mist-800;
+	@apply esf:focus:border-mist-800;
 }
 
 .esf-button-primary-ghost {
-	@apply esf:text-accent;
+	@apply esf:text-mist-600;
+	@apply esf:hover:text-mist-600;
 	@apply esf:border-transparent;
-	@apply esf:hover:text-accent;
-	@apply esf:hover:bg-accent-30;
-	@apply esf:active:text-accent;
-	@apply esf:active:bg-accent-30;
-	@apply esf:focus:text-accent;
-	@apply esf:focus:bg-accent-30;
-	@apply esf:[&.is-active]:bg-accent-30;
+	@apply esf:hover:bg-mist-600/5;
+	@apply esf:active:text-mist-700;
+	@apply esf:active:bg-mist-600/30;
+	@apply esf:focus:text-mist-700;
+	@apply esf:focus:bg-mist-600/8;
 }
 
 .esf-button-secondary-ghost {
 	@apply esf:text-inherit;
 	@apply esf:border-transparent;
 	@apply esf:hover:text-inherit;
-	@apply esf:hover:bg-accent-30;
+	@apply esf:hover:bg-mist-600/30;
 	@apply esf:active:text-inherit;
-	@apply esf:active:bg-accent-30;
+	@apply esf:active:bg-mist-600/30;
 	@apply esf:focus:text-inherit;
-	@apply esf:focus:bg-accent-30;
-	@apply esf:[&.is-active]:bg-accent-30;
+	@apply esf:focus:bg-mist-600/30;
 }
 
 .esf-button-primary-basic {
@@ -148,5 +176,4 @@
 	@apply esf:hover:text-inherit;
 	@apply esf:active:text-inherit;
 	@apply esf:focus:text-inherit;
-	@apply esf:[&.is-active]:text-accent;
 }

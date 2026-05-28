@@ -131,7 +131,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 								icon={warning}
 								label={__('Note', 'eightshift-forms')}
 								subtitle={__('Adding field visibility overrides may result in odd behavior when used with conditional tags.', 'eightshift-forms')}
-								iconClassName='es:text-accent-600'
+								iconClassName='es:text-mist-600-600'
 							/>
 
 							<br />
@@ -139,7 +139,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 							<RichLabel
 								icon={lightBulb}
 								label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
-								iconClassName='es:text-accent-600'
+								iconClassName='es:text-mist-600-600'
 							/>
 						</HelpTooltip>
 					</BaseControl>

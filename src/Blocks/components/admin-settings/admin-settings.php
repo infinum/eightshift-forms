@@ -28,7 +28,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 ?>
 
-<div class="esf-main-container esf:css-reset esf:flex esf:flex-row esf:gap-30 esf:-ml-20 esf:p-40 esf:bg-gray-50 esf:min-h-screen">
+<div class="esf-main-container esf:css-reset esf:flex esf:flex-row esf:gap-30 esf:-ml-20 esf:p-40 esf:bg-white esf:min-h-screen es:font-sans es:css-reset">
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="esf:flex esf:flex-col esf:gap-16">
 			<?php
@@ -43,7 +43,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			?>
 		</div>
 	<?php } ?>
-	<div class="esf:flex esf:max-w-3xs esf:w-full esf:flex-col esf:gap-24 esf:sticky esf:self-start">
+	<div class="esf:flex esf:max-w-120 esf:w-full esf:flex-col esf:gap-24 esf:sticky esf:self-start">
 		<?php
 		echo Helpers::render('button', [
 			'buttonVariant' => 'secondaryGhost',
@@ -64,9 +64,9 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		);
 		?>
 	</div>
-	<div class="esf:flex esf:flex-col esf:h-full esf:gap-15 esf:flex-1">
+	<div class="esf:flex esf:flex-col esf:h-full esf:gap-12 esf:flex-1">
 		<div class="esf:flex esf:items-center esf:justify-between esf:min-h-14 esf:px-5">
-			<div class="esf:text-2xl esf:font-medium">
+			<div class="esf:text-2xl esf:text-gray-700 esf:font-variation-['wdth'_100,'wght'_450,'ROND'_100] esf:m-0!">
 				<?php echo esc_html($adminSettingsPageTitle); ?>
 			</div>
 

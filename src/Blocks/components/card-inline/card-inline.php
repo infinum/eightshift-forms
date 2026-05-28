@@ -19,7 +19,7 @@ $cardInlineIcon = Helpers::checkAttr('cardInlineIcon', $attributes, $manifest);
 $cardInlineRightContent = Helpers::checkAttr('cardInlineRightContent', $attributes, $manifest);
 
 $classes = Helpers::clsx([
-	'esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between esf:text-sm',
+	'esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between esf:text-xs',
 	'esf:min-h-42',
 	$additionalClass,
 ]);

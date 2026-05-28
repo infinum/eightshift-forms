@@ -23,7 +23,7 @@ $cardListingUseCheckbox = Helpers::checkAttr('cardListingUseCheckbox', $attribut
 $cardListingId = Helpers::checkAttr('cardListingId', $attributes, $manifest);
 
 $classes = Helpers::clsx([
-	'esf:hover:bg-accent-10 esf:transition-colors esf:duration-300',
+	'esf:hover:bg-mist-600/10 esf:transition-colors esf:duration-300',
 	UtilsHelper::getStateSelectorAdmin('listingItem'),
 	$cardListingInvalid ? 'esf:bg-red-500/5' : '',
 	$additionalClass,
@@ -33,7 +33,7 @@ $classes = Helpers::clsx([
 <div
 	class="<?php echo esc_attr($classes); ?>"
 	<?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
-	<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between esf:text-sm esf:py-10 esf:px-20 esf:group/card-listing">
+	<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center esf:justify-between esf:text-sm esf:py-8 esf:px-16 esf:group/card-listing">
 		<div class="esf:flex esf:flex-row esf:gap-10 esf:items-center">
 			<?php if ($cardListingUseCheckbox) { ?>
 				<?php echo Helpers::render('checkbox', [
@@ -42,7 +42,7 @@ $classes = Helpers::clsx([
 				]) ?>
 			<?php } ?>
 
-			<div class="esf:flex esf:flex-col esf:gap-2">
+			<div class="esf:flex esf:flex-wrap esf:gap-4">
 				<?php echo Helpers::render('button', [
 					'buttonVariant' => 'primaryBasic',
 					'buttonLabel' => $cardListingTitle,
