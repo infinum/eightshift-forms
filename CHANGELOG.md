@@ -6,9 +6,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [10.0.0]
 
+### Added
+
+- Compatibility for WordPress 6.9+ - apiVersion 3 blocks.
+
 ### Updated
 
-- Updated admin visuals
+- Updated admin visuals.
 - Reworked all editor options and editor components for all blocks, fields, ...
 
 ## [9.5.0]
