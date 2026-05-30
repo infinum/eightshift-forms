@@ -35,6 +35,7 @@ $unique = Helpers::getUnique();
 
 $fieldLabel = Helpers::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldHideLabel = Helpers::checkAttr('fieldHideLabel', $attributes, $manifest);
+$fieldHideLabelVisually = Helpers::checkAttr('fieldHideLabelVisually', $attributes, $manifest);
 $fieldId = Helpers::checkAttr('fieldId', $attributes, $manifest);
 $fieldName = Helpers::checkAttr('fieldName', $attributes, $manifest);
 $fieldBeforeContent = Helpers::checkAttr('fieldBeforeContent', $attributes, $manifest);
@@ -109,6 +110,12 @@ $labelInnerClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
 ]);
+
+if ($fieldHideLabelVisually) {
+	$screenReaderOnlyStyle = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0;';
+	$existingLabelStyle = $fieldAttrsLabel['style'] ?? '';
+	$fieldAttrsLabel['style'] = trim("{$existingLabelStyle};{$screenReaderOnlyStyle}", ';');
+}
 
 $innerClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
@@ -200,7 +207,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 
 	?>
 	<div class="<?php echo esc_attr($innerClass); ?>">
-		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
+		<?php if ($fieldLabel && (!$fieldHideLabel || $fieldHideLabelVisually)) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				<?php
