@@ -142,6 +142,7 @@ $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
+		aria-label="' . esc_attr__('Country code', 'eightshift-forms') . '"
 		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
 	>' . implode('', $options) . '</select>
 	<input
