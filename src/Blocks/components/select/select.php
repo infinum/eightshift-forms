@@ -130,6 +130,7 @@ $fieldOutput = [
 // Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
 if ($selectHideLabel) {
 	$fieldOutput['fieldHideLabel'] = true;
+	$fieldOutput['fieldHideLabelVisually'] = true;
 }
 
 echo Helpers::render(

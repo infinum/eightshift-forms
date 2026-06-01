@@ -49,6 +49,8 @@ if (has_filter($filterName) && !is_admin()) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
+	role="status"
+	aria-live="polite"
 	<?php echo Helpers::getAttrsOutput($globalMsgAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php echo esc_html($globalMsgValue); ?>

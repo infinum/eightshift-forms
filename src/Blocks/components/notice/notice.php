@@ -23,7 +23,7 @@ $noticeClass = Helpers::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($noticeClass); ?>">
+<div class="<?php echo esc_attr($noticeClass); ?>" role="alert">
 	<span class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
 		<?php echo UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>

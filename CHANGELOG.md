@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.5.1]
+
+### Fixed
+
+- Added an accessible name to rendered forms so Safari / VoiceOver exposes them as landmarks.
+- Added live-region semantics for global form messages and alert semantics for notices so screen readers announce status changes.
+- Preserved accessible labels when fields use placeholder mode by keeping a visually hidden label in the DOM.
+- Added an accessible label to the phone country-code select so screen readers announce its purpose.
+
 ## [9.5.0]
 
 ### Added
@@ -1857,6 +1866,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.5.1]: https://github.com/infinum/eightshift-forms/compare/9.5.0...9.5.1
 [9.5.0]: https://github.com/infinum/eightshift-forms/compare/9.4.1...9.5.0
 [9.4.1]: https://github.com/infinum/eightshift-forms/compare/9.4.0...9.4.1
 [9.4.0]: https://github.com/infinum/eightshift-forms/compare/9.3.0...9.4.0

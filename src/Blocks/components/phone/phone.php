@@ -142,6 +142,7 @@ $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
+		aria-label="' . esc_attr__('Country code', 'eightshift-forms') . '"
 		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
 	>' . implode('', $options) . '</select>
 	<input
@@ -177,6 +178,7 @@ $fieldOutput = [
 // Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
 if ($phoneHideLabel) {
 	$fieldOutput['fieldHideLabel'] = true;
+	$fieldOutput['fieldHideLabelVisually'] = true;
 }
 
 echo Helpers::render(
