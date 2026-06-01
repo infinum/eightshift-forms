@@ -46,6 +46,10 @@ if ($submitIcon) {
 	$submitIconContent = $submitIcon;
 }
 
+if ($submitValue === '') {
+	$submitValue = __('Submit', 'eightshift-forms');
+}
+
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"

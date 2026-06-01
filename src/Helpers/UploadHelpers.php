@@ -56,7 +56,7 @@ final class UploadHelpers
 	 * @param array<string, array<int, string>> $extraAllowedMimes Optional `extension => [mime, ...]` supplement for the belt-and-braces security scan
 	 *                                                            (mirror of what the caller passed to the up-front Validator scan).
 	 *
-	 * @return array<string, array<int, array<string, mixed>>>
+	 * @return array<string, mixed>
 	 */
 	public static function uploadFile(array $file, array $extraAllowedMimes = []): array
 	{

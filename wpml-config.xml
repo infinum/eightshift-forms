@@ -1,0 +1,173 @@
+<wpml-config>
+	<!--
+		WPML translatable Gutenberg block attributes for Eightshift Forms.
+
+		Lets WPML's Advanced Translation Editor (ATE) show form field strings
+		side by side instead of duplicating forms per language.
+
+		Attribute names are double-prefixed (blockName + componentName), e.g.
+		"inputInputFieldLabel" - this is how Eightshift's props() serializes them.
+
+		Only display strings are registered (labels, help, placeholders,
+		before/after/suffix content, button text, step labels).
+		Submission keys and identifiers (*Value, *Name, *Id, *Tracking, *Type)
+		are intentionally NOT translated - translating them breaks form
+		submissions and conditional tags.
+	-->
+	<gutenberg-blocks>
+
+		<!-- input -->
+		<gutenberg-block type="eightshift-forms/input" translate="1">
+			<key name="inputInputFieldLabel" />
+			<key name="inputInputFieldHelp" />
+			<key name="inputInputFieldBeforeContent" />
+			<key name="inputInputFieldAfterContent" />
+			<key name="inputInputFieldSuffixContent" />
+			<key name="inputInputPlaceholder" />
+			<key name="inputInputRangeShowMinPrefix" />
+			<key name="inputInputRangeShowMinSuffix" />
+			<key name="inputInputRangeShowMaxPrefix" />
+			<key name="inputInputRangeShowMaxSuffix" />
+			<key name="inputInputRangeShowCurrentPrefix" />
+			<key name="inputInputRangeShowCurrentSuffix" />
+		</gutenberg-block>
+
+		<!-- textarea -->
+		<gutenberg-block type="eightshift-forms/textarea" translate="1">
+			<key name="textareaTextareaFieldLabel" />
+			<key name="textareaTextareaFieldHelp" />
+			<key name="textareaTextareaFieldBeforeContent" />
+			<key name="textareaTextareaFieldAfterContent" />
+			<key name="textareaTextareaFieldSuffixContent" />
+			<key name="textareaTextareaPlaceholder" />
+		</gutenberg-block>
+
+		<!-- select -->
+		<gutenberg-block type="eightshift-forms/select" translate="1">
+			<key name="selectSelectFieldLabel" />
+			<key name="selectSelectFieldHelp" />
+			<key name="selectSelectFieldBeforeContent" />
+			<key name="selectSelectFieldAfterContent" />
+			<key name="selectSelectFieldSuffixContent" />
+			<key name="selectSelectPlaceholder" />
+		</gutenberg-block>
+
+		<!-- select-option -->
+		<gutenberg-block type="eightshift-forms/select-option" translate="1">
+			<key name="selectOptionSelectOptionLabel" />
+		</gutenberg-block>
+
+		<!-- checkbox -->
+		<gutenberg-block type="eightshift-forms/checkbox" translate="1">
+			<key name="checkboxCheckboxLabel" />
+			<key name="checkboxCheckboxHelp" />
+		</gutenberg-block>
+
+		<!-- checkboxes -->
+		<gutenberg-block type="eightshift-forms/checkboxes" translate="1">
+			<key name="checkboxesCheckboxesFieldLabel" />
+			<key name="checkboxesCheckboxesFieldHelp" />
+			<key name="checkboxesCheckboxesFieldBeforeContent" />
+			<key name="checkboxesCheckboxesFieldAfterContent" />
+			<key name="checkboxesCheckboxesFieldSuffixContent" />
+			<key name="checkboxesCheckboxesPlaceholder" />
+		</gutenberg-block>
+
+		<!-- radio -->
+		<gutenberg-block type="eightshift-forms/radio" translate="1">
+			<key name="radioRadioLabel" />
+		</gutenberg-block>
+
+		<!-- radios -->
+		<gutenberg-block type="eightshift-forms/radios" translate="1">
+			<key name="radiosRadiosFieldLabel" />
+			<key name="radiosRadiosFieldHelp" />
+			<key name="radiosRadiosFieldBeforeContent" />
+			<key name="radiosRadiosFieldAfterContent" />
+			<key name="radiosRadiosFieldSuffixContent" />
+			<key name="radiosRadiosPlaceholder" />
+		</gutenberg-block>
+
+		<!-- date -->
+		<gutenberg-block type="eightshift-forms/date" translate="1">
+			<key name="dateDateFieldLabel" />
+			<key name="dateDateFieldHelp" />
+			<key name="dateDateFieldBeforeContent" />
+			<key name="dateDateFieldAfterContent" />
+			<key name="dateDateFieldSuffixContent" />
+			<key name="dateDatePlaceholder" />
+		</gutenberg-block>
+
+		<!-- phone -->
+		<gutenberg-block type="eightshift-forms/phone" translate="1">
+			<key name="phonePhoneFieldLabel" />
+			<key name="phonePhoneFieldHelp" />
+			<key name="phonePhoneFieldBeforeContent" />
+			<key name="phonePhoneFieldAfterContent" />
+			<key name="phonePhoneFieldSuffixContent" />
+			<key name="phonePhonePlaceholder" />
+		</gutenberg-block>
+
+		<!-- country -->
+		<gutenberg-block type="eightshift-forms/country" translate="1">
+			<key name="countryCountryFieldLabel" />
+			<key name="countryCountryFieldHelp" />
+			<key name="countryCountryFieldBeforeContent" />
+			<key name="countryCountryFieldAfterContent" />
+			<key name="countryCountryFieldSuffixContent" />
+			<key name="countryCountryPlaceholder" />
+		</gutenberg-block>
+
+		<!-- file -->
+		<gutenberg-block type="eightshift-forms/file" translate="1">
+			<key name="fileFileFieldLabel" />
+			<key name="fileFileFieldHelp" />
+			<key name="fileFileFieldBeforeContent" />
+			<key name="fileFileFieldAfterContent" />
+			<key name="fileFileFieldSuffixContent" />
+			<key name="fileFileCustomInfoText" />
+			<key name="fileFileCustomInfoButtonText" />
+		</gutenberg-block>
+
+		<!-- rating -->
+		<gutenberg-block type="eightshift-forms/rating" translate="1">
+			<key name="ratingRatingFieldLabel" />
+			<key name="ratingRatingFieldHelp" />
+			<key name="ratingRatingFieldBeforeContent" />
+			<key name="ratingRatingFieldAfterContent" />
+			<key name="ratingRatingFieldSuffixContent" />
+		</gutenberg-block>
+
+		<!-- submit -->
+		<gutenberg-block type="eightshift-forms/submit" translate="1">
+			<key name="submitSubmitValue" />
+		</gutenberg-block>
+
+		<!-- step -->
+		<gutenberg-block type="eightshift-forms/step" translate="1">
+			<key name="stepStepLabel" />
+			<key name="stepStepContent" />
+			<key name="stepStepPrevLabel" />
+			<key name="stepStepNextLabel" />
+		</gutenberg-block>
+
+		<!-- field -->
+		<gutenberg-block type="eightshift-forms/field" translate="1">
+			<key name="fieldFieldLabel" />
+			<key name="fieldFieldHelp" />
+			<key name="fieldFieldContent" />
+			<key name="fieldFieldBeforeContent" />
+			<key name="fieldFieldAfterContent" />
+			<key name="fieldFieldSuffixContent" />
+		</gutenberg-block>
+
+		<!-- dynamic -->
+		<gutenberg-block type="eightshift-forms/dynamic" translate="1">
+			<key name="dynamicDynamicCustomLabel" />
+		</gutenberg-block>
+
+		<!-- forms: nothing translatable (only post IDs / config) -->
+		<!-- form-selector: no attributes -->
+
+	</gutenberg-blocks>
+</wpml-config>
