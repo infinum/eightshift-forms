@@ -104,18 +104,13 @@ $labelClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
+	Helpers::selector($fieldHideLabelVisually && $componentClass, $componentClass, 'label', 'is-visually-hidden'),
 ]);
 
 $labelInnerClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
 ]);
-
-if ($fieldHideLabelVisually) {
-	$screenReaderOnlyStyle = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0;';
-	$existingLabelStyle = $fieldAttrsLabel['style'] ?? '';
-	$fieldAttrsLabel['style'] = trim("{$existingLabelStyle};{$screenReaderOnlyStyle}", ';');
-}
 
 $innerClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
