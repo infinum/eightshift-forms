@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.5.2]
+
+### Added
+
+- Added a `wpml-config.xml` so WPML's Advanced Translation Editor can translate Gutenberg form field strings (labels, help, placeholders, button text, step labels) without duplicating forms per language.
+
+### Changed
+
+- Updated the submit button so its default "Submit" label is provided as a translatable PHP fallback instead of a hardcoded manifest default.
+- Updated the form `method` attribute default to uppercase `POST`.
+
+### Fixed
+
+- Fixed an incorrect `uploadFile()` return-type annotation in `UploadHelpers` that triggered PHPStan errors.
+
 ## [9.5.1]
 
 ### Fixed
@@ -1866,6 +1881,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2
 [9.5.1]: https://github.com/infinum/eightshift-forms/compare/9.5.0...9.5.1
 [9.5.0]: https://github.com/infinum/eightshift-forms/compare/9.4.1...9.5.0
 [9.4.1]: https://github.com/infinum/eightshift-forms/compare/9.4.0...9.4.1
