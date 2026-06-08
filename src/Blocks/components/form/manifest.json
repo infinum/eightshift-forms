@@ -39,7 +39,7 @@
 		},
 		"formMethod": {
 			"type": "string",
-			"default": "post"
+			"default": "POST"
 		},
 		"formId": {
 			"type": "string"

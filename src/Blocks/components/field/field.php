@@ -35,6 +35,7 @@ $unique = Helpers::getUnique();
 
 $fieldLabel = Helpers::checkAttr('fieldLabel', $attributes, $manifest);
 $fieldHideLabel = Helpers::checkAttr('fieldHideLabel', $attributes, $manifest);
+$fieldHideLabelVisually = Helpers::checkAttr('fieldHideLabelVisually', $attributes, $manifest);
 $fieldId = Helpers::checkAttr('fieldId', $attributes, $manifest);
 $fieldName = Helpers::checkAttr('fieldName', $attributes, $manifest);
 $fieldBeforeContent = Helpers::checkAttr('fieldBeforeContent', $attributes, $manifest);
@@ -101,6 +102,7 @@ $labelClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
+	Helpers::selector($fieldHideLabelVisually && $componentClass, $componentClass, 'label', 'is-visually-hidden'),
 ]);
 
 $labelInnerClass = Helpers::clsx([
@@ -202,7 +204,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 
 	?>
 	<div class="<?php echo esc_attr($innerClass); ?>">
-		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
+		<?php if ($fieldLabel && (!$fieldHideLabel || $fieldHideLabelVisually)) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				<?php

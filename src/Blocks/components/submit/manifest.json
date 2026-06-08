@@ -21,8 +21,7 @@
 			"type": "string"
 		},
 		"submitValue": {
-			"type": "string",
-			"default": "Submit"
+			"type": "string"
 		},
 		"submitIsDisabled": {
 			"type": "boolean",

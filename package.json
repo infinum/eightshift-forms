@@ -1,6 +1,6 @@
 {
 	"name": "@eightshift/eightshift-forms",
-	"version": "9.5.0",
+	"version": "9.5.2",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
 	"authors": [
 		{
@@ -22,6 +22,7 @@
 	"scripts": {
 		"lintStyle": "stylelint **/*.css",
 		"lintJs": "eslint src/",
+		"test": "bun run lintStyle && bun run lintJs",
 		"start": "webpack --watch --mode development",
 		"build": "webpack --mode production",
 		"build:sourcemaps": "webpack --mode production --env sourcemaps",

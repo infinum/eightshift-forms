@@ -51,7 +51,8 @@ if ($globalMsgHeadingError) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo wp_kses_post(Helpers::getAttrsOutput($globalMsgAttrs)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-	?>>
+	role="status"
+	aria-live="polite"
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($globalMsgAttrs)); ?>>
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

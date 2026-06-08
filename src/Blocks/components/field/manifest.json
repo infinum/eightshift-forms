@@ -49,6 +49,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"fieldHideLabelVisually": {
+			"type": "boolean",
+			"default": false
+		},
 		"fieldHidden": {
 			"type": "boolean",
 			"default": false

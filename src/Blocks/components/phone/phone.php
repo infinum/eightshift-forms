@@ -147,6 +147,7 @@ $phone = '
 		name="' . esc_attr($phoneName) . '"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrsSelect)) . '
+		aria-label="' . esc_attr__('Country code', 'eightshift-forms') . '"
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -180,6 +181,7 @@ $fieldOutput = [
 // Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
 if ($phoneHideLabel) {
 	$fieldOutput['fieldHideLabel'] = true;
+	$fieldOutput['fieldHideLabelVisually'] = true;
 }
 
 echo Helpers::render(

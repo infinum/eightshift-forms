@@ -187,6 +187,10 @@ if ($inputHideLabel || $inputType === 'hidden') {
 	$fieldOutput['fieldHideLabel'] = true;
 }
 
+if ($inputHideLabel) {
+	$fieldOutput['fieldHideLabelVisually'] = true;
+}
+
 echo Helpers::render(
 	'field',
 	array_merge(

@@ -139,6 +139,11 @@ $globalMsg = Helpers::render(
 	Helpers::props('globalMsg', $attributes)
 );
 
+// A11y: Provide an accessible name so Safari/VoiceOver exposes <form> as a landmark (WCAG 1.3.1, 4.1.2).
+if ($formPostId) {
+	$formAttrs['aria-label'] = esc_attr(get_the_title((int) $formPostId));
+}
+
 ?>
 
 <form
