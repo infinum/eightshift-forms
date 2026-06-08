@@ -327,6 +327,7 @@ abstract class AbstractTheme
 						"esf:group-[&.es-field\_\_label--is-required]/label:after:text-red-500",
 						"esf:group-[&.es-field\_\_label--is-required]/label:after:text-base",
 						"esf:group-[&.es-field\_\_label--is-required]/label:after:font-semibold",
+						"esf:group-[&.es-field\_\_label--is-visually-hidden]/label:sr-only",
 					],
 					'help' => self::THEME_SELECTORS['help'],
 					'suffix-content' => self::THEME_SELECTORS['after-content'],
