@@ -67,31 +67,21 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 	public const SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY = 'validation-use-only-logged-in';
 
 	/**
-	 * Instance variable for labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
-	public function __construct(LabelsInterface $labels)
+	public function __construct(protected LabelsInterface $labels)
 	{
-		$this->labels = $labels;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
 	}
 
 	/**
@@ -105,7 +95,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 	{
 		$formType = GeneralHelpers::getFormTypeById($formId);
 
-		if (!$formType) {
+		if ($formType === '' || $formType === '0') {
 			return [];
 		}
 
@@ -209,7 +199,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 		$messagesOutput = [];
 
 		$locale = FormsHelper::getLocaleFromCountryCode();
-		if ($locale) {
+		if ($locale !== '' && $locale !== '0') {
 			\switch_to_locale($locale);
 		}
 
@@ -297,8 +287,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 								'component' => 'intro',
 								'introTitle' => \__('File upload security stack', 'eightshift-forms'),
 							],
-							...(\array_map(function ($extension) {
-								return [
+							...(\array_map(fn(array $extension): array => [
 									'component' => 'card-inline',
 									'cardInlineTitle' => $extension['title'] ?? '',
 									'cardInlineSubTitle' => $extension['subtitle'] ?? '',
@@ -308,8 +297,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 											'statusLightType' => $extension['status'] ? 'success' : 'error',
 										],
 									],
-								];
-							}, FileSecurityDiagnostics::getExtensionStatuses())),
+								], FileSecurityDiagnostics::getExtensionStatuses())),
 						],
 					],
 					[

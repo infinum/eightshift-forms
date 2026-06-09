@@ -19,8 +19,6 @@ class CreateEntriesTable
 {
 	/**
 	 * Create DB table.
-	 *
-	 * @return void
 	 */
 	public static function createTable(): void
 	{

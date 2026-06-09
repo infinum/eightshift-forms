@@ -16,6 +16,7 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class EnqueueAdmin
@@ -31,8 +32,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
@@ -40,14 +39,12 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 			return;
 		}
 
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminStyles'], 9990);
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
+		\add_action('admin_enqueue_scripts', $this->enqueueAdminStyles(...), 9990);
+		\add_action('admin_enqueue_scripts', $this->enqueueAdminScripts(...));
 	}
 
 	/**
 	 * Method that returns assets name used to prefix asset handlers.
-	 *
-	 * @return string
 	 */
 	public function getAssetsPrefix(): string
 	{
@@ -56,8 +53,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 	/**
 	 * Method that returns assets version for versioning asset handlers.
-	 *
-	 * @return string
 	 */
 	public function getAssetsVersion(): string
 	{
@@ -66,14 +61,11 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only admin.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function enqueueAdminScripts(): void
 	{
 		parent::enqueueAdminScripts();
-
-		$output = [];
 
 		$output = \array_merge(
 			$this->getEnqueueSharedInlineCommonItems(false),
@@ -100,15 +92,14 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 *
 	 * @return array<int, string> List of all the script dependencies.
 	 */
+	#[Override]
 	protected function getAdminScriptDependencies(): array
 	{
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'admin']);
-		$scriptsDependencyOutput = [];
-
 		if (\has_filter($scriptsDependency)) {
-			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+			return \apply_filters($scriptsDependency, []);
 		}
 
-		return $scriptsDependencyOutput;
+		return [];
 	}
 }

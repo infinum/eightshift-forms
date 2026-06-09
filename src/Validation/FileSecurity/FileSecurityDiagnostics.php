@@ -22,8 +22,6 @@ final class FileSecurityDiagnostics
 	/**
 	 * Returns the qpdf binary path resolved via filter, or empty string when
 	 * the project hasn't wired one in.
-	 *
-	 * @return string
 	 */
 	public static function getQpdfBinary(): string
 	{
@@ -34,9 +32,9 @@ final class FileSecurityDiagnostics
 		}
 
 		$candidates = [
-			'/usr/bin/qpdf',
-			'/usr/local/bin/qpdf',
-			'/opt/homebrew/bin/qpdf',
+		'/usr/bin/qpdf',
+		'/usr/local/bin/qpdf',
+		'/opt/homebrew/bin/qpdf',
 		];
 
 		foreach ($candidates as $candidate) {
@@ -50,8 +48,6 @@ final class FileSecurityDiagnostics
 
 	/**
 	 * Is proc_open available? Required for qpdf invocation.
-	 *
-	 * @return bool
 	 */
 	public static function isProcOpenAvailable(): bool
 	{
@@ -60,13 +56,7 @@ final class FileSecurityDiagnostics
 		}
 
 		$disabled = \explode(',', (string) \ini_get('disable_functions'));
-		foreach ($disabled as $name) {
-			if (\trim($name) === 'proc_open') {
-				return false;
-			}
-		}
-
-		return true;
+					return \array_all($disabled, fn($name): bool => \trim((string) $name) !== 'proc_open');
 	}
 
 	/**
@@ -76,7 +66,7 @@ final class FileSecurityDiagnostics
 	 */
 	public static function getExtensionStatuses(): array
 	{
-		$extensions = [
+		return [
 			[
 				'title' => 'fileinfo',
 				'subtitle' => \__('Fileinfo extension is required for file type detection.', 'eightshift-forms'),
@@ -108,7 +98,5 @@ final class FileSecurityDiagnostics
 				'status' => self::getQpdfBinary() !== '',
 			],
 		];
-
-		return $extensions;
 	}
 }

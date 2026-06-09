@@ -34,7 +34,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const FORBIDDEN_ENTRY_SUFFIXES = [
+	private const array FORBIDDEN_ENTRY_SUFFIXES = [
 		'vbaproject.bin',
 		'/oleobject',
 		'oleobject.bin',
@@ -45,7 +45,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 	/**
 	 * CFBF (OLE Compound File) magic. Identifies legacy `.doc/.xls/.ppt`.
 	 */
-	private const CFBF_MAGIC = "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1";
+	private const string CFBF_MAGIC = "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1";
 
 	/**
 	 * UTF-8 stream names (encoded to UTF-16LE at runtime) whose presence in a
@@ -54,7 +54,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const CFBF_DANGEROUS_STREAMS = [
+	private const array CFBF_DANGEROUS_STREAMS = [
 		'Macros',
 		'_VBA_PROJECT',
 		'_VBA_PROJECT_CUR',
@@ -133,7 +133,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 				$lower = \strtolower($entryName);
 
 				foreach (self::FORBIDDEN_ENTRY_SUFFIXES as $needle) {
-					if (\strpos($lower, $needle) !== false) {
+					if (\str_contains($lower, $needle)) {
 						return 'validationFileOfficeUnsafe';
 					}
 				}
@@ -141,7 +141,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 				// Relationship files describe links between document parts.
 				// External TargetMode is the documented vector for
 				// auto-loaded remote payloads (DDE, template injection).
-				if (\substr($lower, -5) === '.rels') {
+				if (\str_ends_with($lower, '.rels')) {
 					$body = (string) $zip->getFromIndex($i);
 					if ($body !== '' && \stripos($body, 'targetmode="external"') !== false) {
 						return 'validationFileOfficeUnsafe';
@@ -174,7 +174,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 
 		foreach (self::CFBF_DANGEROUS_STREAMS as $name) {
 			$needle = $this->toUtf16Le($name);
-			if ($needle !== '' && \strpos($contents, $needle) !== false) {
+			if ($needle !== '' && \str_contains($contents, $needle)) {
 				return 'validationFileOfficeUnsafe';
 			}
 		}

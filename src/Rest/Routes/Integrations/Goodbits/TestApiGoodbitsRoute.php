@@ -32,13 +32,6 @@ class TestApiGoodbitsRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsGoodbits::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Goodbits data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $goodbitsClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiGoodbitsRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $goodbitsClient
+		protected ClientInterface $goodbitsClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->goodbitsClient = $goodbitsClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiGoodbitsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

@@ -25,6 +25,7 @@ use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use Override;
 
 /**
  * Class FormSubmitPipedriveRoute
@@ -35,13 +36,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsPipedrive::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Instance variable for Pipedrive data.
-	 *
-	 * @var PipedriveClientInterface
-	 */
-	protected $pipedriveClient;
 
 	/**
 	 * Create a new instance that injects classes
@@ -61,7 +55,7 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		PipedriveClientInterface $pipedriveClient
+		protected PipedriveClientInterface $pipedriveClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +63,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->pipedriveClient = $pipedriveClient;
 	}
 
 	/**
@@ -84,8 +77,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -115,10 +106,8 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If test API fails.
 	 * @throws DisabledIntegrationException If integration is disabled.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -162,6 +151,7 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
+	#[Override]
 	protected function getEmailResponseTags(array $formDetails): array
 	{
 		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];

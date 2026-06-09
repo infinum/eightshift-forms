@@ -74,11 +74,7 @@ $textareaAttrs['aria-invalid'] = 'false';
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('textarea', $attributes);
 
 // For outputting textarea value as HTML, we need to escape the value.
-if ($textareaAlternativeOutputEscape) {
-	$textareaValue = esc_html($textareaValue);
-} else {
-	$textareaValue = wp_kses_post($textareaValue);
-}
+$textareaValue = $textareaAlternativeOutputEscape ? esc_html($textareaValue) : wp_kses_post($textareaValue);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"

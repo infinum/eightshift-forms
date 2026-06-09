@@ -20,20 +20,6 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 final class DisabledIntegrationException extends Exception implements GeneralExceptionInterface
 {
 	/**
-	 * Internal data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $data = [];
-
-	/**
-	 * Internal debug data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $debug = [];
-
-	/**
 	 * Throws error if integration is disabled.
 	 *
 	 * @param string $message Message to show.
@@ -43,12 +29,16 @@ final class DisabledIntegrationException extends Exception implements GeneralExc
 	 */
 	public function __construct(
 		string $message,
-		array $debug = [],
-		array $data = [],
+		/**
+		 * Internal debug data.
+		 */
+		private readonly array $debug = [],
+		/**
+		 * Internal data.
+		 */
+		private readonly array $data = [],
 		int $code = AbstractRoute::API_RESPONSE_CODE_OK
 	) {
-		$this->data = $data;
-		$this->debug = $debug;
 		parent::__construct($message, $code);
 	}
 

@@ -28,18 +28,14 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('load-post.php', [$this, 'updateFormOnBlockEditorLoad']);
+		\add_action('load-post.php', $this->updateFormOnBlockEditorLoad(...));
 	}
 
 	/**
 	 * Sync and update form DB when the user opens a block editor.
-	 *
-	 * @return void
 	 */
 	public function updateFormOnBlockEditorLoad(): void
 	{
@@ -59,15 +55,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$formId = isset($_GET['post']) ? \sanitize_text_field(\wp_unslash($_GET['post'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Run form sync.
-		$syncForm = $this->syncFormDirect($formId);
-
-		// Find final status.
-		$status = $syncForm['status'] ?? '';
-
-		// If error output log.
-		if ($status === AbstractRoute::STATUS_ERROR) {
-			return;
-		}
+		$this->syncFormDirect($formId);
 	}
 
 	/**
@@ -123,7 +111,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$update = $this->updateBlockContent($formId, $blocksGrammar);
 
 		// Bailout if db content update failed.
-		if (!$update) {
+		if ($update === 0) {
 			return [
 				'formId' => $formId,
 				'status' => AbstractRoute::STATUS_ERROR,
@@ -154,7 +142,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	public function createFormEditor(string $formId, string $type, string $itemId, string $innerId, bool $editorOutput = false): array
 	{
 		// Bailout if form ID is missing.
-		if (!$formId) {
+		if ($formId === '' || $formId === '0') {
 			return [
 				'formId' => $formId,
 				'status' => AbstractRoute::STATUS_ERROR,
@@ -224,9 +212,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		$blockOutput = \array_map(
-			static function ($item) {
-				return $item['integration'];
-			},
+			static fn(array $item) => $item['integration'],
 			$this->prepareIntegrationBlocksForCheck($integrationFields)
 		);
 
@@ -241,7 +227,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		);
 
 		// Bailout if integration fields are missing.
-		if (!$fields) {
+		if ($fields === []) {
 			return [
 				'formId' => $formId,
 				'status' => AbstractRoute::STATUS_ERROR,
@@ -274,7 +260,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	public function syncFormEditor(string $formId, bool $editorOutput = false): array
 	{
 		// Bailout if form ID is missing.
-		if (!$formId) {
+		if ($formId === '' || $formId === '0') {
 			return [
 				'formId' => $formId,
 				'status' => AbstractRoute::STATUS_ERROR,
@@ -287,7 +273,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$content = GeneralHelpers::getFormDetails($formId);
 
 		// Bailout if content is empty.
-		if (!$content) {
+		if ($content === []) {
 			return [
 				'formId' => $formId,
 				'status' => AbstractRoute::STATUS_ERROR,
@@ -561,11 +547,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$typeAttrs = [];
 
 			foreach ($output['typeAttrs'] as $attrKey => $attrValue) {
-				if ($attrKey === "{$output['type']}IntegrationId" || $attrKey === "{$output['type']}IntegrationInnerId") {
+				if ($attrKey === "{$output['type']}IntegrationId") {
+																	continue;
+				}
+				if ($attrKey === "{$output['type']}IntegrationInnerId") {
 					continue;
 				}
-
-				$typeAttrs[$attrKey] = $attrValue;
+																$typeAttrs[$attrKey] = $attrValue;
 			}
 
 			$output['typeAttrs'] = $typeAttrs;
@@ -614,7 +602,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Remove item if block is not present on integration, output nothing.
-		if (!$integration) {
+		if ($integration === []) {
 			// Skip removing step block because it doesn't exist on the integration.
 			if (isset($content['component']) && $content['component'] === Helpers::getBlock('step')['blockName']) {
 				$output['update'] = false;
@@ -628,7 +616,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// If field exists on the integration but not on the content add it.
-		if (!$content) {
+		if ($content === []) {
 			$output['update'] = true;
 			$output['added'] = $key;
 			$output['output'] = $integration;
@@ -647,7 +635,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerOutput = $content;
 
 		// Find prefix of the component.
-		$prefix = Helpers::kebabToCamelCase($integration['component'] . \ucfirst($integration['component']));
+		$prefix = Helpers::kebabToCamelCase($integration['component'] . \ucfirst((string) $integration['component']));
 
 		// Find components disabled options.
 		$disabledOptionsIntegration = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
@@ -661,25 +649,21 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				$i = $integration['attrs'][$disabledOption] ?? '';
 				$c = $content['attrs'][$disabledOption] ?? '';
 				// If integration is missing disabled or protected attribute. There could be and issue in the mapping of component attributes for integration.
-				if (!$i) {
-					// This condition is here if both integration and content are empty.
-					if ($i !== $c) {
-						$output['update'] = true;
-						$output['replaced'] = $key;
-						$output['output'] = $integration;
-						break;
-					}
+																// This condition is here if both integration and content are empty.
+				if (!$i && $i !== $c) {
+					$output['update'] = true;
+					$output['replaced'] = $key;
+					$output['output'] = $integration;
+					break;
 				}
 
 				// If content has missing, disabled or protected attribute add it from integration.
-				if (!$c) {
-					// This condition is here if both integration and content are empty.
-					if ($c !== $i) {
-						$output['update'] = true;
-						$output['changed'][$key][] = $disabledOption;
-						$innerOutput['attrs'][$disabledOption] = $i;
-						break;
-					}
+																// This condition is here if both integration and content are empty.
+				if (!$c && $c !== $i) {
+					$output['update'] = true;
+					$output['changed'][$key][] = $disabledOption;
+					$innerOutput['attrs'][$disabledOption] = $i;
+					break;
 				}
 
 				// If values of attribute in content and internation are different do something.
@@ -710,31 +694,29 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Skip attrs sync are used if some attrs are set via code and are missing from integration but should be able to be changed in the content like "hidden" state.
 		$syncAttrsSkipKeys = \array_flip($output['output']['attrs']["{$prefix}SyncAttrsSkip"] ?? []);
 
-		if ($missingAttributes) {
-			foreach ($missingAttributes as $missingAttributesKey => $missingAttributesValue) {
+		foreach ($missingAttributes as $missingAttributesKey => $missingAttributesValue) {
 				// No need to add default values.
-				if ($missingAttributesKey === 'inputInputType' && $missingAttributesValue === 'text') {
-					continue;
-				}
+			if ($missingAttributesKey === 'inputInputType' && $missingAttributesValue === 'text') {
+				continue;
+			}
 
 				// Skip sync if key is in the skip array.
-				if (isset($syncAttrsSkipKeys[$missingAttributesKey])) {
-					continue;
-				}
+			if (isset($syncAttrsSkipKeys[$missingAttributesKey])) {
+				continue;
+			}
 
 				// Add missing attributes to the output.
 				$output['update'] = true;
 				$output['added'] = $missingAttributesKey;
 				$output['output']['attrs'][$missingAttributesKey] = $missingAttributesValue;
-			}
 		}
 
 		$disabledOptionsKeys = \array_flip($output['output']['attrs']["{$prefix}DisabledOptions"]);
 
 		// Remove attributes removed from integration but it is still in the content.
 		$removedAttributes = \array_diff_key($content['attrs'], $integration['attrs']);
-		if ($removedAttributes) {
-			foreach ($removedAttributes as $removedAttributesKey => $removedAttributesValue) {
+		if ($removedAttributes !== []) {
+			foreach (\array_keys($removedAttributes) as $removedAttributesKey) {
 				if (!isset($disabledOptionsKeys[$removedAttributesKey])) {
 					continue;
 				}
@@ -791,7 +773,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 			$innerBlocks = \array_intersect_key($block, $nestedKeys);
 
-			if ($innerBlocks) {
+			if ($innerBlocks !== []) {
 				foreach (\reset($innerBlocks) as $innerKey => $innerBlock) {
 					$blockInnerTypeOriginal = $innerBlock['component'] ?? '';
 
@@ -920,7 +902,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		return [
-			'order' => $order ? $order : \array_keys($output),
+			'order' => $order ?: \array_keys($output),
 			'orderInner' => $orderInner,
 			'diff' => $output,
 		];
@@ -1027,14 +1009,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 *
 	 * @param string $formId Form Id.
 	 * @param string $content Form Block grammar content.
-	 *
-	 * @return int
 	 */
 	private function updateBlockContent(string $formId, string $content): int
 	{
 		return \wp_update_post([
-			'ID' => (int) $formId,
-			'post_content' => \wp_slash($content),
+		'ID' => (int) $formId,
+		'post_content' => \wp_slash($content),
 		]);
 	}
 
@@ -1067,9 +1047,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 			if ($key === "{$component}DisabledOptions" || $key === "{$component}SyncAttrsSkip") {
 				$value = \array_values(\array_map(
-					static function ($item) use ($component) {
-						return $component . \ucfirst($item);
-					},
+					static fn($item): string => $component . \ucfirst((string) $item),
 					$value
 				));
 			}
@@ -1107,8 +1085,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 * @param array<string, mixed> $attributes Array of all component attributes.
 	 * @param integer $index Index in list of inner blocks.
 	 * @param string $parentName Parent block name.
-	 *
-	 * @return string
 	 */
 	private function getInnerBlocksKeyName(string $prefix, array $attributes, int $index, string $parentName): string
 	{
@@ -1161,9 +1137,9 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$indexMap = \array_flip($b);
 
 		// Sort $a based on the order in $b, preserving the original order for missing elements.
-		\usort($a, function ($x, $y) use ($indexMap) {
-			$indexX = isset($indexMap[$x]) ? $indexMap[$x] : \count($indexMap);
-			$indexY = isset($indexMap[$y]) ? $indexMap[$y] : \count($indexMap);
+		\usort($a, function ($x, $y) use ($indexMap): int|float {
+			$indexX = $indexMap[$x] ?? \count($indexMap);
+			$indexY = $indexMap[$y] ?? \count($indexMap);
 			return $indexX - $indexY;
 		});
 
@@ -1224,7 +1200,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		];
 
 		// Bailout if empty.
-		if (!$newOrder) {
+		if ($newOrder === []) {
 			return $blocks;
 		}
 
@@ -1234,7 +1210,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				\array_flip($newOrder),
 				$blocks
 			),
-			static fn($item) => \is_array($item)
+			\is_array(...)
 		);
 	}
 
@@ -1255,7 +1231,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				continue;
 			}
 
-			$output[$name . \ucfirst($key)] = $value['default'];
+			$output[$name . \ucfirst((string) $key)] = $value['default'];
 		}
 
 		return $output;

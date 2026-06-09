@@ -127,12 +127,10 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
 	}
 
 	/**
@@ -145,9 +143,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public function getSettingsData(string $formId): array
 	{
 		$specialConstants = \array_map(
-			static function ($item, $key) {
-				return "<li><code>{$key}</code> - {$item}</li>";
-			},
+			static fn(string $item, int|string $key): string => "<li><code>{$key}</code> - {$item}</li>",
 			GeneralHelpers::getSpecialConstants('tracking'),
 			\array_keys(GeneralHelpers::getSpecialConstants('tracking'))
 		);
@@ -387,14 +383,12 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'selectId' => SettingsHelpers::getSettingName(self::SETTINGS_FORCE_LOCALE),
 								'selectFieldLabel' => \__('Force locale', 'eightshift-forms'),
 								'selectFieldHelp' => \__('Force the locale for this form.', 'eightshift-forms'),
-								'selectContent' => \array_map(static function ($item, $key) use ($formId) {
-									return [
+								'selectContent' => \array_map(static fn($item, $key): array => [
 										'component' => 'select-option',
-										'selectOptionLabel' => \ucfirst($item),
+										'selectOptionLabel' => \ucfirst((string) $item),
 										'selectOptionValue' => $key,
 										'selectOptionIsSelected' => $key === SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
-									];
-								}, I18n::AVAILABLE_LANGUAGES, \array_keys(I18n::AVAILABLE_LANGUAGES)),
+									], I18n::AVAILABLE_LANGUAGES, \array_keys(I18n::AVAILABLE_LANGUAGES)),
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
 							],
 						],

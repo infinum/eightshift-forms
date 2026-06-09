@@ -57,7 +57,7 @@ class FormsListing implements FormListingInterface
 					'title' => \get_the_title($id),
 					'status' => \get_post_status($id),
 					'settingsLink' => GeneralHelpers::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY),
-					'editLink' => !$showTrash ? GeneralHelpers::getFormEditPageUrl((string) $id) : '',
+					'editLink' => $showTrash ? '' : GeneralHelpers::getFormEditPageUrl((string) $id),
 					'trashLink' => GeneralHelpers::getFormTrashActionUrl((string) $id, $showTrash),
 					'entriesLink' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, (string) $id),
 					'trashRestoreLink' => GeneralHelpers::getFormTrashRestoreActionUrl((string) $id),

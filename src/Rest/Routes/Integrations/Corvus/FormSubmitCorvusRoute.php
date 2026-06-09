@@ -46,8 +46,6 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -77,10 +75,8 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Corvus is missing config.
 	 * @throws ValidationFailedException If Corvus is missing required params.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
@@ -101,23 +97,15 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		$params = $this->prepareParams($mapParams, $formDetails[Config::FD_PARAMS], $formId);
 
 		$reqParams = [
-			'store_id',
-			'amount',
-			'language',
-			'require_complete',
-			'currency',
-			'order_number',
-			'cart',
+		'store_id',
+		'amount',
+		'language',
+		'require_complete',
+		'currency',
+		'order_number',
+		'cart',
 		];
-
-		$missingOrEmpty = false;
-
-		foreach ($reqParams as $param) {
-			if (!isset($params[$param]) || empty($params[$param])) {
-				$missingOrEmpty = true;
-				break;
-			}
-		}
+					$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
@@ -133,7 +121,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		}
 
 		// Bail early if the API key is missing.
-		if (isset($params['store_id']) && empty(Variables::getApiKeyCorvus($params['store_id']))) {
+		if (isset($params['store_id']) && \in_array(Variables::getApiKeyCorvus($params['store_id']), ['', '0'], true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
 				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
@@ -168,22 +156,22 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
-			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS,
-			],
-			AbstractBaseRoute::R_DATA => \array_merge(
-				$successAdditionalData['public'],
-				$successAdditionalData['additional'],
-				[
-					UtilsHelper::getStateResponseOutputKey('processExternally') => [
+		AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
+		AbstractBaseRoute::R_DEBUG => [
+		AbstractBaseRoute::R_DEBUG => $formDetails,
+		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS,
+					],
+					AbstractBaseRoute::R_DATA => \array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['additional'],
+						[
+						UtilsHelper::getStateResponseOutputKey('processExternally') => [
 						'type' => 'POST',
 						'url' => $this->getUrl($formId),
 						'params' => $this->setRealOrderNumber($params, $successAdditionalData, $formId),
-					],
-				]
-			),
+						],
+						]
+					),
 		];
 	}
 
@@ -201,7 +189,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		$output = [];
 		$storeId = SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_STORE_ID, $formId);
 
-		if (!$storeId) {
+		if ($storeId === '' || $storeId === '0') {
 			return $output;
 		}
 
@@ -256,7 +244,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
-		if (SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId) ?: '') {
+		if (SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId) ?: '' !== '' && SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId) ?: '' !== '0') {
 			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 
 			if ($entryId) {
@@ -285,7 +273,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		// Add signature.
 		$params['signature'] = \hash_hmac(
 			'sha256',
-			\array_reduce(\array_keys($params), fn($carry, $key) => $carry . $key . $params[$key], ''),
+			\array_reduce(\array_keys($params), fn($carry, $key): string => $carry . $key . $params[$key], ''),
 			SettingsHelpers::getOptionWithConstant(Variables::getApiKeyCorvus($params['store_id']), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)
 		);
 
@@ -296,8 +284,6 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 * Get merchant URL.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	private function getUrl(string $formId): string
 	{

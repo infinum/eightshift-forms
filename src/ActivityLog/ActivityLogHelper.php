@@ -30,8 +30,6 @@ class ActivityLogHelper
 	 *
 	 * @param string $activityLogId Activity log Id.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getActivityLogAdminUrl(string $activityLogId, string $formId): string
 	{
@@ -98,8 +96,8 @@ class ActivityLogHelper
 					[
 						'%' . $search . '%',
 						'%' . $search . '%',
-						(int) $perPage,
-						(int) $perPage * ($page - 1),
+						$perPage,
+						$perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -129,7 +127,7 @@ class ActivityLogHelper
 		);
 
 		return [
-			'currentPage' => (int) $page,
+			'currentPage' => $page,
 			'totalPages' => (int) \ceil($totalPages / $perPage),
 			'count' => \count($output),
 			'items' => $results,
@@ -162,8 +160,8 @@ class ActivityLogHelper
 						(int) $formId,
 						'%' . $search . '%',
 						'%' . $search . '%',
-						(int) $perPage,
-						(int) $perPage * ($page - 1),
+						$perPage,
+						$perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -194,7 +192,7 @@ class ActivityLogHelper
 		);
 
 		return [
-			'currentPage' => (int) $page,
+			'currentPage' => $page,
 			'totalPages' => (int) \ceil($totalPages / $perPage),
 			'count' => \count($results),
 			'items' => $results,
@@ -219,7 +217,7 @@ class ActivityLogHelper
 	) {
 		global $wpdb;
 
-		if (!$formId) {
+		if ($formId === '' || $formId === '0') {
 			return false;
 		}
 
@@ -252,8 +250,6 @@ class ActivityLogHelper
 	 * Delete activity log.
 	 *
 	 * @param string $id Entry Id.
-	 *
-	 * @return boolean
 	 */
 	public static function deleteActivityLog(string $id): bool
 	{
@@ -264,11 +260,11 @@ class ActivityLogHelper
 		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$tableName,
 			[
-				'id' => (int) $id,
-			],
+			'id' => (int) $id,
+					],
 			[
-				'%d',
-			]
+					'%d',
+					]
 		);
 
 		if (\is_wp_error($result)) {
@@ -303,8 +299,6 @@ class ActivityLogHelper
 
 	/**
 	 * Get full table name.
-	 *
-	 * @return string
 	 */
 	private static function getFullTableName(): string
 	{

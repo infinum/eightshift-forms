@@ -32,13 +32,6 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsAirtable::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Airtable data.
-	 *
-	 * @var AirtableClientInterface
-	 */
-	protected $airtableClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		AirtableClientInterface $airtableClient
+		protected AirtableClientInterface $airtableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->airtableClient = $airtableClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

@@ -59,7 +59,7 @@ $checkboxInputClass = Helpers::clsx([
 $checkboxAttrs['value'] = esc_attr($checkboxValue);
 
 // strlen used because we can have 0 as string.
-if (strlen($checkboxUncheckedValue) !== 0) {
+if (strlen((string) $checkboxUncheckedValue) !== 0) {
 	$checkboxAttrs['data-unchecked-value'] = $checkboxUncheckedValue;
 }
 
@@ -68,7 +68,7 @@ $conditionalTags = Helpers::render(
 	Helpers::props('conditionalTags', $attributes)
 );
 
-if ($conditionalTags) {
+if ($conditionalTags !== '' && $conditionalTags !== '0') {
 	$checkboxFieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 

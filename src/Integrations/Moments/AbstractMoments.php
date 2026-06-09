@@ -34,8 +34,6 @@ abstract class AbstractMoments
 
 	/**
 	 * Return Moments base url.
-	 *
-	 * @return string
 	 */
 	protected function getBaseUrl(): string
 	{
@@ -46,8 +44,6 @@ abstract class AbstractMoments
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	protected function getApiKey(): string
 	{
@@ -56,8 +52,6 @@ abstract class AbstractMoments
 
 	/**
 	 * Return Api Url from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiUrl(): string
 	{

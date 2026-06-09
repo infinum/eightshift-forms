@@ -39,8 +39,6 @@ interface ValidatorInterface
 	 *
 	 * @param array<string, mixed> $params Params to validate or FormDetails.
 	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
-	 *
-	 * @return boolean
 	 */
 	public function validateMandatoryParams(array $params, array $mandatoryParams): bool;
 
@@ -58,8 +56,6 @@ interface ValidatorInterface
 	 * Set validation submit once.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return bool
 	 */
 	public function setValidationSubmitOnce(string $formId): bool;
 
@@ -67,8 +63,6 @@ interface ValidatorInterface
 	 * Check if validation submit only logged in is active.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return bool
 	 */
 	public function validateSubmitOnlyLoggedIn(string $formId): bool;
 
@@ -76,8 +70,6 @@ interface ValidatorInterface
 	 * Check if user has already submitted the form.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return bool
 	 */
 	public function validateSubmitOnlyOnce(string $formId): bool;
 }

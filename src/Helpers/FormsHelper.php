@@ -24,8 +24,6 @@ final class FormsHelper
 	 * Return field type internal enum values by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateFieldType(string $name): string
 	{
@@ -53,46 +51,29 @@ final class FormsHelper
 	 * @param string $start  Start value.
 	 * @param string $value  Value to compare.
 	 * @param string $end    End value.
-	 *
-	 * @return boolean
 	 */
 	public static function getComparator(string $action, string $start, string $value, string $end = ''): bool
 	{
 		$operator = Helpers::getSettings()['comparator'];
 		$operatorExtended = Helpers::getSettings()['comparatorExtended'];
 
-		switch ($action) {
-			case $operator['IS']:
-				return $value === $start;
-			case $operator['ISN']:
-				return $value !== $start;
-			case $operator['GT']:
-				return \floatval($value) > \floatval($start);
-			case $operator['GTE']:
-				return \floatval($value) >= \floatval($start);
-			case $operator['LT']:
-				return \floatval($value) < \floatval($start);
-			case $operator['LTE']:
-				return \floatval($value) <= \floatval($start);
-			case $operator['C']:
-				return \strpos($value, $start) !== false;
-			case $operator['CN']:
-				return \strpos($value, $start) === false;
-			case $operator['SW']:
-				return \strpos($value, $start) === 0;
-			case $operator['EW']:
-				return \substr($value, -\strlen($start)) === $start;
-			case $operatorExtended['B']:
-				return \floatval($value) > \floatval($start) && \floatval($value) < \floatval($end);
-			case $operatorExtended['BS']:
-				return \floatval($value) >= \floatval($start) && \floatval($value) <= \floatval($end);
-			case $operatorExtended['BN']:
-				return \floatval($value) < \floatval($start) || \floatval($value) > \floatval($end);
-			case $operatorExtended['BNS']:
-				return \floatval($value) <= \floatval($start) || \floatval($value) >= \floatval($end);
-			default:
-				return false;
-		}
+		return match ($action) {
+									$operator['IS'] => $value === $start,
+									$operator['ISN'] => $value !== $start,
+									$operator['GT'] => \floatval($value) > \floatval($start),
+									$operator['GTE'] => \floatval($value) >= \floatval($start),
+									$operator['LT'] => \floatval($value) < \floatval($start),
+									$operator['LTE'] => \floatval($value) <= \floatval($start),
+									$operator['C'] => \str_contains($value, $start),
+									$operator['CN'] => !\str_contains($value, $start),
+									$operator['SW'] => \str_starts_with($value, $start),
+									$operator['EW'] => \str_ends_with($value, $start),
+									$operatorExtended['B'] => \floatval($value) > \floatval($start) && \floatval($value) < \floatval($end),
+									$operatorExtended['BS'] => \floatval($value) >= \floatval($start) && \floatval($value) <= \floatval($end),
+									$operatorExtended['BN'] => \floatval($value) < \floatval($start) || \floatval($value) > \floatval($end),
+									$operatorExtended['BNS'] => \floatval($value) <= \floatval($start) || \floatval($value) >= \floatval($end),
+									default => false,
+		};
 	}
 
 	/**
@@ -129,10 +110,12 @@ final class FormsHelper
 		$showOutput = false;
 
 		foreach ($variationData as $key => $value) {
-			if (!$key || !isset($value)) {
+			if (!$key) {
+													continue;
+			}
+			if (!isset($value)) {
 				continue;
 			}
-
 			if ($name !== $key) {
 				continue;
 			}
@@ -193,7 +176,7 @@ final class FormsHelper
 	{
 		$output = [];
 
-		if (!$data) {
+		if ($data === []) {
 			return $output;
 		}
 
@@ -212,8 +195,6 @@ final class FormsHelper
 	 * @param array<string, string> $data Data to get base from.
 	 * @param string $selector Selector to get data for.
 	 * @param string $suffix Suffix to add to the selector.
-	 *
-	 * @return string
 	 */
 	public static function getTwBase(array $data, string $selector, string $suffix = ''): string
 	{
@@ -223,7 +204,7 @@ final class FormsHelper
 			return $suffix;
 		}
 
-		return \implode(' ', !\is_array($base) ? [$base, $suffix] : \array_merge($base, [$suffix]));
+		return \implode(' ', \is_array($base) ? \array_merge($base, [$suffix]) : [$base, $suffix]);
 	}
 
 	/**
@@ -233,8 +214,6 @@ final class FormsHelper
 	 * @param string $parentSelector Parent selector to get data for.
 	 * @param string $selector Selector to get data for.
 	 * @param string $suffix Suffix to add to the selector.
-	 *
-	 * @return string
 	 */
 	public static function getTwPart(array $data, string $parentSelector, string $selector, string $suffix = ''): string
 	{
@@ -250,7 +229,7 @@ final class FormsHelper
 			return $suffix;
 		}
 
-		return \implode(' ', !\is_array($part) ? [$part, $suffix] : \array_merge($part, [$suffix]));
+		return \implode(' ', \is_array($part) ? \array_merge($part, [$suffix]) : [$part, $suffix]);
 	}
 
 	/**
@@ -258,15 +237,11 @@ final class FormsHelper
 	 *
 	 * @param array<string, string> $data Data to get output from.
 	 * @param string $type Type of the selectors.
-	 *
-	 * @return string
 	 */
 	public static function getTwSelectorsOutput(array $data, string $type): string
 	{
-		switch ($type) {
-			case 'select':
-			case 'country':
-				$output = [
+		$output = match ($type) {
+									'select', 'country' => [
 					'containerOuter' => $data['base'] ?? [],
 					'containerInner' => $data['parts']['select-choices-inner'] ?? [],
 					'input' => $data['parts']['select-input'] ?? [],
@@ -281,41 +256,32 @@ final class FormsHelper
 					'itemChoice' => $data['parts']['select-item-choice'] ?? [],
 					'placeholder' => $data['parts']['select-placeholder'] ?? [],
 					'button' => $data['parts']['select-button'] ?? [],
-				];
-				break;
-			case 'phone':
-				$output = [
-					'containerOuter' => $data['parts']['select'] ?? [],
-					'containerInner' => $data['parts']['select-choices-inner'] ?? [],
-					'input' => $data['parts']['select-input'] ?? [],
-					'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
-					'list' => $data['parts']['select-list'] ?? [],
-					'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
-					'listSingle' => $data['parts']['select-list-single'] ?? [],
-					'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
-					'item' => $data['parts']['select-item'] ?? [],
-					'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
-					'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
-					'itemChoice' => $data['parts']['select-item-choice'] ?? [],
-					'placeholder' => $data['parts']['select-placeholder'] ?? [],
-					'button' => $data['parts']['select-button'] ?? [],
-				];
-				break;
-			case 'date':
-				$output = $data['parts']['picker'] ?? [];
-				break;
-			default:
-				$output = [];
-				break;
-		}
+									],
+									'phone' => [
+									'containerOuter' => $data['parts']['select'] ?? [],
+									'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+									'input' => $data['parts']['select-input'] ?? [],
+									'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
+									'list' => $data['parts']['select-list'] ?? [],
+									'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
+									'listSingle' => $data['parts']['select-list-single'] ?? [],
+									'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
+									'item' => $data['parts']['select-item'] ?? [],
+									'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
+									'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
+									'itemChoice' => $data['parts']['select-item-choice'] ?? [],
+									'placeholder' => $data['parts']['select-placeholder'] ?? [],
+									'button' => $data['parts']['select-button'] ?? [],
+									],
+									'date' => $data['parts']['picker'] ?? [],
+									default => [],
+		};
 
-		return \wp_json_encode($output);
+					return \wp_json_encode($output);
 	}
 
 	/**
 	 * Get unique form hash.
-	 *
-	 * @return string
 	 */
 	public static function getFormUniqueHash(): string
 	{
@@ -326,19 +292,17 @@ final class FormsHelper
 	 * Get increment.
 	 *
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getIncrement(string $formId): string
 	{
 		$value = SettingsHelpers::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			$value = 0;
 		}
 
 		$length = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_LENGTH_KEY, $formId);
-		if ($length) {
-			$value = \str_pad($value, (int) $length, '0', \STR_PAD_LEFT);
+		if ($length !== '' && $length !== '0') {
+			$value = \str_pad((string) $value, (int) $length, '0', \STR_PAD_LEFT);
 		}
 
 		return (string) $value;
@@ -348,15 +312,13 @@ final class FormsHelper
 	 * Set increment.
 	 *
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function setIncrement(string $formId): string
 	{
 		$start = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
 		$value = SettingsHelpers::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
 
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			$value = $start;
 		}
 
@@ -368,21 +330,19 @@ final class FormsHelper
 
 		\update_post_meta((int) $formId, SettingsHelpers::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
 
-		return static::getIncrement($formId);
+		return self::getIncrement($formId);
 	}
 
 	/**
 	 * Reset increment.
 	 *
 	 * @param string $formId Form Id.
-	 *
-	 * @return bool
 	 */
 	public static function resetIncrement(string $formId): bool
 	{
 		$value = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
 
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			$value = 0;
 		}
 
@@ -401,13 +361,11 @@ final class FormsHelper
 	 */
 	public static function getParamValue(string $key, array $params): string|array
 	{
-		return \array_reduce($params, fn($carry, $paramKey) => $carry ?: ($paramKey['name'] === $key ? $paramKey['value'] : ''), '');
+		return \array_reduce($params, fn($carry, $paramKey): mixed => $carry ?: ($paramKey['name'] === $key ? $paramKey['value'] : ''), '');
 	}
 
 	/**
 	 * Get locale from country code.
-	 *
-	 * @return string
 	 */
 	public static function getLocaleFromCountryCode(): string
 	{
@@ -415,7 +373,7 @@ final class FormsHelper
 
 		$languages = \apply_filters('wpml_active_languages', []);
 
-		return \array_values(\array_filter($languages, fn($language) => $language['code'] === $locale))[0]['default_locale'] ?? 'en_US';
+		return \array_values(\array_filter($languages, fn(array $language): bool => $language['code'] === $locale))[0]['default_locale'] ?? 'en_US';
 	}
 
 	/**

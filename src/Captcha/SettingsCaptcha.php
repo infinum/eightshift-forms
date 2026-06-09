@@ -55,13 +55,11 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -81,14 +79,12 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * The merged page is valid whenever the active provider's own validity filter says so.
-	 *
-	 * @return bool
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$providerFilter = self::getActiveProvider() === self::PROVIDER_FRIENDLY
-			? SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME
-			: SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME;
+		? SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME
+		: SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME;
 
 		return (bool) \apply_filters($providerFilter, false);
 	}

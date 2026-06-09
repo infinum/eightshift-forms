@@ -21,6 +21,7 @@ use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class FormFieldsRoute
@@ -31,13 +32,6 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = '/form-fields/';
-
-	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
 
 	/**
 	 * Create a new instance.
@@ -51,12 +45,11 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff
+		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -71,9 +64,8 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -81,8 +73,6 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -254,7 +244,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	{
 		$output = [];
 
-		if (!$items) {
+		if ($items === []) {
 			return $output;
 		}
 

@@ -25,19 +25,17 @@ $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes
 $checkboxesId = $checkboxesName . '-' . Helpers::getUnique();
 
 // Add internal counter name key.
-$checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
-	return 'name="' . $checkboxesName . '"';
-}, $checkboxesContent);
+$checkboxesContent = (string) preg_replace_callback('/name=""/', fn(): string => 'name="' . $checkboxesName . '"', (string) $checkboxesContent);
 
 // Add internal counter id key.
 $indexId = 0;
-$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesId) {
+$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesId): string {
 	return 'id="' . $checkboxesId . '[' . $indexId++ . ']"';
 }, $checkboxesContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesId) {
+$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesId): string {
 	return 'for="' . $checkboxesId . '[' . $indexLabel++ . ']"';
 }, $checkboxesContent);
 

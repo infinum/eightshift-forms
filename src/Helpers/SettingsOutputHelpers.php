@@ -166,10 +166,10 @@ final class SettingsOutputHelpers
 		string $label,
 		string $help = ''
 	): array {
-		$options = static::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
+		$options = self::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
 
-		$internalHelp = !empty($help) ? $help . '<br/><br/>' : '';
-		$optionsHelp = !empty($options['help']) ? "{$internalHelp}{$options['help']}" : $help;
+		$internalHelp = $help === '' || $help === '0' ? '' : $help . '<br/><br/>';
+		$optionsHelp = empty($options['help']) ? $help : "{$internalHelp}{$options['help']}";
 
 		return [
 			'component' => 'input',
@@ -201,7 +201,7 @@ final class SettingsOutputHelpers
 		string $label,
 		string $help = ''
 	): array {
-		$options = static::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
+		$options = self::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
 
 		$general = [
 			'component' => 'input',
@@ -262,13 +262,13 @@ final class SettingsOutputHelpers
 		string $optionName,
 		string $constantName
 	): array {
-		$isDisabled = !empty($constantValue);
+		$isDisabled = $constantValue !== '' && $constantValue !== '0';
 		$value = '';
 		$isConstantValueUsed = false;
 
 		$option = SettingsHelpers::getOptionValue($optionName);
 
-		if (empty($constantValue)) {
+		if ($constantValue === '' || $constantValue === '0') {
 			$value = $option;
 		} else {
 			$value = $constantValue;
@@ -277,7 +277,7 @@ final class SettingsOutputHelpers
 
 		$helpOutput = '';
 
-		if ($constantName) {
+		if ($constantName !== '' && $constantName !== '0') {
 			// translators: %s will be replaced with global variable name.
 			$helpOutput .= \sprintf(\__('
 				<details class="esf-is-filter-applied">
@@ -366,14 +366,14 @@ final class SettingsOutputHelpers
 				[
 					'component' => 'card-inline',
 					'cardInlineTitle' => \__('Connect with Oauth', 'eightshift-forms'),
-					'cardInlineSubTitle' => $token ? \__('Oauth connected.', 'eightshift-forms') : \__('Oauth connection required!', 'eightshift-forms'),
+					'cardInlineSubTitle' => $token !== '' && $token !== '0' ? \__('Oauth connected.', 'eightshift-forms') : \__('Oauth connection required!', 'eightshift-forms'),
 					'cardInlineRightContent' => [
 						[
 							'component' => 'button',
 							'buttonLabel' => \__('Oauth Connect', 'eightshift-forms'),
-							'buttonVariant' => $token ? 'primary' : 'primaryOutline',
+							'buttonVariant' => $token !== '' && $token !== '0' ? 'primary' : 'primaryOutline',
 							'buttonUrl' => $url,
-							'buttonIsDisabled' => $allowIsChecked ? false : true,
+							'buttonIsDisabled' => !$allowIsChecked,
 						],
 					],
 				],
@@ -386,19 +386,16 @@ final class SettingsOutputHelpers
 	}
 
 	// --------------------------------------------------
-	// Partials output helpers.
-	// --------------------------------------------------
-
-	/**
-	 * Get response tags output copy.
-	 *
-	 * @param string $formFieldTags Response tags to output.
-	 *
-	 * @return string
-	 */
+				// Partials output helpers.
+				// --------------------------------------------------
+				/**
+				 * Get response tags output copy.
+				 *
+				 * @param string $formFieldTags Response tags to output.
+				 */
 	public static function getPartialFieldTags(string $formFieldTags): string
 	{
-		if (!$formFieldTags) {
+		if ($formFieldTags === '' || $formFieldTags === '0') {
 			return '';
 		}
 
@@ -419,12 +416,10 @@ final class SettingsOutputHelpers
 	 * Get response tags copy output.
 	 *
 	 * @param string $formResponseTags Response tags to output.
-	 *
-	 * @return string
 	 */
 	public static function getPartialResponseTags(string $formResponseTags): string
 	{
-		if (!$formResponseTags) {
+		if ($formResponseTags === '' || $formResponseTags === '0') {
 			return '';
 		}
 
@@ -445,8 +440,6 @@ final class SettingsOutputHelpers
 	 *
 	 * @param array<int, string> $fieldNames Form field IDs.
 	 * @param string $wrapper Wrapper for the field name.
-	 *
-	 * @return string
 	 */
 	public static function getPartialFormFieldNames(array $fieldNames, string $wrapper = '{}'): string
 	{
@@ -454,14 +447,10 @@ final class SettingsOutputHelpers
 
 		// Populate output.
 		foreach ($fieldNames as $item) {
-			switch ($wrapper) {
-				case '$':
-					$output[] = "<li><code>$" . $item . "</code></li>";
-					break;
-				default:
-					$output[] = "<li><code>{" . $item . "}</code></li>";
-					break;
-			}
+			$output[] = match ($wrapper) {
+													'$' => "<li><code>$" . $item . "</code></li>",
+													default => "<li><code>{" . $item . "}</code></li>",
+			};
 		}
 
 		return \implode("\n", $output);
@@ -471,8 +460,6 @@ final class SettingsOutputHelpers
 	 * Get all field names from the form.
 	 *
 	 * @param string $formType Form type to check.
-	 *
-	 * @return string
 	 */
 	public static function getPartialFormResponseTags(string $formType): string
 	{
@@ -489,15 +476,13 @@ final class SettingsOutputHelpers
 	 * Settings output data deactivated integration.
 	 *
 	 * @param string $key Key to return.
-	 *
-	 * @return string
 	 */
 	public static function getPartialDeactivatedIntegration(string $key): string
 	{
 		$output = [
-			'checkboxLabel' => \__('Deactivate integration and send all the data to the fallback email.', 'eightshift-forms'),
-			'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all the data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
-			'introSubtitle' => \__('To ensure your form is not lost, it is important to activate the "Stop form syncing" option in the debug settings and avoid clicking on the form sync button.', 'eightshift-forms'),
+		'checkboxLabel' => \__('Deactivate integration and send all the data to the fallback email.', 'eightshift-forms'),
+		'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all the data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
+		'introSubtitle' => \__('To ensure your form is not lost, it is important to activate the "Stop form syncing" option in the debug settings and avoid clicking on the form sync button.', 'eightshift-forms'),
 		];
 
 		return $output[$key] ?? '';

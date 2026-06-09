@@ -66,30 +66,20 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, [$this, 'isDebugActive'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
+		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, $this->isDebugActive(...), 10, 2);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
 	}
 
 	/**
@@ -263,8 +253,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 *
 	 * @param boolean $default Default value.
 	 * @param string $settingKey Setting key to check.
-	 *
-	 * @return boolean
 	 */
 	public function isDebugActive(bool $default, string $settingKey): bool
 	{

@@ -55,21 +55,12 @@ class HubspotClient implements HubspotClientInterface
 	public const HUBSPOT_CONSENT_LEGITIMATE = 'legitimateInterest';
 
 	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
 	 * Create a new admin instance.
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 */
-	public function __construct(
-		SecurityInterface $security
-	) {
-		$this->security = $security;
+	public function __construct(protected SecurityInterface $security)
+	{
 	}
 
 	/**
@@ -173,8 +164,16 @@ class HubspotClient implements HubspotClientInterface
 				$formField = $item['formField'] ?? false;
 				$archived = $item['archived'] ?? false;
 				$fieldType = $item['fieldType'] ?? '';
-
-				if (!$name || $hidden || !$formField || $archived) {
+				if (!$name) {
+					continue;
+				}
+				if ($hidden) {
+					continue;
+				}
+				if (!$formField) {
+					continue;
+				}
+				if ($archived) {
 					continue;
 				}
 
@@ -223,7 +222,7 @@ class HubspotClient implements HubspotClientInterface
 		$body = [];
 
 		$pageUrl = Helpers::cleanUrlParams(FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotPageUrl'), $params));
-		if ($pageUrl) {
+		if ($pageUrl !== '' && $pageUrl !== '0') {
 			$body['context']['pageUri'] = $pageUrl;
 		}
 
@@ -238,7 +237,7 @@ class HubspotClient implements HubspotClientInterface
 		}
 
 		$ip = $this->security->getIpAddress();
-		if ($ip) {
+		if ($ip !== '' && $ip !== '0') {
 			$body['context']['ipAddress'] = $ip;
 		}
 
@@ -247,13 +246,13 @@ class HubspotClient implements HubspotClientInterface
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
 
-		$itemIdExploded = \explode(Config::DELIMITER, $itemId);
+		$itemIdExploded = \explode(Config::DELIMITER, (string) $itemId);
 
 		$baseId = $itemIdExploded[1] ?? '';
 		$submitId = $itemIdExploded[0] ?? '';
 
 		$paramsConsent = $this->prepareConsent($params, $itemId);
-		if ($paramsConsent) {
+		if ($paramsConsent !== []) {
 			$body['legalConsentOptions'] = $paramsConsent;
 		}
 
@@ -311,15 +310,13 @@ class HubspotClient implements HubspotClientInterface
 
 		$customFields = \array_flip(Helpers::flattenArray(UtilsHelper::getStateParams()));
 
-		if ($params) {
-			foreach ($params as $key => $value) {
+		foreach ($params as $key => $value) {
 				// Remove unnecessary fields.
-				if (isset($customFields[$key])) {
-					continue;
-				}
+			if (isset($customFields[$key])) {
+				continue;
+			}
 
 				$properties[$key] = $value;
-			}
 		}
 
 		$body = [
@@ -364,14 +361,12 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param string $file File to send.
 	 * @param string $formId FormId value.
-	 *
-	 * @return string
 	 */
 	private function postFileMedia(string $file, string $formId): string
 	{
 		$folder = SettingsHelpers::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
-		if (!$folder) {
+		if ($folder === '' || $folder === '0') {
 			$folder = self::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY;
 		}
 
@@ -379,12 +374,12 @@ class HubspotClient implements HubspotClientInterface
 		$fileExtension = \pathinfo($file, \PATHINFO_EXTENSION);
 
 		$options = [
-			'folderPath' => '/' . $folder,
-			'fileName' => "{$fileName}.{$fileExtension}",
-			'options' => \wp_json_encode([
-				"access" => "PUBLIC_NOT_INDEXABLE",
-				"overwrite" => false,
-			]),
+		'folderPath' => '/' . $folder,
+		'fileName' => "{$fileName}.{$fileExtension}",
+		'options' => \wp_json_encode([
+		"access" => "PUBLIC_NOT_INDEXABLE",
+		"overwrite" => false,
+					]),
 		];
 
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
@@ -394,8 +389,8 @@ class HubspotClient implements HubspotClientInterface
 
 		$postData = \array_merge(
 			[
-				'file' => new CURLFile($file, 'application/octet-stream'),
-			],
+			'file' => new CURLFile($file, 'application/octet-stream'),
+					],
 			$options
 		);
 
@@ -403,13 +398,13 @@ class HubspotClient implements HubspotClientInterface
 		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
 			$curl,
 			[
-				\CURLOPT_URL => $this->getBaseUrl("files/v3/files"),
-				\CURLOPT_FAILONERROR => true,
-				\CURLOPT_POST => true,
-				\CURLOPT_RETURNTRANSFER => true,
-				\CURLOPT_POSTFIELDS => $postData,
-				\CURLOPT_HTTPHEADER => $this->getHeaders(true),
-			]
+			\CURLOPT_URL => $this->getBaseUrl("files/v3/files"),
+			\CURLOPT_FAILONERROR => true,
+			\CURLOPT_POST => true,
+			\CURLOPT_RETURNTRANSFER => true,
+			\CURLOPT_POSTFIELDS => $postData,
+			\CURLOPT_HTTPHEADER => $this->getHeaders(true),
+					]
 		);
 
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
@@ -430,8 +425,6 @@ class HubspotClient implements HubspotClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
@@ -442,59 +435,32 @@ class HubspotClient implements HubspotClientInterface
 			$msg = $errors[0]['errorType'];
 		}
 
-		switch ($msg) {
-			// Internal.
-			case 'Bad Request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_BAD_REQUEST_ERROR;
-			case 'The request is not valid':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_REQUEST_ERROR;
-
-				// Hubspot.
-			case 'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR;
-			case 'INVALID_EMAIL':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_EMAIL_ERROR;
-			case 'BLOCKED_EMAIL':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_BLOCKED_EMAIL_ERROR;
-			case 'INVALID_NUMBER':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_NUMBER_ERROR;
-			case 'INPUT_TOO_LARGE':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INPUT_TOO_LARGE_ERROR;
-			case 'FIELD_NOT_IN_FORM_DEFINITION':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR;
-			case 'NUMBER_OUT_OF_RANGE':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR;
-			case 'VALUE_NOT_IN_FIELD_DEFINITION':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR;
-			case 'INVALID_METADATA':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_METADATA_ERROR;
-			case 'INVALID_GOTOWEBINAR_WEBINAR_KEY':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR;
-			case 'INVALID_HUTK':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_HUTK_ERROR;
-			case 'INVALID_IP_ADDRESS':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_IP_ADDRESS_ERROR;
-			case 'INVALID_PAGE_URI':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_PAGE_URI_ERROR;
-			case 'INVALID_LEGAL_OPTION_FORMAT':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR;
-			case 'MISSING_PROCESSING_CONSENT':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR;
-			case 'MISSING_PROCESSING_CONSENT_TEXT':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR;
-			case 'MISSING_COMMUNICATION_CONSENT_TEXT':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR;
-			case 'MISSING_LEGITIMATE_INTEREST_TEXT':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR;
-			case 'DUPLICATE_SUBSCRIPTION_TYPE_ID':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR;
-			case 'FORM_HAS_RECAPTCHA_ENABLED':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR;
-			case 'ERROR 429':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_ERROR_429_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_BAD_REQUEST_ERROR,
+									'The request is not valid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_REQUEST_ERROR,
+									'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR,
+									'INVALID_EMAIL' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_EMAIL_ERROR,
+									'BLOCKED_EMAIL' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_BLOCKED_EMAIL_ERROR,
+									'INVALID_NUMBER' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_NUMBER_ERROR,
+									'INPUT_TOO_LARGE' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INPUT_TOO_LARGE_ERROR,
+									'FIELD_NOT_IN_FORM_DEFINITION' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR,
+									'NUMBER_OUT_OF_RANGE' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR,
+									'VALUE_NOT_IN_FIELD_DEFINITION' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR,
+									'INVALID_METADATA' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_METADATA_ERROR,
+									'INVALID_GOTOWEBINAR_WEBINAR_KEY' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR,
+									'INVALID_HUTK' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_HUTK_ERROR,
+									'INVALID_IP_ADDRESS' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_IP_ADDRESS_ERROR,
+									'INVALID_PAGE_URI' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_PAGE_URI_ERROR,
+									'INVALID_LEGAL_OPTION_FORMAT' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR,
+									'MISSING_PROCESSING_CONSENT' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR,
+									'MISSING_PROCESSING_CONSENT_TEXT' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR,
+									'MISSING_COMMUNICATION_CONSENT_TEXT' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR,
+									'MISSING_LEGITIMATE_INTEREST_TEXT' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR,
+									'DUPLICATE_SUBSCRIPTION_TYPE_ID' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR,
+									'FORM_HAS_RECAPTCHA_ENABLED' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR,
+									'ERROR 429' => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_ERROR_429_ERROR,
+									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -512,18 +478,20 @@ class HubspotClient implements HubspotClientInterface
 		foreach ($msg as $value) {
 			$key = $value['errorType'] ?? '';
 			$message = $value['message'] ?? '';
-
-			if (!$key || !$message) {
+			if (!$key) {
+				continue;
+			}
+			if (!$message) {
 				continue;
 			}
 
 			if ($key === 'REQUIRED_FIELD') {
 				// Validate req fields.
-				\preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
+				\preg_match_all("/(Required field) '(\w+)' (is missing)/", (string) $message, $matchesReq, \PREG_SET_ORDER, 0);
 
-				if ($matchesReq) {
+				if ($matchesReq !== []) {
 					$match = $matchesReq[0][2] ?: '';
-					if ($match) {
+					if ($match !== '' && $match !== '0') {
 						$output[$match] = 'validationRequired';
 					}
 				}
@@ -644,7 +612,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		// Find consent data from meta.
 		$consentData = \array_values(\array_filter(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$name = $item['name'] ?? '';
 
 				if ($name === 'legalConsentOptions') {
@@ -657,8 +625,8 @@ class HubspotClient implements HubspotClientInterface
 		$consentData = $consentData[0] ?? '';
 
 		try {
-			$consentData = \json_decode($consentData, true);
-		} catch (Exception $e) { // @phpstan-ignore-line
+			$consentData = \json_decode((string) $consentData, true);
+		} catch (Exception) { // @phpstan-ignore-line
 			return [];
 		}
 
@@ -673,13 +641,11 @@ class HubspotClient implements HubspotClientInterface
 
 		$output[self::HUBSPOT_CONSENT_COMMUNICATION] = [
 			'items' => \array_map(
-				static function ($item) {
-					return [
+				static fn(array $item): array => [
 						'id' => isset($item['communicationTypeId']) ? \strval($item['communicationTypeId']) : '',
 						'label' => $item['label'] ?? '',
 						'isRequired' => $item['required'] ?? false,
-					];
-				},
+					],
 				$consentData['communicationConsentCheckboxes'] ?? []
 			),
 			'text' => $consentData['communicationConsentText'] ?? '',
@@ -696,7 +662,7 @@ class HubspotClient implements HubspotClientInterface
 		$output[self::HUBSPOT_CONSENT_LEGITIMATE] = [
 			'typeId' => $consentData['legitimateInterestSubscriptionTypes'][0] ?? '',
 			'basis' => 'CUSTOMER',
-			'isActive' => !!$interest,
+			'isActive' => (bool) $interest,
 			'text' => $consentData['privacyPolicyText'] ?? '',
 			'isHidden' => true,
 		];
@@ -727,7 +693,7 @@ class HubspotClient implements HubspotClientInterface
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
 			$value = $param['value'] ?? '';
-			$name = $param['name'] ? \explode(Config::DELIMITER, $param['name']) : [];
+			$name = $param['name'] ? \explode(Config::DELIMITER, (string) $param['name']) : [];
 
 			if ($data[self::HUBSPOT_CONSENT_LEGITIMATE]['isActive']) {
 				$output['legitimateInterest'] = [
@@ -739,27 +705,25 @@ class HubspotClient implements HubspotClientInterface
 			} else {
 				if ($typeCustom === self::HUBSPOT_CONSENT_PROCESSING) {
 					$output['consent'] = [
-						'consentToProcess' => !!$value,
+						'consentToProcess' => (bool) $value,
 						'text' => $value[0] ?? '',
 					];
 				}
 
 				if ($typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION) {
 					$communicationOutput[] = [
-						'value' => !!$value,
+						'value' => (bool) $value,
 						'subscriptionTypeId' => \end($name),
 						'text' => \array_values(\array_filter(
 							$data[self::HUBSPOT_CONSENT_COMMUNICATION]['items'],
-							static function ($item) use ($name) {
-								return $item['id'] === \end($name);
-							}
+							static fn(array $item): bool => $item['id'] === \end($name)
 						))[0]['label'],
 					];
 				}
 			}
 		}
 
-		if ($communicationOutput) {
+		if ($communicationOutput !== []) {
 			$output['consent']['communications'] = $communicationOutput;
 		}
 
@@ -782,13 +746,14 @@ class HubspotClient implements HubspotClientInterface
 
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
-
-			// Remove consent data.
-			if (
-				$typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION ||
-				$typeCustom === self::HUBSPOT_CONSENT_LEGITIMATE ||
-				$typeCustom === self::HUBSPOT_CONSENT_PROCESSING
-			) {
+												// Remove consent data.
+			if ($typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION) {
+				continue;
+			}
+			if ($typeCustom === self::HUBSPOT_CONSENT_LEGITIMATE) {
+				continue;
+			}
+			if ($typeCustom === self::HUBSPOT_CONSENT_PROCESSING) {
 				continue;
 			}
 
@@ -820,7 +785,7 @@ class HubspotClient implements HubspotClientInterface
 
 			// Must be in UTC timestamp with milliseconds.
 			if ($type === 'date') {
-				$value = \strtotime($value) * 1000;
+				$value = \strtotime((string) $value) * 1000;
 			}
 
 			$output[] = [
@@ -852,15 +817,19 @@ class HubspotClient implements HubspotClientInterface
 
 			$name = $items['name'] ?? '';
 			$value = $items['value'] ?? [];
-
-			if (!$name || !$value) {
+			if (!$name) {
+				continue;
+			}
+			if (!$value) {
 				continue;
 			}
 
 			foreach ($value as $file) {
 				$fileUrl = $this->postFileMedia($file, $formId);
-
-				if (!$fileUrl) {
+				if ($fileUrl === '') {
+					continue;
+				}
+				if ($fileUrl === '0') {
 					continue;
 				}
 
@@ -877,8 +846,6 @@ class HubspotClient implements HubspotClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{
@@ -889,8 +856,6 @@ class HubspotClient implements HubspotClientInterface
 	 * Return HubSpot base url.
 	 *
 	 * @param string $path Path to append.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(string $path): string
 	{

@@ -28,20 +28,16 @@ class FileUploadJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_filter('cron_schedules', $this->addJobToSchedule(...)); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**
 	 * Check if job is set and add it if not.
-	 *
-	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -73,10 +69,8 @@ class FileUploadJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
-	 *
-	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
 		UploadHelpers::deleteUploadFolderContent();
 	}

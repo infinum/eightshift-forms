@@ -37,7 +37,7 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return 'validationFileScanFailed';
 		}
 
-		if (\strncmp($contents, '%PDF-', 5) !== 0) {
+		if (!\str_starts_with($contents, '%PDF-')) {
 			return 'validationFileMimeMismatch';
 		}
 
@@ -79,8 +79,6 @@ final class PdfScanner implements FileSecurityScannerInterface
 	 * match `/AA`.
 	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
-	 *
-	 * @return bool
 	 */
 	private function containsDangerousKey(string $haystack): bool
 	{
@@ -180,8 +178,10 @@ final class PdfScanner implements FileSecurityScannerInterface
 
 			foreach ($read as $stream) {
 				$chunk = \stream_get_contents($stream);
-
-				if (!\is_string($chunk) || $chunk === '') {
+				if (!\is_string($chunk)) {
+					continue;
+				}
+				if ($chunk === '') {
 					continue;
 				}
 

@@ -92,7 +92,7 @@ final class FiltersOutputMock
 
 		// Find global settings per integration.
 		$data = SettingsHelpers::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
-		if ($data) {
+		if ($data !== []) {
 			$data = \array_column($data, 1, 0);
 		}
 
@@ -100,7 +100,7 @@ final class FiltersOutputMock
 
 		// Find local settings for form.
 		$dataLocal = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
-		if ($dataLocal) {
+		if ($dataLocal !== []) {
 			$dataLocal = \array_column($dataLocal, 1, 0);
 			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
@@ -157,7 +157,7 @@ final class FiltersOutputMock
 		// Find local settings for form.
 		$dataLocal = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_URL_KEY, $formId);
 
-		if ($dataLocal) {
+		if ($dataLocal !== '' && $dataLocal !== '0') {
 			$data = $dataLocal;
 		}
 
@@ -287,18 +287,15 @@ final class FiltersOutputMock
 	}
 
 	// --------------------------------------------------
-	// Private helper methods
-	// --------------------------------------------------
-
-	/**
-	 * Wrap output date with div for styling.
-	 *
-	 * @param string $data Data to wrap.
-	 * @param bool $used If false dont wrap.
-	 * @param bool $defaultPrefix Add default copy prefix.
-	 *
-	 * @return string
-	 */
+				// Private helper methods
+				// --------------------------------------------------
+				/**
+				 * Wrap output date with div for styling.
+				 *
+				 * @param string $data Data to wrap.
+				 * @param bool $used If false dont wrap.
+				 * @param bool $defaultPrefix Add default copy prefix.
+				 */
 	private static function getSettingsDivWrap(string $data, bool $used = false, bool $defaultPrefix = true): string
 	{
 		if (!$used) {
@@ -311,7 +308,7 @@ final class FiltersOutputMock
 			return '<br /><div class="esf-is-filter-applied">' . $data . '</div>';
 		}
 
-		if (empty($data)) {
+		if ($data === '' || $data === '0') {
 			return '<div class="esf-is-filter-applied">' . $prefix . '</div>';
 		}
 

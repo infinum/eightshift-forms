@@ -42,8 +42,6 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -72,10 +70,8 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @throws BadRequestException If integration is missing config.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (!\apply_filters(SettingsCalculator::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
@@ -114,15 +110,15 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
-			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
-			],
-			AbstractBaseRoute::R_DATA => \array_merge(
-				$successAdditionalData['public'],
-				$successAdditionalData['additional']
-			),
+		AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
+		AbstractBaseRoute::R_DEBUG => [
+		AbstractBaseRoute::R_DEBUG => $formDetails,
+		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
+					],
+					AbstractBaseRoute::R_DATA => \array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['additional']
+					),
 		];
 	}
 }

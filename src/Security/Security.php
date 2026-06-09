@@ -45,8 +45,6 @@ class Security implements SecurityInterface
 	 *
 	 * @param string $formType Form type.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isRequestValid(string $formType, string $formId): bool
 	{
@@ -95,9 +93,9 @@ class Security implements SecurityInterface
 			default => $rateLimit,
 		};
 
-		$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
+					$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
 
-		$sum = 0;
+					$sum = 0;
 		foreach ($aggregatedActivityByType as $aggregate) {
 			$sum += $aggregate['count'];
 
@@ -110,26 +108,20 @@ class Security implements SecurityInterface
 			return false;
 		}
 
-		$granularRateLimit = \intval(SettingsHelpers::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, (string)$formId));
+					$granularRateLimit = \intval(SettingsHelpers::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, $formId));
 
 		if ($granularRateLimit <= 0) {
 			return true;
 		}
 
-		$activityCountByFormId = RateLimitingLogEntry::countByFormId($userToken, $formId, $window);
-
-		if ($activityCountByFormId > $granularRateLimit) {
-			return false;
-		}
-		return true;
+					$activityCountByFormId = RateLimitingLogEntry::countByFormId($userToken, $formId, $window);
+					return $activityCountByFormId <= $granularRateLimit;
 	}
 
 	/**
 	 * Get users Ip address.
 	 *
 	 * @param string $secureType Determine if the function will return normal, hashed or anonymized IP.
-	 *
-	 * @return string
 	 */
 	public function getIpAddress(string $secureType = 'none'): string
 	{
@@ -161,7 +153,7 @@ class Security implements SecurityInterface
 			case 'anonymize':
 				if (\filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
 					$output = \explode('.', $ip);
-					if ($output) {
+					if ($output !== []) {
 						$output[\array_key_last($output)] = 'xxx';
 						return \implode('.', $output);
 					}
@@ -169,7 +161,7 @@ class Security implements SecurityInterface
 
 				if (\filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
 					$output = \explode(':', $ip);
-					if ($output) {
+					if ($output !== []) {
 						$output[\array_key_last($output)] = 'xxx';
 						return \implode(':', $output);
 					}
@@ -183,8 +175,6 @@ class Security implements SecurityInterface
 
 	/**
 	 * Get sanitized user agent string from the current request.
-	 *
-	 * @return string
 	 */
 	public function getUserAgent(): string
 	{

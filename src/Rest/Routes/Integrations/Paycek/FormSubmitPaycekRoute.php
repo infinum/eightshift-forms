@@ -46,8 +46,6 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -77,10 +75,8 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If integration is missing config.
 	 * @throws ValidationFailedException If required params are missing.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
@@ -101,20 +97,12 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		$params = $this->prepareParams($mapParams, $formDetails[Config::FD_PARAMS], $formId);
 
 		$reqParams = [
-			'profileCode',
-			'secretKey',
-			'paymentId',
-			'amount',
+		'profileCode',
+		'secretKey',
+		'paymentId',
+		'amount',
 		];
-
-		$missingOrEmpty = false;
-
-		foreach ($reqParams as $param) {
-			if (!isset($params[$param]) || empty($params[$param])) {
-				$missingOrEmpty = true;
-				break;
-			}
-		}
+					$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
@@ -153,16 +141,16 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
-			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
-			],
-			AbstractBaseRoute::R_DATA => \array_merge(
-				$successAdditionalData['public'],
-				$successAdditionalData['additional'],
-				[
-					UtilsHelper::getStateResponseOutputKey('processExternally') => [
+		AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
+		AbstractBaseRoute::R_DEBUG => [
+		AbstractBaseRoute::R_DEBUG => $formDetails,
+		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
+					],
+					AbstractBaseRoute::R_DATA => \array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['additional'],
+						[
+						UtilsHelper::getStateResponseOutputKey('processExternally') => [
 						'type' => 'GET',
 						'url' => $this->generatePaymentUrl(
 							$params['profileCode'],
@@ -176,9 +164,9 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 							$params['urlFail'],
 							$params['urlCancel']
 						),
-					],
-				]
-			),
+						],
+						]
+					),
 		];
 	}
 
@@ -234,7 +222,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
-		if (SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '') {
+		if (SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '' !== '' && SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '' !== '0') {
 			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 
 			if ($entryId) {
@@ -258,8 +246,6 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 * Generate payment URL for Paycek.
 	 *
 	 * @param string $data Data to encode.
-	 *
-	 * @return string
 	 */
 	private function base64urlEncode(string $data): string
 	{
@@ -324,20 +310,18 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 * @param string $formId Form ID.
 	 * @param string $orderId Order ID.
 	 * @param string $url URL.
-	 *
-	 * @return string
 	 */
 	private function getCallbackUrl(string $formId, string $orderId, string $url = ''): string
 	{
-		if (!$url) {
+		if ($url === '' || $url === '0') {
 			return '';
 		}
 
 		return \add_query_arg(
 			[
-				'formId' => $formId,
-				'orderId' => $orderId,
-			],
+			'formId' => $formId,
+			'orderId' => $orderId,
+					],
 			$url
 		);
 	}

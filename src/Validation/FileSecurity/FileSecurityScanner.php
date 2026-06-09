@@ -26,7 +26,7 @@ final class FileSecurityScanner
 	 *
 	 * @var array<string, class-string<FileSecurityScannerInterface>>
 	 */
-	private const TYPE_SCANNERS = [
+	private const array TYPE_SCANNERS = [
 		'application/pdf' => PdfScanner::class,
 		'image/' => ImageScanner::class,
 		'application/vnd.openxmlformats-officedocument' => OfficeScanner::class,
@@ -92,8 +92,6 @@ final class FileSecurityScanner
 	 * Lowercase extension extracted from the declared filename.
 	 *
 	 * @param string $name Filename.
-	 *
-	 * @return string
 	 */
 	private function getExtension(string $name): string
 	{
@@ -109,8 +107,6 @@ final class FileSecurityScanner
 	 * Is the extension in the deny-list (built-in plus filter overrides)?
 	 *
 	 * @param string $extension Lowercase extension.
-	 *
-	 * @return bool
 	 */
 	private function isDenyListed(string $extension): bool
 	{
@@ -126,14 +122,7 @@ final class FileSecurityScanner
 		if (!\is_array($denyList)) {
 			$denyList = Config::FILE_UPLOAD_DENY_EXTENSIONS;
 		}
-
-		foreach ($denyList as $denied) {
-			if (\is_string($denied) && \strtolower(\ltrim($denied, '.')) === $extension) {
-				return true;
-			}
-		}
-
-		return false;
+					return \array_any($denyList, fn($denied): bool => \is_string($denied) && \strtolower(\ltrim($denied, '.')) === $extension);
 	}
 
 	/**
@@ -171,8 +160,6 @@ final class FileSecurityScanner
 	 *
 	 * @param string                           $detectedMime      MIME detected from file bytes.
 	 * @param array<string, array<int, string>> $extraAllowedMimes Caller-supplied extension → MIMEs supplement.
-	 *
-	 * @return bool
 	 */
 	private function isMimeRegisteredOnSite(string $detectedMime, array $extraAllowedMimes = []): bool
 	{
@@ -205,8 +192,6 @@ final class FileSecurityScanner
 	 * @param string                           $extension         Lowercase extension from the declared filename.
 	 * @param string                           $detectedMime      MIME detected from file bytes.
 	 * @param array<string, array<int, string>> $extraAllowedMimes Caller-supplied extension → MIMEs supplement.
-	 *
-	 * @return bool
 	 */
 	private function extensionMatchesMime(string $extension, string $detectedMime, array $extraAllowedMimes = []): bool
 	{
@@ -220,7 +205,7 @@ final class FileSecurityScanner
 				continue;
 			}
 
-			foreach (\explode('|', $extPattern) as $allowedExt) {
+			foreach (\explode('|', (string) $extPattern) as $allowedExt) {
 				if (\strtolower($allowedExt) === $extension) {
 					return true;
 				}
@@ -254,7 +239,7 @@ final class FileSecurityScanner
 	private function runTypeScanner(string $filepath, string $declaredName, string $detectedMime): string
 	{
 		foreach (self::TYPE_SCANNERS as $needle => $scannerClass) {
-			if ($needle === $detectedMime || \strpos($detectedMime, $needle) === 0) {
+			if ($needle === $detectedMime || \str_starts_with($detectedMime, $needle)) {
 				/**
 				 * Scan with the type-specific scanner. It must return an empty string when the file is safe,
 				 * or a label key describing the rejection reason.

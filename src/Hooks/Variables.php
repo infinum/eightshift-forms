@@ -17,8 +17,6 @@ class Variables
 {
 	/**
 	 * Get API Key for HubSpot.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyHubspot(): string
 	{
@@ -27,8 +25,6 @@ class Variables
 
 	/**
 	 * Get API Key for Greenhouse.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyGreenhouse(): string
 	{
@@ -37,8 +33,6 @@ class Variables
 
 	/**
 	 * Get Board token Key for Greenhouse.
-	 *
-	 * @return string
 	 */
 	public static function getBoardTokenGreenhouse(): string
 	{
@@ -47,8 +41,6 @@ class Variables
 
 	/**
 	 * Get API Key for Mailchimp.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyMailchimp(): string
 	{
@@ -57,8 +49,6 @@ class Variables
 
 	/**
 	 * Get API Key for Mailerlite.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyMailerlite(): string
 	{
@@ -137,8 +127,6 @@ class Variables
 
 	/**
 	 * Get forms geolocation ip. Default: empty.
-	 *
-	 * @return string
 	 */
 	public static function getGeolocationIp(): string
 	{
@@ -157,8 +145,6 @@ class Variables
 
 	/**
 	 * Get API key for ActiveCampaign.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyActiveCampaign(): string
 	{
@@ -167,8 +153,6 @@ class Variables
 
 	/**
 	 * Get API URL for ActiveCampaign.
-	 *
-	 * @return string
 	 */
 	public static function getApiUrlActiveCampaign(): string
 	{
@@ -177,8 +161,6 @@ class Variables
 
 	/**
 	 * Get API key for Airtable.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyAirtable(): string
 	{
@@ -187,8 +169,6 @@ class Variables
 
 	/**
 	 * Get API URL for Moments.
-	 *
-	 * @return string
 	 */
 	public static function getApiUrlMoments(): string
 	{
@@ -197,8 +177,6 @@ class Variables
 
 	/**
 	 * Get API Key for Moments.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyMoments(): string
 	{
@@ -207,8 +185,6 @@ class Variables
 
 	/**
 	 * Get API Key for Workable.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyWorkable(): string
 	{
@@ -217,8 +193,6 @@ class Variables
 
 	/**
 	 * Get Board token Key for Workable.
-	 *
-	 * @return string
 	 */
 	public static function getSubdomainWorkable(): string
 	{
@@ -227,8 +201,6 @@ class Variables
 
 	/**
 	 * Get API Key for Talentlyft.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyTalentlyft(): string
 	{
@@ -279,8 +251,6 @@ class Variables
 	 * Get API Key for Corvus.
 	 *
 	 * @param string $storeId Store ID.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyCorvus(string $storeId): string
 	{
@@ -290,8 +260,6 @@ class Variables
 
 	/**
 	 * Get API Key for Paycek.
-	 *
-	 * @return string
 	 */
 	public static function getApiKeyPaycek(): string
 	{
@@ -300,8 +268,6 @@ class Variables
 
 	/**
 	 * Get API Profile Key for Paycek.
-	 *
-	 * @return string
 	 */
 	public static function getApiProfileKeyPaycek(): string
 	{
@@ -310,8 +276,6 @@ class Variables
 
 	/**
 	 * Get Client Slug for Nation Builder.
-	 *
-	 * @return string
 	 */
 	public static function getClientSlugNationBuilder(): string
 	{
@@ -320,8 +284,6 @@ class Variables
 
 	/**
 	 * Get Client ID for Nation Builder.
-	 *
-	 * @return string
 	 */
 	public static function getClientIdNationBuilder(): string
 	{
@@ -330,8 +292,6 @@ class Variables
 
 	/**
 	 * Get Client Secret for Nation Builder.
-	 *
-	 * @return string
 	 */
 	public static function getClientSecretNationBuilder(): string
 	{

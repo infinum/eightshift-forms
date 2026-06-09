@@ -67,14 +67,12 @@ class Enrichment implements EnrichmentInterface
 		$tags = [];
 		$tagsAdditional = SettingsHelpers::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
 
-		if ($tagsAdditional) {
+		if ($tagsAdditional !== '' && $tagsAdditional !== '0') {
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \str_replace(',', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \array_values(\array_filter(\explode(\PHP_EOL, $tagsAdditional)));
 			$tagsAdditional = \array_unique(\array_map(
-				static function ($item) {
-					return \preg_replace('/[^a-zA-Z0-9_ -]/s', '', $item);
-				},
+				static fn($item): ?string => \preg_replace('/[^a-zA-Z0-9_ -]/s', '', (string) $item),
 				$tagsAdditional
 			));
 
@@ -93,7 +91,7 @@ class Enrichment implements EnrichmentInterface
 		foreach ($fullAllowed as $value) {
 			$itemValue = SettingsHelpers::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
 
-			if ($itemValue) {
+			if ($itemValue !== '' && $itemValue !== '0') {
 				$itemValue = \str_replace(' ', '', $itemValue);
 				$itemValue = \array_flip(\explode(',', $itemValue));
 
@@ -132,7 +130,7 @@ class Enrichment implements EnrichmentInterface
 
 		// Map param values.
 		return \array_map(
-			static function ($item) use ($enrichment, $storage) {
+			static function (array $item) use ($enrichment, $storage): array {
 				// Check param name as a reference.
 				$name = $item['name'] ?? '';
 
@@ -140,7 +138,7 @@ class Enrichment implements EnrichmentInterface
 				// Find only first iteration.
 				$enrichmentName = \array_keys(\array_filter(
 					$enrichment,
-					static function ($inner) use ($name) {
+					static function (array $inner) use ($name) {
 						if (isset($inner[$name])) {
 							return true;
 						}

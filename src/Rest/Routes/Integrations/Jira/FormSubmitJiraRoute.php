@@ -25,6 +25,7 @@ use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use Override;
 
 /**
  * Class FormSubmitJiraRoute
@@ -35,13 +36,6 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsJira::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Instance variable for Jira data.
-	 *
-	 * @var JiraClientInterface
-	 */
-	protected $jiraClient;
 
 	/**
 	 * Create a new instance that injects classes
@@ -61,7 +55,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		JiraClientInterface $jiraClient
+		protected JiraClientInterface $jiraClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +63,6 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->jiraClient = $jiraClient;
 	}
 
 	/**
@@ -84,8 +77,6 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -116,10 +107,8 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Jira is missing config.
 	 * @throws DisabledIntegrationException If Jira is disabled.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -163,6 +152,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
+	#[Override]
 	protected function getEmailResponseTags(array $formDetails): array
 	{
 		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body'] ?? [];

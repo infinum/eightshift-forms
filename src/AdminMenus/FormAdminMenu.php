@@ -24,6 +24,7 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Theme\AbstractTheme;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
+use Override;
 
 /**
  * FormAdminMenu class.
@@ -31,21 +32,11 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 class FormAdminMenu extends AbstractAdminMenu
 {
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
-	{
-		$this->formsListing = $formsListing;
-	}
+	public function __construct(protected FormListingInterface $formsListing) {}
 
 	/**
 	 * Capability for this admin sub menu
@@ -127,6 +118,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *                  e.g. 'dashicons-chart-pie'.
 	 *                * Pass 'none' to leave div.wp-menu-image empty so an icon can be added via CSS.
 	 */
+	#[Override]
 	protected function getIcon(): string
 	{
 		return 'data:image/svg+xml;base64,' . \base64_encode(UtilsHelper::getUtilsIcons('menuIcon')); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -148,9 +140,10 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * 80  - below Settings
 	 * 100 - below second separator
 	 */
+	#[Override]
 	protected function getPosition(): int
 	{
-		return (int) self::ADMIN_MENU_POSITION;
+		return self::ADMIN_MENU_POSITION;
 	}
 
 	/**
@@ -212,12 +205,10 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 						'count' => 1
 					];
+				} elseif ($formId) {
+					$data = EntriesHelper::getEntries($formId, $page, $perPage, $search);
 				} else {
-					if ($formId) {
-						$data = EntriesHelper::getEntries($formId, $page, $perPage, $search);
-					} else {
-						$data = EntriesHelper::getEntriesAll($page, $perPage, $search);
-					}
+					$data = EntriesHelper::getEntriesAll($page, $perPage, $search);
 				}
 
 				$items = $data['items'] ?? [];
@@ -238,12 +229,10 @@ class FormAdminMenu extends AbstractAdminMenu
 						'items' => [ActivityLogHelper::getActivityLog((string) $adminListingActivityLogsCustomSearch['p'])],
 						'count' => 1
 					];
+				} elseif ($formId) {
+					$data = ActivityLogHelper::getActivityLogs($formId, $page, $perPage, $search);
 				} else {
-					if ($formId) {
-						$data = ActivityLogHelper::getActivityLogs($formId, $page, $perPage, $search);
-					} else {
-						$data = ActivityLogHelper::getActivityLogsAll($page, $perPage, $search);
-					}
+					$data = ActivityLogHelper::getActivityLogsAll($page, $perPage, $search);
 				}
 
 				$items = $data['items'] ?? [];
@@ -316,7 +305,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			[
 				'adminListingShowNoItems' => $count === 0,
 				'adminListingItems' => $this->getListingItems($items, $type, $parent),
-				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent, $search, $perPage),
+				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $search, $perPage),
 				'adminListingNoItems' => $this->getNoItemsMessage($type, $parent),
 				'adminListingData' => $data,
 			]
@@ -327,8 +316,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * Get multilinguals title depending on the settings flag.
 	 *
 	 * @param string $title Title to be translated.
-	 *
-	 * @return string
 	 */
 	private function getMultiLangTitle(string $title): string
 	{
@@ -336,7 +323,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		if ($useWpml) {
 			$lang = \apply_filters('wpml_current_language', '');
 			if ($lang) {
-				$title = $title . ' - ' . \strtoupper($lang);
+				$title = $title . ' - ' . \strtoupper((string) $lang);
 			}
 		}
 
@@ -358,16 +345,16 @@ class FormAdminMenu extends AbstractAdminMenu
 			return $query;
 		}
 
-		if (\str_starts_with($search, 'STATUS:')) {
-			$status = \substr($search, \strlen('STATUS:'));
+		if (\str_starts_with((string) $search, 'STATUS:')) {
+			$status = \substr((string) $search, \strlen('STATUS:'));
 			if ($status && \array_key_exists($status, \get_post_stati())) {
 				$query['post_status'] = $status;
 				unset($query['s']);
 			}
 		}
 
-		if (\str_starts_with($search, 'ID:')) {
-			$id = (int) \substr($search, \strlen('ID:'));
+		if (\str_starts_with((string) $search, 'ID:')) {
+			$id = (int) \substr((string) $search, \strlen('ID:'));
 			if ($id > 0) {
 				$query['p'] = $id;
 				unset($query['s']);
@@ -504,13 +491,11 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @param string $type Type of the listing.
 	 * @param string $formId Form ID.
-	 * @param string $parent Parent type of the listing.
 	 * @param string $search Search query.
 	 * @param int $perPage Number of items per page.
-	 *
 	 * @return array<string, mixed>
 	 */
-	private function getTopBarItems(string $type, string $formId, string $parent, string $search, int $perPage): array
+	private function getTopBarItems(string $type, string $formId, string $search, int $perPage): array
 	{
 		$bulkSelector = UtilsHelper::getStateSelectorAdmin('listingBulk');
 		$exportSelector = UtilsHelper::getStateSelectorAdmin('listingExport');
@@ -642,33 +627,18 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
-				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
-					$left = [
-						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-						Helpers::render('button', [
-							'buttonVariant' => 'primaryGhost',
-							'buttonLabel' => \__('Restore', 'eightshift-forms'),
-							'buttonIsDisabled' => true,
-							'additionalClass' => $bulkSelector,
-							'buttonAttrs' => [
-								UtilsHelper::getStateAttribute('bulkType') => 'restore',
-							],
-						]),
-					];
-				} else {
-					$left = [
-						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-						Helpers::render('button', [
-							'buttonVariant' => 'primaryGhost',
-							'buttonLabel' => \__('Restore', 'eightshift-forms'),
-							'buttonIsDisabled' => true,
-							'additionalClass' => $bulkSelector,
-							'buttonAttrs' => [
-								UtilsHelper::getStateAttribute('bulkType') => 'restore',
-							],
-						]),
-					];
-				}
+				$left = [
+					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Restore', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'buttonAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'restore',
+						],
+					]),
+				];
 
 				$right = [
 					Helpers::render('button', [
@@ -819,9 +789,7 @@ class FormAdminMenu extends AbstractAdminMenu
 								$entryValue = \implode('<br/>', $entryValue);
 							} else {
 								$entryValue = \array_map(
-									function ($value, $key) {
-										return "{$key}={$value}";
-									},
+									fn($value, int|string $key): string => "{$key}={$value}",
 									$entryValue,
 									\array_keys($entryValue)
 								);
@@ -840,12 +808,12 @@ class FormAdminMenu extends AbstractAdminMenu
 						}
 
 						if (!isset($tableHead[$entryKey])) {
-							$tableHead[$entryKey] = \ucfirst($entryKey);
+							$tableHead[$entryKey] = \ucfirst((string) $entryKey);
 						}
 						$tableContent[$itemId][$entryKey] = $entryValue;
 					}
 
-					\uksort($tableHead, 'strcasecmp');
+					\uksort($tableHead, \strcasecmp(...));
 
 					$i++;
 				}
@@ -944,7 +912,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$itemTitle = $item['title'] ?: \sprintf(\__('No Form title for ID %s', 'eightshift-forms'), $itemId);
 					$editLink = $item['editLink'] ?? '#';
 					$activeIntegration = $item['activeIntegration'] ?? [];
-					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					$cardIcon = $activeIntegration['icon'] ?? UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 					$isValid = $this->isIntegrationValid($item);
 
@@ -976,8 +944,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * Get is integration valid.
 	 *
 	 * @param array<string, mixed> $item Item to be checked.
-	 *
-	 * @return boolean
 	 */
 	private function isIntegrationValid(array $item): bool
 	{
@@ -1001,10 +967,10 @@ class FormAdminMenu extends AbstractAdminMenu
 		$output = [];
 
 		$showOnly = \array_flip($showOnly);
-		$showOnlyStatus = isset($showOnly['status']) || empty($showOnly);
-		$showOnlyIntegrationIsActive = isset($showOnly['integrationIsActive']) || empty($showOnly);
-		$showOnlyIntegrationIsValid = isset($showOnly['integrationIsValid']) || empty($showOnly);
-		$showOnlyIntegrationIsApiValid = isset($showOnly['integrationIsApiValid']) || empty($showOnly);
+		$showOnlyStatus = isset($showOnly['status']) || $showOnly === [];
+		$showOnlyIntegrationIsActive = isset($showOnly['integrationIsActive']) || $showOnly === [];
+		$showOnlyIntegrationIsValid = isset($showOnly['integrationIsValid']) || $showOnly === [];
+		$showOnlyIntegrationIsApiValid = isset($showOnly['integrationIsApiValid']) || $showOnly === [];
 
 		$status = $item['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$postType = $item['postType'] ?? '';
@@ -1013,7 +979,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		$isApiValid = $item['activeIntegration']['isApiValid'] ?? false;
 
 		if ($postType) {
-			$output[] = ($postType === 'wp_block' ? \__('Patterns', 'eightshift-forms') : \ucfirst($postType));
+			$output[] = ($postType === 'wp_block' ? \__('Patterns', 'eightshift-forms') : \ucfirst((string) $postType));
 		}
 
 		if (!$isActive && $showOnlyIntegrationIsActive) {
@@ -1176,7 +1142,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @return array<mixed>
 	 */
-	private function getDefaultLeftTopBarItems($search, $perPage, $include = []): array
+	private function getDefaultLeftTopBarItems(string $search, int $perPage, array $include = []): array
 	{
 		$selectAllSelector = UtilsHelper::getStateSelectorAdmin('listingSelectAll');
 		$searchSelector = UtilsHelper::getStateSelectorAdmin('listingSearch');

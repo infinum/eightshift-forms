@@ -237,32 +237,23 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(self::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, [$this, 'shouldLogActivity'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
+		\add_filter(self::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, $this->shouldLogActivity(...), 10, 2);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
 		$isActivityLogUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_ACTIVITY_LOG_USE_KEY, self::SETTINGS_FALLBACK_ACTIVITY_LOG_USE_KEY);
-
-		if (!$isUsed || !$isActivityLogUsed) {
-			return false;
-		}
-
-		return true;
+					return $isUsed && $isActivityLogUsed;
 	}
 
 	/**
@@ -270,12 +261,10 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 *
 	 * @param bool $isSettingsValid Is settings valid.
 	 * @param string $key Key to check.
-	 *
-	 * @return bool
 	 */
 	public function shouldLogActivity(bool $isSettingsValid, string $key): bool
 	{
-		if (!$key) {
+		if ($key === '' || $key === '0') {
 			return false;
 		}
 
@@ -506,8 +495,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 * Get flag label.
 	 *
 	 * @param string $key Key to get label for.
-	 *
-	 * @return string
 	 */
 	public function getFlagLabel(string $key): string
 	{

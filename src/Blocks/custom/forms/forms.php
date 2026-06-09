@@ -22,7 +22,7 @@ if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $m
 
 echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
-$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
+$blockClass = $attributes['blockClass'] ?? "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
 
 // Check formPost ID prop.
 $formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
@@ -33,9 +33,7 @@ $formsFormGeolocationAlternatives = Helpers::checkAttr('formsFormGeolocationAlte
 $formsStyleOutput = [];
 if ($formsStyle && gettype($formsStyle) === 'array') {
 	$formsStyleOutput = array_map(
-		static function ($item) use ($blockClass) {
-			return Helpers::bem($blockClass, '', $item);
-		},
+		static fn(string $item): string => Helpers::bem($blockClass, '', $item),
 		$formsStyle
 	);
 }
@@ -65,9 +63,7 @@ if ($formsFormGeolocationAlternatives && apply_filters(SettingsGeolocation::FILT
 	$allForms = [
 		...$allForms,
 		...array_map(
-			static function ($item) {
-				return $item['formId'];
-			},
+			static fn(array $item) => $item['formId'],
 			$formsFormGeolocationAlternatives
 		),
 	];

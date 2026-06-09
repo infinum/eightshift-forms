@@ -63,8 +63,10 @@ class EntriesHelper
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 			$type = $param['type'] ?? '';
-
-			if (!$name || !$type) {
+			if (!$name) {
+				continue;
+			}
+			if (!$type) {
 				continue;
 			}
 
@@ -74,7 +76,7 @@ class EntriesHelper
 
 			if ($type === 'file') {
 				$value = \array_map(
-					static function (string $file) {
+					static function (string $file): string {
 						$filename = \pathinfo($file, \PATHINFO_FILENAME);
 						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 						return "{$filename}.{$extension}";
@@ -93,7 +95,7 @@ class EntriesHelper
 			}
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return false;
 		}
 
@@ -105,8 +107,6 @@ class EntriesHelper
 	 *
 	 * @param string $entryId Entry Id.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getEntryAdminUrl(string $entryId, string $formId): string
 	{
@@ -174,8 +174,8 @@ class EntriesHelper
 					"SELECT * FROM {$tableName} WHERE entry_value LIKE %s ORDER BY created_at DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
 						'%' . $search . '%',
-						(int) $perPage,
-						(int) $perPage * ($page - 1),
+						$perPage,
+						$perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -204,7 +204,7 @@ class EntriesHelper
 		);
 
 		return [
-			'currentPage' => (int) $page,
+			'currentPage' => $page,
 			'totalPages' => (int) \ceil($totalPages / $perPage),
 			'count' => \count($results),
 			'items' => $results,
@@ -238,8 +238,8 @@ class EntriesHelper
 					[
 						(int) $formId,
 						'%' . $search . '%',
-						(int) $perPage,
-						(int) $perPage * ($page - 1),
+						$perPage,
+						$perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -269,7 +269,7 @@ class EntriesHelper
 		);
 
 		return [
-			'currentPage' => (int) $page,
+			'currentPage' => $page,
 			'totalPages' => (int) \ceil($totalPages / $perPage),
 			'count' => \count($results),
 			'items' => $results,
@@ -318,8 +318,6 @@ class EntriesHelper
 	 *
 	 * @param array<string, mixed> $data Data to update.
 	 * @param string $id Entry Id.
-	 *
-	 * @return boolean
 	 */
 	public static function updateEntry(array $data, string $id): bool
 	{
@@ -330,32 +328,25 @@ class EntriesHelper
 		$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			self::getFullTableName(),
 			[
-				'entry_value' => $output,
-			],
+			'entry_value' => $output,
+					],
 			[
-				'id' => (int) $id,
-			],
+					'id' => (int) $id,
+					],
 			[
-				'%s',
-			],
+					'%s',
+					],
 			[
-				'%d',
-			]
+					'%d',
+					]
 		);
-
-		if (\is_wp_error($result)) {
-			return false;
-		}
-
-		return true;
+					return !\is_wp_error($result);
 	}
 
 	/**
 	 * Delete entry.
 	 *
 	 * @param string $id Entry Id.
-	 *
-	 * @return boolean
 	 */
 	public static function deleteEntry(string $id): bool
 	{
@@ -366,11 +357,11 @@ class EntriesHelper
 		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$tableName,
 			[
-				'id' => (int) $id,
-			],
+			'id' => (int) $id,
+					],
 			[
-				'%d',
-			]
+					'%d',
+					]
 		);
 
 		if (\is_wp_error($result)) {
@@ -396,15 +387,13 @@ class EntriesHelper
 		return [
 			'id' => $data['id'] ?? '',
 			'formId' => $data['form_id'] ?? '',
-			'entryValue' => isset($data['entry_value']) ? \json_decode($data['entry_value'], true) : [],
+			'entryValue' => isset($data['entry_value']) ? \json_decode((string) $data['entry_value'], true) : [],
 			'createdAt' => $data['created_at'] ?? '',
 		];
 	}
 
 	/**
 	 * Get full table name.
-	 *
-	 * @return string
 	 */
 	private static function getFullTableName(): string
 	{

@@ -22,8 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
  * @example echo esFormsGetFormIdByName('22826');
  *
  * @param string $formId Form ID.
- *
- * @return string
  */
 function esFormsGetFormIdByName(string $formId): string
 {
@@ -49,17 +47,15 @@ function esFormsDecryptor(string $value)
  */
 function esFormsGeolocationCountriesList(): array
 {
-	return (new Geolocation())->getCountriesList();
+	return new Geolocation()->getCountriesList();
 }
 
 /**
  * Get user's geolocation.
- *
- * @return string
  */
 function esFormsGetUsersGeolocation(): string
 {
-	return (new Geolocation())->getUsersGeolocation();
+	return new Geolocation()->getUsersGeolocation();
 }
 
 /**
@@ -79,8 +75,6 @@ function esFormsGetSelectOptionsArrayFromString(string $options): array
  *
  * @param string $component Component's name or full path (ending with .php).
  * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
- *
- * @return string
  */
 function esFormsGetComponentsRender(string $component, array $attributes = []): string
 {
@@ -97,8 +91,6 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
  *
  * @param string $formId Form Id.
  * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
- *
- * @return string
  */
 function esFormRenderForm(string $formId, array $attributes = []): string
 {
@@ -132,8 +124,6 @@ function esFormGetEntry(string $entryId): array
  *
  * @param array<string, mixed> $data Data to update.
  * @param string $entryId Entry Id.
- *
- * @return boolean
  */
 function esFormUpdateEntry(array $data, string $entryId): bool
 {
@@ -147,7 +137,7 @@ function esFormUpdateEntry(array $data, string $entryId): bool
  */
 function getFormsGetCountryList(): array
 {
-	return (new Countries())->getCountriesDataSet();
+	return new Countries()->getCountriesDataSet();
 }
 
 /**

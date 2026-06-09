@@ -117,44 +117,24 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	public const SETTINGS_JIRA_SKIP_INTEGRATION_KEY = 'jira-skip-integration';
 
 	/**
-	 * Instance variable for Jira data.
-	 *
-	 * @var JiraClientInterface
-	 */
-	protected $jiraClient;
-
-	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		JiraClientInterface $jiraClient,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->jiraClient = $jiraClient;
-		$this->settingsFallback = $settingsFallback;
+	public function __construct(protected JiraClientInterface $jiraClient, protected SettingsFallbackDataInterface $settingsFallback)
+	{
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -162,8 +142,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -173,17 +151,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 
 		$selectedProject = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
-		if (!$selectedProject) {
+		if ($selectedProject === '' || $selectedProject === '0') {
 			return false;
 		}
 
 		$selectedIssueType = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
-
-		if (!$selectedIssueType) {
-			return false;
-		}
-
-		return true;
+					return (bool) $selectedIssueType;
 	}
 
 	/**
@@ -224,38 +197,34 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'selectSingleSubmit' => true,
 								'selectPlaceholder' => \__('Select project', 'eightshift-forms'),
 								'selectContent' => \array_map(
-									static function ($option) use ($selectedProject) {
-										return [
+									static fn(array $option): array => [
 											'component' => 'select-option',
 											'selectOptionLabel' => $option['title'],
 											'selectOptionValue' => $option['key'],
 											'selectOptionIsSelected' => $selectedProject === $option['key'],
-										];
-									},
+										],
 									$this->jiraClient->getProjects()
 								),
 							],
-							$selectedProject ? [
+							$selectedProject !== '' && $selectedProject !== '0' ? [
 								'component' => 'select',
 								'selectSingleSubmit' => true,
 								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
 								'selectFieldLabel' => \__('Issue type', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select issue type', 'eightshift-forms'),
 								'selectContent' => \array_map(
-									static function ($option) use ($selectedIssueType) {
-										return [
+									static fn(array $option): array => [
 											'component' => 'select-option',
 											'selectOptionLabel' => $option['title'],
 											'selectOptionValue' => $option['id'],
 											'selectOptionIsSelected' => $selectedIssueType === $option['id'],
-										];
-									},
+										],
 									$this->jiraClient->getIssueType($selectedProject)
 								),
 							] : [],
 						],
 					],
-					$selectedIssueType ? [
+					$selectedIssueType !== '' && $selectedIssueType !== '0' ? [
 						'component' => 'tab',
 						'tabLabel' => \__('Parameter mapping', 'eightshift-forms'),
 						'tabContent' => [
@@ -321,7 +290,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 									'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
 									'groupContent' => [
 										...\array_map(
-											function ($item) use ($mapParams) {
+											function (array $item) use ($mapParams) {
 												$id  = $item['id'] ?? '';
 
 												if ($id) {
@@ -349,8 +318,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
@@ -358,12 +325,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY);
 		$apiBoard = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY);
 		$apiUser = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY);
-
-		if (!$isUsed || !$apiKey || !$apiBoard || !$apiUser) {
-			return false;
-		}
-
-		return true;
+					return !(!$isUsed || !$apiKey || !$apiBoard || !$apiUser);
 	}
 
 	/**

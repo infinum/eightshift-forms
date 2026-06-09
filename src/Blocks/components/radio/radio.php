@@ -54,7 +54,7 @@ $conditionalTags = Helpers::render(
 	Helpers::props('conditionalTags', $attributes)
 );
 
-if ($conditionalTags) {
+if ($conditionalTags !== '' && $conditionalTags !== '0') {
 	$radioFieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 

@@ -72,29 +72,19 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
 	}
 
 	/**
@@ -284,7 +274,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getCptList($postType): array
+	private function getCptList(string $postType): array
 	{
 		$args = [
 			'post_type' => $postType,

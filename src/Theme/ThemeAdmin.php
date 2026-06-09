@@ -27,12 +27,10 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 
 	/**
 	 * Register the hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectorsAdmin']), [$this, 'getSelectors']);
+		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectorsAdmin']), $this->getSelectors(...));
 	}
 
 	/**

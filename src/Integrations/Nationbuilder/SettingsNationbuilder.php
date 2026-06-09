@@ -97,53 +97,24 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	public const SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY = 'nationbuilder-oauth-allow';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthNationbuilder;
-
-	/**
-	 * Instance variable for Jira data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback methods.
 	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 * @param NationbuilderClientInterface $nationbuilderClient Inject Jira which holds Jira connect data.
 	 */
-	public function __construct(
-		SettingsFallbackDataInterface $settingsFallback,
-		OauthInterface $oauthNationbuilder,
-		NationbuilderClientInterface $nationbuilderClient,
-	) {
-		$this->settingsFallback = $settingsFallback;
-		$this->oauthNationbuilder = $oauthNationbuilder;
-		$this->nationbuilderClient = $nationbuilderClient;
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback, protected OauthInterface $oauthNationbuilder, protected NationbuilderClientInterface $nationbuilderClient)
+	{
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -187,27 +158,23 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 										'fieldIsFiftyFiftyHorizontal' => true,
 									],
 									...\array_map(
-										function ($item) use ($mapParams) {
-											return [
+										fn($item): array => [
 												'component' => 'select',
 												'selectName' => $item,
-												'selectFieldLabel' => \ucfirst($item),
+												'selectFieldLabel' => \ucfirst((string) $item),
 												'selectValue' => $mapParams[$item] ?? '',
 												'selectFieldIsFiftyFiftyHorizontal' => true,
 												'selectFieldBeforeContent' => '&rarr;',
 												'selectContent' => \array_map(
-													static function ($option) use ($mapParams, $item) {
-														return [
+													static fn(array $option): array => [
 															'component' => 'select-option',
 															'selectOptionLabel' => $option['title'],
 															'selectOptionValue' => $option['id'],
 															'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
-														];
-													},
+														],
 													$this->getFields()
 												),
-											];
-										},
+											],
 										$params
 									),
 								],
@@ -224,14 +191,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'selectFieldLabel' => \__('Select list', 'eightshift-forms'),
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId),
 								'selectContent' => \array_map(
-									static function ($option) use ($list) {
-										return [
+									static fn(array $option): array => [
 											'component' => 'select-option',
 											'selectOptionLabel' => $option['title'],
 											'selectOptionValue' => $option['id'],
 											'selectOptionIsSelected' => $option['id'] === $list,
-										];
-									},
+										],
 									$this->nationbuilderClient->getLists()
 								),
 							],
@@ -242,14 +207,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'selectIsMultiple' => true,
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId),
 								'selectContent' => \array_map(
-									static function ($option) use ($tags) {
-										return [
+									static fn(array $option): array => [
 											'component' => 'select-option',
 											'selectOptionLabel' => $option['title'],
 											'selectOptionValue' => $option['id'],
 											'selectOptionIsSelected' => isset($tags[$option['id']]),
-										];
-									},
+										],
 									$this->nationbuilderClient->getTags()
 								),
 							]
@@ -262,8 +225,6 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
@@ -271,12 +232,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 		$clientId = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_ID);
 		$clientSecret = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientSecretNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
 		$clientSlug = SettingsHelpers::getOptionWithConstant(Variables::getClientSlugNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
-
-		if (!$isUsed || !$clientId || !$clientSecret || !$clientSlug) {
-			return false;
-		}
-
-		return true;
+					return !(!$isUsed || !$clientId || !$clientSecret || !$clientSlug);
 	}
 
 	/**
@@ -422,12 +378,10 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	private function getFields(): array
 	{
 		$customFields = \array_values(\array_map(
-			static function ($field) {
-				return [
+			static fn(array $field): array => [
 					'id' => $field['id'],
 					'title' => $field['title'],
-				];
-			},
+				],
 			$this->nationbuilderClient->getCustomFields()
 		));
 

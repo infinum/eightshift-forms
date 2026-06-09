@@ -29,7 +29,7 @@ final class ApiHelpers
 	 * Return API response array details.
 	 *
 	 * @param string $integration Integration name from settings.
-	 * @param mixed $response API full response.
+	 * @param array $response API full response.
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.
@@ -42,7 +42,7 @@ final class ApiHelpers
 	 */
 	public static function getIntegrationApiResponseDetails(
 		string $integration,
-		$response,
+		array $response,
 		string $url,
 		array $params = [],
 		array $files = [],
@@ -81,7 +81,7 @@ final class ApiHelpers
 			Config::IARD_RESPONSE => $response['response'] ?? [],
 			Config::IARD_CODE => $code,
 			Config::IARD_STATUS => self::isSuccessResponse($code) ? AbstractRoute::STATUS_SUCCESS : AbstractRoute::STATUS_ERROR,
-			Config::IARD_BODY => !\is_string($body) ? $body : [],
+			Config::IARD_BODY => \is_string($body) ? [] : $body,
 			Config::IARD_URL => $url,
 			Config::IARD_ITEM_ID => $itemId,
 			Config::IARD_FORM_ID => $formId,
@@ -152,7 +152,7 @@ final class ApiHelpers
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 
@@ -180,7 +180,7 @@ final class ApiHelpers
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 
@@ -208,7 +208,7 @@ final class ApiHelpers
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 
@@ -223,8 +223,6 @@ final class ApiHelpers
 	 * Check if the code is a success code.
 	 *
 	 * @param int|string $code The code to check.
-	 *
-	 * @return bool
 	 */
 	public static function isSuccessResponse(int|string $code): bool
 	{
@@ -239,8 +237,6 @@ final class ApiHelpers
 	 * Check if the code is a error code.
 	 *
 	 * @param int|string $code The code to check.
-	 *
-	 * @return bool
 	 */
 	public static function isErrorResponse(int|string $code): bool
 	{

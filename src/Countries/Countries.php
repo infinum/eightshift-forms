@@ -37,15 +37,13 @@ class Countries implements CountriesInterface
 				'slug' => 'default',
 				'items' => $countries,
 				'codes' => \array_map(
-					static function ($item) {
-						return [
+					static fn(array $item): array => [
 							'label' => $item[0],
 							'value' => $item[1],
 							'unlocalized-label' => $item[3] ?? $item[0],
 							'code' => $item[1],
 							'phone' => $item[2],
-						];
-					},
+						],
 					$countries
 				)
 			]
@@ -63,7 +61,10 @@ class Countries implements CountriesInterface
 			foreach ($alternative as $value) {
 				$label = $value['label'] ?? '';
 				$slug = $value['slug'] ?? '';
-				if (!$label || !$slug) {
+				if (!$label) {
+					continue;
+				}
+				if (!$slug) {
 					continue;
 				}
 
@@ -79,9 +80,11 @@ class Countries implements CountriesInterface
 				$changed = $value['change'] ?? [];
 
 				foreach ($countries as $item) {
-					$countryCode = \strtolower($item[1]);
-
-					if ((!empty($onlyUse) && !\in_array($countryCode, $onlyUse, true)) || \in_array($countryCode, $removed, true)) {
+					$countryCode = \strtolower((string) $item[1]);
+					if (!empty($onlyUse) && !\in_array($countryCode, $onlyUse, true)) {
+						continue;
+					}
+					if (\in_array($countryCode, $removed, true)) {
 						continue;
 					}
 
@@ -109,12 +112,10 @@ class Countries implements CountriesInterface
 			'label' => $output['default']['label'],
 			'slug' => $output['default']['slug'],
 			'items' => \array_values(\array_map(
-				static function ($item) {
-					return [
+				static fn(array $item): array => [
 						'label' => $item['label'],
 						'value' => $item['slug'],
-					];
-				},
+					],
 				$output
 			)),
 			'codes' => $output['default']['codes'],

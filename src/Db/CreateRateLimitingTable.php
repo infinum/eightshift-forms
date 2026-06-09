@@ -24,8 +24,6 @@ class CreateRateLimitingTable
 
 	/**
 	 * Create DB table.
-	 *
-	 * @return void
 	 */
 	public static function createTable(): void
 	{

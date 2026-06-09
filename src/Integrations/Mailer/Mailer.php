@@ -32,41 +32,14 @@ use Exception;
 class Mailer implements MailerInterface
 {
 	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
-	 * Instance variable of SettingsFallbackDataInterface data.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance that injects classes.
 	 *
 	 * @param SecurityInterface $security Security interface.
 	 * @param LabelsInterface $labels Labels interface.
 	 * @param SettingsFallbackDataInterface $settingsFallback Settings fallback data interface.
 	 */
-	public function __construct(
-		SecurityInterface $security,
-		LabelsInterface $labels,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->security = $security;
-		$this->labels = $labels;
-		$this->settingsFallback = $settingsFallback;
+	public function __construct(protected SecurityInterface $security, protected LabelsInterface $labels, protected SettingsFallbackDataInterface $settingsFallback)
+	{
 	}
 
 	/**
@@ -145,8 +118,6 @@ class Mailer implements MailerInterface
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $data Data to send in the email.
 	 * @param string $debugKey Debug key.
-	 *
-	 * @return boolean
 	 */
 	public function sendTroubleshootingEmail(
 		array $formDetails,
@@ -163,14 +134,14 @@ class Mailer implements MailerInterface
 			$this->security->getIpAddress('hash'),
 			$debugKeyValue,
 			$formId,
-			$debugKey ? $data : $this->getDebugOutputActivityLog($data)
+			$debugKey !== '' && $debugKey !== '0' ? $data : $this->getDebugOutputActivityLog($data)
 		);
 
 
 		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
 		$headers = [
-			$this->getType()
+		$this->getType()
 		];
 
 		if (!$to && !$cc) {
@@ -182,11 +153,11 @@ class Mailer implements MailerInterface
 			$cc = '';
 		}
 
-		if ($cc) {
+		if ($cc !== '' && $cc !== '0') {
 			$headers[] = "Cc: {$cc}";
 		}
 
-		$data = $debugKey ? $data : $this->getDebugOutputLevel($data);
+		$data = $debugKey !== '' && $debugKey !== '0' ? $data : $this->getDebugOutputLevel($data);
 
 		$status = \str_contains($debugKeyValue, 'Success') ? 'Success' : 'Error';
 
@@ -205,7 +176,7 @@ class Mailer implements MailerInterface
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Activity Log ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html((string) $activityLogId)) . '</p>';
 		}
 
-		if ($debugKeyValue) {
+		if ($debugKeyValue !== '' && $debugKeyValue !== '0') {
 			// translators: %s replaces the debug key.
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
 
@@ -229,8 +200,6 @@ class Mailer implements MailerInterface
 	 * Get debug key.
 	 *
 	 * @param array<string, mixed> $data Data to use.
-	 *
-	 * @return string
 	 */
 	public function getDebugKey(array $data): string
 	{
@@ -244,8 +213,6 @@ class Mailer implements MailerInterface
 	 * @param array<mixed> $params Params array.
 	 * @param array<mixed> $files Files array.
 	 * @param array<string, mixed> $responseTags Response tags.
-	 *
-	 * @return boolean
 	 */
 	private function sendConfirmationEmail(string $formId, array $params, array $files, array $responseTags = []): bool
 	{
@@ -287,8 +254,6 @@ class Mailer implements MailerInterface
 	 * @param array<string, mixed> $fields Email fields.
 	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
 	 * @param array<string, mixed> $toAdvanced Advanced conditions for the email to.
-	 *
-	 * @return bool
 	 */
 	private function internalSendEmail(
 		string $formId,
@@ -329,8 +294,6 @@ class Mailer implements MailerInterface
 	/**
 	 * Get Email type.
 	 * We use HTML for all.
-	 *
-	 * @return string
 	 */
 	private function getType(): string
 	{
@@ -342,16 +305,14 @@ class Mailer implements MailerInterface
 	 *
 	 * @param string $email Email string.
 	 * @param string $name Name string.
-	 *
-	 * @return string
 	 */
 	private function getFrom(string $email, string $name): string
 	{
-		if (empty($email)) {
+		if ($email === '' || $email === '0') {
 			return '';
 		}
 
-		if (empty($name)) {
+		if ($name === '' || $name === '0') {
 			return "From: {$email}";
 		}
 
@@ -380,8 +341,6 @@ class Mailer implements MailerInterface
 	 * @param array<string, mixed> $params Params to replace in the template.
 	 * @param boolean $shouldParse Should the template be parsed.
 	 * @param string $template Additional description.
-	 *
-	 * @return string
 	 */
 	private function getTemplate(array $params, bool $shouldParse = false, string $template = ''): string
 	{
@@ -398,7 +357,7 @@ class Mailer implements MailerInterface
 				$parsedown = new Parsedown();
 
 				return $parsedown->text($template);
-			} catch (Exception $e) {
+			} catch (Exception) {
 				return $template;
 			}
 		}
@@ -427,8 +386,10 @@ class Mailer implements MailerInterface
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 			$type = $param['type'] ?? '';
-
-			if (!$name || !$type) {
+			if (!$name) {
+				continue;
+			}
+			if (!$type) {
 				continue;
 			}
 
@@ -438,7 +399,7 @@ class Mailer implements MailerInterface
 
 			if ($type === 'file') {
 				$value = \array_map(
-					static function (string $file) {
+					static function (string $file): string {
 						$filename = \pathinfo($file, \PATHINFO_FILENAME);
 						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 						return "{$filename}.{$extension}";
@@ -462,7 +423,7 @@ class Mailer implements MailerInterface
 	 */
 	private function prepareFiles(array $files): array
 	{
-		if (!$files) {
+		if ($files === []) {
 			return [];
 		}
 
@@ -478,7 +439,7 @@ class Mailer implements MailerInterface
 			$output[] = $value;
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return [];
 		}
 
@@ -491,12 +452,10 @@ class Mailer implements MailerInterface
 	 * @param string $default Default email.
 	 * @param array<string, mixed> $advanced Advanced conditions.
 	 * @param array<string, mixed> $params Params.
-	 *
-	 * @return string
 	 */
 	private function getAdvancedConditions(string $default, array $advanced, array $params): string
 	{
-		if (!$advanced) {
+		if ($advanced === []) {
 			return $default;
 		}
 
@@ -511,8 +470,10 @@ class Mailer implements MailerInterface
 		foreach ($settings as $item) {
 			$email = $item[0] ?? '';
 			$conditions = $item[1] ?? '';
-
-			if (!$email || !$conditions) {
+			if (!$email) {
+				continue;
+			}
+			if (!$conditions) {
 				continue;
 			}
 
@@ -523,7 +484,7 @@ class Mailer implements MailerInterface
 			$output[] = $email;
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return $default;
 		}
 
@@ -546,8 +507,6 @@ class Mailer implements MailerInterface
 	 *
 	 * @param string $logic Logic string.
 	 * @param array<string, mixed> $params Params.
-	 *
-	 * @return bool
 	 */
 	private function evaluateAdvancedConditionLogic(string $logic, array $params): bool
 	{
@@ -565,7 +524,7 @@ class Mailer implements MailerInterface
 			}
 
 			// Check if the condition is a negation.
-			$isNegation = \strpos($token, '!=') !== false;
+			$isNegation = \str_contains($token, '!=');
 			$operator = $isNegation ? '!=' : '=';
 
 			[$key, $value] = \explode($operator, $token, 2);
@@ -579,7 +538,7 @@ class Mailer implements MailerInterface
 				$conditionResult = !$conditionResult;
 			}
 
-			$processedTokens[] = !empty($conditionResult);
+			$processedTokens[] = $conditionResult;
 		}
 
 		// Evaluate with correct precedence (AND before OR).
@@ -588,14 +547,12 @@ class Mailer implements MailerInterface
 
 		foreach ($processedTokens as $token) {
 			if ($token === '&' || $token === '|') {
-				$currentOp = $token;
+													$currentOp = $token;
+			} elseif ($currentOp === '&') {
+				$last = \array_pop($stack) ?? false;
+				$stack[] = $last && $token;
 			} else {
-				if ($currentOp === '&') {
-					$last = \array_pop($stack) ?? false;
-					$stack[] = $last && $token;
-				} else {
-					$stack[] = $token;
-				}
+				$stack[] = $token;
 			}
 		}
 

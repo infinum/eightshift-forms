@@ -43,32 +43,18 @@ if ($buttonIsDisabled) {
 	$buttonAttrs['disabled'] = true;
 }
 
-switch ($buttonVariant) {
-	case 'primaryOutline':
-		$buttonClass = 'esf-button-primary-outline';
-		break;
-	case 'primaryGhost':
-		$buttonClass = 'esf-button-primary-ghost';
-		break;
-	case 'primaryBasic':
-		$buttonClass = 'esf-button-primary-basic';
-		break;
-	case 'secondaryGhost':
-		$buttonClass = 'esf-button-secondary-ghost';
-		break;
-	default:
-		$buttonClass = 'esf-button-primary';
-		break;
-}
+$buttonClass = match ($buttonVariant) {
+	'primaryOutline' => 'esf-button-primary-outline',
+	'primaryGhost' => 'esf-button-primary-ghost',
+	'primaryBasic' => 'esf-button-primary-basic',
+	'secondaryGhost' => 'esf-button-secondary-ghost',
+	default => 'esf-button-primary',
+};
 
-switch ($buttonIconSize) {
-	case 'small':
-		$buttonIconSizeClass = 'esf:shrink-0 esf:[&>svg]:w-20 esf:[&>svg]:h-20';
-		break;
-	default:
-		$buttonIconSizeClass = 'esf:shrink-0 esf:[&>svg]:w-24 esf:[&>svg]:h-24';
-		break;
-}
+$buttonIconSizeClass = match ($buttonIconSize) {
+	'small' => 'esf:shrink-0 esf:[&>svg]:w-20 esf:[&>svg]:h-20',
+	default => 'esf:shrink-0 esf:[&>svg]:w-24 esf:[&>svg]:h-24',
+};
 
 $class = Helpers::clsx([
 	$buttonClass,

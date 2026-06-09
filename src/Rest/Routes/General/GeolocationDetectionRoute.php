@@ -33,13 +33,6 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'geolocation';
 
 	/**
-	 * Instance variable of geolocation data.
-	 *
-	 * @var GeolocationInterface
-	 */
-	protected GeolocationInterface $geolocation;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -51,12 +44,14 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		GeolocationInterface $geolocation,
+		/**
+		 * Instance variable of geolocation data.
+		 */
+		protected GeolocationInterface $geolocation,
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->geolocation = $geolocation;
 	}
 
 	/**
@@ -85,8 +80,6 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -149,7 +142,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 
 		$geolocation = $this->geolocation->isUserGeolocated($formId, $geo, $alt);
 
-		if (!$geolocation) {
+		if ($geolocation === '' || $geolocation === '0') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),

@@ -30,31 +30,21 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	public const FILTER_FORM_FIELDS_NAME = 'es_mailchimp_form_fields_filter';
 
 	/**
-	 * Instance variable for Mailchimp data.
-	 *
-	 * @var MailchimpClientInterface
-	 */
-	protected $mailchimpClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 */
-	public function __construct(MailchimpClientInterface $mailchimpClient)
+	public function __construct(protected MailchimpClientInterface $mailchimpClient)
 	{
-		$this->mailchimpClient = $mailchimpClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -77,13 +67,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		// Get fields.
 		$item = $this->mailchimpClient->getItem($itemId);
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId, $itemId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -105,7 +95,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	{
 		$output = [];
 
-		if (!$data) {
+		if ($data === []) {
 			return $output;
 		}
 
@@ -131,7 +121,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			$type = $field['type'] ?? '';
 			$name = $field['tag'] ?? '';
 			$label = $field['name'] ?? '';
-			$isRequired = isset($field['required']) ? (bool) $field['required'] : false;
+			$isRequired = isset($field['required']) && (bool) $field['required'];
 			$value = $field['default_value'] ?? '';
 			$options = $field['options'] ?? [];
 			$choices = $options['choices'] ?? [];
@@ -146,7 +136,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => (bool) $isRequired,
+						'inputIsRequired' => $isRequired,
 						'inputValue' => $value,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
@@ -168,7 +158,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputFieldLabel' => $label,
 						'inputType' => 'url',
 						'inputIsUrl' => true,
-						'inputIsRequired' => (bool) $isRequired,
+						'inputIsRequired' => $isRequired,
 						'inputValue' => $value,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
@@ -186,7 +176,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
-						'inputIsRequired' => (bool) $isRequired,
+						'inputIsRequired' => $isRequired,
 						'inputValue' => $value,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
@@ -202,7 +192,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'number',
-						'inputIsRequired' => (bool) $isRequired,
+						'inputIsRequired' => $isRequired,
 						'inputValue' => $value,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
@@ -217,7 +207,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
 						'inputType' => 'number',
-						'inputIsRequired' => (bool) $isRequired,
+						'inputIsRequired' => $isRequired,
 						'inputValue' => $value,
 						'inputMaxLength' => 5,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -233,7 +223,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'phoneName' => $name,
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
-						'phoneIsRequired' => (bool) $isRequired,
+						'phoneIsRequired' => $isRequired,
 						'phoneIsNumber' => true,
 						'phoneValue' => $value,
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
@@ -250,7 +240,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'dateTracking' => $name,
 						'dateFieldLabel' => $label,
 						'dateType' => 'date',
-						'dateIsRequired' => (bool) $isRequired,
+						'dateIsRequired' => $isRequired,
 						'datePreviewFormat' => 'F j, Y',
 						'dateOutputFormat' => GeneralHelpers::getCorrectLibDateFormats($dateFormat, '/'),
 						'dateValue' => $value,
@@ -266,19 +256,17 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'component' => 'radios',
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
-						'radiosIsRequired' => (bool) $isRequired,
+						'radiosIsRequired' => $isRequired,
 						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) {
-								return [
+							fn($radio): array => [
 									'component' => 'radio',
 									'radioLabel' => $radio,
 									'radioValue' => $radio,
 									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 										'radioValue',
 									], false),
-								];
-							},
+								],
 							$choices
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -292,19 +280,17 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectName' => $name,
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
-						'selectIsRequired' => (bool) $isRequired,
+						'selectIsRequired' => $isRequired,
 						'selectContent' => \array_values(
 							\array_map(
-								function ($option) {
-									return [
+								fn($option): array => [
 										'component' => 'select-option',
 										'selectOptionLabel' => $option,
 										'selectOptionValue' => $option,
 										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
 											'selectOptionValue',
 										], false),
-									];
-								},
+									],
 								$choices
 							),
 						),
@@ -318,7 +304,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		$tagsItems = $this->mailchimpClient->getTags($itemId);
 
-		if ($tagsItems) {
+		if ($tagsItems !== []) {
 			$output = [
 				...$output,
 				$this->getTagsFields($tagsItems),
@@ -335,7 +321,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+									return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;
@@ -350,7 +336,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 */
 	private function getTagsFields(array $items): array
 	{
-		if (!$items) {
+		if ($items === []) {
 			return [];
 		}
 
@@ -361,7 +347,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'selectTracking' => UtilsHelper::getStateParam('mailchimpTags'),
 			'selectContent' => \array_values(
 				\array_map(
-					function ($option) {
+					function (array $option): array {
 						$name = $option['name'] ?? '';
 
 						return [

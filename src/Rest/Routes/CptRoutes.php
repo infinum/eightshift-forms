@@ -23,12 +23,10 @@ class CptRoutes implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter('rest_pre_echo_response', [$this, 'getCptLimits'], 10, 3);
+		\add_filter('rest_pre_echo_response', $this->getCptLimits(...), 10, 3);
 	}
 
 	/**
@@ -46,14 +44,7 @@ class CptRoutes implements ServiceInterface
 			'/wp/v2/' . Config::SLUG_POST_TYPE,
 			'/wp/v2/' . Config::SLUG_RESULT_POST_TYPE,
 		];
-
-		$find = false;
-		foreach ($disableRoutes as $route) {
-			if (\str_contains($request->get_route(), $route)) {
-				$find = true;
-				break;
-			}
-		}
+								$find = \array_any($disableRoutes, fn($route): bool => \str_contains($request->get_route(), (string) $route));
 
 		if ($find && !\current_user_can(Config::CAP_SETTINGS)) {
 			return ApiHelpers::getApiErrorPublicOutput(

@@ -57,36 +57,24 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	public const SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY = 'friendly-captcha-load-on-init';
 
 	/**
-	 * Instance variable for labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject labels data.
 	 */
-	public function __construct(LabelsInterface $labels)
+	public function __construct(protected LabelsInterface $labels)
 	{
-		$this->labels = $labels;
 	}
 
 	/**
 	 * Register all the hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{

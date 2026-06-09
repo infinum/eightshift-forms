@@ -29,12 +29,10 @@ class ThemeFrontend extends AbstractTheme implements ServiceInterface
 
 	/**
 	 * Register the hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), [$this, 'getSelectors']);
+		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), $this->getSelectors(...));
 	}
 
 	/**

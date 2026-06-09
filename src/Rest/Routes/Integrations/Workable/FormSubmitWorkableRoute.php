@@ -37,13 +37,6 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsWorkable::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $workableClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $workableClient
+		protected ClientInterface $workableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +62,6 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->workableClient = $workableClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -116,10 +106,8 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Workable is missing config.
 	 * @throws DisabledIntegrationException If Workable is disabled.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

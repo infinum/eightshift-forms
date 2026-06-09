@@ -31,7 +31,7 @@ $customAttributes = [];
 
 $customAttributes[UtilsHelper::getStateAttribute('selectOptionIsHidden')] = $selectOptionIsHidden;
 
-if ($conditionalTags) {
+if ($conditionalTags !== '' && $conditionalTags !== '0') {
 	$customAttributes[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 

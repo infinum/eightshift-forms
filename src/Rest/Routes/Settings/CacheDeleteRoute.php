@@ -39,8 +39,6 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -79,7 +77,7 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 		switch ($type) {
 			case 'allOperational':
 				$allItems = Helpers::flattenArray(\array_map(
-					static function ($item) {
+					static function (array $item) {
 						if (isset($item['cache'])) {
 							return $item['cache'];
 						}
@@ -87,17 +85,15 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 					$data
 				));
 
-				if ($allItems) {
-					foreach ($allItems as $item) {
+				foreach ($allItems as $item) {
 						\delete_transient($item);
-					}
 				}
 
 				$outputTitle = \esc_html__('All operational', 'eightshift-forms');
 				break;
 			default:
 				$cacheTypes = $data[$type]['cache'] ?? [];
-				$outputTitle = \ucfirst($type);
+				$outputTitle = \ucfirst((string) $type);
 
 				if (!$cacheTypes) {
 					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped

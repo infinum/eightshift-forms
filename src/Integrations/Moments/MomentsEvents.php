@@ -65,7 +65,6 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		);
 
 		$code = $details[Config::IARD_CODE];
-		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
 		if (ApiHelpers::isSuccessResponse($code)) {
@@ -111,16 +110,14 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		// Map params.
-		if ($map) {
-			foreach ($map as $mapKey => $mapItem) {
+		foreach ($map as $mapKey => $mapItem) {
 				$foundItem = FormsHelper::getParamValue($mapItem, $params);
 
-				if (!$foundItem) {
-					continue;
-				}
+			if (!$foundItem) {
+				continue;
+			}
 
 				$properties[$mapKey] = $foundItem;
-			}
 		}
 
 		// Filter params.

@@ -122,33 +122,23 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_CORVUS_IBAN_VALUE_KEY = 'corvus-iban-value';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
 	{
-		$this->settingsFallback = $settingsFallback;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -156,8 +146,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -170,12 +158,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 		$currency = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
 		$cartDesc = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
-
-		if (!$selectedStoreId || !$lang || !$currency || !$mapParams || !$cartDesc) {
-			return false;
-		}
-
-		return true;
+					return !(!$selectedStoreId || !$lang || !$currency || !$mapParams || !$cartDesc);
 	}
 
 	/**
@@ -238,18 +221,16 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 								'selectFieldLabel' => \__('Store ID', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select Store ID', 'eightshift-forms'),
 								'selectContent' => \array_map(
-									static function ($option) use ($selectedStoreId) {
-										return [
+									static fn(array $option): array => [
 											'component' => 'select-option',
 											'selectOptionLabel' => "{$option[0]} ({$option[1]})",
 											'selectOptionValue' => $option[1],
 											'selectOptionIsSelected' => $selectedStoreId === $option[1],
-										];
-									},
+										],
 									SettingsHelpers::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY)
 								),
 							],
-							...($selectedStoreId ? [
+							...($selectedStoreId !== '' && $selectedStoreId !== '0' ? [
 								[
 									'component' => 'select',
 									'selectIsRequired' => true,
@@ -556,31 +537,27 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 										'fieldIsFiftyFiftyHorizontal' => true,
 									],
 									...\array_map(
-										function ($item) use ($params, $mapParams) {
+										function (array $item) use ($params, $mapParams): array {
 											$options = [];
 
 											if ($item['type'] === 'internal-select') {
 												$options = \array_map(
-													static function ($option) use ($mapParams, $item) {
-														return [
+													static fn($option): array => [
 															'component' => 'select-option',
 															'selectOptionLabel' => $option,
 															'selectOptionValue' => $option,
 															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														];
-													},
+														],
 													$item['value']
 												);
 											} else {
 												$options = \array_map(
-													static function ($option) use ($mapParams, $item) {
-														return [
+													static fn($option): array => [
 															'component' => 'select-option',
 															'selectOptionLabel' => $option,
 															'selectOptionValue' => $option,
 															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														];
-													},
+														],
 													$params
 												);
 											}
@@ -625,18 +602,10 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY);
 	}
 
 	/**
@@ -678,7 +647,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 										</ul>", 'eightshift-forms')),
 								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_CORVUS_STORE_IDS_KEY, 2),
 							],
-							...($storeIds ? [
+							...($storeIds !== [] ? [
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,

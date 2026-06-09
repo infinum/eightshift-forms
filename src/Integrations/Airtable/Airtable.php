@@ -31,34 +31,24 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public const FILTER_FORM_FIELDS_NAME = 'es_airtable_form_fields_filter';
 
 	/**
-	 * Instance variable for Airtable data.
-	 *
-	 * @var AirtableClientInterface
-	 */
-	protected $airtableClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
-	public function __construct(AirtableClientInterface $airtableClient)
+	public function __construct(protected AirtableClientInterface $airtableClient)
 	{
-		$this->airtableClient = $airtableClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 
 		// Recreate dynamic block data for frontend.
-		\add_filter(HooksHelpers::getFilterName(['block', 'dynamic', 'dataOutput']), [$this, 'getDynamicBlockOutput'], 10, 2);
+		\add_filter(HooksHelpers::getFilterName(['block', 'dynamic', 'dataOutput']), $this->getDynamicBlockOutput(...), 10, 2);
 	}
 
 	/**
@@ -82,13 +72,13 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Get fields.
 		$item = $this->airtableClient->getItem($itemId);
 
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item[$innerId] ?? [], $formId, $item, $itemId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -111,7 +101,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	{
 		$output = [];
 
-		if (!$data) {
+		if ($data === []) {
 			return $output;
 		}
 
@@ -123,7 +113,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			$type = $field['type'] ?? '';
 			$id = $field['id'] ?? '';
 			$name = $id;
-			$label = $field['name'] ?? '';
 			$label = $field['name'] ?? '';
 			$options = $field['options'] ?? [];
 
@@ -249,16 +238,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectFieldLabel' => $label,
 						'selectIsMultiple' => $type === 'multipleSelects',
 						'selectContent' => \array_map(
-							function ($selectOption) {
-								return [
+							fn(array $selectOption): array => [
 									'component' => 'select-option',
 									'selectOptionLabel' => $selectOption['name'],
 									'selectOptionValue' => $selectOption['id'],
 									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('selectOption', [
 										'selectOptionValue',
 									], false),
-								];
-							},
+								],
 							$options['choices'] ?? []
 						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
@@ -329,7 +316,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+									return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;
@@ -340,8 +327,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param array<string, mixed> $attributes Attributes.
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public function getDynamicBlockOutput(array $attributes, string $formId): string
 	{
@@ -359,7 +344,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return '';
 		}
 
-		$data = \json_decode($data, true);
+		$data = \json_decode((string) $data, true);
 
 		$baseId = $data['baseId'] ?? '';
 		$listId = $data['listId'] ?? '';
@@ -370,7 +355,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 
 		$records = $this->airtableClient->getItemDetails($baseId, $listId);
 
-		if (!$records) {
+		if ($records === []) {
 			return '';
 		}
 
@@ -379,8 +364,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		foreach ($records as $record) {
 			$id = $record['id'] ?? '';
 			$title = $record['title'] ?? '';
-
-			if (!$id || !$title) {
+			if (!$id) {
+				continue;
+			}
+			if (!$title) {
 				continue;
 			}
 
@@ -400,14 +387,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		return Helpers::render(
 			'select',
 			Helpers::props('select', [
-				'selectName' => Helpers::checkAttr('dynamicName', $attributes, $manifest),
-				'selectTracking' => Helpers::checkAttr('dynamicTracking', $attributes, $manifest),
-				'selectFieldLabel' => Helpers::checkAttr('dynamicFieldLabel', $attributes, $manifest),
-				'selectIsMultiple' => Helpers::checkAttr('dynamicIsMultiple', $attributes, $manifest),
-				'selectIsRequired' => Helpers::checkAttr('dynamicIsRequired', $attributes, $manifest),
-				'selectTypeCustom' => Helpers::checkAttr('dynamicTypeCustom', $attributes, $manifest),
-				'selectContent' => $content,
-			])
+			'selectName' => Helpers::checkAttr('dynamicName', $attributes, $manifest),
+			'selectTracking' => Helpers::checkAttr('dynamicTracking', $attributes, $manifest),
+			'selectFieldLabel' => Helpers::checkAttr('dynamicFieldLabel', $attributes, $manifest),
+			'selectIsMultiple' => Helpers::checkAttr('dynamicIsMultiple', $attributes, $manifest),
+			'selectIsRequired' => Helpers::checkAttr('dynamicIsRequired', $attributes, $manifest),
+			'selectTypeCustom' => Helpers::checkAttr('dynamicTypeCustom', $attributes, $manifest),
+			'selectContent' => $content,
+					])
 		);
 	}
 }

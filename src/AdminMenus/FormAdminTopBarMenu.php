@@ -29,38 +29,26 @@ use WP_Admin_Bar;
 class FormAdminTopBarMenu implements ServiceInterface
 {
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
+	public function __construct(protected FormListingInterface $formsListing)
 	{
-		$this->formsListing = $formsListing;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_bar_menu', [$this, 'getTopBarMenu'], 500);
+		\add_action('admin_bar_menu', $this->getTopBarMenu(...), 500);
 	}
 
 	/**
 	 * Add top bar menu form items.
 	 *
 	 * @param WP_Admin_Bar $adminBar Admin bar array.
-	 *
-	 * @return void
 	 */
 	public function getTopBarMenu(WP_Admin_Bar $adminBar): void
 	{
@@ -99,34 +87,34 @@ class FormAdminTopBarMenu implements ServiceInterface
 		// Add main menu item.
 		$adminBar->add_menu(
 			[
-				'id' => $prefix,
-				'parent' => 'eightshift',
-				'group' => '',
-				'title' => $isDevelopMode ? $titleWarning : $mainLabel,
-				'href' => GeneralHelpers::getListingPageUrl(),
-				'meta' => [
-					'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
-				]
-			],
+			'id' => $prefix,
+			'parent' => 'eightshift',
+			'group' => '',
+			'title' => $isDevelopMode ? $titleWarning : $mainLabel,
+			'href' => GeneralHelpers::getListingPageUrl(),
+			'meta' => [
+			'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
+					]
+					],
 		);
 
 		$listingPrefix = "{$prefix}-listing";
 		$adminBar->add_menu(
 			[
-				'id' => $listingPrefix,
-				'parent' => $prefix,
-				'title' => \esc_html__('View all forms', 'eightshift-forms'),
-				'href' => GeneralHelpers::getListingPageUrl(),
-			],
+			'id' => $listingPrefix,
+			'parent' => $prefix,
+			'title' => \esc_html__('View all forms', 'eightshift-forms'),
+			'href' => GeneralHelpers::getListingPageUrl(),
+					],
 		);
 
 		$adminBar->add_menu(
 			[
-				'id' => "{$prefix}-new-form",
-				'parent' => $prefix,
-				'title' => \esc_html__('Add new form', 'eightshift-forms'),
-				'href' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
-			],
+			'id' => "{$prefix}-new-form",
+			'parent' => $prefix,
+			'title' => \esc_html__('Add new form', 'eightshift-forms'),
+			'href' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
+					],
 		);
 
 		if (\current_user_can(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {

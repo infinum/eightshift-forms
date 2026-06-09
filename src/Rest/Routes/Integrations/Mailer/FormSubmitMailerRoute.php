@@ -38,8 +38,6 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -66,10 +64,8 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
@@ -100,11 +96,11 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 		return \array_merge(
 			$return,
 			[
-				AbstractBaseRoute::R_DATA => \array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional']
-				),
-			]
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
+					]
 		);
 	}
 }

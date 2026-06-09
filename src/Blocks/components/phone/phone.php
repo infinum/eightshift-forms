@@ -85,7 +85,7 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['phone']['dataset'];
 	}
 
-	$phoneSelectValue = str_replace(' ', '', strtolower($phoneSelectValue));
+	$phoneSelectValue = str_replace(' ', '', strtolower((string) $phoneSelectValue));
 
 	$phoneAttrsSelect[UtilsHelper::getStateAttribute('countryOutputType')] = esc_attr($phoneValueType);
 
@@ -95,17 +95,11 @@ if (has_filter($filterName)) {
 		$value = $option[2] ?? '';
 		$unLocalizedLabel = $option[3] ?? '';
 
-		switch ($phoneViewType) {
-			case 'number-country-code':
-				$optionLabel = "+{$value} (" . strtoupper($code) . ")";
-				break;
-			case 'number-country-label':
-				$optionLabel = "(+{$value}) {$label}";
-				break;
-			default:
-				$optionLabel = "+{$value}";
-				break;
-		}
+		$optionLabel = match ($phoneViewType) {
+									'number-country-code' => "+{$value} (" . strtoupper((string) $code) . ")",
+									'number-country-label' => "(+{$value}) {$label}",
+									default => "+{$value}",
+		};
 
 		$customProperties = [
 			UtilsHelper::getStateAttribute('countryCode') => $code,
@@ -128,8 +122,9 @@ if (has_filter($filterName)) {
 }
 
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
+$phoneOutput = FormsHelper::getTwSelectorsOutput($phoneTwSelectorsData['phone'] ?? [], 'phone');
 
-if ($phoneOutput = FormsHelper::getTwSelectorsOutput($phoneTwSelectorsData['phone'] ?? [], 'phone')) {
+if ($phoneOutput !== '' && $phoneOutput !== '0') {
 	$phoneAttrsSelect[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $phoneOutput;
 }
 

@@ -31,8 +31,10 @@ foreach ($steps as $step) { ?>
 	<?php
 	$name = $step['name'] ?? '';
 	$label = $step['label'] ?? '';
-
-	if (!$name || !$label) {
+	if (!$name) {
+		continue;
+	}
+	if (!$label) {
 		continue;
 	}
 

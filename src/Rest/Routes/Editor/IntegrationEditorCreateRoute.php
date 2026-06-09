@@ -20,6 +20,7 @@ use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use Override;
 
 /**
  * Class IntegrationEditorCreateRoute
@@ -30,13 +31,6 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = 'create';
-
-	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
 
 	/**
 	 * Create a new instance.
@@ -50,12 +44,11 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff
+		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -70,9 +63,8 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +72,6 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

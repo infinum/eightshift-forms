@@ -69,8 +69,9 @@ if ($dateIsRequired) {
 }
 
 $dateAttrs['aria-invalid'] = 'false';
+$dateOutput = FormsHelper::getTwSelectorsOutput($dateTwSelectorsData['date'] ?? [], 'date');
 
-if ($dateOutput = FormsHelper::getTwSelectorsOutput($dateTwSelectorsData['date'] ?? [], 'date')) {
+if ($dateOutput !== '' && $dateOutput !== '0') {
 	$dateAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $dateOutput;
 }
 

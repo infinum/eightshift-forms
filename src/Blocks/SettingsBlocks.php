@@ -60,32 +60,26 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY . '-global';
 
 	/**
-	 * Instance variable of countries data.
-	 *
-	 * @var CountriesInterface
-	 */
-	private CountriesInterface $countries;
-
-	/**
 	 * Create a new admin instance.
 	 *
 	 * @param CountriesInterface $countries Inject countries which holds data about for storing to countries.
 	 */
-	public function __construct(CountriesInterface $countries)
-	{
-		$this->countries = $countries;
+	public function __construct(
+		/**
+		 * Instance variable of countries data.
+		 */
+		private readonly CountriesInterface $countries
+	) {
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME, [$this, 'getCountryDatasetValue'], 9999);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME, $this->getCountryDatasetValue(...), 9999);
 	}
 
 	/**
@@ -246,7 +240,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 									],
 								],
 							],
-							...(!$disablePhoneCountryPicker ? [
+							...($disablePhoneCountryPicker ? [] : [
 								[
 									'component' => 'divider',
 									'dividerSeparator' => true,
@@ -262,7 +256,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'items'
 									),
 								],
-							] : []),
+							]),
 						],
 					],
 				],
@@ -313,7 +307,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	private function getCountrySettingsList(string $selectedValue, string $list): array
 	{
 		return \array_map(
-			function ($option) use ($selectedValue) {
+			function (array $option) use ($selectedValue) {
 				$label = $option['label'] ?? '';
 				$value = $option['value'] ?? '';
 

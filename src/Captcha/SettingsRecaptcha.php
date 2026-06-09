@@ -93,36 +93,24 @@ class SettingsRecaptcha implements ServiceInterface
 	public const SETTINGS_CAPTCHA_HIDE_BADGE_KEY = 'captcha-hide-badge';
 
 	/**
-	 * Instance variable for labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
-	public function __construct(LabelsInterface $labels)
+	public function __construct(protected LabelsInterface $labels)
 	{
-		$this->labels = $labels;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
@@ -142,13 +130,11 @@ class SettingsRecaptcha implements ServiceInterface
 			if (!$isUsed || !$siteKey || !$apiKey || !$projectIdKey) {
 				return false;
 			}
-		} else {
-			if (!$isUsed || !$siteKey || !$secretKey) {
-				return false;
-			}
+		} elseif (!$isUsed || !$siteKey || !$secretKey) {
+			return false;
 		}
 
-		return true;
+					return true;
 	}
 
 	/**
@@ -202,14 +188,7 @@ class SettingsRecaptcha implements ServiceInterface
 							'ES_GOOGLE_RECAPTCHA_SITE_KEY',
 							\__('Site key', 'eightshift-forms'),
 						),
-						...(!$isEnterprise ? [
-							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
-								Variables::getGoogleReCaptchaSecretKey(),
-								self::SETTINGS_CAPTCHA_SECRET_KEY,
-								'ES_GOOGLE_RECAPTCHA_SECRET_KEY',
-								\__('Secret key', 'eightshift-forms'),
-							),
-						] : [
+						...($isEnterprise ? [
 							SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 								Variables::getGoogleReCaptchaProjectIdKey(),
 								self::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
@@ -221,6 +200,13 @@ class SettingsRecaptcha implements ServiceInterface
 								self::SETTINGS_CAPTCHA_API_KEY,
 								'ES_GOOGLE_RECAPTCHA_API_KEY',
 								\__('API key', 'eightshift-forms'),
+							),
+						] : [
+							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
+								Variables::getGoogleReCaptchaSecretKey(),
+								self::SETTINGS_CAPTCHA_SECRET_KEY,
+								'ES_GOOGLE_RECAPTCHA_SECRET_KEY',
+								\__('Secret key', 'eightshift-forms'),
 							),
 						]),
 					],

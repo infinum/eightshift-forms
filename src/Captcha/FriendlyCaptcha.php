@@ -33,33 +33,25 @@ class FriendlyCaptcha implements CaptchaInterface
 	/**
 	 * Friendly Captcha siteverify error codes that indicate a missing or invalid API key.
 	 */
-	private const ERROR_CODES_AUTH = ['secret_missing', 'secret_invalid', 'auth_invalid', 'auth_required'];
+	private const array ERROR_CODES_AUTH = ['secret_missing', 'secret_invalid', 'auth_invalid', 'auth_required'];
 
 	/**
 	 * Friendly Captcha siteverify error codes that indicate a malformed request.
 	 */
-	private const ERROR_CODES_BAD_REQUEST = ['bad_request', 'solution_missing', 'sitekey_invalid', 'sitekey_missing'];
+	private const array ERROR_CODES_BAD_REQUEST = ['bad_request', 'solution_missing', 'sitekey_invalid', 'sitekey_missing'];
 
 	/**
 	 * Friendly Captcha siteverify error codes recoverable by a fresh widget solution.
 	 */
-	private const ERROR_CODES_TIMEOUT_OR_DUPLICATE = ['solution_timeout_or_duplicate', 'solution_expired', 'solution_already_used'];
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
+	private const array ERROR_CODES_TIMEOUT_OR_DUPLICATE = ['solution_timeout_or_duplicate', 'solution_expired', 'solution_already_used'];
 
 	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param LabelsInterface $labels Inject labels methods.
 	 */
-	public function __construct(LabelsInterface $labels)
+	public function __construct(protected LabelsInterface $labels)
 	{
-		$this->labels = $labels;
 	}
 
 	/**
@@ -92,7 +84,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			'token' => $token,
 		];
 
-		if (!$token) {
+		if ($token === '' || $token === '0') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaBadRequest'),
@@ -232,8 +224,6 @@ class FriendlyCaptcha implements CaptchaInterface
 
 	/**
 	 * Get the selected endpoint value.
-	 *
-	 * @return string
 	 */
 	public static function getEndpoint(): string
 	{
@@ -242,8 +232,6 @@ class FriendlyCaptcha implements CaptchaInterface
 
 	/**
 	 * Get the siteverify URL for the selected endpoint.
-	 *
-	 * @return string
 	 */
 	public static function getEndpointUrl(): string
 	{

@@ -80,44 +80,24 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	public const SETTINGS_CLEARBIT_CRON_KEY = 'clearbit-cron';
 
 	/**
-	 * Instance variable for Clearbit data.
-	 *
-	 * @var ClearbitClientInterface
-	 */
-	protected $clearbitClient;
-
-	/**
-	 * Instance variable for Hubspot data.
-	 *
-	 * @var HubspotClientInterface
-	 */
-	protected $hubspotClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(
-		ClearbitClientInterface $clearbitClient,
-		HubspotClientInterface $hubspotClient
-	) {
-		$this->clearbitClient = $clearbitClient;
-		$this->hubspotClient = $hubspotClient;
+	public function __construct(protected ClearbitClientInterface $clearbitClient, protected HubspotClientInterface $hubspotClient)
+	{
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -125,39 +105,23 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
-
-		$use = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
-
-		if (!$use) {
-			return false;
-		}
-
-		return true;
+					return SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY);
-
-		if (!$isUsed || !$apiKey) {
-			return false;
-		}
-
-		return true;
+					return $isUsed && $apiKey;
 	}
 
 	/**
@@ -255,14 +219,12 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 									'checkboxesIsRequired' => true,
 									'checkboxesContent' => \array_map(
-										function ($item) {
-											return [
+										fn(string $item): array => [
 												'component' => 'checkbox',
 												'checkboxLabel' => $item,
 												'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 												'checkboxValue' => $item,
-											];
-										},
+											],
 										$this->clearbitClient->getParams()
 									),
 								],
@@ -344,7 +306,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 
 		$clearbitMapValue = SettingsHelpers::getOptionValueGroup($key);
 
-		if (!$clearbitAvailableKeys) {
+		if ($clearbitAvailableKeys === []) {
 			return [];
 		}
 
@@ -370,7 +332,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 					'layoutWithBg' => false,
 				],
 				...\array_map(
-					static function ($item) use ($clearbitMapValue, $properties) {
+					static function ($item) use ($clearbitMapValue, $properties): array {
 						$selectedValue = $clearbitMapValue[$item] ?? '';
 						return [
 							'component' => 'layout',
@@ -382,20 +344,18 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'introTitle' => $item,
 									'introTitleType' => 'small',
 								],
-								$properties ? [
+								$properties !== [] ? [
 									'component' => 'select',
 									'selectName' => $item,
 									'selectFieldHideLabel' => true,
 									'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
 									'selectContent' => \array_map(
-										static function ($option) use ($selectedValue) {
-											return [
+										static fn($option): array => [
 												'component' => 'select-option',
 												'selectOptionLabel' => $option,
 												'selectOptionValue' => $option,
 												'selectOptionIsSelected' => $selectedValue === $option,
-											];
-										},
+											],
 										$properties
 									),
 								] : [],

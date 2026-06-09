@@ -18,6 +18,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class GeolocationCountriesRoute
@@ -32,13 +33,6 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'geolocation-countries';
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var GeolocationInterface
-	 */
-	private $geolocation;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +44,14 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		GeolocationInterface $geolocation
+		/**
+		 * Instance variable of ClientInterface data.
+		 */
+		private readonly GeolocationInterface $geolocation
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->geolocation = $geolocation;
 	}
 
 	/**
@@ -70,9 +66,8 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +75,6 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -113,7 +106,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 	{
 		$countries = $this->geolocation->getCountriesList();
 
-		if (!$countries) {
+		if ($countries === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationCountriesMissing'),

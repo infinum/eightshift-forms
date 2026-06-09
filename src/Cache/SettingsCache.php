@@ -43,12 +43,10 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
 	}
 
 	/**
@@ -61,7 +59,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		$outputIntegrations = \array_values(\array_filter(\array_map(
-			function ($key, $value) {
+			function (int|string $key, int $value) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
@@ -116,7 +114,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					],
 				]
 			],
-			...($outputIntegrations ? [
+			...($outputIntegrations !== [] ? [
 				[
 					'component' => 'intro',
 					'introTitle' => \__('Integration cache', 'eightshift-forms'),

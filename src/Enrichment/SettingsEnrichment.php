@@ -76,47 +76,34 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY = 'enrichment-prefill-expiration-time';
 
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
+	public function __construct(
+		/**
+		 * Instance variable of enrichment data.
+		 */
+		protected EnrichmentInterface $enrichment
+	) {
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY)) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY);
 	}
 
 	/**
@@ -204,8 +191,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'layoutWithBg' => false,
 							],
 							...\array_map(
-								function ($item) {
-									return [
+								fn($item): array => [
 										'component' => 'layout',
 										'layoutType' => 'layout-grid-half',
 										'layoutWithBg' => false,
@@ -222,8 +208,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 												'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 											],
 										],
-									];
-								},
+									],
 								$enrichment['settingsFields'] ?? []
 							)
 						],

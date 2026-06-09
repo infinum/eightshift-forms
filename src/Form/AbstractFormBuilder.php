@@ -66,8 +66,6 @@ abstract class AbstractFormBuilder
 	 *
 	 * @param array<int, array<string, mixed>> $formItems Form array.
 	 * @param array<string, array<string, string>|string> $formAdditionalProps Additional attributes for the form component.
-	 *
-	 * @return string
 	 */
 	public function buildSettingsForm(array $formItems, array $formAdditionalProps = []): string
 	{
@@ -77,9 +75,9 @@ abstract class AbstractFormBuilder
 		$formContent .= Helpers::render(
 			'submit',
 			Helpers::props('submit', [
-				'additionalClass' => 'es-submit--global',
-				'submitValue' => \__('Save changes', 'eightshift-forms'),
-			]),
+			'additionalClass' => 'es-submit--global',
+			'submitValue' => \__('Save changes', 'eightshift-forms'),
+					]),
 			'components',
 			true
 		);
@@ -95,12 +93,10 @@ abstract class AbstractFormBuilder
 	 * Build components from array of items.
 	 *
 	 * @param array<string, mixed> $attributes Array of form components.
-	 *
-	 * @return string
 	 */
 	protected function buildComponent(array $attributes): string
 	{
-		if (!$attributes) {
+		if ($attributes === []) {
 			return '';
 		}
 
@@ -109,19 +105,13 @@ abstract class AbstractFormBuilder
 
 		// Check children components for specific components.
 		if (
-			$component === 'checkboxes' ||
-			$component === 'select' ||
-			$component === 'radios' ||
-			$component === 'group' ||
-			$component === 'layout' ||
-			$component === 'tabs' ||
-			$component === 'cardInline'
+			\in_array($component, ['checkboxes', 'select', 'radios', 'group', 'layout', 'tabs', 'cardInline'], true)
 		) {
 			$output = '';
 
 			$nestedKeys = \array_flip(self::NESTED_KEYS);
 
-			foreach ($nestedKeys as $nestedKey => $value) {
+			foreach (\array_keys($nestedKeys) as $nestedKey) {
 				if (isset($attributes[$nestedKey])) {
 					// Loop children and do the same on top level.
 					foreach ($attributes[$nestedKey] as $item) {
@@ -204,8 +194,6 @@ abstract class AbstractFormBuilder
 	 * @param array<int, array<string, mixed>> $formItems Form array.
 	 * @param array<string, bool|int|string> $formAdditionalProps Additional attributes for form component.
 	 * @param string $formContent For adding additional form components after every form.
-	 *
-	 * @return string
 	 */
 	private function getFormBuilder(array $formItems, array $formAdditionalProps = [], string $formContent = ''): string
 	{
@@ -217,17 +205,17 @@ abstract class AbstractFormBuilder
 		}
 
 		// Append additional form components.
-		if (!empty($formContent)) {
+		if ($formContent !== '' && $formContent !== '0') {
 			$form .= $formContent;
 		}
 
 		// Populate form props.
 		$formProps = [
-			'formContent' => $form,
+		'formContent' => $form,
 		];
 
 		// Add additional form props.
-		if ($formAdditionalProps) {
+		if ($formAdditionalProps !== []) {
 			$formProps = \array_merge($formProps, $formAdditionalProps);
 		}
 

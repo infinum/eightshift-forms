@@ -30,31 +30,21 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	public const FILTER_FORM_FIELDS_NAME = 'es_greenhouse_form_fields_filter';
 
 	/**
-	 * Instance variable for Greenhouse data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 */
-	public function __construct(ClientInterface $greenhouseClient)
+	public function __construct(protected ClientInterface $greenhouseClient)
 	{
-		$this->greenhouseClient = $greenhouseClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -78,13 +68,13 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Get fields.
 		$item = $this->greenhouseClient->getItem($itemId);
 
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -105,7 +95,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	{
 		$output = [];
 
-		if (!$data) {
+		if ($data === []) {
 			return $output;
 		}
 
@@ -117,7 +107,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			$fields = $item['fields'] ?? [];
 			$label = $item['label'] ?? '';
 			$description = $item['description'] ?? '';
-			$isRequired = isset($item['required']) ? (bool) $item['required'] : false;
+			$isRequired = isset($item['required']) && (bool) $item['required'];
 
 			foreach ($fields as $field) {
 				$type = $field['type'] ?? '';
@@ -127,9 +117,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				// In GH select and check box is the same, addes some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
-						switch ($name) {
-							case 'phone':
-								$output[] = [
+						$output[] = match ($name) {
+																									'phone' => [
 									'component' => 'phone',
 									'phoneName' => $name,
 									'phoneTracking' => $name,
@@ -141,40 +130,35 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 										$isRequired ? 'phoneIsRequired' : '',
 										'phoneIsNumber',
 									]),
-								];
-								break;
-							case 'email':
-								$output[] = [
-									'component' => 'input',
-									'inputName' => $name,
-									'inputTracking' => $name,
-									'inputFieldLabel' => $label,
-									'inputMeta' => $description,
-									'inputType' => 'email',
-									'inputIsRequired' => $isRequired,
-									'inputIsEmail' => true,
-									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-										$isRequired ? 'inputIsRequired' : '',
-										'inputType',
-										'inputIsEmail',
-									]),
-								];
-								break;
-							default:
-								$output[] = [
-									'component' => 'input',
-									'inputName' => $name,
-									'inputTracking' => $name,
-									'inputFieldLabel' => $label,
-									'inputMeta' => $description,
-									'inputType' => 'text',
-									'inputIsRequired' => $isRequired,
-									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-										$isRequired ? 'inputIsRequired' : '',
-									]),
-								];
-								break;
-						}
+																									],
+																									'email' => [
+																									'component' => 'input',
+																									'inputName' => $name,
+																									'inputTracking' => $name,
+																									'inputFieldLabel' => $label,
+																									'inputMeta' => $description,
+																									'inputType' => 'email',
+																									'inputIsRequired' => $isRequired,
+																									'inputIsEmail' => true,
+																									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+																									$isRequired ? 'inputIsRequired' : '',
+																									'inputType',
+																									'inputIsEmail',
+																									]),
+																									],
+																									default => [
+																									'component' => 'input',
+																									'inputName' => $name,
+																									'inputTracking' => $name,
+																									'inputFieldLabel' => $label,
+																									'inputMeta' => $description,
+																									'inputType' => 'text',
+																									'inputIsRequired' => $isRequired,
+																									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+																									$isRequired ? 'inputIsRequired' : '',
+																									]),
+																									],
+						};
 						break;
 					case 'input_file':
 						$maxFileSize = SettingsHelpers::getOptionValueWithFallback(SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsGreenhouse::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT);
@@ -249,16 +233,14 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectFieldLabel' => $label,
 								'selectIsRequired' => $isRequired,
 								'selectContent' => \array_map(
-									function ($selectOption) {
-										return [
+									fn(array $selectOption): array => [
 											'component' => 'select-option',
 											'selectOptionLabel' => $selectOption['label'],
 											'selectOptionValue' => $selectOption['value'],
 											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
 												'selectOptionValue',
 											], false),
-										];
-									},
+										],
 									$values
 								),
 								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
@@ -315,7 +297,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+									return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

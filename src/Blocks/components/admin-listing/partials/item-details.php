@@ -36,7 +36,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			$subtitle = [];
 
 			if ($postType) {
-				$subtitle[] = ($postType === 'wp_block' ? __('Patterns', 'eightshift-forms') : ucfirst($postType));
+				$subtitle[] = ($postType === 'wp_block' ? __('Patterns', 'eightshift-forms') : ucfirst((string) $postType));
 			}
 
 			if ($status !== 'publish') {

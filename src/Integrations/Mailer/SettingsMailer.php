@@ -131,15 +131,13 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, [$this, 'isSettingsConfirmationValid'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $this->isSettingsConfirmationValid(...), 10, 2);
 	}
 
 	/**
@@ -147,8 +145,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -162,12 +158,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 		$to = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
-
-		if (!$isUsed || !$name || !$email || !$to || !$subject || !$template) {
-			return false;
-		}
-
-		return true;
+					return !(!$isUsed || !$name || !$email || !$to || !$subject || !$template);
 	}
 
 	/**
@@ -175,8 +166,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsConfirmationValid(bool $output, string $formId): bool
 	{
@@ -190,28 +179,15 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 		$email = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
 		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
-
-		if (!$isUsed || !$name || !$email || !$subject || !$template || !$emailField) {
-			return false;
-		}
-
-		return true;
+					return !(!$isUsed || !$name || !$email || !$subject || !$template || !$emailField);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
 	}
 
 	/**
@@ -447,14 +423,12 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 										'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
 										'selectContent' => \array_map(
-											static function ($option) use ($emailField) {
-												return [
+											static fn($option): array => [
 													'component' => 'select-option',
 													'selectOptionLabel' => $option,
 													'selectOptionValue' => $option,
 													'selectOptionIsSelected' => $emailField === $option,
-												];
-											},
+												],
 											$fieldNames
 										),
 									],
@@ -557,8 +531,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Provide additional markdown copy to help.
-	 *
-	 * @return string
 	 */
 	private function getContentHelpOutput(): string
 	{

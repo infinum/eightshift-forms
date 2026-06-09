@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Jira
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Jira;
 
 use EightshiftForms\Integrations\ClientMappingInterface;
@@ -35,8 +37,6 @@ interface JiraClientInterface extends ClientMappingInterface
 
 	/**
 	 * Return base output url prefix.
-	 *
-	 * @return string
 	 */
 	public function getBaseUrlOutputPrefix(): string;
 
@@ -51,8 +51,6 @@ interface JiraClientInterface extends ClientMappingInterface
 
 	/**
 	 * Use self-hosted or cloud version.
-	 *
-	 * @return bool
 	 */
 	public function isSelfHosted(): bool;
 }

@@ -39,8 +39,6 @@ class LocationsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -74,14 +72,10 @@ class LocationsRoute extends AbstractSimpleFormSubmit
 		$id = $params['id'] ?? '';
 		$usageType = $params['type'] ?? '';
 
-		switch ($usageType) {
-			case Result::POST_TYPE_SLUG:
-				$errorMsg = $this->getLabels()->getLabel('locationsResultOutputError');
-				break;
-			default:
-				$errorMsg = $this->getLabels()->getLabel('locationsFormError');
-				break;
-		}
+		$errorMsg = match ($usageType) {
+									Result::POST_TYPE_SLUG => $this->getLabels()->getLabel('locationsResultOutputError'),
+									default => $this->getLabels()->getLabel('locationsFormError'),
+		};
 
 		$type = GeneralHelpers::getFormTypeById($id);
 

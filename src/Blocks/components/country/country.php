@@ -67,8 +67,9 @@ if ($countryIsRequired) {
 }
 
 $countryAttrs['aria-invalid'] = 'false';
+$countryOutput = FormsHelper::getTwSelectorsOutput($countryTwSelectorsData['country'] ?? [], 'country');
 
-if ($countryOutput = FormsHelper::getTwSelectorsOutput($countryTwSelectorsData['country'] ?? [], 'country')) {
+if ($countryOutput !== '' && $countryOutput !== '0') {
 	$countryAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $countryOutput;
 }
 
@@ -107,7 +108,7 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['country']['dataset'];
 	}
 
-	$countryValue = array_flip(explode(',', str_replace(' ', '', strtolower($countryValue))));
+	$countryValue = array_flip(explode(',', str_replace(' ', '', strtolower((string) $countryValue))));
 
 	$countryAttrs[UtilsHelper::getStateAttribute('countryOutputType')] = esc_attr($countryValueType);
 

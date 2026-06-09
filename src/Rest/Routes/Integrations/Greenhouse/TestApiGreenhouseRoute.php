@@ -32,13 +32,6 @@ class TestApiGreenhouseRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsGreenhouse::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Greenhouse data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiGreenhouseRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $greenhouseClient
+		protected ClientInterface $greenhouseClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->greenhouseClient = $greenhouseClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiGreenhouseRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

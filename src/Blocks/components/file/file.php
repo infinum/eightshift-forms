@@ -49,8 +49,8 @@ $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
 $customFile = '';
 
-$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eightshift-forms');
-$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eightshift-forms');
+$infoText = empty($fileCustomInfoText) ? __('Drag and drop files here', 'eightshift-forms') : $fileCustomInfoText;
+$infoButton = empty($fileCustomInfoButtonText) ? __('Add files', 'eightshift-forms') : $fileCustomInfoButtonText;
 
 $infoTextContent = '';
 if ($fileCustomInfoTextUse) {

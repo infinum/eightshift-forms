@@ -27,6 +27,7 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use Override;
 
 /**
  * Class FormSubmitMomentsRoute
@@ -37,20 +38,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsMoments::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Instance variable for Moments data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $momentsClient;
-
-	/**
-	 * Instance variable for Moments events data.
-	 *
-	 * @var MomentsEventsInterface
-	 */
-	protected $momentsEvents;
 
 	/**
 	 * Create a new instance that injects classes
@@ -71,8 +58,8 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $momentsClient,
-		MomentsEventsInterface $momentsEvents
+		protected ClientInterface $momentsClient,
+		protected MomentsEventsInterface $momentsEvents
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -80,8 +67,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->momentsClient = $momentsClient;
-		$this->momentsEvents = $momentsEvents;
 	}
 
 	/**
@@ -96,8 +81,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -128,10 +111,8 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -171,9 +152,8 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
 	{
 		$this->sendEvent($formDetails);
@@ -183,8 +163,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 * Send event to Moments if needed.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return void
 	 */
 	private function sendEvent(array $formDetails): void
 	{

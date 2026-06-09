@@ -19,28 +19,24 @@ class Link implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_shortcode('esFormsLink', [$this, 'callback']);
+		\add_shortcode('esFormsLink', $this->callback(...));
 	}
 
 	/**
 	 * Shortcode callback
 	 *
 	 * @param array<string, mixed> $atts Attributes passed to the shortcode.
-	 *
-	 * @return string
 	 */
 	public function callback(array $atts): string
 	{
 		$params = \shortcode_atts(
 			[
-				'url' => '',
-				'label' => '',
-			],
+			'url' => '',
+			'label' => '',
+					],
 			$atts
 		);
 

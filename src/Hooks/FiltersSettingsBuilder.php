@@ -82,12 +82,10 @@ class FiltersSettingsBuilder implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(Config::FILTER_SETTINGS_DATA, [$this, 'getSettingsFiltersData']);
+		\add_filter(Config::FILTER_SETTINGS_DATA, $this->getSettingsFiltersData(...));
 	}
 
 	/**
@@ -678,7 +676,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 		// Populate additional items from filters, used for add-ons.
 		$filterName = HooksHelpers::getFilterName(['admin', 'settings', 'data']);
 		if (\has_filter($filterName)) {
-			$data = \apply_filters($filterName, $data);
+									return \apply_filters($filterName, $data);
 		}
 
 		return $data;

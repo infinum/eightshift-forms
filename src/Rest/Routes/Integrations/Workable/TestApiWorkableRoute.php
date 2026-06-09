@@ -32,13 +32,6 @@ class TestApiWorkableRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsWorkable::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Workable data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $workableClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiWorkableRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $workableClient
+		protected ClientInterface $workableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->workableClient = $workableClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiWorkableRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

@@ -30,10 +30,8 @@ class GreenhouseClient implements ClientInterface
 {
 	/**
 	 * Return Greenhouse base url.
-	 *
-	 * @var string
 	 */
-	private const BASE_URL = 'https://boards-api.greenhouse.io/v1/';
+	private const string BASE_URL = 'https://boards-api.greenhouse.io/v1/';
 
 	/**
 	 * Transient cache name for items.
@@ -71,7 +69,7 @@ class GreenhouseClient implements ClientInterface
 					$output[$id] = [
 						'id' => (string) $id,
 						'title' => $item['title'] ?? '',
-						'locations' => \explode(', ', $item['location']['name']),
+						'locations' => \explode(', ', (string) $item['location']['name']),
 						'fields' => [],
 						'updatedAt' => $item['updated_at'],
 					];
@@ -180,14 +178,10 @@ class GreenhouseClient implements ClientInterface
 
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		if (!$response) {
-			$response = [
+		$response = $response ? \json_decode($response, true) : [
 				'status' => 408,
 				'error' => 'timeout',
 			];
-		} else {
-			$response = \json_decode($response, true);
-		}
 
 		// Structure response details.
 		$details = ApiHelpers::getIntegrationApiResponseDetails(
@@ -220,19 +214,15 @@ class GreenhouseClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error'] ?? '';
 
-		switch ($msg) {
-			case 'Bad Request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR,
+									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 
@@ -251,9 +241,9 @@ class GreenhouseClient implements ClientInterface
 		// Validate req fields.
 		\preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
-		if ($matchesReq) {
+		if ($matchesReq !== []) {
 			$key = $matchesReq[0][2] ?: '';
-			if ($key) {
+			if ($key !== '' && $key !== '0') {
 				$keys = \explode(',', $key);
 
 				foreach ($keys as $inner) {
@@ -262,11 +252,11 @@ class GreenhouseClient implements ClientInterface
 			}
 		}
 
-		if (\strpos($msg, 'Uploaded resume has an unsupported file type.') !== false) {
+		if (\str_contains((string) $msg, 'Uploaded resume has an unsupported file type.')) {
 			$output['resume'] = 'validationGreenhouseAcceptMime';
 		}
 
-		if (\strpos($msg, 'Uploaded cover letter has an unsupported file type') !== false) {
+		if (\str_contains((string) $msg, 'Uploaded cover letter has an unsupported file type')) {
 			$output['cover_letter'] = 'validationGreenhouseAcceptMime';
 		}
 
@@ -403,8 +393,10 @@ class GreenhouseClient implements ClientInterface
 		foreach ($files as $items) {
 			$name = $items['name'] ?? '';
 			$value = $items['value'] ?? [];
-
-			if (!$name || !$value) {
+			if (!$name) {
+				continue;
+			}
+			if (!$value) {
 				continue;
 			}
 
@@ -418,8 +410,6 @@ class GreenhouseClient implements ClientInterface
 
 	/**
 	 * Return Board Token from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getBoardToken(): string
 	{
@@ -428,8 +418,6 @@ class GreenhouseClient implements ClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

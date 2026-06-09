@@ -19,12 +19,10 @@ class Media implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter('mime_types', [$this, 'enableMimeTypes']);
+		\add_filter('mime_types', $this->enableMimeTypes(...));
 	}
 
 	/**

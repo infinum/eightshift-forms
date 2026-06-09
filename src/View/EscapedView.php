@@ -21,7 +21,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('wp_kses_allowed_html', [$this, 'setCustomWpksesPostTags'], 99999, 2);
+		\add_filter('wp_kses_allowed_html', $this->setCustomWpksesPostTags(...), 99999, 2);
 	}
 
 	/**

@@ -64,7 +64,7 @@ class ValidationPatterns
 	public static function getValidationPatternsEditor(): array
 	{
 		return \array_map(
-			static function ($item) {
+			static function (array $item): array {
 				$label = $item['label'] ?? '';
 
 				// Output label as value for enum.
@@ -88,9 +88,7 @@ class ValidationPatterns
 	{
 		$patterns = \array_filter(
 			static::getValidationPatterns(),
-			static function ($item) use ($pattern) {
-				return $item['label'] === $pattern;
-			}
+			static fn(array $item): bool => $item['label'] === $pattern
 		);
 
 		$patterns = \reset($patterns);
@@ -123,8 +121,13 @@ class ValidationPatterns
 		if ($userPatterns) {
 			foreach ($userPatterns as $pattern) {
 				$pattern = \explode(' : ', $pattern);
-
-				if (!isset($pattern[0]) || !isset($pattern[1]) || !isset($pattern[2])) {
+				if (!isset($pattern[0])) {
+					continue;
+				}
+				if (!isset($pattern[1])) {
+					continue;
+				}
+				if (!isset($pattern[2])) {
 					continue;
 				};
 

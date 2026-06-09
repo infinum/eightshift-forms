@@ -63,8 +63,9 @@ if ($selectIsMultiple) {
 		$selectAttrs[UtilsHelper::getStateAttribute('selectMaxCount')] = esc_attr($selectMaxCount);
 	}
 }
+$selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [], 'select');
 
-if ($selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [], 'select')) {
+if ($selectOutput !== '' && $selectOutput !== '0') {
 	$selectAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $selectOutput;
 }
 

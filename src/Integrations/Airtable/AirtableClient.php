@@ -28,10 +28,8 @@ class AirtableClient implements AirtableClientInterface
 {
 	/**
 	 * Return Airtable base url.
-	 *
-	 * @var string
 	 */
-	private const BASE_URL = 'https://api.airtable.com/v0/';
+	private const string BASE_URL = 'https://api.airtable.com/v0/';
 
 	/**
 	 * Transient cache name for items.
@@ -98,7 +96,7 @@ class AirtableClient implements AirtableClientInterface
 		$output = $this->getItems();
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['items'])) {
+		if ($output === [] || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['items'])) {
 			$fields = $this->getAirtableListFields($itemId);
 
 			$tables = $fields['tables'] ?? [];
@@ -135,11 +133,11 @@ class AirtableClient implements AirtableClientInterface
 	{
 		$output = $this->getItems();
 
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['records']) || empty($output[$itemId]['records'][$listId])) {
+		if ($output === [] || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['records']) || empty($output[$itemId]['records'][$listId])) {
 			$fields = $this->getAirtableListRecords($itemId, $listId);
 
 			$output[$itemId]['records'][$listId] = \array_map(
-				static function ($item) {
+				static function (array $item): array {
 					$fields = $item['fields'] ?? [];
 
 					return [
@@ -189,7 +187,7 @@ class AirtableClient implements AirtableClientInterface
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
 
-		$itemIdExploded = \explode(Config::DELIMITER, $itemId);
+		$itemIdExploded = \explode(Config::DELIMITER, (string) $itemId);
 
 		$itemIdReal = $itemIdExploded[0] ?? '';
 		$itemInnerIdReal = $itemIdExploded[1] ?? '';
@@ -233,27 +231,19 @@ class AirtableClient implements AirtableClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error']['type'] ?? '';
 
-		switch ($msg) {
-			case 'NOT_FOUND':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_NOT_FOUND_ERROR;
-			case 'INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR;
-			case 'INVALID_PERMISSIONS':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_ERROR;
-			case 'INVALID_REQUEST_UNKNOWN':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR;
-			case 'INVALID_VALUE_FOR_COLUMN':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+									'NOT_FOUND' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_NOT_FOUND_ERROR,
+									'INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR,
+									'INVALID_PERMISSIONS' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_ERROR,
+									'INVALID_REQUEST_UNKNOWN' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR,
+									'INVALID_VALUE_FOR_COLUMN' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR,
+									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -263,12 +253,10 @@ class AirtableClient implements AirtableClientInterface
 	 */
 	private function getHeaders(): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'Authorization' => "Bearer {$this->getApiKey()}",
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -320,7 +308,7 @@ class AirtableClient implements AirtableClientInterface
 	{
 		$url = self::BASE_URL . "{$baseId}/{$listId}";
 
-		if ($offset) {
+		if ($offset !== '' && $offset !== '0') {
 			$url .= "?offset={$offset}";
 		}
 
@@ -348,7 +336,7 @@ class AirtableClient implements AirtableClientInterface
 
 			// If we have more that 100 records, we need to fetch them all.
 			if ($offset) {
-				$data = \array_merge($data, $this->getAirtableListRecords($baseId, $listId, $offset));
+													return \array_merge($data, $this->getAirtableListRecords($baseId, $listId, $offset));
 			}
 
 			return $data;
@@ -419,22 +407,17 @@ class AirtableClient implements AirtableClientInterface
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
 			$name = $param['name'] ?? '';
-
-			if (!$value || !$name) {
+			if (!$value) {
 				continue;
 			}
-
-			switch ($param['typeCustom'] ?? '') {
-				case 'singleCheckbox':
-					$value = \filter_var(($value[0] ?? ''), \FILTER_VALIDATE_BOOLEAN);
-					break;
-				case 'number':
-					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
-					break;
-				default:
-					$value = $value;
-					break;
+			if (!$name) {
+				continue;
 			}
+												$value = match ($param['typeCustom'] ?? '') {
+													'singleCheckbox' => \filter_var(($value[0] ?? ''), \FILTER_VALIDATE_BOOLEAN),
+													'number' => \filter_var($value, \FILTER_VALIDATE_FLOAT),
+													default => $value,
+												};
 
 			$output[$name] = $value;
 		}
@@ -444,8 +427,6 @@ class AirtableClient implements AirtableClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

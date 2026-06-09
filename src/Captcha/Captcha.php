@@ -19,29 +19,21 @@ namespace EightshiftForms\Captcha;
 class Captcha implements CaptchaInterface
 {
 	/**
-	 * Google reCAPTCHA provider.
-	 *
-	 * @var Recaptcha
-	 */
-	private Recaptcha $recaptcha;
-
-	/**
-	 * Friendly Captcha provider.
-	 *
-	 * @var FriendlyCaptcha
-	 */
-	private FriendlyCaptcha $friendlyCaptcha;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param Recaptcha $recaptcha Google reCAPTCHA provider.
 	 * @param FriendlyCaptcha $friendlyCaptcha Friendly Captcha provider.
 	 */
-	public function __construct(Recaptcha $recaptcha, FriendlyCaptcha $friendlyCaptcha)
-	{
-		$this->recaptcha = $recaptcha;
-		$this->friendlyCaptcha = $friendlyCaptcha;
+	public function __construct(
+		/**
+		 * Google reCAPTCHA provider.
+		 */
+		private readonly Recaptcha $recaptcha,
+		/**
+		 * Friendly Captcha provider.
+		 */
+		private readonly FriendlyCaptcha $friendlyCaptcha
+	) {
 	}
 
 	/**
@@ -56,11 +48,9 @@ class Captcha implements CaptchaInterface
 	 */
 	public function check(string $token, string $action, bool $isEnterprise, array $formDetails = []): array
 	{
-		switch (SettingsCaptcha::getActiveProvider()) {
-			case SettingsCaptcha::PROVIDER_FRIENDLY:
-				return $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails);
-			default:
-				return $this->recaptcha->check($token, $action, $isEnterprise, $formDetails);
-		}
+		return match (SettingsCaptcha::getActiveProvider()) {
+									SettingsCaptcha::PROVIDER_FRIENDLY => $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails),
+									default => $this->recaptcha->check($token, $action, $isEnterprise, $formDetails),
+		};
 	}
 }

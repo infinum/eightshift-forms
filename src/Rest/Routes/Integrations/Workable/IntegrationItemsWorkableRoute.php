@@ -20,19 +20,13 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class IntegrationItemsWorkableRoute
  */
 class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable for Workable data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $workableClient;
-
 	/**
 	 * Route slug.
 	 */
@@ -60,19 +54,17 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $workableClient
+		protected ClientInterface $workableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->workableClient = $workableClient;
 	}
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +72,6 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -126,7 +116,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 
 		$items = $this->workableClient->getItems();
 
-		if (!$items) {
+		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
@@ -139,7 +129,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 		}
 
 		$items = \array_filter(\array_values(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$id = $item['id'] ?? '';
 
 				if ($id) {

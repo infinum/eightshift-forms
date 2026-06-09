@@ -32,26 +32,16 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 	public const JOB_NAME = 'es_forms_entries_auto_delete';
 
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
+	public function __construct(protected FormListingInterface $formsListing)
 	{
-		$this->formsListing = $formsListing;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
@@ -59,15 +49,13 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 			return;
 		}
 
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_filter('cron_schedules', $this->addJobToSchedule(...)); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**
 	 * Check if job is set and add it if not.
-	 *
-	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -99,13 +87,11 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
-	 *
-	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
 		$forms = $this->formsListing->getFormsList([
-			'post_type' => Forms::POST_TYPE_SLUG,
+		'post_type' => Forms::POST_TYPE_SLUG,
 		]);
 
 		foreach ($forms as $form) {

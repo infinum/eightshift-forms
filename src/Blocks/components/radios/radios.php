@@ -26,19 +26,17 @@ $radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manif
 $radiosId = $radiosName . '-' . Helpers::getUnique();
 
 // Add internal counter name key.
-$radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
-	return 'name="' . $radiosName . '"';
-}, $radiosContent);
+$radiosContent = (string) preg_replace_callback('/name=""/', fn(): string => 'name="' . $radiosName . '"', (string) $radiosContent);
 
 // Add internal counter id key.
 $indexId = 0;
-$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId) {
+$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId): string {
 	return 'id="' . $radiosId . '[' . $indexId++ . ']"';
 }, $radiosContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId) {
+$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId): string {
 	return 'for="' . $radiosId . '[' . $indexLabel++ . ']"';
 }, $radiosContent);
 

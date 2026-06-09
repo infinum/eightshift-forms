@@ -20,20 +20,6 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 final class BadRequestException extends Exception implements GeneralExceptionInterface
 {
 	/**
-	 * Internal data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $data = [];
-
-	/**
-	 * Internal debug data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $debug = [];
-
-	/**
 	 * Throws error if request is malformed.
 	 *
 	 * @param string $message Message to show.
@@ -43,12 +29,16 @@ final class BadRequestException extends Exception implements GeneralExceptionInt
 	 */
 	public function __construct(
 		string $message,
-		array $debug = [],
-		array $data = [],
+		/**
+		 * Internal debug data.
+		 */
+		private readonly array $debug = [],
+		/**
+		 * Internal data.
+		 */
+		private readonly array $data = [],
 		int $code = AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 	) {
-		$this->data = $data;
-		$this->debug = $debug;
 		parent::__construct($message, $code);
 	}
 

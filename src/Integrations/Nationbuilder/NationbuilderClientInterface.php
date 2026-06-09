@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Nationbuilder
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftForms\Integrations\ClientMappingInterface;

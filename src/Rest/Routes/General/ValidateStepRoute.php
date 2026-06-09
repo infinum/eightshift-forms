@@ -17,6 +17,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use Override;
 
 /**
  * Class ValidateStepRoute
@@ -40,9 +41,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Detect what type of route it is.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function routeGetType(): string
 	{
 		return self::ROUTE_TYPE_STEP_VALIDATION;
@@ -50,8 +50,6 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -60,9 +58,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route should check captcha.
-	 *
-	 * @return boolean
 	 */
+	#[Override]
 	protected function shouldCheckCaptcha(): bool
 	{
 		return false;
@@ -70,9 +67,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route should check security.
-	 *
-	 * @return boolean
 	 */
+	#[Override]
 	protected function shouldCheckSecurity(): bool
 	{
 		return false;
@@ -80,9 +76,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route should check enrichment.
-	 *
-	 * @return boolean
 	 */
+	#[Override]
 	protected function shouldCheckEnrichment(): bool
 	{
 		return false;
@@ -90,9 +85,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route should check country.
-	 *
-	 * @return boolean
 	 */
+	#[Override]
 	protected function shouldCheckCountry(): bool
 	{
 		return false;
@@ -121,10 +115,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @throws BadRequestException If validation steps are missing.
-	 *
-	 * @return mixed
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$currentStep = $formDetails[Config::FD_API_STEPS]['current'] ?? '';
 
@@ -195,8 +187,19 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 				$flowConditions = $flow[2] ?? [];
 				$flowProgressBarItems = $flow[3] ?? 0;
 				$flowDisableNextButton = $flow[4] ?? false;
-
-				if (!$flowNext || !$flowCurrent || !$flowConditions) {
+				if ($flowNext === '') {
+					continue;
+				}
+				if ($flowNext === '0') {
+					continue;
+				}
+				if ($flowCurrent === '') {
+					continue;
+				}
+				if ($flowCurrent === '0') {
+					continue;
+				}
+				if (!$flowConditions) {
 					continue;
 				}
 
@@ -212,7 +215,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			}
 
 			// If nothing is valid go to normal next step.
-			if (!$nextStep) {
+			if ($nextStep === '' || $nextStep === '0') {
 				$nextStep = $this->getNextStepRegular($steps, $currentStep);
 			}
 		} else {
@@ -240,16 +243,12 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<int, string> $steps Available steps.
 	 * @param string $currentStep Current step ID.
-	 *
-	 * @return string
 	 */
 	private function getNextStepRegular(array $steps, string $currentStep): string
 	{
 		// Make sure all keys are strings.
 		$keys = \array_filter(\array_values(\array_map(
-			static function ($value) {
-				return \strval($value);
-			},
+			\strval(...),
 			\array_keys($steps)
 		)));
 
@@ -261,8 +260,6 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<int, mixed> $flowConditions Flow conditions that we need to check.
 	 * @param array<string, mixed> $params Params array.
-	 *
-	 * @return boolean
 	 */
 	private function checkFlowConditions(array $flowConditions, array $params): bool
 	{
@@ -277,8 +274,10 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 				$name = $condition[0] ?? '';
 				$operator = $condition[1] ?? '';
 				$value = $condition[2] ?? '';
-
-				if (!$name || !$operator) {
+				if (!$name) {
+					continue;
+				}
+				if (!$operator) {
 					continue;
 				}
 
@@ -301,10 +300,6 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			}
 		}
 
-		return \array_reduce($output, function ($carry, $validItem) {
-			return $carry || (bool) \array_reduce($validItem, function ($subCarry, $item) {
-				return $subCarry && (bool) $item;
-			}, true);
-		}, false);
+		return \array_reduce($output, fn(false $carry, array $validItem): bool => $carry || \array_reduce($validItem, fn(true $subCarry, $item): bool => $subCarry && (bool) $item, true), false);
 	}
 }

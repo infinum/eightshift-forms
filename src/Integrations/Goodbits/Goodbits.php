@@ -29,31 +29,21 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public const FILTER_FORM_FIELDS_NAME = 'es_goodbits_form_fields_filter';
 
 	/**
-	 * Instance variable for Goodbits data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $goodbitsClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
 	 */
-	public function __construct(ClientInterface $goodbitsClient)
+	public function __construct(protected ClientInterface $goodbitsClient)
 	{
-		$this->goodbitsClient = $goodbitsClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -77,13 +67,13 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Get fields.
 		$item = $this->goodbitsClient->getItem($itemId);
 
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($formId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -147,7 +137,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+									return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

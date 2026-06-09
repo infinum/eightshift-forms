@@ -29,10 +29,8 @@ class MailerliteClient implements ClientInterface
 {
 	/**
 	 * Return Mailerlite base url.
-	 *
-	 * @var string
 	 */
-	private const BASE_URL = 'https://api.mailerlite.com/api/v2/';
+	private const string BASE_URL = 'https://api.mailerlite.com/api/v2/';
 
 	/**
 	 * Transient cache name for items.
@@ -192,21 +190,16 @@ class MailerliteClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error']['message'] ?? '';
 
-		switch ($msg) {
-			case 'Bad Request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR;
-			case 'Unauthorized':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR,
+									'Unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
+									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -224,8 +217,6 @@ class MailerliteClient implements ClientInterface
 
 		switch ($msg) {
 			case 'Invalid email address':
-				$output['email'] = 'validationEmail';
-				break;
 			case 'Email temporarily blocked':
 				$output['email'] = 'validationEmail';
 				break;
@@ -241,12 +232,10 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getHeaders(): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'X-MailerLite-ApiKey' => $this->getApiKey(),
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -344,8 +333,6 @@ class MailerliteClient implements ClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

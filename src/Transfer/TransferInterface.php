@@ -49,8 +49,6 @@ interface TransferInterface
 	 *
 	 * @param string $upload Upload file.
 	 * @param bool $override Override existing form.
-	 *
-	 * @return boolean
 	 */
 	public function getImport(string $upload, bool $override): bool;
 
@@ -59,8 +57,6 @@ interface TransferInterface
 	 *
 	 * @param array<int, array<string, mixed>> $form Forms export details.
 	 * @param bool $override Override existing form.
-	 *
-	 * @return boolean
 	 */
 	public function getImportByFormArray(array $form, bool $override): bool;
 }

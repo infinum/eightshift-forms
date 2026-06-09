@@ -40,8 +40,6 @@ class ExportRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -74,7 +72,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 	 */
 	protected function submitAction(array $params): array
 	{
-		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
+		$ids = isset($params['ids']) ? \json_decode((string) $params['ids'], true) : [];
 
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
@@ -87,19 +85,13 @@ class ExportRoute extends AbstractSimpleFormSubmit
 			// phpcs:enable
 		}
 
-		switch ($params['type']) {
-			case 'entry':
-				$output = $this->getEntryOutput($ids);
-				break;
-			case 'activity-log':
-				$output = $this->getActivityLogOutput($ids);
-				break;
-			default:
-				$output = [];
-				break;
-		}
+		$output = match ($params['type']) {
+									'entry' => $this->getEntryOutput($ids),
+									'activity-log' => $this->getActivityLogOutput($ids),
+									default => [],
+		};
 
-		if (!$output) {
+		if ($output === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('exportDataEmpty'),
@@ -135,7 +127,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		foreach ($ids as $id) {
 			$entry = EntriesHelper::getEntry((string) $id);
 
-			if (!$entry) {
+			if ($entry === []) {
 				continue;
 			}
 
@@ -157,9 +149,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 						$outputInner[$key] = \implode(Config::DELIMITER, $value);
 					} else {
 						$outputItems = \array_map(
-							function ($value, $key) {
-								return "{$key}={$value}";
-							},
+							fn($value, int|string $key): string => "{$key}={$value}",
 							$value,
 							\array_keys($value)
 						);
@@ -190,7 +180,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		foreach ($ids as $id) {
 			$activityLog = ActivityLogHelper::getActivityLog((string) $id);
 
-			if (!$activityLog) {
+			if ($activityLog === []) {
 				continue;
 			}
 

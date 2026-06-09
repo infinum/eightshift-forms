@@ -33,13 +33,6 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 	public const JOB_NAME = 'es_forms_nationbuilder_queue';
 
 	/**
-	 * Instance variable for NationbuilderClientInterface data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
-
-	/**
 	 * Instance variable of MailerInterface data.
 	 *
 	 * @var MailerInterface
@@ -54,16 +47,13 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function __construct(
 		MailerInterface $mailer,
-		NationbuilderClientInterface $nationbuilderClient
+		protected NationbuilderClientInterface $nationbuilderClient
 	) {
 		$this->mailer = $mailer;
-		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
@@ -71,15 +61,13 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 			return;
 		}
 
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_filter('cron_schedules', $this->addJobToSchedule(...)); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**
 	 * Check if job is set and add it if not.
-	 *
-	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -111,10 +99,8 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
-	 *
-	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
 		$use = \apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		$jobs = SettingsHelpers::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);

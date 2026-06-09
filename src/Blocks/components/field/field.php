@@ -72,9 +72,7 @@ if (has_filter($filterName)) {
 
 if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	$fieldStyleOutput = array_map(
-		static function ($item) use ($componentClass) {
-			return Helpers::bem($componentClass, '', $item);
-		},
+		static fn(string $item): string => Helpers::bem($componentClass, '', $item),
 		$fieldStyle
 	);
 }

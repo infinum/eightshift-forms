@@ -101,7 +101,7 @@ if ($formConditionalTags) {
 	$rawConditionalTagData = $formConditionalTags;
 
 	if (str_contains($formConditionalTags, 'subItems')) {
-		$rawConditionalTagData = wp_json_encode(array_map(fn($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
+		$rawConditionalTagData = wp_json_encode(array_map(fn(array $item): array => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
 	}
 
 	$formAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);

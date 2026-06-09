@@ -20,20 +20,6 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 final class ValidationFailedException extends Exception implements GeneralExceptionInterface
 {
 	/**
-	 * Internal data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $data = [];
-
-	/**
-	 * Internal debug data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $debug = [];
-
-	/**
 	 * Throws error if validation failed.
 	 *
 	 * @param string $message Message to show.
@@ -43,12 +29,16 @@ final class ValidationFailedException extends Exception implements GeneralExcept
 	 */
 	public function __construct(
 		string $message,
-		array $debug = [],
-		array $data = [],
+		/**
+		 * Internal debug data.
+		 */
+		private readonly array $debug = [],
+		/**
+		 * Internal data.
+		 */
+		private readonly array $data = [],
 		int $code = AbstractRoute::API_RESPONSE_CODE_UNPROCESSABLE_ENTITY,
 	) {
-		$this->data = $data;
-		$this->debug = $debug;
 		parent::__construct($message, $code);
 	}
 
