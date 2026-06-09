@@ -29,20 +29,6 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 ?>
 
 <div class="esf-main-container esf:css-reset esf:flex esf:flex-row esf:gap-30 esf:-ml-20 esf:p-40 esf:bg-white esf:min-h-screen es:font-sans es:css-reset">
-	<?php if ($adminSettingsNotice) { ?>
-		<div class="esf:flex esf:flex-col esf:gap-16">
-			<?php
-			echo Helpers::render(
-				'notice',
-				[
-					'noticeContent' => $adminSettingsNotice,
-				],
-				'components',
-				true
-			);
-			?>
-		</div>
-	<?php } ?>
 	<div class="esf:flex esf:max-w-120 esf:w-full esf:flex-col esf:gap-24 esf:sticky esf:self-start">
 		<?php
 		echo Helpers::render('button', [
@@ -89,6 +75,21 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			<?php } ?>
 		</div>
 		<div class="esf:h-full esf:max-w-xl esf:px-5 esf:pb-5">
+			<?php if ($adminSettingsNotice) { ?>
+				<div class="esf:mb-15">
+					<?php
+					echo Helpers::render(
+						'notice',
+						[
+							'noticeContent' => $adminSettingsNotice,
+						],
+						'components',
+						true
+					);
+					?>
+				</div>
+			<?php } ?>
+
 			<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?>
 		</div>

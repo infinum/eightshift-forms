@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88ff875fc7690c0d5bc635b8a605bb42",
+    "content-hash": "0d20a2e59511e7d46e622c2de4213ab2",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -64,16 +64,16 @@
         },
         {
             "name": "infinum/eightshift-libs",
-            "version": "13.0.0",
+            "version": "13.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "5803e6989a397e89c0750370dd37628fa7c1b591"
+                "reference": "b6813538498c8fd22ac9fbe4c8a98286b4ad3a71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/5803e6989a397e89c0750370dd37628fa7c1b591",
-                "reference": "5803e6989a397e89c0750370dd37628fa7c1b591",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/b6813538498c8fd22ac9fbe4c8a98286b4ad3a71",
+                "reference": "b6813538498c8fd22ac9fbe4c8a98286b4ad3a71",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2026-05-29T09:17:53+00:00"
+            "time": "2026-06-09T14:34:34+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -1197,12 +1197,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b000295a5fd02609ee7ad31d084cfa904af8a69a"
+                "reference": "2f3bb19d3f2665d75f6bd3277835897094b86f77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b000295a5fd02609ee7ad31d084cfa904af8a69a",
-                "reference": "b000295a5fd02609ee7ad31d084cfa904af8a69a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2f3bb19d3f2665d75f6bd3277835897094b86f77",
+                "reference": "2f3bb19d3f2665d75f6bd3277835897094b86f77",
                 "shasum": ""
             },
             "conflict": {
@@ -1592,7 +1592,7 @@
                 "inter-mediator/inter-mediator": "==5.5",
                 "intercom/intercom-php": "==5.0.2",
                 "invoiceninja/invoiceninja": "<5.13.4",
-                "ipl/web": "<=0.13",
+                "ipl/web": "<=0.10.2|>=0.11,<=0.13",
                 "islandora/crayfish": "<4.1",
                 "islandora/islandora": ">=2,<2.4.1",
                 "ivankristianto/phpwhois": "<=4.3",
@@ -1833,7 +1833,7 @@
                 "phpoffice/common": "<0.2.9",
                 "phpoffice/math": "<=0.2",
                 "phpoffice/phpexcel": "<=1.8.2",
-                "phpoffice/phpspreadsheet": "<=1.30.3|>=2,<=2.1.15|>=2.2,<=2.4.4|>=3,<=3.10.4|>=4,<=5.6",
+                "phpoffice/phpspreadsheet": "<=1.30.4|>=2,<=2.1.15|>=2.2,<=2.4.4|>=3,<=3.10.4|>=4,<=5.6",
                 "phppgadmin/phppgadmin": "<=7.13",
                 "phpseclib/phpseclib": "<=2.0.53|>=3,<=3.0.51",
                 "phpservermon/phpservermon": "<3.6",
@@ -1859,6 +1859,7 @@
                 "pocketmine/bedrock-protocol": "<8.0.2",
                 "pocketmine/pocketmine-mp": "<5.42.1",
                 "pocketmine/raklib": ">=0.14,<0.14.6|>=0.15,<0.15.1",
+                "poweradmin/poweradmin": "<4.2.4|>=4.3,<4.3.3",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/blockreassurance": "<=5.1.3",
@@ -1928,7 +1929,7 @@
                 "shopware/core": "<6.6.10.18-dev|>=6.7,<6.7.10.1-dev",
                 "shopware/platform": "<6.6.10.18-dev|>=6.7,<6.7.10.1-dev",
                 "shopware/production": "<=6.3.5.2",
-                "shopware/shopware": "<=5.7.17|>=6.4.6,<6.6.10.10-dev|>=6.7,<6.7.6.1-dev",
+                "shopware/shopware": "<=6.3.5.2|>=6.4.6,<6.6.10.10-dev|>=6.7,<6.7.6.1-dev",
                 "shopware/storefront": "<6.6.10.10-dev|>=6.7,<6.7.5.1-dev",
                 "shopxo/shopxo": "<=6.4",
                 "showdoc/showdoc": "<3.8.1",
@@ -2281,7 +2282,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-05T20:39:10+00:00"
+            "time": "2026-06-09T11:06:21+00:00"
         },
         {
             "name": "slevomat/coding-standard",

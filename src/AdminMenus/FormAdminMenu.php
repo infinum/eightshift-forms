@@ -378,7 +378,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
 					Helpers::render('intro', [
-						'highlightedContentTitle' => \__('Location list is empty', 'eightshift-forms'),
+						'introTitle' => \__('Location list is empty', 'eightshift-forms'),
 						'introSubtitle' => \__('Your form is not assigned to any location.', 'eightshift-forms'),
 						'introIcon' => 'emptyStateLocations',
 						'introType' => 'highlighted',

@@ -79,7 +79,7 @@ final class SettingsOutputHelpers
 	 *
 	 * @param string $type Settings/Integration type.
 	 *
-	 * @return array<string, list<array<string, list<array<string, string>>|string>>|string>
+	 * @return array<int, array<string, list<array<string, list<array<string, string>>|string>>|string>>
 	 */
 	public static function getNoValidGlobalConfig(string $type): array
 	{
@@ -90,25 +90,27 @@ final class SettingsOutputHelpers
 		}
 
 		return [
-			'component' => 'layout',
-			'layoutContent' => [
-				[
-					'component' => 'intro',
-					'introTitle' => \__('Some config required', 'eightshift-forms'),
-					// translators: %s will be replaced with the integration name.
-					'introSubtitle' => \sprintf(\__('Before using %s you need to configure it in global settings.', 'eightshift-forms'), $title),
-					'introIcon' => 'tools',
-					'introType' => 'highlighted',
-					'introActions' => [
-						[
-							'component' => 'button',
-							'buttonLabel' => \__('Go to global settings', 'eightshift-forms'),
-							'buttonVariant' => 'primaryOutline',
-							'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($type),
+			[
+				'component' => 'layout',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Some config required', 'eightshift-forms'),
+						// translators: %s will be replaced with the integration name.
+						'introSubtitle' => \sprintf(\__('Before using %s you need to configure it in global settings.', 'eightshift-forms'), $title),
+						'introIcon' => 'tools',
+						'introType' => 'highlighted',
+						'introActions' => [
+							[
+								'component' => 'button',
+								'buttonLabel' => \__('Go to global settings', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($type),
+							],
 						],
 					],
 				],
-			],
+			]
 		];
 	}
 

@@ -63,10 +63,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public function register(): void
 	{
 		// Editor only script.
-		\add_action('enqueue_block_editor_assets', $this->enqueueBlockEditorScript(...));
+		\add_action('enqueue_block_assets', $this->enqueueBlockEditorScript(...));
 
 		// Editor only style.
-		\add_action('enqueue_block_editor_assets', $this->enqueueBlockEditorStyle(...), 50);
+		\add_action('enqueue_block_assets', $this->enqueueBlockEditorStyle(...), 50);
 
 		// Frontend only style.
 		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendStyleMandatory(...), 49);
@@ -102,6 +102,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	#[Override]
 	public function enqueueBlockEditorStyle(): void
 	{
+		if (!\is_admin()) {
+			return;
+		}
+
 		$handle = $this->getBlockEditorStyleHandle();
 
 		\wp_register_style(
