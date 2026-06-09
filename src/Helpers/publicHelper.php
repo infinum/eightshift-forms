@@ -32,10 +32,8 @@ function esFormsGetFormIdByName(string $formId): string
  * Decrypt method.
  *
  * @param string $value Value used.
- *
- * @return string|bool
  */
-function esFormsDecryptor(string $value)
+function esFormsDecryptor(string $value): string|false
 {
 	return EncryptionHelpers::decryptor($value);
 }
