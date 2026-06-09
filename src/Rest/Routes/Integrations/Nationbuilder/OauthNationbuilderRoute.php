@@ -29,9 +29,7 @@ class OauthNationbuilderRoute extends AbstractOauth
 	 *
 	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 */
-	public function __construct(protected OauthInterface $oauthNationbuilder)
-	{
-	}
+	public function __construct(protected OauthInterface $oauthNationbuilder) {} // phpcs:ignore
 
 	/**
 	 * Get the base url of the route

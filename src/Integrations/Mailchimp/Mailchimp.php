@@ -34,9 +34,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	 *
 	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 */
-	public function __construct(protected MailchimpClientInterface $mailchimpClient)
-	{
-	}
+	public function __construct(protected MailchimpClientInterface $mailchimpClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -260,13 +258,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
 							fn($radio): array => [
-									'component' => 'radio',
-									'radioLabel' => $radio,
-									'radioValue' => $radio,
-									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-										'radioValue',
-									], false),
-								],
+								'component' => 'radio',
+								'radioLabel' => $radio,
+								'radioValue' => $radio,
+								'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+									'radioValue',
+								], false),
+							],
 							$choices
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -284,13 +282,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectContent' => \array_values(
 							\array_map(
 								fn($option): array => [
-										'component' => 'select-option',
-										'selectOptionLabel' => $option,
-										'selectOptionValue' => $option,
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									],
+									'component' => 'select-option',
+									'selectOptionLabel' => $option,
+									'selectOptionValue' => $option,
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$choices
 							),
 						),
@@ -321,7 +319,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

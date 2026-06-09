@@ -30,7 +30,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @param SettingsBuilderInterface $settings Settings builder data for injecting the form.
 	 */
-	public function __construct(protected SettingsBuilderInterface $settings) {}
+	public function __construct(protected SettingsBuilderInterface $settings) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks

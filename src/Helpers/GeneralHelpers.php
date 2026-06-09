@@ -104,9 +104,9 @@ final class GeneralHelpers
 		$page = isset($_GET['page']) ? \sanitize_text_field(\wp_unslash($_GET['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$pages = \array_flip([
-		Config::SLUG_ADMIN,
-		Config::SLUG_ADMIN_SETTINGS,
-		Config::SLUG_ADMIN_SETTINGS_GLOBAL,
+			Config::SLUG_ADMIN,
+			Config::SLUG_ADMIN_SETTINGS,
+			Config::SLUG_ADMIN_SETTINGS_GLOBAL,
 		]);
 
 		return isset($pages[$page]) && \is_admin();
@@ -402,10 +402,10 @@ final class GeneralHelpers
 	public static function getEmailParamsField(array $params): string
 	{
 		$allowed = [
-		'email' => 0,
-		'e-mail' => 1,
-		'mail' => 2,
-		'email_address' => 3,
+			'email' => 0,
+			'e-mail' => 1,
+			'mail' => 2,
+			'email_address' => 3,
 		];
 
 		$field = \array_filter(
@@ -428,13 +428,13 @@ final class GeneralHelpers
 			$separator,
 			\array_map(
 				static function ($item) {
-						$item = \count_chars($item, 3);
+					$item = \count_chars($item, 3);
 
 					if ($item === 'Y') {
 						return $item;
 					}
 
-						return \strtolower($item);
+					return \strtolower($item);
 				},
 				\explode($separator, $date)
 			)
@@ -575,7 +575,7 @@ final class GeneralHelpers
 				if (isset($customFields[$item['name'] ?? ''])) {
 					return false;
 				}
-																return !($additional && isset($additional[$item['name'] ?? '']));
+				return !($additional && isset($additional[$item['name'] ?? '']));
 			}
 		);
 	}
@@ -601,8 +601,8 @@ final class GeneralHelpers
 	public static function getBlockLocations(string $formId, string $type): array
 	{
 		$outputString = match ($type) {
-									Config::SLUG_RESULT_POST_TYPE => "%\"resultOutputPostId\":\"{$formId}\"%",
-									default => "%\"formsFormPostId\":\"{$formId}\"%",
+			Config::SLUG_RESULT_POST_TYPE => "%\"resultOutputPostId\":\"{$formId}\"%",
+			default => "%\"formsFormPostId\":\"{$formId}\"%",
 		};
 
 		global $wpdb;

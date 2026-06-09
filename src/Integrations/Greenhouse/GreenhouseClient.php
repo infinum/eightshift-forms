@@ -179,9 +179,9 @@ class GreenhouseClient implements ClientInterface
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
 		$response = $response ? \json_decode($response, true) : [
-				'status' => 408,
-				'error' => 'timeout',
-			];
+			'status' => 408,
+			'error' => 'timeout',
+		];
 
 		// Structure response details.
 		$details = ApiHelpers::getIntegrationApiResponseDetails(
@@ -220,8 +220,8 @@ class GreenhouseClient implements ClientInterface
 		$msg = $body['error'] ?? '';
 
 		return match ($msg) {
-									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

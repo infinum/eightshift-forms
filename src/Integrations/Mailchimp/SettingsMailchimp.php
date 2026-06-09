@@ -63,9 +63,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements SettingG
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -83,7 +81,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements SettingG
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMailchimp(), self::SETTINGS_MAILCHIMP_API_KEY_KEY);
-					return $isUsed && $apiKey;
+		return $isUsed && $apiKey;
 	}
 
 	/**

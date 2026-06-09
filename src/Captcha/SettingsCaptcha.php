@@ -83,8 +83,8 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$providerFilter = self::getActiveProvider() === self::PROVIDER_FRIENDLY
-		? SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME
-		: SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME;
+			? SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME
+			: SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME;
 
 		return (bool) \apply_filters($providerFilter, false);
 	}

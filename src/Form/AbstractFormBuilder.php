@@ -75,9 +75,9 @@ abstract class AbstractFormBuilder
 		$formContent .= Helpers::render(
 			'submit',
 			Helpers::props('submit', [
-			'additionalClass' => 'es-submit--global',
-			'submitValue' => \__('Save changes', 'eightshift-forms'),
-					]),
+				'additionalClass' => 'es-submit--global',
+				'submitValue' => \__('Save changes', 'eightshift-forms'),
+			]),
 			'components',
 			true
 		);
@@ -211,7 +211,7 @@ abstract class AbstractFormBuilder
 
 		// Populate form props.
 		$formProps = [
-		'formContent' => $form,
+			'formContent' => $form,
 		];
 
 		// Add additional form props.

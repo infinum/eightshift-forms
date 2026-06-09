@@ -122,17 +122,17 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		$type = $params['type'] ?? '';
 
 		return match ($type) {
-									SettingsMigration::VERSION_2_3_GENERAL => $this->getMigration2To3General(),
-									SettingsMigration::VERSION_2_3_FORMS => $this->getMigration2To3Forms(),
-									SettingsMigration::VERSION_2_3_LOCALE => $this->getMigration2To3Locale(),
-									SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
-									// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-									default => throw new BadRequestException(
-										$this->getLabels()->getLabel('migrationTypeNotFound'),
-										[
-										AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
-										]
-									),
+			SettingsMigration::VERSION_2_3_GENERAL => $this->getMigration2To3General(),
+			SettingsMigration::VERSION_2_3_FORMS => $this->getMigration2To3Forms(),
+			SettingsMigration::VERSION_2_3_LOCALE => $this->getMigration2To3Locale(),
+			SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			default => throw new BadRequestException(
+				$this->getLabels()->getLabel('migrationTypeNotFound'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
+				]
+			),
 		};
 	}
 
@@ -246,7 +246,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			}
 
 			$type = GeneralHelpers::getFormTypeById($id);
-												// If there is nothing in the content, skip this form.
+			// If there is nothing in the content, skip this form.
 			if ($type === '') {
 				continue;
 			}

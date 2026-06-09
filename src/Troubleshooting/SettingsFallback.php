@@ -253,7 +253,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
 		$isActivityLogUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_ACTIVITY_LOG_USE_KEY, self::SETTINGS_FALLBACK_ACTIVITY_LOG_USE_KEY);
-					return $isUsed && $isActivityLogUsed;
+		return $isUsed && $isActivityLogUsed;
 	}
 
 	/**

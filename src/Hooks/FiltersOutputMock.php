@@ -287,15 +287,16 @@ final class FiltersOutputMock
 	}
 
 	// --------------------------------------------------
-				// Private helper methods
-				// --------------------------------------------------
-				/**
-				 * Wrap output date with div for styling.
-				 *
-				 * @param string $data Data to wrap.
-				 * @param bool $used If false dont wrap.
-				 * @param bool $defaultPrefix Add default copy prefix.
-				 */
+	// Private helper methods
+	// --------------------------------------------------
+
+	/**
+	 * Wrap output date with div for styling.
+	 *
+	 * @param string $data Data to wrap.
+	 * @param bool $used If false dont wrap.
+	 * @param bool $defaultPrefix Add default copy prefix.
+	 */
 	private static function getSettingsDivWrap(string $data, bool $used = false, bool $defaultPrefix = true): string
 	{
 		if (!$used) {

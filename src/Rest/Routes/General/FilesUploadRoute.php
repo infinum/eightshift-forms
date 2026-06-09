@@ -122,6 +122,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @throws ValidationFailedException If files are not valid.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

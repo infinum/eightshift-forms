@@ -32,9 +32,9 @@ final class FileSecurityDiagnostics
 		}
 
 		$candidates = [
-		'/usr/bin/qpdf',
-		'/usr/local/bin/qpdf',
-		'/opt/homebrew/bin/qpdf',
+			'/usr/bin/qpdf',
+			'/usr/local/bin/qpdf',
+			'/opt/homebrew/bin/qpdf',
 		];
 
 		foreach ($candidates as $candidate) {
@@ -56,7 +56,7 @@ final class FileSecurityDiagnostics
 		}
 
 		$disabled = \explode(',', (string) \ini_get('disable_functions'));
-					return \array_all($disabled, fn($name): bool => \trim((string) $name) !== 'proc_open');
+		return \array_all($disabled, fn($name): bool => \trim((string) $name) !== 'proc_open');
 	}
 
 	/**

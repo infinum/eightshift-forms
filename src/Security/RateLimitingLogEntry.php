@@ -105,7 +105,7 @@ class RateLimitingLogEntry
 		$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE user_token = %s AND activity_type = %s AND created_at >= %d", $table, $userToken, $activityType, $windowStart));
 
 		return \array_map(
-									// We use snake-case in the database column names.
+			// We use snake-case in the database column names.
 			static fn($result): RateLimitingLogEntry => new RateLimitingLogEntry(
 				userToken: $result->user_token,
 				activityType: $result->activity_type,
@@ -159,9 +159,9 @@ class RateLimitingLogEntry
 		$results = $wpdb->get_results($wpdb->prepare("SELECT activity_type, COUNT(*) as count FROM %i WHERE user_token = %s AND created_at >= %d GROUP BY activity_type", $table, $userToken, $windowStart));
 
 		return \array_map(static fn($result): array => [
-				'activityType' => $result->activity_type,
-				'count' => $result->count,
-			], $results);
+			'activityType' => $result->activity_type,
+			'count' => $result->count,
+		], $results);
 	}
 
 	/**

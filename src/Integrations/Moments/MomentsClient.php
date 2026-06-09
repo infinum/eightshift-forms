@@ -170,9 +170,9 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		$msg = $body['requestError']['serviceException']['messageId'] ?? '';
 
 		return match ($msg) {
-									'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR,
-									'UNAUTHORIZED' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR,
+			'UNAUTHORIZED' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 
@@ -417,7 +417,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 
 			$typeCustom = $param['typeCustom'] ?? '';
 			if ($typeCustom === 'email') {
-													$value = \strtolower((string) $value);
+				$value = \strtolower((string) $value);
 			}
 
 			$output[$name] = $value;

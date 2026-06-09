@@ -46,13 +46,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 	 *
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connection data.
 	 */
-	public function __construct(
-		/**
-		 * Instance variable for ActiveCampaign data.
-		 */
-		private readonly ActiveCampaignClientInterface $activeCampaignClient
-	) {
-	}
+	public function __construct(private readonly ActiveCampaignClientInterface $activeCampaignClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -245,14 +239,14 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'checkboxesIsRequired' => $isRequired,
 						'checkboxesContent' => \array_map(
 							fn(array $checkbox): array => [
-									'component' => 'checkbox',
-									'checkboxLabel' => $checkbox['value'],
-									'checkboxValue' => $checkbox['value'],
-									'checkboxTracking' => $name,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue'
-									], false),
-								],
+								'component' => 'checkbox',
+								'checkboxLabel' => $checkbox['value'],
+								'checkboxValue' => $checkbox['value'],
+								'checkboxTracking' => $name,
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxValue'
+								], false),
+							],
 							$options
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
@@ -269,13 +263,13 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
 							fn(array $radio): array => [
-									'component' => 'radio',
-									'radioLabel' => $radio['value'],
-									'radioValue' => $radio['value'],
-									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-										'radioValue',
-									], false),
-								],
+								'component' => 'radio',
+								'radioLabel' => $radio['value'],
+								'radioValue' => $radio['value'],
+								'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+									'radioValue',
+								], false),
+							],
 							$options
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -292,13 +286,13 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'selectIsRequired' => $isRequired,
 						'selectContent' => \array_map(
 							fn(array $option): array => [
-									'component' => 'select-option',
-									'selectOptionLabel' => $option['value'],
-									'selectOptionValue' => $option['value'],
-									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-										'selectOptionValue',
-									], false),
-								],
+								'component' => 'select-option',
+								'selectOptionLabel' => $option['value'],
+								'selectOptionValue' => $option['value'],
+								'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+									'selectOptionValue',
+								], false),
+							],
 							$options
 						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
@@ -350,7 +344,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

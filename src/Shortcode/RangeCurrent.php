@@ -40,10 +40,10 @@ class RangeCurrent implements ServiceInterface
 
 		$params = \shortcode_atts(
 			[
-			'value' => '',
-			'prefix' => '',
-			'suffix' => '',
-					],
+				'value' => '',
+				'prefix' => '',
+				'suffix' => '',
+			],
 			$atts
 		);
 

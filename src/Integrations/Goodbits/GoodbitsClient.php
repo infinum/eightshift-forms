@@ -183,9 +183,9 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		return match ($msg) {
-									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR,
-									'Invalid API Key has been submitted, please refer to your API key under your settings' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR,
+			'Invalid API Key has been submitted, please refer to your API key under your settings' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 
@@ -208,7 +208,7 @@ class GoodbitsClient implements ClientInterface
 
 		foreach ($errors as $value) {
 			if ($value === 'Email is invalid') {
-													$output['email'] = 'validationEmail';
+				$output['email'] = 'validationEmail';
 			}
 		}
 

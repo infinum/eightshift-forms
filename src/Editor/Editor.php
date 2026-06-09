@@ -38,8 +38,8 @@ class Editor implements ServiceInterface
 		$actualUrl = Helpers::getCurrentUrl();
 
 		$types = [
-		Forms::POST_TYPE_SLUG,
-		Result::POST_TYPE_SLUG,
+			Forms::POST_TYPE_SLUG,
+			Result::POST_TYPE_SLUG,
 		];
 
 		foreach ($types as $type) {

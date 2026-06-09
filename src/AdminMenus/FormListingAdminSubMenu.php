@@ -27,7 +27,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(protected FormListingInterface $formsListing) {}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks.

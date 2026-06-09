@@ -18,14 +18,15 @@ use EightshiftForms\Config\Config;
 final class SettingsHelpers
 {
 	// --------------------------------------------------
-				// Settings helper methods
-				// --------------------------------------------------
-				/**
-				 * Get settings value.
-				 *
-				 * @param string $key Key to find in db settings.
-				 * @param string $formId Form Id.
-				 */
+	// Settings helper methods
+	// --------------------------------------------------
+
+	/**
+	 * Get settings value.
+	 *
+	 * @param string $key Key to find in db settings.
+	 * @param string $formId Form Id.
+	 */
 	public static function getSettingValue(string $key, string $formId): string
 	{
 		return (string) \get_post_meta((int) $formId, self::getSettingName($key), true);
@@ -158,13 +159,13 @@ final class SettingsHelpers
 	}
 
 	// --------------------------------------------------
-				// Options helper methods
-				// --------------------------------------------------
-				/**
-				 * Get option value.
-				 *
-				 * @param string $key Providing string to append to.
-				 */
+	// Options helper methods
+	// --------------------------------------------------
+	/**
+	 * Get option value.
+	 *
+	 * @param string $key Providing string to append to.
+	 */
 	public static function getOptionValue(string $key): string
 	{
 		return (string) \get_option(self::getOptionName($key), '');
@@ -194,7 +195,7 @@ final class SettingsHelpers
 		$value = self::getOptionValue($key);
 
 		if ($value === '' || $value === '0') {
-									return $fallback;
+			return $fallback;
 		}
 
 		return $value;
@@ -349,14 +350,14 @@ final class SettingsHelpers
 	}
 
 	// --------------------------------------------------
-				// Private helper methods
-				// --------------------------------------------------
-				/**
-				 * Get saved value string saved as json array - used for textarea with : delimiter.
-				 *
-				 * @param array<string, mixed> $values Values provided from settings.
-				 * @param int $useNumber Number of items to use.
-				 */
+	// Private helper methods
+	// --------------------------------------------------
+	/**
+	 * Get saved value string saved as json array - used for textarea with : delimiter.
+	 *
+	 * @param array<string, mixed> $values Values provided from settings.
+	 * @param int $useNumber Number of items to use.
+	 */
 	private static function getSavedValueAsJson(array $values, int $useNumber = 2): string
 	{
 		$output = [];

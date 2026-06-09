@@ -34,9 +34,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param ClientInterface $workableClient Inject Workable which holds Workable connect data.
 	 */
-	public function __construct(protected ClientInterface $workableClient)
-	{
-	}
+	public function __construct(protected ClientInterface $workableClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -243,13 +241,13 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectContent' => \array_values(
 							\array_map(
 								fn(array $selectOption): array => [
-										'component' => 'select-option',
-										'selectOptionLabel' => $selectOption['body'],
-										'selectOptionValue' => $selectOption['id'],
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									],
+									'component' => 'select-option',
+									'selectOptionLabel' => $selectOption['body'],
+									'selectOptionValue' => $selectOption['id'],
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$fields
 							),
 						),
@@ -312,7 +310,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

@@ -127,9 +127,10 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 	 * @param PipedriveClientInterface $pipedriveClient Inject Pipedrive which holds Pipedrive connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected PipedriveClientInterface $pipedriveClient, protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(
+		protected PipedriveClientInterface $pipedriveClient,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -155,7 +156,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 		}
 
 		$personName = SettingsHelpers::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
-					return (bool) $personName;
+		return (bool) $personName;
 	}
 
 	/**
@@ -213,11 +214,11 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									'selectPlaceholder' => \__('Select person name field', 'eightshift-forms'),
 									'selectContent' => \array_map(
 										static fn($option): array => [
-												'component' => 'select-option',
-												'selectOptionLabel' => \ucfirst((string) $option),
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $personName === $option,
-											],
+											'component' => 'select-option',
+											'selectOptionLabel' => \ucfirst((string) $option),
+											'selectOptionValue' => $option,
+											'selectOptionIsSelected' => $personName === $option,
+										],
 										$fields
 									),
 								],
@@ -374,11 +375,11 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 											'selectPlaceholder' => \__('Select lead value name field', 'eightshift-forms'),
 											'selectContent' => \array_map(
 												static fn($option): array => [
-														'component' => 'select-option',
-														'selectOptionLabel' => \ucfirst((string) $option),
-														'selectOptionValue' => $option,
-														'selectOptionIsSelected' => $leadValue === $option,
-													],
+													'component' => 'select-option',
+													'selectOptionLabel' => \ucfirst((string) $option),
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $leadValue === $option,
+												],
 												$fields
 											),
 										],
@@ -419,7 +420,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 														'selectOptionIsSelected' => $leadLabel === $id,
 													];
 												},
-												$leadFields ?? []
+												$leadFields
 											)),
 										],
 									] : []),
@@ -463,11 +464,11 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 											'selectPlaceholder' => \__('Select organization name field', 'eightshift-forms'),
 											'selectContent' => \array_map(
 												static fn($option): array => [
-														'component' => 'select-option',
-														'selectOptionLabel' => \ucfirst((string) $option),
-														'selectOptionValue' => $option,
-														'selectOptionIsSelected' => $organization === $option,
-													],
+													'component' => 'select-option',
+													'selectOptionLabel' => \ucfirst((string) $option),
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $organization === $option,
+												],
 												$fields
 											),
 										],
@@ -488,7 +489,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY);
-					return $isUsed && $apiKey;
+		return $isUsed && $apiKey;
 	}
 
 	/**

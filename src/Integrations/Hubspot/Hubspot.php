@@ -36,9 +36,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 *
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(protected HubspotClientInterface $hubspotClient)
-	{
-	}
+	public function __construct(protected HubspotClientInterface $hubspotClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -414,15 +412,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'checkboxesContent' => \array_map(
 								fn(array $checkbox): array => [
-										'component' => 'checkbox',
-										'checkboxLabel' => $checkbox['label'],
-										'checkboxValue' => $checkbox['value'],
-										'checkboxIsChecked' => \in_array($checkbox['value'], $selectedOption, true),
-										'checkboxTracking' => $name,
-										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-											'checkboxValue',
-										], false),
-									],
+									'component' => 'checkbox',
+									'checkboxLabel' => $checkbox['label'],
+									'checkboxValue' => $checkbox['value'],
+									'checkboxIsChecked' => \in_array($checkbox['value'], $selectedOption, true),
+									'checkboxTracking' => $name,
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue',
+									], false),
+								],
 								$options
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
@@ -447,14 +445,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'radiosContent' => \array_map(
 								fn(array $radio): array => [
-										'component' => 'radio',
-										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
-										'radioLabel' => $radio['label'],
-										'radioValue' => $radio['value'],
-										'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-											'radioValue',
-										], false),
-									],
+									'component' => 'radio',
+									'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
+									'radioLabel' => $radio['label'],
+									'radioValue' => $radio['value'],
+									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioValue',
+									], false),
+								],
 								$options
 							),
 							'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -602,7 +600,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

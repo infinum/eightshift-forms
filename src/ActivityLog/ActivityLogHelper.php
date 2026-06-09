@@ -260,11 +260,11 @@ class ActivityLogHelper
 		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$tableName,
 			[
-			'id' => (int) $id,
-					],
+				'id' => (int) $id,
+			],
 			[
-					'%d',
-					]
+				'%d',
+			]
 		);
 
 		if (\is_wp_error($result)) {

@@ -61,9 +61,7 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	 *
 	 * @param LabelsInterface $labels Inject labels data.
 	 */
-	public function __construct(protected LabelsInterface $labels)
-	{
-	}
+	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks.

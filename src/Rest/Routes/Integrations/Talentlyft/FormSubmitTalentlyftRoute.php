@@ -106,6 +106,8 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If test API fails.
 	 * @throws DisabledIntegrationException If integration is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

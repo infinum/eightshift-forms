@@ -126,9 +126,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -158,7 +156,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 		$currency = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
 		$cartDesc = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
-					return !(!$selectedStoreId || !$lang || !$currency || !$mapParams || !$cartDesc);
+		return !(!$selectedStoreId || !$lang || !$currency || !$mapParams || !$cartDesc);
 	}
 
 	/**
@@ -222,11 +220,11 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 								'selectPlaceholder' => \__('Select Store ID', 'eightshift-forms'),
 								'selectContent' => \array_map(
 									static fn(array $option): array => [
-											'component' => 'select-option',
-											'selectOptionLabel' => "{$option[0]} ({$option[1]})",
-											'selectOptionValue' => $option[1],
-											'selectOptionIsSelected' => $selectedStoreId === $option[1],
-										],
+										'component' => 'select-option',
+										'selectOptionLabel' => "{$option[0]} ({$option[1]})",
+										'selectOptionValue' => $option[1],
+										'selectOptionIsSelected' => $selectedStoreId === $option[1],
+									],
 									SettingsHelpers::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY)
 								),
 							],
@@ -543,21 +541,21 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 											if ($item['type'] === 'internal-select') {
 												$options = \array_map(
 													static fn($option): array => [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														],
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
+													],
 													$item['value']
 												);
 											} else {
 												$options = \array_map(
 													static fn($option): array => [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														],
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
+													],
 													$params
 												);
 											}

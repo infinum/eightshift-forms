@@ -34,9 +34,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @param ClientInterface $greenhouseClient Inject Greenhouse which holds Greenhouse connect data.
 	 */
-	public function __construct(protected ClientInterface $greenhouseClient)
-	{
-	}
+	public function __construct(protected ClientInterface $greenhouseClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -118,46 +116,46 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				switch ($type) {
 					case 'input_text':
 						$output[] = match ($name) {
-																									'phone' => [
-									'component' => 'phone',
-									'phoneName' => $name,
-									'phoneTracking' => $name,
-									'phoneFieldLabel' => $label,
-									'phoneMeta' => $description,
-									'phoneIsRequired' => $isRequired,
-									'phoneIsNumber' => true,
-									'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
-										$isRequired ? 'phoneIsRequired' : '',
-										'phoneIsNumber',
-									]),
-																									],
-																									'email' => [
-																									'component' => 'input',
-																									'inputName' => $name,
-																									'inputTracking' => $name,
-																									'inputFieldLabel' => $label,
-																									'inputMeta' => $description,
-																									'inputType' => 'email',
-																									'inputIsRequired' => $isRequired,
-																									'inputIsEmail' => true,
-																									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-																									$isRequired ? 'inputIsRequired' : '',
-																									'inputType',
-																									'inputIsEmail',
-																									]),
-																									],
-																									default => [
-																									'component' => 'input',
-																									'inputName' => $name,
-																									'inputTracking' => $name,
-																									'inputFieldLabel' => $label,
-																									'inputMeta' => $description,
-																									'inputType' => 'text',
-																									'inputIsRequired' => $isRequired,
-																									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-																									$isRequired ? 'inputIsRequired' : '',
-																									]),
-																									],
+							'phone' => [
+								'component' => 'phone',
+								'phoneName' => $name,
+								'phoneTracking' => $name,
+								'phoneFieldLabel' => $label,
+								'phoneMeta' => $description,
+								'phoneIsRequired' => $isRequired,
+								'phoneIsNumber' => true,
+								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+									$isRequired ? 'phoneIsRequired' : '',
+									'phoneIsNumber',
+								]),
+							],
+							'email' => [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputMeta' => $description,
+								'inputType' => 'email',
+								'inputIsRequired' => $isRequired,
+								'inputIsEmail' => true,
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									$isRequired ? 'inputIsRequired' : '',
+									'inputType',
+									'inputIsEmail',
+								]),
+							],
+							default => [
+								'component' => 'input',
+								'inputName' => $name,
+								'inputTracking' => $name,
+								'inputFieldLabel' => $label,
+								'inputMeta' => $description,
+								'inputType' => 'text',
+								'inputIsRequired' => $isRequired,
+								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+									$isRequired ? 'inputIsRequired' : '',
+								]),
+							],
 						};
 						break;
 					case 'input_file':
@@ -234,13 +232,13 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 								'selectIsRequired' => $isRequired,
 								'selectContent' => \array_map(
 									fn(array $selectOption): array => [
-											'component' => 'select-option',
-											'selectOptionLabel' => $selectOption['label'],
-											'selectOptionValue' => $selectOption['value'],
-											'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-												'selectOptionValue',
-											], false),
-										],
+										'component' => 'select-option',
+										'selectOptionLabel' => $selectOption['label'],
+										'selectOptionValue' => $selectOption['value'],
+										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+											'selectOptionValue',
+										], false),
+									],
 									$values
 								),
 								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
@@ -297,7 +295,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

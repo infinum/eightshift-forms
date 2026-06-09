@@ -103,9 +103,11 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 * @param NationbuilderClientInterface $nationbuilderClient Inject Jira which holds Jira connect data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback, protected OauthInterface $oauthNationbuilder, protected NationbuilderClientInterface $nationbuilderClient)
-	{
-	}
+	public function __construct(
+		protected SettingsFallbackDataInterface $settingsFallback,
+		protected OauthInterface $oauthNationbuilder,
+		protected NationbuilderClientInterface $nationbuilderClient
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -159,22 +161,22 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 									],
 									...\array_map(
 										fn($item): array => [
-												'component' => 'select',
-												'selectName' => $item,
-												'selectFieldLabel' => \ucfirst((string) $item),
-												'selectValue' => $mapParams[$item] ?? '',
-												'selectFieldIsFiftyFiftyHorizontal' => true,
-												'selectFieldBeforeContent' => '&rarr;',
-												'selectContent' => \array_map(
-													static fn(array $option): array => [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option['title'],
-															'selectOptionValue' => $option['id'],
-															'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
-														],
-													$this->getFields()
-												),
-											],
+											'component' => 'select',
+											'selectName' => $item,
+											'selectFieldLabel' => \ucfirst((string) $item),
+											'selectValue' => $mapParams[$item] ?? '',
+											'selectFieldIsFiftyFiftyHorizontal' => true,
+											'selectFieldBeforeContent' => '&rarr;',
+											'selectContent' => \array_map(
+												static fn(array $option): array => [
+													'component' => 'select-option',
+													'selectOptionLabel' => $option['title'],
+													'selectOptionValue' => $option['id'],
+													'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
+												],
+												$this->getFields()
+											),
+										],
 										$params
 									),
 								],
@@ -192,11 +194,11 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId),
 								'selectContent' => \array_map(
 									static fn(array $option): array => [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => $option['id'] === $list,
-										],
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => $option['id'] === $list,
+									],
 									$this->nationbuilderClient->getLists()
 								),
 							],
@@ -208,11 +210,11 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId),
 								'selectContent' => \array_map(
 									static fn(array $option): array => [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => isset($tags[$option['id']]),
-										],
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => isset($tags[$option['id']]),
+									],
 									$this->nationbuilderClient->getTags()
 								),
 							]
@@ -232,7 +234,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 		$clientId = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_ID);
 		$clientSecret = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientSecretNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
 		$clientSlug = SettingsHelpers::getOptionWithConstant(Variables::getClientSlugNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
-					return !(!$isUsed || !$clientId || !$clientSecret || !$clientSlug);
+		return !(!$isUsed || !$clientId || !$clientSecret || !$clientSlug);
 	}
 
 	/**
@@ -379,9 +381,9 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	{
 		$customFields = \array_values(\array_map(
 			static fn(array $field): array => [
-					'id' => $field['id'],
-					'title' => $field['title'],
-				],
+				'id' => $field['id'],
+				'title' => $field['title'],
+			],
 			$this->nationbuilderClient->getCustomFields()
 		));
 

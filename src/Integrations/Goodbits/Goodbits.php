@@ -33,9 +33,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
 	 */
-	public function __construct(protected ClientInterface $goodbitsClient)
-	{
-	}
+	public function __construct(protected ClientInterface $goodbitsClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -137,7 +135,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

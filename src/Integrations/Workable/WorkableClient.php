@@ -203,10 +203,10 @@ class WorkableClient implements ClientInterface
 		$msg = $body['error'] ?? '';
 
 		return match ($msg) {
-									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR,
-									'position is draft or archived' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR,
-									'Filename should contain less characters' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR,
+			'position is draft or archived' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR,
+			'Filename should contain less characters' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

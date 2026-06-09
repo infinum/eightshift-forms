@@ -75,6 +75,8 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If integration is missing config.
 	 * @throws ValidationFailedException If required params are missing.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{
@@ -97,12 +99,12 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		$params = $this->prepareParams($mapParams, $formDetails[Config::FD_PARAMS], $formId);
 
 		$reqParams = [
-		'profileCode',
-		'secretKey',
-		'paymentId',
-		'amount',
+			'profileCode',
+			'secretKey',
+			'paymentId',
+			'amount',
 		];
-					$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
+		$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
@@ -141,16 +143,16 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-		AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
-		AbstractBaseRoute::R_DEBUG => [
-		AbstractBaseRoute::R_DEBUG => $formDetails,
-		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
-					],
-					AbstractBaseRoute::R_DATA => \array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional'],
-						[
-						UtilsHelper::getStateResponseOutputKey('processExternally') => [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional'],
+				[
+					UtilsHelper::getStateResponseOutputKey('processExternally') => [
 						'type' => 'GET',
 						'url' => $this->generatePaymentUrl(
 							$params['profileCode'],
@@ -164,9 +166,9 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 							$params['urlFail'],
 							$params['urlCancel']
 						),
-						],
-						]
-					),
+					],
+				]
+			),
 		];
 	}
 
@@ -222,7 +224,9 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
-		if (SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '' !== '' && SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '' !== '0') {
+		$entryIdUse = SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId);
+
+		if ($entryIdUse !== '' && $entryIdUse !== '0') {
 			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 
 			if ($entryId) {
@@ -319,9 +323,9 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 
 		return \add_query_arg(
 			[
-			'formId' => $formId,
-			'orderId' => $orderId,
-					],
+				'formId' => $formId,
+				'orderId' => $orderId,
+			],
 			$url
 		);
 	}

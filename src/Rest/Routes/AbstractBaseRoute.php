@@ -40,7 +40,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @param SecurityInterface $security Security interface.
 	 */
-	public function __construct(protected SecurityInterface $security) {}
+	public function __construct(protected SecurityInterface $security) {} // phpcs:ignore
 
 	/**
 	 * Check if the route is admin protected.

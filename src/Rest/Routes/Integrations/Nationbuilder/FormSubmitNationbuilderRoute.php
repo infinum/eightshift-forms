@@ -107,6 +107,8 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Nationbuilder is missing config.
 	 * @throws DisabledIntegrationException If Nationbuilder is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

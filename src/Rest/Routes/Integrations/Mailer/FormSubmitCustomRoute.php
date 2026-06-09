@@ -130,11 +130,11 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		$customResponse = \wp_remote_post(
 			$action,
 			[
-			'headers' => [
-			'Content-Type' => 'application/x-www-form-urlencoded',
-					],
-					'body' => \http_build_query($params),
-					]
+				'headers' => [
+					'Content-Type' => 'application/x-www-form-urlencoded',
+				],
+				'body' => \http_build_query($params),
+			]
 		);
 
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $customResponse;
@@ -174,15 +174,15 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-		AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccess', $formId),
-		AbstractBaseRoute::R_DEBUG => [
-		AbstractBaseRoute::R_DEBUG => $formDetails,
-		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS,
-					],
-					AbstractBaseRoute::R_DATA => \array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional']
-					),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
 		];
 	}
 }

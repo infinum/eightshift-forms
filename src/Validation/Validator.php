@@ -77,12 +77,8 @@ class Validator extends AbstractValidation
 	 */
 	public function __construct(
 		protected LabelsInterface $labels,
-		/**
-		 * File security scanner.
-		 */
 		protected FileSecurityScanner $fileSecurityScanner
-	) {
-	}
+	) {} // phpcs:ignore
 
 	/**
 	 * Validate params.
@@ -145,36 +141,36 @@ class Validator extends AbstractValidation
 			// Validate all files are uploaded to the server and not a external link.
 			$isFilesError = false;
 			if ($paramType === 'file' && \is_array($inputValue)) {
-													// Check if single or multiple and output error.
+				// Check if single or multiple and output error.
 				if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
 					$output[$paramKey] = $this->labels->getLabel('validationFileMaxAmount', $formId);
 					$isFilesError = true;
 				}
-													// Check if wrong upload path.
+				// Check if wrong upload path.
 				foreach ($inputValue as $value) {
 					if (UploadHelpers::isUploadError($value)) {
-							$output[$paramKey] = $this->labels->getLabel('validationFileNotLocated', $formId);
-							$isFilesError = true;
-							break;
+						$output[$paramKey] = $this->labels->getLabel('validationFileNotLocated', $formId);
+						$isFilesError = true;
+						break;
 					}
 
-						// Explode and remove empty files.
-														$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, (string) $value));
+					// Explode and remove empty files.
+					$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, (string) $value));
 					if ($fileName === []) {
 						continue;
 					}
 
-														$fileName = \array_flip($fileName);
+					$fileName = \array_flip($fileName);
 
-						// Bailout if file is ok.
+					// Bailout if file is ok.
 					if (isset($fileName[Config::TEMP_UPLOAD_DIR])) {
 						continue;
 					}
 
-						// Output error if file is not uploaded to the correct path.
-														$output[$paramKey] = $this->labels->getLabel('validationFileWrongUploadPath', $formId);
-														$isFilesError = true;
-														break;
+					// Output error if file is not uploaded to the correct path.
+					$output[$paramKey] = $this->labels->getLabel('validationFileWrongUploadPath', $formId);
+					$isFilesError = true;
+					break;
 				}
 			}
 
@@ -580,8 +576,8 @@ class Validator extends AbstractValidation
 
 			// If nested key exists do a recursive loop.
 			if (isset($nestedKeys[$name]) && isset($block["{$name}Content"])) {
-													// Do recursive loop.
-													$output = \array_merge($output, $this->flattenValidationReferenceManual($block["{$name}Content"]));
+				// Do recursive loop.
+				$output = \array_merge($output, $this->flattenValidationReferenceManual($block["{$name}Content"]));
 			} elseif (\is_array($block)) {
 				// Only output arrays of components not the actual components attribute.
 				// Output only allowed fields that are relevant for the validation.

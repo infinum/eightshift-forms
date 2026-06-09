@@ -124,6 +124,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

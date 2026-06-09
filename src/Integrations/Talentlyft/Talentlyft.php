@@ -34,9 +34,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @param ClientInterface $talentlyftClient Inject Talentlyft which holds Talentlyft connect data.
 	 */
-	public function __construct(protected ClientInterface $talentlyftClient)
-	{
-	}
+	public function __construct(protected ClientInterface $talentlyftClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -223,13 +221,13 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						$selectContent = \array_values(
 							\array_map(
 								fn(array $selectOption): array => [
-										'component' => 'select-option',
-										'selectOptionValue' => $selectOption['Body'],
-										'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									],
+									'component' => 'select-option',
+									'selectOptionValue' => $selectOption['Body'],
+									'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$fields
 							),
 						);
@@ -237,13 +235,13 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						$selectContent = \array_values(
 							\array_map(
 								fn(array $selectOption): array => [
-										'component' => 'select-option',
-										'selectOptionValue' => (string) $selectOption['Id'],
-										'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									],
+									'component' => 'select-option',
+									'selectOptionValue' => (string) $selectOption['Id'],
+									'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$fields
 							),
 						);
@@ -288,14 +286,14 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'checkboxesTypeCustom' => $internalType,
 						'checkboxesContent' => \array_map(
 							fn(array $checkbox): array => [
-									'component' => 'checkbox',
-									'checkboxValue' => (string) $checkbox['Id'],
-									'checkboxLabel' => $checkbox['DisplayName'] ?? '',
-									'checkboxTracking' => $tracking,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue',
-									], false),
-								],
+								'component' => 'checkbox',
+								'checkboxValue' => (string) $checkbox['Id'],
+								'checkboxLabel' => $checkbox['DisplayName'] ?? '',
+								'checkboxTracking' => $tracking,
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxValue',
+								], false),
+							],
 							$fields
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
@@ -314,14 +312,14 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'radiosTypeCustom' => $internalType,
 						'radiosContent' => \array_map(
 							fn(array $radio): array => [
-									'component' => 'radio',
-									'radioValue' => (string) $radio['Id'],
-									'radioLabel' => $radio['DisplayName'] ?? '',
-									'radioTracking' => $tracking,
-									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-										'radioValue',
-									], false),
-								],
+								'component' => 'radio',
+								'radioValue' => (string) $radio['Id'],
+								'radioLabel' => $radio['DisplayName'] ?? '',
+								'radioTracking' => $tracking,
+								'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+									'radioValue',
+								], false),
+							],
 							$fields
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -384,7 +382,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

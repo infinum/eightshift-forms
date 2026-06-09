@@ -71,9 +71,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
-	public function __construct(protected LabelsInterface $labels)
-	{
-	}
+	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -288,16 +286,16 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 								'introTitle' => \__('File upload security stack', 'eightshift-forms'),
 							],
 							...(\array_map(fn(array $extension): array => [
-									'component' => 'card-inline',
-									'cardInlineTitle' => $extension['title'] ?? '',
-									'cardInlineSubTitle' => $extension['subtitle'] ?? '',
-									'cardInlineRightContent' => [
-										[
-											'component' => 'status-light',
-											'statusLightType' => $extension['status'] ? 'success' : 'error',
-										],
+								'component' => 'card-inline',
+								'cardInlineTitle' => $extension['title'] ?? '',
+								'cardInlineSubTitle' => $extension['subtitle'] ?? '',
+								'cardInlineRightContent' => [
+									[
+										'component' => 'status-light',
+										'statusLightType' => $extension['status'] ? 'success' : 'error',
 									],
-								], FileSecurityDiagnostics::getExtensionStatuses())),
+								],
+							], FileSecurityDiagnostics::getExtensionStatuses())),
 						],
 					],
 					[

@@ -25,16 +25,9 @@ class Captcha implements CaptchaInterface
 	 * @param FriendlyCaptcha $friendlyCaptcha Friendly Captcha provider.
 	 */
 	public function __construct(
-		/**
-		 * Google reCAPTCHA provider.
-		 */
 		private readonly Recaptcha $recaptcha,
-		/**
-		 * Friendly Captcha provider.
-		 */
 		private readonly FriendlyCaptcha $friendlyCaptcha
-	) {
-	}
+	) {} // phpcs:ignore
 
 	/**
 	 * Delegate to the active captcha provider.
@@ -49,8 +42,8 @@ class Captcha implements CaptchaInterface
 	public function check(string $token, string $action, bool $isEnterprise, array $formDetails = []): array
 	{
 		return match (SettingsCaptcha::getActiveProvider()) {
-									SettingsCaptcha::PROVIDER_FRIENDLY => $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails),
-									default => $this->recaptcha->check($token, $action, $isEnterprise, $formDetails),
+			SettingsCaptcha::PROVIDER_FRIENDLY => $this->friendlyCaptcha->check($token, $action, $isEnterprise, $formDetails),
+			default => $this->recaptcha->check($token, $action, $isEnterprise, $formDetails),
 		};
 	}
 }

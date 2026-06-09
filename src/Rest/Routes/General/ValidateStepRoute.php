@@ -115,6 +115,8 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @throws BadRequestException If validation steps are missing.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{
@@ -300,6 +302,6 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			}
 		}
 
-		return \array_reduce($output, fn(false $carry, array $validItem): bool => $carry || \array_reduce($validItem, fn(true $subCarry, $item): bool => $subCarry && (bool) $item, true), false);
+		return \array_reduce($output, fn(bool $carry, array $validItem): bool => $carry || \array_reduce($validItem, fn(bool $subCarry, $item): bool => $subCarry && (bool) $item, true), false);
 	}
 }

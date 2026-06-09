@@ -122,7 +122,7 @@ final class FileSecurityScanner
 		if (!\is_array($denyList)) {
 			$denyList = Config::FILE_UPLOAD_DENY_EXTENSIONS;
 		}
-					return \array_any($denyList, fn($denied): bool => \is_string($denied) && \strtolower(\ltrim($denied, '.')) === $extension);
+		return \array_any($denyList, fn($denied): bool => \is_string($denied) && \strtolower(\ltrim($denied, '.')) === $extension);
 	}
 
 	/**

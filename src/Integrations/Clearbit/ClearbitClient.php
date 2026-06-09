@@ -283,9 +283,9 @@ class ClearbitClient implements ClearbitClientInterface
 		$msg = $body['error']['type'] ?? '';
 
 		return match ($msg) {
-									'auth_required' => SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR,
-									'email_invalid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'auth_required' => SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR,
+			'email_invalid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

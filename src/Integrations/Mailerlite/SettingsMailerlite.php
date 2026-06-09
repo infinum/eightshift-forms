@@ -58,9 +58,7 @@ class SettingsMailerlite extends AbstractSettingsIntegrations implements Setting
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 	/**
 	 * Register all the hooks
 	 */
@@ -77,7 +75,7 @@ class SettingsMailerlite extends AbstractSettingsIntegrations implements Setting
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILERLITE_USE_KEY, self::SETTINGS_MAILERLITE_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMailerlite(), self::SETTINGS_MAILERLITE_API_KEY_KEY);
-					return $isUsed && $apiKey;
+		return $isUsed && $apiKey;
 	}
 
 	/**

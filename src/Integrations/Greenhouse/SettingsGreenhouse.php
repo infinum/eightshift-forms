@@ -80,9 +80,7 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements Setting
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -101,7 +99,7 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements Setting
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyGreenhouse(), self::SETTINGS_GREENHOUSE_API_KEY_KEY);
 		$boardToken = (bool) SettingsHelpers::getOptionWithConstant(Variables::getBoardTokenGreenhouse(), self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
-					return !(!$isUsed || !$apiKey || !$boardToken);
+		return !(!$isUsed || !$apiKey || !$boardToken);
 	}
 
 	/**

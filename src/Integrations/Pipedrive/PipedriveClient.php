@@ -585,11 +585,11 @@ class PipedriveClient implements PipedriveClientInterface
 		$msg = $body['error'] ?? '';
 
 		return match ($msg) {
-									'Name must be given.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME,
-									'Organization name must be given.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION,
-									'Invalid organization ID provided' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID,
-									'provided dataset is not valid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Name must be given.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME,
+			'Organization name must be given.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION,
+			'Invalid organization ID provided' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID,
+			'provided dataset is not valid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 
@@ -606,7 +606,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = $url . '/?api_token=' . $this->getApiKey();
 
 		if ($params !== '' && $params !== '0') {
-									return $output . '&' . $params;
+			return $output . '&' . $params;
 		}
 
 		return $output;

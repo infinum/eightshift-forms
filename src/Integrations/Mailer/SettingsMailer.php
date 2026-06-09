@@ -158,7 +158,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 		$to = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
-					return !(!$isUsed || !$name || !$email || !$to || !$subject || !$template);
+		return !(!$isUsed || !$name || !$email || !$to || !$subject || !$template);
 	}
 
 	/**
@@ -179,7 +179,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 		$email = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
 		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
-					return !(!$isUsed || !$name || !$email || !$subject || !$template || !$emailField);
+		return !(!$isUsed || !$name || !$email || !$subject || !$template || !$emailField);
 	}
 
 	/**
@@ -424,11 +424,11 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 										'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
 										'selectContent' => \array_map(
 											static fn($option): array => [
-													'component' => 'select-option',
-													'selectOptionLabel' => $option,
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $emailField === $option,
-												],
+												'component' => 'select-option',
+												'selectOptionLabel' => $option,
+												'selectOptionValue' => $option,
+												'selectOptionIsSelected' => $emailField === $option,
+											],
 											$fieldNames
 										),
 									],

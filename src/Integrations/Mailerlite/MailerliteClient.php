@@ -196,9 +196,9 @@ class MailerliteClient implements ClientInterface
 		$msg = $body['error']['message'] ?? '';
 
 		return match ($msg) {
-									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR,
-									'Unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_BAD_REQUEST_ERROR,
+			'Unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

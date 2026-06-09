@@ -55,9 +55,9 @@ class ManifestCache extends AbstractManifestCache
 	}
 
 	/**
-				 * Get cache for geolocation
-				 */
-				#[Override]
+	 * Get cache for geolocation
+	 */
+	#[Override]
 	public function useGeolocation(): bool
 	{
 		return true;
@@ -76,13 +76,13 @@ class ManifestCache extends AbstractManifestCache
 		return \array_merge(
 			parent::getCacheBuilder(),
 			[
-			self::TYPE_FORMS => [
-			self::TLD_KEY => [
-			'path' => 'src',
-			'fileName' => "Validation{$sep}manifest.json",
-			]
-					],
+				self::TYPE_FORMS => [
+					self::TLD_KEY => [
+						'path' => 'src',
+						'fileName' => "Validation{$sep}manifest.json",
 					]
+				],
+			]
 		);
 	}
 }

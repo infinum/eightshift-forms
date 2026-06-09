@@ -33,9 +33,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(protected FormListingInterface $formsListing)
-	{
-	}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -87,34 +85,34 @@ class FormAdminTopBarMenu implements ServiceInterface
 		// Add main menu item.
 		$adminBar->add_menu(
 			[
-			'id' => $prefix,
-			'parent' => 'eightshift',
-			'group' => '',
-			'title' => $isDevelopMode ? $titleWarning : $mainLabel,
-			'href' => GeneralHelpers::getListingPageUrl(),
-			'meta' => [
-			'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
-					]
-					],
+				'id' => $prefix,
+				'parent' => 'eightshift',
+				'group' => '',
+				'title' => $isDevelopMode ? $titleWarning : $mainLabel,
+				'href' => GeneralHelpers::getListingPageUrl(),
+				'meta' => [
+					'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
+				]
+			],
 		);
 
 		$listingPrefix = "{$prefix}-listing";
 		$adminBar->add_menu(
 			[
-			'id' => $listingPrefix,
-			'parent' => $prefix,
-			'title' => \esc_html__('View all forms', 'eightshift-forms'),
-			'href' => GeneralHelpers::getListingPageUrl(),
-					],
+				'id' => $listingPrefix,
+				'parent' => $prefix,
+				'title' => \esc_html__('View all forms', 'eightshift-forms'),
+				'href' => GeneralHelpers::getListingPageUrl(),
+			],
 		);
 
 		$adminBar->add_menu(
 			[
-			'id' => "{$prefix}-new-form",
-			'parent' => $prefix,
-			'title' => \esc_html__('Add new form', 'eightshift-forms'),
-			'href' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
-					],
+				'id' => "{$prefix}-new-form",
+				'parent' => $prefix,
+				'title' => \esc_html__('Add new form', 'eightshift-forms'),
+				'href' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
+			],
 		);
 
 		if (\current_user_can(FormGlobalSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) {

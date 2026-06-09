@@ -182,7 +182,7 @@ abstract class AbstractValidation implements ValidatorInterface
 		$fileTypes = \explode(',', \strtolower($fileTypes));
 
 		if ($fileTypes !== []) {
-									return \array_unique($fileTypes);
+			return \array_unique($fileTypes);
 		}
 
 		return $fileTypes;

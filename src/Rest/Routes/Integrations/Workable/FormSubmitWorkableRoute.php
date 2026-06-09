@@ -106,6 +106,8 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Workable is missing config.
 	 * @throws DisabledIntegrationException If Workable is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

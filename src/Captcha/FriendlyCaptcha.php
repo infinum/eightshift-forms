@@ -50,9 +50,7 @@ class FriendlyCaptcha implements CaptchaInterface
 	 *
 	 * @param LabelsInterface $labels Inject labels methods.
 	 */
-	public function __construct(protected LabelsInterface $labels)
-	{
-	}
+	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Check captcha request.

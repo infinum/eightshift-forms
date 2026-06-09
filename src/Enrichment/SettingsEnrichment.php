@@ -81,13 +81,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
-	public function __construct(
-		/**
-		 * Instance variable of enrichment data.
-		 */
-		protected EnrichmentInterface $enrichment
-	) {
-	}
+	public function __construct(protected EnrichmentInterface $enrichment) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -192,23 +186,23 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							...\array_map(
 								fn($item): array => [
-										'component' => 'layout',
-										'layoutType' => 'layout-grid-half',
-										'layoutWithBg' => false,
-										'layoutContent' => [
-											[
-												'component' => 'intro',
-												'introTitle' => $item,
-												'introTitleType' => 'small',
-											],
-											[
-												'component' => 'input',
-												'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-												'inputFieldHideLabel' => true,
-												'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-											],
+									'component' => 'layout',
+									'layoutType' => 'layout-grid-half',
+									'layoutWithBg' => false,
+									'layoutContent' => [
+										[
+											'component' => 'intro',
+											'introTitle' => $item,
+											'introTitleType' => 'small',
+										],
+										[
+											'component' => 'input',
+											'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+											'inputFieldHideLabel' => true,
+											'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										],
 									],
+								],
 								$enrichment['settingsFields'] ?? []
 							)
 						],

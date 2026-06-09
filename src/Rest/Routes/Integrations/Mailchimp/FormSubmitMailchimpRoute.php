@@ -106,6 +106,8 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Mailchimp is missing config.
 	 * @throws DisabledIntegrationException If Mailchimp is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

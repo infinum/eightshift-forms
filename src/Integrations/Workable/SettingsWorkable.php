@@ -86,9 +86,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -107,7 +105,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY);
 		$subdomain = (bool) SettingsHelpers::getOptionWithConstant(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
-					return !(!$isUsed || !$apiKey || !$subdomain);
+		return !(!$isUsed || !$apiKey || !$subdomain);
 	}
 
 	/**

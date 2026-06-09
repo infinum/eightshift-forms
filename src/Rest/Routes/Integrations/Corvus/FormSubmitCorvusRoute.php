@@ -75,6 +75,8 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Corvus is missing config.
 	 * @throws ValidationFailedException If Corvus is missing required params.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{
@@ -97,15 +99,15 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		$params = $this->prepareParams($mapParams, $formDetails[Config::FD_PARAMS], $formId);
 
 		$reqParams = [
-		'store_id',
-		'amount',
-		'language',
-		'require_complete',
-		'currency',
-		'order_number',
-		'cart',
+			'store_id',
+			'amount',
+			'language',
+			'require_complete',
+			'currency',
+			'order_number',
+			'cart',
 		];
-					$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
+		$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
@@ -156,22 +158,22 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-		AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
-		AbstractBaseRoute::R_DEBUG => [
-		AbstractBaseRoute::R_DEBUG => $formDetails,
-		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS,
-					],
-					AbstractBaseRoute::R_DATA => \array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional'],
-						[
-						UtilsHelper::getStateResponseOutputKey('processExternally') => [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional'],
+				[
+					UtilsHelper::getStateResponseOutputKey('processExternally') => [
 						'type' => 'POST',
 						'url' => $this->getUrl($formId),
 						'params' => $this->setRealOrderNumber($params, $successAdditionalData, $formId),
-						],
-						]
-					),
+					],
+				]
+			),
 		];
 	}
 
@@ -244,7 +246,9 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
-		if (SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId) ?: '' !== '' && SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId) ?: '' !== '0') {
+		$entryIdUse = SettingsHelpers::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId);
+
+		if ($entryIdUse !== '' && $entryIdUse !== '0') {
 			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 
 			if ($entryId) {

@@ -73,8 +73,8 @@ class LocationsRoute extends AbstractSimpleFormSubmit
 		$usageType = $params['type'] ?? '';
 
 		$errorMsg = match ($usageType) {
-									Result::POST_TYPE_SLUG => $this->getLabels()->getLabel('locationsResultOutputError'),
-									default => $this->getLabels()->getLabel('locationsFormError'),
+			Result::POST_TYPE_SLUG => $this->getLabels()->getLabel('locationsResultOutputError'),
+			default => $this->getLabels()->getLabel('locationsFormError'),
 		};
 
 		$type = GeneralHelpers::getFormTypeById($id);

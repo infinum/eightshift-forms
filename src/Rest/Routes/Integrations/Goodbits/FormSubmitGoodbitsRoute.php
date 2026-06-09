@@ -106,6 +106,8 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Goodbits is missing config.
 	 * @throws DisabledIntegrationException If Goodbits is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

@@ -35,9 +35,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
-	public function __construct(protected AirtableClientInterface $airtableClient)
-	{
-	}
+	public function __construct(protected AirtableClientInterface $airtableClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -239,13 +237,13 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectIsMultiple' => $type === 'multipleSelects',
 						'selectContent' => \array_map(
 							fn(array $selectOption): array => [
-									'component' => 'select-option',
-									'selectOptionLabel' => $selectOption['name'],
-									'selectOptionValue' => $selectOption['id'],
-									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('selectOption', [
-										'selectOptionValue',
-									], false),
-								],
+								'component' => 'select-option',
+								'selectOptionLabel' => $selectOption['name'],
+								'selectOptionValue' => $selectOption['id'],
+								'selectOptionDisabledOptions' => $this->prepareDisabledOptions('selectOption', [
+									'selectOptionValue',
+								], false),
+							],
 							$options['choices'] ?? []
 						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
@@ -316,7 +314,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;
@@ -387,14 +385,14 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		return Helpers::render(
 			'select',
 			Helpers::props('select', [
-			'selectName' => Helpers::checkAttr('dynamicName', $attributes, $manifest),
-			'selectTracking' => Helpers::checkAttr('dynamicTracking', $attributes, $manifest),
-			'selectFieldLabel' => Helpers::checkAttr('dynamicFieldLabel', $attributes, $manifest),
-			'selectIsMultiple' => Helpers::checkAttr('dynamicIsMultiple', $attributes, $manifest),
-			'selectIsRequired' => Helpers::checkAttr('dynamicIsRequired', $attributes, $manifest),
-			'selectTypeCustom' => Helpers::checkAttr('dynamicTypeCustom', $attributes, $manifest),
-			'selectContent' => $content,
-					])
+				'selectName' => Helpers::checkAttr('dynamicName', $attributes, $manifest),
+				'selectTracking' => Helpers::checkAttr('dynamicTracking', $attributes, $manifest),
+				'selectFieldLabel' => Helpers::checkAttr('dynamicFieldLabel', $attributes, $manifest),
+				'selectIsMultiple' => Helpers::checkAttr('dynamicIsMultiple', $attributes, $manifest),
+				'selectIsRequired' => Helpers::checkAttr('dynamicIsRequired', $attributes, $manifest),
+				'selectTypeCustom' => Helpers::checkAttr('dynamicTypeCustom', $attributes, $manifest),
+				'selectContent' => $content,
+			])
 		);
 	}
 }

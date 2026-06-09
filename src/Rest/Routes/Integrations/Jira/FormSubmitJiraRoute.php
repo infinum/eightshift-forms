@@ -107,6 +107,8 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Jira is missing config.
 	 * @throws DisabledIntegrationException If Jira is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

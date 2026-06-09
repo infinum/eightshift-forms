@@ -103,7 +103,7 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 		}
 
 		$normalized = \str_replace('\\', '/', $name);
-					return \array_any(\explode('/', $normalized), fn($segment): bool => $segment === '..');
+		return \array_any(\explode('/', $normalized), fn($segment): bool => $segment === '..');
 	}
 
 	/**

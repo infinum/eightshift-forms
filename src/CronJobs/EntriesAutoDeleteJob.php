@@ -36,9 +36,7 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(protected FormListingInterface $formsListing)
-	{
-	}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -91,7 +89,7 @@ class EntriesAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 	public function getJobCallback(): void
 	{
 		$forms = $this->formsListing->getFormsList([
-		'post_type' => Forms::POST_TYPE_SLUG,
+			'post_type' => Forms::POST_TYPE_SLUG,
 		]);
 
 		foreach ($forms as $form) {

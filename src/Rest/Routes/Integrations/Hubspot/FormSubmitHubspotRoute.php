@@ -110,6 +110,8 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Hubspot is missing config.
 	 * @throws DisabledIntegrationException If Hubspot is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

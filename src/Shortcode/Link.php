@@ -34,9 +34,9 @@ class Link implements ServiceInterface
 	{
 		$params = \shortcode_atts(
 			[
-			'url' => '',
-			'label' => '',
-					],
+				'url' => '',
+				'label' => '',
+			],
 			$atts
 		);
 

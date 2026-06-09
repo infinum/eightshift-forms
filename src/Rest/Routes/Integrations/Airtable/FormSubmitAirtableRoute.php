@@ -107,6 +107,8 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If Airtable is missing config.
 	 * @throws DisabledIntegrationException If Airtable is disabled.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

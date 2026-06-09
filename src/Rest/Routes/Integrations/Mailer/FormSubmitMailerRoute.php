@@ -64,6 +64,8 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{
@@ -96,11 +98,11 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 		return \array_merge(
 			$return,
 			[
-			AbstractBaseRoute::R_DATA => \array_merge(
-				$successAdditionalData['public'],
-				$successAdditionalData['additional']
-			),
-					]
+				AbstractBaseRoute::R_DATA => \array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['additional']
+				),
+			]
 		);
 	}
 }

@@ -278,8 +278,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$response =  \wp_remote_get(
 			$url,
 			[
-			'headers' => $this->getHeaders(),
-					]
+				'headers' => $this->getHeaders(),
+			]
 		);
 
 		// Structure response details.
@@ -317,11 +317,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		// Prepare body.
 		$requestBody = [
-		'tag' => [
-		'tag' => $tag,
-		'tagType' => 'contact',
-		'description' => '',
-					],
+			'tag' => [
+				'tag' => $tag,
+				'tagType' => 'contact',
+				'description' => '',
+			],
 		];
 
 		$url = "{$this->getBaseUrl()}tags";
@@ -330,9 +330,9 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$response = \wp_remote_post(
 			$url,
 			[
-			'headers' => $this->getHeaders(),
-			'body' => \wp_json_encode($requestBody),
-					]
+				'headers' => $this->getHeaders(),
+				'body' => \wp_json_encode($requestBody),
+			]
 		);
 
 		// Structure response details.

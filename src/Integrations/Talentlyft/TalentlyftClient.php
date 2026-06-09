@@ -194,9 +194,9 @@ class TalentlyftClient implements ClientInterface
 		$msg = $body['Message'] ?? '';
 
 		return match ($msg) {
-									'An error has occurred' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR,
-									'Validation Failed' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'An error has occurred' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR,
+			'Validation Failed' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

@@ -53,15 +53,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
 	 */
 	public function __construct(
-		/**
-		 * Instance variable of enrichment data.
-		 */
 		protected EnrichmentInterface $enrichment,
-		/**
-		 * Instance variable of geolocation data.
-		 */
 		protected GeolocationInterface $geolocation
-	) {}
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -196,8 +190,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	// -----------------------------------------------------
-				// Block Frontend Mandatory only
-				// -----------------------------------------------------
+	// Block Frontend Mandatory only
+	// -----------------------------------------------------
+
 	/**
 	 * Method that returns editor and frontend style with check.
 	 */
@@ -217,8 +212,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	// -----------------------------------------------------
-				// Block Frontend only
-				// -----------------------------------------------------
+	// Block Frontend only
+	// -----------------------------------------------------
+
 	/**
 	 * Method that returns editor and frontend style with check.
 	 */

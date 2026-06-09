@@ -37,8 +37,8 @@ class ResultOutputItemPart implements ServiceInterface
 	{
 		$params = \shortcode_atts(
 			[
-			'name' => '',
-					],
+				'name' => '',
+			],
 			$atts
 		);
 
@@ -60,9 +60,9 @@ class ResultOutputItemPart implements ServiceInterface
 
 		// Used on the same page as the form and changed via JS.
 		$attrs = [
-		UtilsHelper::getStateAttribute('resultOutputPart') => $name,
-		UtilsHelper::getStateAttribute('resultOutputPartDefault') => $content,
-		'class' => UtilsHelper::getStateSelector('resultOutputPart'),
+			UtilsHelper::getStateAttribute('resultOutputPart') => $name,
+			UtilsHelper::getStateAttribute('resultOutputPartDefault') => $content,
+			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
 		];
 
 		return "<span " . \wp_kses_post(Helpers::getAttrsOutput($attrs)) . ">{$content}</span>";
@@ -100,7 +100,7 @@ class ResultOutputItemPart implements ServiceInterface
 
 		foreach ($variationData as $key => $value) {
 			if (!$key) {
-													continue;
+				continue;
 			}
 			if ($value === '') {
 				continue;

@@ -86,9 +86,9 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		}
 
 		$output = match ($params['type']) {
-									'entry' => $this->getEntryOutput($ids),
-									'activity-log' => $this->getActivityLogOutput($ids),
-									default => [],
+			'entry' => $this->getEntryOutput($ids),
+			'activity-log' => $this->getActivityLogOutput($ids),
+			default => [],
 		};
 
 		if ($output === []) {

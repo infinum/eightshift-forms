@@ -328,19 +328,19 @@ class EntriesHelper
 		$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			self::getFullTableName(),
 			[
-			'entry_value' => $output,
-					],
+				'entry_value' => $output,
+			],
 			[
-					'id' => (int) $id,
-					],
+				'id' => (int) $id,
+			],
 			[
-					'%s',
-					],
+				'%s',
+			],
 			[
-					'%d',
-					]
+				'%d',
+			]
 		);
-					return !\is_wp_error($result);
+		return !\is_wp_error($result);
 	}
 
 	/**
@@ -357,11 +357,11 @@ class EntriesHelper
 		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$tableName,
 			[
-			'id' => (int) $id,
-					],
+				'id' => (int) $id,
+			],
 			[
-					'%d',
-					]
+				'%d',
+			]
 		);
 
 		if (\is_wp_error($result)) {

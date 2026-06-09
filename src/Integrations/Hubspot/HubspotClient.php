@@ -626,7 +626,7 @@ class HubspotClient implements HubspotClientInterface
 
 		try {
 			$consentData = \json_decode((string) $consentData, true);
-		} catch (Exception) { // @phpstan-ignore-line
+		} catch (Exception) {
 			return [];
 		}
 

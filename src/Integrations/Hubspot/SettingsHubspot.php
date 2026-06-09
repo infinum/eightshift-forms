@@ -80,9 +80,10 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected HubspotClientInterface $hubspotClient, protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(
+		protected HubspotClientInterface $hubspotClient,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -101,7 +102,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY);
-					return $isUsed && $apiKey;
+		return $isUsed && $apiKey;
 	}
 
 	/**

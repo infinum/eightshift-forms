@@ -38,9 +38,11 @@ class Mailer implements MailerInterface
 	 * @param LabelsInterface $labels Labels interface.
 	 * @param SettingsFallbackDataInterface $settingsFallback Settings fallback data interface.
 	 */
-	public function __construct(protected SecurityInterface $security, protected LabelsInterface $labels, protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(
+		protected SecurityInterface $security,
+		protected LabelsInterface $labels,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Send emails method.
@@ -141,7 +143,7 @@ class Mailer implements MailerInterface
 		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
 		$headers = [
-		$this->getType()
+			$this->getType()
 		];
 
 		if (!$to && !$cc) {
@@ -547,7 +549,7 @@ class Mailer implements MailerInterface
 
 		foreach ($processedTokens as $token) {
 			if ($token === '&' || $token === '|') {
-													$currentOp = $token;
+				$currentOp = $token;
 			} elseif ($currentOp === '&') {
 				$last = \array_pop($stack) ?? false;
 				$stack[] = $last && $token;

@@ -262,8 +262,8 @@ class Transfer implements TransferInterface
 
 		// Check if form exists.
 		$exists = $this->formExists([
-		'name' => $postName,
-		'post_type' => $postType,
+			'name' => $postName,
+			'post_type' => $postType,
 		]);
 
 		if ($override) {
@@ -353,12 +353,12 @@ class Transfer implements TransferInterface
 		$args = \array_merge(
 			$args,
 			[
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'no_found_rows' => true,
-			'fields' => 'ids',
-			'numberposts' => 1,
-					]
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'no_found_rows' => true,
+				'fields' => 'ids',
+				'numberposts' => 1,
+			]
 		);
 
 		$theQuery = new WP_Query($args);

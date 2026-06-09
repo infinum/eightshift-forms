@@ -70,6 +70,8 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @throws BadRequestException If integration is missing config.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{
@@ -110,15 +112,15 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-		AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
-		AbstractBaseRoute::R_DEBUG => [
-		AbstractBaseRoute::R_DEBUG => $formDetails,
-		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
-					],
-					AbstractBaseRoute::R_DATA => \array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional']
-					),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
 		];
 	}
 }

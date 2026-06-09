@@ -106,6 +106,8 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function submitAction(array $formDetails): array
 	{

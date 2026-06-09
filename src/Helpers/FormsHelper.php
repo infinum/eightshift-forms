@@ -58,21 +58,21 @@ final class FormsHelper
 		$operatorExtended = Helpers::getSettings()['comparatorExtended'];
 
 		return match ($action) {
-									$operator['IS'] => $value === $start,
-									$operator['ISN'] => $value !== $start,
-									$operator['GT'] => \floatval($value) > \floatval($start),
-									$operator['GTE'] => \floatval($value) >= \floatval($start),
-									$operator['LT'] => \floatval($value) < \floatval($start),
-									$operator['LTE'] => \floatval($value) <= \floatval($start),
-									$operator['C'] => \str_contains($value, $start),
-									$operator['CN'] => !\str_contains($value, $start),
-									$operator['SW'] => \str_starts_with($value, $start),
-									$operator['EW'] => \str_ends_with($value, $start),
-									$operatorExtended['B'] => \floatval($value) > \floatval($start) && \floatval($value) < \floatval($end),
-									$operatorExtended['BS'] => \floatval($value) >= \floatval($start) && \floatval($value) <= \floatval($end),
-									$operatorExtended['BN'] => \floatval($value) < \floatval($start) || \floatval($value) > \floatval($end),
-									$operatorExtended['BNS'] => \floatval($value) <= \floatval($start) || \floatval($value) >= \floatval($end),
-									default => false,
+			$operator['IS'] => $value === $start,
+			$operator['ISN'] => $value !== $start,
+			$operator['GT'] => \floatval($value) > \floatval($start),
+			$operator['GTE'] => \floatval($value) >= \floatval($start),
+			$operator['LT'] => \floatval($value) < \floatval($start),
+			$operator['LTE'] => \floatval($value) <= \floatval($start),
+			$operator['C'] => \str_contains($value, $start),
+			$operator['CN'] => !\str_contains($value, $start),
+			$operator['SW'] => \str_starts_with($value, $start),
+			$operator['EW'] => \str_ends_with($value, $start),
+			$operatorExtended['B'] => \floatval($value) > \floatval($start) && \floatval($value) < \floatval($end),
+			$operatorExtended['BS'] => \floatval($value) >= \floatval($start) && \floatval($value) <= \floatval($end),
+			$operatorExtended['BN'] => \floatval($value) < \floatval($start) || \floatval($value) > \floatval($end),
+			$operatorExtended['BNS'] => \floatval($value) <= \floatval($start) || \floatval($value) >= \floatval($end),
+			default => false,
 		};
 	}
 
@@ -111,7 +111,7 @@ final class FormsHelper
 
 		foreach ($variationData as $key => $value) {
 			if (!$key) {
-													continue;
+				continue;
 			}
 			if (!isset($value)) {
 				continue;
@@ -241,43 +241,43 @@ final class FormsHelper
 	public static function getTwSelectorsOutput(array $data, string $type): string
 	{
 		$output = match ($type) {
-									'select', 'country' => [
-					'containerOuter' => $data['base'] ?? [],
-					'containerInner' => $data['parts']['select-choices-inner'] ?? [],
-					'input' => $data['parts']['select-input'] ?? [],
-					'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
-					'list' => $data['parts']['select-list'] ?? [],
-					'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
-					'listSingle' => $data['parts']['select-list-single'] ?? [],
-					'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
-					'item' => $data['parts']['select-item'] ?? [],
-					'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
-					'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
-					'itemChoice' => $data['parts']['select-item-choice'] ?? [],
-					'placeholder' => $data['parts']['select-placeholder'] ?? [],
-					'button' => $data['parts']['select-button'] ?? [],
-									],
-									'phone' => [
-									'containerOuter' => $data['parts']['select'] ?? [],
-									'containerInner' => $data['parts']['select-choices-inner'] ?? [],
-									'input' => $data['parts']['select-input'] ?? [],
-									'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
-									'list' => $data['parts']['select-list'] ?? [],
-									'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
-									'listSingle' => $data['parts']['select-list-single'] ?? [],
-									'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
-									'item' => $data['parts']['select-item'] ?? [],
-									'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
-									'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
-									'itemChoice' => $data['parts']['select-item-choice'] ?? [],
-									'placeholder' => $data['parts']['select-placeholder'] ?? [],
-									'button' => $data['parts']['select-button'] ?? [],
-									],
-									'date' => $data['parts']['picker'] ?? [],
-									default => [],
+			'select', 'country' => [
+				'containerOuter' => $data['base'] ?? [],
+				'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+				'input' => $data['parts']['select-input'] ?? [],
+				'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
+				'list' => $data['parts']['select-list'] ?? [],
+				'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
+				'listSingle' => $data['parts']['select-list-single'] ?? [],
+				'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
+				'item' => $data['parts']['select-item'] ?? [],
+				'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
+				'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
+				'itemChoice' => $data['parts']['select-item-choice'] ?? [],
+				'placeholder' => $data['parts']['select-placeholder'] ?? [],
+				'button' => $data['parts']['select-button'] ?? [],
+			],
+			'phone' => [
+				'containerOuter' => $data['parts']['select'] ?? [],
+				'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+				'input' => $data['parts']['select-input'] ?? [],
+				'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
+				'list' => $data['parts']['select-list'] ?? [],
+				'listMultiple' => $data['parts']['select-list-multiple'] ?? [],
+				'listSingle' => $data['parts']['select-list-single'] ?? [],
+				'listDropdown' => $data['parts']['select-list-dropdown'] ?? [],
+				'item' => $data['parts']['select-item'] ?? [],
+				'itemSelectable' => $data['parts']['select-item-selectable'] ?? [],
+				'itemDisabled' => $data['parts']['select-item-disabled'] ?? [],
+				'itemChoice' => $data['parts']['select-item-choice'] ?? [],
+				'placeholder' => $data['parts']['select-placeholder'] ?? [],
+				'button' => $data['parts']['select-button'] ?? [],
+			],
+			'date' => $data['parts']['picker'] ?? [],
+			default => [],
 		};
 
-					return \wp_json_encode($output);
+		return \wp_json_encode($output);
 	}
 
 	/**

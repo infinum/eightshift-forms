@@ -33,9 +33,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 	 *
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 */
-	public function __construct(protected ClientInterface $mailerliteClient)
-	{
-	}
+	public function __construct(protected ClientInterface $mailerliteClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -110,51 +108,51 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 			switch ($type) {
 				case 'text':
 					$output[] = match ($name) {
-																					'phone' => [
-								'component' => 'phone',
-								'phoneName' => $name,
-								'phoneTracking' => $name,
-								'phoneIsNumber' => true,
-								'phoneFieldHidden' => true,
-								'phoneFieldLabel' => $label,
-								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
-									'phoneIsNumber',
-								]),
-								'phoneSyncAttrsSkip' => [
-									'phoneFieldHidden',
-								],
-																					],
-																					'zip' => [
-																					'component' => 'input',
-																					'inputName' => $name,
-																					'inputTracking' => $name,
-																					'inputFieldHidden' => true,
-																					'inputFieldLabel' => $label,
-																					'inputType' => 'number',
-																					'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-																					'inputType',
-																					]),
-								'inputSyncAttrsSkip' => [
-									'inputFieldHidden',
-																					],
-																					],
-																					default => [
-																					'component' => 'input',
-																					'inputName' => $name,
-																					'inputTracking' => $name,
-																					'inputFieldLabel' => $label,
-																					'inputType' => 'text',
-																					'inputFieldHidden' => $name !== 'email',
-																					'inputIsRequired' => $name === 'email',
-																					'inputIsEmail' => $name === 'email',
-																					'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-																					$name === 'email' ? 'inputIsRequired' : '',
-																					$name === 'email' ? 'inputIsEmail' : '',
-																					]),
-								'inputSyncAttrsSkip' => [
-									'inputFieldHidden',
-																					],
-																					],
+						'phone' => [
+							'component' => 'phone',
+							'phoneName' => $name,
+							'phoneTracking' => $name,
+							'phoneIsNumber' => true,
+							'phoneFieldHidden' => true,
+							'phoneFieldLabel' => $label,
+							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+								'phoneIsNumber',
+							]),
+							'phoneSyncAttrsSkip' => [
+								'phoneFieldHidden',
+							],
+						],
+						'zip' => [
+							'component' => 'input',
+							'inputName' => $name,
+							'inputTracking' => $name,
+							'inputFieldHidden' => true,
+							'inputFieldLabel' => $label,
+							'inputType' => 'number',
+							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+								'inputType',
+							]),
+							'inputSyncAttrsSkip' => [
+								'inputFieldHidden',
+							],
+						],
+						default => [
+							'component' => 'input',
+							'inputName' => $name,
+							'inputTracking' => $name,
+							'inputFieldLabel' => $label,
+							'inputType' => 'text',
+							'inputFieldHidden' => $name !== 'email',
+							'inputIsRequired' => $name === 'email',
+							'inputIsEmail' => $name === 'email',
+							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+								$name === 'email' ? 'inputIsRequired' : '',
+								$name === 'email' ? 'inputIsEmail' : '',
+							]),
+							'inputSyncAttrsSkip' => [
+								'inputFieldHidden',
+							],
+						],
 					};
 					break;
 				case 'date':
@@ -207,7 +205,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

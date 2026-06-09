@@ -111,13 +111,13 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 
 		// Map params.
 		foreach ($map as $mapKey => $mapItem) {
-				$foundItem = FormsHelper::getParamValue($mapItem, $params);
+			$foundItem = FormsHelper::getParamValue($mapItem, $params);
 
 			if (!$foundItem) {
 				continue;
 			}
 
-				$properties[$mapKey] = $foundItem;
+			$properties[$mapKey] = $foundItem;
 		}
 
 		// Filter params.

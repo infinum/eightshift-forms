@@ -85,9 +85,10 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(protected ClearbitClientInterface $clearbitClient, protected HubspotClientInterface $hubspotClient)
-	{
-	}
+	public function __construct(
+		protected ClearbitClientInterface $clearbitClient,
+		protected HubspotClientInterface $hubspotClient
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -111,7 +112,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
-					return SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
+		return SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
 	}
 
 	/**
@@ -121,7 +122,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY);
-					return $isUsed && $apiKey;
+		return $isUsed && $apiKey;
 	}
 
 	/**
@@ -220,11 +221,11 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'checkboxesIsRequired' => true,
 									'checkboxesContent' => \array_map(
 										fn(string $item): array => [
-												'component' => 'checkbox',
-												'checkboxLabel' => $item,
-												'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-												'checkboxValue' => $item,
-											],
+											'component' => 'checkbox',
+											'checkboxLabel' => $item,
+											'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+											'checkboxValue' => $item,
+										],
 										$this->clearbitClient->getParams()
 									),
 								],
@@ -351,11 +352,11 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 									'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
 									'selectContent' => \array_map(
 										static fn($option): array => [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option,
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $selectedValue === $option,
-											],
+											'component' => 'select-option',
+											'selectOptionLabel' => $option,
+											'selectOptionValue' => $option,
+											'selectOptionIsSelected' => $selectedValue === $option,
+										],
 										$properties
 									),
 								] : [],

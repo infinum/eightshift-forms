@@ -386,13 +386,13 @@ final class SettingsOutputHelpers
 	}
 
 	// --------------------------------------------------
-				// Partials output helpers.
-				// --------------------------------------------------
-				/**
-				 * Get response tags output copy.
-				 *
-				 * @param string $formFieldTags Response tags to output.
-				 */
+	// Partials output helpers.
+	// --------------------------------------------------
+	/**
+	 * Get response tags output copy.
+	 *
+	 * @param string $formFieldTags Response tags to output.
+	 */
 	public static function getPartialFieldTags(string $formFieldTags): string
 	{
 		if ($formFieldTags === '' || $formFieldTags === '0') {
@@ -448,8 +448,8 @@ final class SettingsOutputHelpers
 		// Populate output.
 		foreach ($fieldNames as $item) {
 			$output[] = match ($wrapper) {
-													'$' => "<li><code>$" . $item . "</code></li>",
-													default => "<li><code>{" . $item . "}</code></li>",
+				'$' => "<li><code>$" . $item . "</code></li>",
+				default => "<li><code>{" . $item . "}</code></li>",
 			};
 		}
 
@@ -480,9 +480,9 @@ final class SettingsOutputHelpers
 	public static function getPartialDeactivatedIntegration(string $key): string
 	{
 		$output = [
-		'checkboxLabel' => \__('Deactivate integration and send all the data to the fallback email.', 'eightshift-forms'),
-		'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all the data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
-		'introSubtitle' => \__('To ensure your form is not lost, it is important to activate the "Stop form syncing" option in the debug settings and avoid clicking on the form sync button.', 'eightshift-forms'),
+			'checkboxLabel' => \__('Deactivate integration and send all the data to the fallback email.', 'eightshift-forms'),
+			'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all the data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
+			'introSubtitle' => \__('To ensure your form is not lost, it is important to activate the "Stop form syncing" option in the debug settings and avoid clicking on the form sync button.', 'eightshift-forms'),
 		];
 
 		return $output[$key] ?? '';

@@ -38,12 +38,12 @@ class Countries implements CountriesInterface
 				'items' => $countries,
 				'codes' => \array_map(
 					static fn(array $item): array => [
-							'label' => $item[0],
-							'value' => $item[1],
-							'unlocalized-label' => $item[3] ?? $item[0],
-							'code' => $item[1],
-							'phone' => $item[2],
-						],
+						'label' => $item[0],
+						'value' => $item[1],
+						'unlocalized-label' => $item[3] ?? $item[0],
+						'code' => $item[1],
+						'phone' => $item[2],
+					],
 					$countries
 				)
 			]
@@ -113,9 +113,9 @@ class Countries implements CountriesInterface
 			'slug' => $output['default']['slug'],
 			'items' => \array_values(\array_map(
 				static fn(array $item): array => [
-						'label' => $item['label'],
-						'value' => $item['slug'],
-					],
+					'label' => $item['label'],
+					'value' => $item['slug'],
+				],
 				$output
 			)),
 			'codes' => $output['default']['codes'],

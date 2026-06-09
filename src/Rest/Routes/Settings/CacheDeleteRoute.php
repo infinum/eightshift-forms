@@ -86,7 +86,7 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 				));
 
 				foreach ($allItems as $item) {
-						\delete_transient($item);
+					\delete_transient($item);
 				}
 
 				$outputTitle = \esc_html__('All operational', 'eightshift-forms');

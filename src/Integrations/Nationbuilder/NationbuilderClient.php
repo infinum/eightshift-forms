@@ -51,9 +51,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 *
 	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 */
-	public function __construct(protected OauthInterface $oauthNationbuilder)
-	{
-	}
+	public function __construct(protected OauthInterface $oauthNationbuilder) {} // phpcs:ignore
 
 	/**
 	 * Return custom fields.
@@ -268,7 +266,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 				}
 
 				foreach ($tags as $tag) {
-						$job['tags'][$tag][] = $body['data']['id'] ?? '';
+					$job['tags'][$tag][] = $body['data']['id'] ?? '';
 				}
 
 				\update_option(SettingsHelpers::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $job);
@@ -417,10 +415,10 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$msg = $body['code'] ?? '';
 
 		return match ($msg) {
-									'bad_request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR,
-									'unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING,
-									'server_error' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'bad_request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR,
+			'unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING,
+			'server_error' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 
@@ -676,9 +674,9 @@ class NationbuilderClient implements NationbuilderClientInterface
 	{
 		return \add_query_arg(
 			[
-			'page[number]' => 1,
-			'page[size]' => self::NATIONBUILDER_PAGINATION_PAGE_SIZE,
-					],
+				'page[number]' => 1,
+				'page[size]' => self::NATIONBUILDER_PAGINATION_PAGE_SIZE,
+			],
 			$path
 		);
 	}

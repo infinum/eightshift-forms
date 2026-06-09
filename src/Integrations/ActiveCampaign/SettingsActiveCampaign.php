@@ -63,9 +63,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -84,7 +82,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
 		$url = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
-					return !(!$isUsed || !$apiKey || !$url);
+		return !(!$isUsed || !$apiKey || !$url);
 	}
 
 	/**

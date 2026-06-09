@@ -12,6 +12,7 @@ namespace EightshiftForms\Helpers;
 
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use WP_Error;
 
 /**
  * ApiHelpers class.
@@ -29,7 +30,7 @@ final class ApiHelpers
 	 * Return API response array details.
 	 *
 	 * @param string $integration Integration name from settings.
-	 * @param array $response API full response.
+	 * @param array<string, mixed>|WP_Error $response API full response.
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.
@@ -42,7 +43,7 @@ final class ApiHelpers
 	 */
 	public static function getIntegrationApiResponseDetails(
 		string $integration,
-		array $response,
+		array|WP_Error $response,
 		string $url,
 		array $params = [],
 		array $files = [],

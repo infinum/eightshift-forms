@@ -90,9 +90,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 	/**
 	 * Register all the hooks
 	 */
@@ -111,7 +109,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY);
 		$url = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY);
-					return !(!$isUsed || !$apiKey || !$url);
+		return !(!$isUsed || !$apiKey || !$url);
 	}
 
 	/**
@@ -172,11 +170,11 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 									'selectIsRequired' => true,
 									'selectContent' => \array_map(
 										static fn($option): array => [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option,
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $eventsEmailFieldValue === $option,
-											],
+											'component' => 'select-option',
+											'selectOptionLabel' => $option,
+											'selectOptionValue' => $option,
+											'selectOptionIsSelected' => $eventsEmailFieldValue === $option,
+										],
 										$formFields
 									),
 								],
@@ -221,11 +219,11 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 														'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
 														'selectContent' => \array_map(
 															static fn($option): array => [
-																	'component' => 'select-option',
-																	'selectOptionLabel' => $option,
-																	'selectOptionValue' => $option,
-																	'selectOptionIsSelected' => $selectedValue === $option,
-																],
+																'component' => 'select-option',
+																'selectOptionLabel' => $option,
+																'selectOptionValue' => $option,
+																'selectOptionIsSelected' => $selectedValue === $option,
+															],
 															$formFields
 														),
 													];

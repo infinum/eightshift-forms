@@ -548,12 +548,12 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 			foreach ($output['typeAttrs'] as $attrKey => $attrValue) {
 				if ($attrKey === "{$output['type']}IntegrationId") {
-																	continue;
+					continue;
 				}
 				if ($attrKey === "{$output['type']}IntegrationInnerId") {
 					continue;
 				}
-																$typeAttrs[$attrKey] = $attrValue;
+				$typeAttrs[$attrKey] = $attrValue;
 			}
 
 			$output['typeAttrs'] = $typeAttrs;
@@ -649,7 +649,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				$i = $integration['attrs'][$disabledOption] ?? '';
 				$c = $content['attrs'][$disabledOption] ?? '';
 				// If integration is missing disabled or protected attribute. There could be and issue in the mapping of component attributes for integration.
-																// This condition is here if both integration and content are empty.
+				// This condition is here if both integration and content are empty.
 				if (!$i && $i !== $c) {
 					$output['update'] = true;
 					$output['replaced'] = $key;
@@ -658,7 +658,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				}
 
 				// If content has missing, disabled or protected attribute add it from integration.
-																// This condition is here if both integration and content are empty.
+				// This condition is here if both integration and content are empty.
 				if (!$c && $c !== $i) {
 					$output['update'] = true;
 					$output['changed'][$key][] = $disabledOption;
@@ -695,20 +695,20 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$syncAttrsSkipKeys = \array_flip($output['output']['attrs']["{$prefix}SyncAttrsSkip"] ?? []);
 
 		foreach ($missingAttributes as $missingAttributesKey => $missingAttributesValue) {
-				// No need to add default values.
+			// No need to add default values.
 			if ($missingAttributesKey === 'inputInputType' && $missingAttributesValue === 'text') {
 				continue;
 			}
 
-				// Skip sync if key is in the skip array.
+			// Skip sync if key is in the skip array.
 			if (isset($syncAttrsSkipKeys[$missingAttributesKey])) {
 				continue;
 			}
 
-				// Add missing attributes to the output.
-				$output['update'] = true;
-				$output['added'] = $missingAttributesKey;
-				$output['output']['attrs'][$missingAttributesKey] = $missingAttributesValue;
+			// Add missing attributes to the output.
+			$output['update'] = true;
+			$output['added'] = $missingAttributesKey;
+			$output['output']['attrs'][$missingAttributesKey] = $missingAttributesValue;
 		}
 
 		$disabledOptionsKeys = \array_flip($output['output']['attrs']["{$prefix}DisabledOptions"]);
@@ -1013,8 +1013,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	private function updateBlockContent(string $formId, string $content): int
 	{
 		return \wp_update_post([
-		'ID' => (int) $formId,
-		'post_content' => \wp_slash($content),
+			'ID' => (int) $formId,
+			'post_content' => \wp_slash($content),
 		]);
 	}
 
@@ -1137,7 +1137,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$indexMap = \array_flip($b);
 
 		// Sort $a based on the order in $b, preserving the original order for missing elements.
-		\usort($a, function ($x, $y) use ($indexMap): int|float {
+		\usort($a, function ($x, $y) use ($indexMap): int {
 			$indexX = $indexMap[$x] ?? \count($indexMap);
 			$indexY = $indexMap[$y] ?? \count($indexMap);
 			return $indexX - $indexY;

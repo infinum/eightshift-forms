@@ -123,7 +123,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
-					return SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		return SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 	}
 
 	/**

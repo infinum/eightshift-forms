@@ -147,13 +147,13 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 						if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR)) {
 							$this->mailer->sendTroubleshootingEmail(
 								[
-								Config::FD_FORM_ID => (string) $formId,
-								Config::FD_TYPE => $type,
-																						],
+									Config::FD_FORM_ID => (string) $formId,
+									Config::FD_TYPE => $type,
+								],
 								[
-																						'response' => $clearbitResponse[Config::IARD_RESPONSE] ?? [],
-																						'body' => $clearbitResponse[Config::IARD_BODY] ?? [],
-																						],
+									'response' => $clearbitResponse[Config::IARD_RESPONSE] ?? [],
+									'body' => $clearbitResponse[Config::IARD_BODY] ?? [],
+								],
 								SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR
 							);
 						}

@@ -28,7 +28,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @param SettingsBuilderInterface $settings Inject form global settings data.
 	 */
-	public function __construct(protected SettingsBuilderInterface $settings) {}
+	public function __construct(protected SettingsBuilderInterface $settings) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks

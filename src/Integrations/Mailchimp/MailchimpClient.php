@@ -127,9 +127,9 @@ class MailchimpClient implements MailchimpClientInterface
 			if ($items !== []) {
 				$output[$itemId]['tags'] = \array_map(
 					static fn(array $item): array => [
-							'id' => (string) $item['id'],
-							'name' => (string) $item['name'],
-						],
+						'id' => (string) $item['id'],
+						'name' => (string) $item['name'],
+					],
 					$items
 				);
 
@@ -237,9 +237,9 @@ class MailchimpClient implements MailchimpClientInterface
 		$msg = $body['detail'] ?? '';
 
 		return match ($msg) {
-									'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR,
-									'Your request did not include an API key.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR,
+			'Your request did not include an API key.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

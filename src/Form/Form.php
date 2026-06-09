@@ -215,8 +215,8 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						// Change the forms attributes to a correct prefix and remove them from the original block.
 						$customUsedAttrs = [];
 						foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
-								$customUsedAttrs['field' . \ucfirst((string) $customDiffKey)] = $customDiffValue;
-								unset($inBlock['attrs'][$customDiffKey]);
+							$customUsedAttrs['field' . \ucfirst((string) $customDiffKey)] = $customDiffValue;
+							unset($inBlock['attrs'][$customDiffKey]);
 						}
 
 						// Change the original output of the custom block.
@@ -343,7 +343,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 
 		$loggedInOnlyForm = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId);
-					return !($loggedInOnlyForm && !\is_user_logged_in());
+		return !($loggedInOnlyForm && !\is_user_logged_in());
 	}
 
 	/**

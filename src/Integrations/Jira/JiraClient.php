@@ -321,7 +321,7 @@ class JiraClient implements JiraClientInterface
 		if ($this->isSelfHosted()) {
 			return $body ?? [];
 		}
-								return $body['values'] ?? [];
+		return $body['values'] ?? [];
 	}
 
 	/**
@@ -361,7 +361,7 @@ class JiraClient implements JiraClientInterface
 			if ($this->isSelfHosted()) {
 				return $body['issueTypes'] ?? [];
 			}
-												return $body ?? [];
+			return $body ?? [];
 		}
 
 		return [];
@@ -401,9 +401,9 @@ class JiraClient implements JiraClientInterface
 		if (ApiHelpers::isSuccessResponse($code)) {
 			return \array_map(
 				static fn(array $item): array => [
-						'id' => $item['id'],
-						'title' => $item['name'],
-					],
+					'id' => $item['id'],
+					'title' => $item['name'],
+				],
 				$body
 			);
 		}
@@ -635,7 +635,7 @@ class JiraClient implements JiraClientInterface
 					continue;
 				}
 
-					$output[$key] = $value;
+				$output[$key] = $value;
 			}
 		} else {
 			// Add header.
@@ -730,9 +730,9 @@ class JiraClient implements JiraClientInterface
 		}
 
 		return match ($msg) {
-									'auth_required' => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR,
-									'email_invalid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'auth_required' => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR,
+			'email_invalid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

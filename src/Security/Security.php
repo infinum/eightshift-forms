@@ -93,9 +93,9 @@ class Security implements SecurityInterface
 			default => $rateLimit,
 		};
 
-					$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
+		$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
 
-					$sum = 0;
+		$sum = 0;
 		foreach ($aggregatedActivityByType as $aggregate) {
 			$sum += $aggregate['count'];
 
@@ -108,14 +108,14 @@ class Security implements SecurityInterface
 			return false;
 		}
 
-					$granularRateLimit = \intval(SettingsHelpers::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, $formId));
+		$granularRateLimit = \intval(SettingsHelpers::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, $formId));
 
 		if ($granularRateLimit <= 0) {
 			return true;
 		}
 
-					$activityCountByFormId = RateLimitingLogEntry::countByFormId($userToken, $formId, $window);
-					return $activityCountByFormId <= $granularRateLimit;
+		$activityCountByFormId = RateLimitingLogEntry::countByFormId($userToken, $formId, $window);
+		return $activityCountByFormId <= $granularRateLimit;
 	}
 
 	/**

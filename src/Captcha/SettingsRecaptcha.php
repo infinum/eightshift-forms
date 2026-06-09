@@ -97,9 +97,7 @@ class SettingsRecaptcha implements ServiceInterface
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
-	public function __construct(protected LabelsInterface $labels)
-	{
-	}
+	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -134,7 +132,7 @@ class SettingsRecaptcha implements ServiceInterface
 			return false;
 		}
 
-					return true;
+		return true;
 	}
 
 	/**

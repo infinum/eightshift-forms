@@ -105,10 +105,10 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-		UtilsHelper::getStateAttribute('formFid') => $formId,
-		UtilsHelper::getStateAttribute('formId') => FormsHelper::getFormUniqueHash(),
-		UtilsHelper::getStateAttribute('formType') => $internalType,
-		UtilsHelper::getStateAttribute('settingsType') => $type,
+			UtilsHelper::getStateAttribute('formFid') => $formId,
+			UtilsHelper::getStateAttribute('formId') => FormsHelper::getFormUniqueHash(),
+			UtilsHelper::getStateAttribute('formType') => $internalType,
+			UtilsHelper::getStateAttribute('settingsType') => $type,
 		];
 
 		// Populate and build form.

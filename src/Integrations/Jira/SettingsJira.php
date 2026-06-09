@@ -122,9 +122,10 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected JiraClientInterface $jiraClient, protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(
+		protected JiraClientInterface $jiraClient,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -156,7 +157,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 		}
 
 		$selectedIssueType = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
-					return (bool) $selectedIssueType;
+		return (bool) $selectedIssueType;
 	}
 
 	/**
@@ -198,11 +199,11 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'selectPlaceholder' => \__('Select project', 'eightshift-forms'),
 								'selectContent' => \array_map(
 									static fn(array $option): array => [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['key'],
-											'selectOptionIsSelected' => $selectedProject === $option['key'],
-										],
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['key'],
+										'selectOptionIsSelected' => $selectedProject === $option['key'],
+									],
 									$this->jiraClient->getProjects()
 								),
 							],
@@ -214,11 +215,11 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'selectPlaceholder' => \__('Select issue type', 'eightshift-forms'),
 								'selectContent' => \array_map(
 									static fn(array $option): array => [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => $selectedIssueType === $option['id'],
-										],
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => $selectedIssueType === $option['id'],
+									],
 									$this->jiraClient->getIssueType($selectedProject)
 								),
 							] : [],
@@ -325,7 +326,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY);
 		$apiBoard = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY);
 		$apiUser = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY);
-					return !(!$isUsed || !$apiKey || !$apiBoard || !$apiUser);
+		return !(!$isUsed || !$apiKey || !$apiBoard || !$apiUser);
 	}
 
 	/**

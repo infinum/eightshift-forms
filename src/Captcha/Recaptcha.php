@@ -191,13 +191,15 @@ class Recaptcha implements CaptchaInterface
 	 * @param bool $isRetry Whether this request is itself a client retry.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
+	 *
+	 * @return array<string, mixed>
 	 */
 	private function getEnterpriseOutput(array $responseBody, string $action, bool $isRetry): array
 	{
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = [
-		'responseBody' => $responseBody,
-		'action' => $action,
-		'isRetry' => $isRetry,
+			'responseBody' => $responseBody,
+			'action' => $action,
+			'isRetry' => $isRetry,
 		];
 
 		if (!isset($responseBody['tokenProperties']['valid']) || !$responseBody['tokenProperties']['valid']) {
@@ -252,12 +254,14 @@ class Recaptcha implements CaptchaInterface
 	 * @param bool $isRetry Whether this request is itself a client retry.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
+	 *
+	 * @return array<string, mixed>
 	 */
 	private function getFreeOutput(array $responseBody, string $action, bool $isRetry): array
 	{
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = [
-		'responseBody' => $responseBody,
-		'action' => $action,
+			'responseBody' => $responseBody,
+			'action' => $action,
 		];
 
 		// If response is error.
@@ -300,6 +304,8 @@ class Recaptcha implements CaptchaInterface
 	 * @param float $score Score value Score value from API.
 	 *
 	 * @throws BadRequestException If captcha is not valid.
+	 *
+	 * @return array<string, mixed>
 	 */
 	private function validate(
 		$responseBody,
@@ -308,10 +314,10 @@ class Recaptcha implements CaptchaInterface
 		float $score,
 	): array {
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = [
-		'responseBody' => $responseBody,
-		'action' => $action,
-		'actionResponse' => $actionResponse,
-		'score' => $score,
+			'responseBody' => $responseBody,
+			'action' => $action,
+			'actionResponse' => $actionResponse,
+			'score' => $score,
 		];
 
 		// Bailout if action is not correct.
@@ -346,14 +352,14 @@ class Recaptcha implements CaptchaInterface
 		}
 
 		return [
-		AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
-		AbstractBaseRoute::R_DEBUG => [
-		AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
-		AbstractBaseRoute::R_DEBUG => $formDetails,
-					],
-					AbstractBaseRoute::R_DATA => [
-					UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => false,
-					],
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => false,
+			],
 		];
 	}
 }

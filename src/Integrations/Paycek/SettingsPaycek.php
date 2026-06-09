@@ -106,9 +106,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -136,7 +134,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 		$lang = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$cartDesc = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
-					return !(!$lang || !$mapParams || !$cartDesc);
+		return !(!$lang || !$mapParams || !$cartDesc);
 	}
 
 	/**
@@ -277,21 +275,21 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 											if ($item['type'] === 'internal-select') {
 												$options = \array_map(
 													static fn($option): array => [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														],
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
+													],
 													$item['value']
 												);
 											} else {
 												$options = \array_map(
 													static fn($option): array => [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														],
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
+													],
 													$params
 												);
 											}
@@ -325,7 +323,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY);
 		$profileKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY);
-					return !(!$isUsed || !$apiKey || !$profileKey);
+		return !(!$isUsed || !$apiKey || !$profileKey);
 	}
 
 	/**

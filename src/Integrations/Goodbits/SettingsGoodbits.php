@@ -58,9 +58,7 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements SettingGl
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(protected SettingsFallbackDataInterface $settingsFallback)
-	{
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 	/**
 	 * Register all the hooks
 	 */
@@ -77,7 +75,7 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements SettingGl
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GOODBITS_USE_KEY, self::SETTINGS_GOODBITS_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyGoodbits(), self::SETTINGS_GOODBITS_API_KEY_KEY);
-					return $isUsed && $apiKey;
+		return $isUsed && $apiKey;
 	}
 
 	/**

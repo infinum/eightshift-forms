@@ -26,22 +26,22 @@ final class UploadHelpers
 	public static function isUploadError(string $error): bool
 	{
 		$errors = [
-// uploadFile() method errors.
-		'errorFileUploadNoFileProvided' => '',
-		'errorFileUploadNoNameProvided' => '',
-		'errorFileUploadNoIdProvided' => '',
-		'errorFileUploadFolderUploadPathMissing' => '',
-		'errorFileUploadUnableToCreateFolder' => '',
-		'errorFileUploadFaultyFile' => '',
-		'errorFileUploadUnableToMoveFile' => '',
-		'errorFileUploadFailedSecurityScan' => '',
+			// uploadFile() method errors.
+			'errorFileUploadNoFileProvided' => '',
+			'errorFileUploadNoNameProvided' => '',
+			'errorFileUploadNoIdProvided' => '',
+			'errorFileUploadFolderUploadPathMissing' => '',
+			'errorFileUploadUnableToCreateFolder' => '',
+			'errorFileUploadFaultyFile' => '',
+			'errorFileUploadUnableToMoveFile' => '',
+			'errorFileUploadFailedSecurityScan' => '',
 
-// getFilePath() method errors.
-		'errorFilePathMissingUploadFolder' => '',
-		'errorFilePathMissingFile' => '',
+			// getFilePath() method errors.
+			'errorFilePathMissingUploadFolder' => '',
+			'errorFilePathMissingFile' => '',
 
-// getUploadFolderPath() method errors.
-		'errorUploadFolderPathMissingWpContentDir' => '',
+			// getUploadFolderPath() method errors.
+			'errorUploadFolderPathMissingWpContentDir' => '',
 		];
 
 		return isset($errors[$error]);
