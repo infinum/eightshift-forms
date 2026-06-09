@@ -192,6 +192,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'component' => 'divider',
 										'dividerSeparator' => true,
 									],
+									// phpcs:disable Generic.Files.LineLength.TooLong
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
@@ -201,6 +202,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
 									],
+									// phpcs:enable Generic.Files.LineLength.TooLong
 								]
 							],
 						],

@@ -21,11 +21,11 @@ if (!$tabLabel || !$tabContent) {
 
 <details
 	class="<?php echo esc_attr(Helpers::clsx([
-		UtilsHelper::getStateSelectorAdmin('tabsItem'),
-		'esf:group',
-		'esf:md:not-open:hidden',
-		$tabWithBg ? 'esf:bg-white esf:border esf:border-mist-200 esf:rounded-2xl' : '',
-	])); ?>"
+						UtilsHelper::getStateSelectorAdmin('tabsItem'),
+						'esf:group',
+						'esf:md:not-open:hidden',
+						$tabWithBg ? 'esf:bg-white esf:border esf:border-mist-200 esf:rounded-2xl' : '',
+					])); ?>"
 	data-hash="<?php echo rawurlencode($tabLabel); ?>"
 	data-btn-class="js-es-tabs-btn esf:cursor-pointer esf:border-b-2 esf:border-transparent esf:inline-flex esf:items-center esf:py-5 esf:text-xs! esf:transition-colors esf:duration-300 esf:hover:border-mist-200 esf:aria-selected:border-mist-600 esf-focus-ring">
 
@@ -36,10 +36,10 @@ if (!$tabLabel || !$tabContent) {
 		</svg>
 	</summary>
 	<div class="<?php echo esc_attr(Helpers::clsx([
-		'esf:flex esf:flex-col esf:gap-16',
-		$tabWithBg ? 'esf:p-20 esf:border-t esf:border-gray-300 esf:md:border-t-0' : '',
-	])); ?>">
-			<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+								'esf:flex esf:flex-col esf:gap-16',
+								$tabWithBg ? 'esf:p-20 esf:border-t esf:border-gray-300 esf:md:border-t-0' : '',
+							])); ?>">
+		<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		?>
 	</div>
 </details>

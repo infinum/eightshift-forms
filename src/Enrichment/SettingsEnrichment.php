@@ -182,7 +182,9 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
+								'introSubtitle' => \__('
+									Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />
+									You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'layout',

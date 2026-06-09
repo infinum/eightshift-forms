@@ -98,6 +98,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 	 */
 	public function getSettingsFiltersData(): array
 	{
+		// phpcs:disable Generic.Files.LineLength.TooLong
 		$data = [
 			// ------------------------------
 			// GENERAL.
@@ -662,6 +663,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				],
 			],
 		];
+		// phpcs:enable Generic.Files.LineLength.TooLong
 
 		// Populate icons form utils list.
 		foreach ($data as $keyData => $valueData) {

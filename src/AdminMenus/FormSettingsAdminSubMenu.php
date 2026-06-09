@@ -198,8 +198,9 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
-			// translators: %s will be replaced with the form edit link.
-			'adminSettingsNotice' => !$integrationTypeUsed ? \sprintf(\__('Please set a block type in the form\'s block editor. Configuration options will appear in the sidebar afterwards.  <a href="%s" target="_blank" rel="noopener noreferrer">Edit form &rarr;</a>', 'eightshift-forms'), $formEditLink) : '',
+			'adminSettingsNotice' => !$integrationTypeUsed ?
+				// translators: %s will be replaced with the form edit link.
+				\sprintf(\__('Please set a block type in the form\'s block editor. Configuration options will appear in the sidebar afterwards.  <a href="%s" target="_blank" rel="noopener noreferrer">Edit form &rarr;</a>', 'eightshift-forms'), $formEditLink) : '',
 		];
 	}
 

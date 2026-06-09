@@ -68,9 +68,14 @@ class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 						'introTitle' => \__('Credits', 'eightshift-forms'),
 						'introTitleType' => 'medium',
 						// translators: %s will be replaced with links.
-						'introSubtitle' => \sprintf(\__("
+						'introSubtitle' => \sprintf(
+							\__("
 							Made by the WordPress team at <a href='%1\$s' target='_blank' rel='noopener noreferrer'>Infinum</a>, using the <a href='%2\$s' target='_blank' rel='noopener noreferrer'>Eightshift development kit</a>.<br/>
-							If you have any questions or problems, please open an <a href='%3\$s' target='_blank' rel='noopener noreferrer'>issue on GitHub</a>, and we will do our best to give you a timely answer.", 'eightshift-forms'), 'https://infinum.com/', 'https://eightshift.com/', 'https://github.com/infinum/eightshift-forms/issues'),
+							If you have any questions or problems, please open an <a href='%3\$s' target='_blank' rel='noopener noreferrer'>issue on GitHub</a>, and we will do our best to give you a timely answer.", 'eightshift-forms'),
+							'https://infinum.com/',
+							'https://eightshift.com/',
+							'https://github.com/infinum/eightshift-forms/issues'
+						),
 					],
 				],
 			],

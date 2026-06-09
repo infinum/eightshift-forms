@@ -327,6 +327,7 @@ class SettingsRecaptcha implements ServiceInterface
 							'component' => 'divider',
 							'dividerSeparator' => true,
 						],
+						// phpcs:disable Generic.Files.LineLength.TooLong
 						[
 							'component' => 'steps',
 							'stepsTitle' => \__('How to get the Enterprise reCAPTCHA API key?', 'eightshift-forms'),
@@ -346,6 +347,7 @@ class SettingsRecaptcha implements ServiceInterface
 								\__('Set that key as <strong>API key</strong>.', 'eightshift-forms'),
 							],
 						],
+						// phpcs:enable Generic.Files.LineLength.TooLong
 					]
 				],
 			],

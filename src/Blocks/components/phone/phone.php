@@ -140,6 +140,7 @@ if ($phoneIsRequired) {
 $phoneAttrs['aria-invalid'] = 'false';
 $phoneAttrs['autocomplete'] = 'tel';
 
+$phoneAttrsSelect['aria-label'] = esc_attr__('Country code', 'eightshift-forms');
 
 $phone = '
 	<select
@@ -147,7 +148,6 @@ $phone = '
 		name="' . esc_attr($phoneName) . '"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrsSelect)) . '
-		aria-label="' . esc_attr__('Country code', 'eightshift-forms') . '"
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"

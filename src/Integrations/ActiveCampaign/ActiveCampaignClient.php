@@ -310,9 +310,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			return $tagId[0]['id'] ?? '';
 		}
 
-		// Output error.
-		ApiHelpers::getIntegrationErrorInternalOutput($details);
-
 		return '';
 	}
 
@@ -359,9 +356,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['id'] ?? '';
 		}
-
-		// Output error.
-		ApiHelpers::getIntegrationErrorInternalOutput($details);
 
 		return '';
 	}
