@@ -113,6 +113,29 @@ final class GeneralHelpers
 	}
 
 	/**
+	 * Method that checks if request is for forms custom post type.
+	 */
+	public static function isEightshiftFormsCpt(): bool
+	{
+		$list = [
+			Config::SLUG_POST_TYPE => 0,
+			Config::SLUG_RESULT_POST_TYPE => 1,
+		];
+
+		$postType = isset($_GET['post_type']) ? \sanitize_text_field(\wp_unslash($_GET['post_type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if (!$postType) {
+			$postType = isset($_GET['post']) ? \get_post_type((int)\sanitize_text_field(\wp_unslash($_GET['post']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		if (!$postType) {
+			return false;
+		}
+
+		return isset($list[$postType]) && \is_admin();
+	}
+
+	/**
 	 * Method that returns form trash action url.
 	 *
 	 * @param string $formId Form ID.

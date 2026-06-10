@@ -30,6 +30,7 @@ use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Validation\ValidationPatterns;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\IntegrationsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
@@ -74,6 +75,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendScript(...), 11);
+
+		if (GeneralHelpers::isEightshiftFormsCpt()) {
+			\add_action('enqueue_block_editor_assets', $this->unregisterDefaultStyleOverrides(...), 102);
+		}
 	}
 
 	/**

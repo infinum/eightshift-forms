@@ -187,7 +187,6 @@ export const FieldOptionsMore = (attributes) => {
 					<InputField
 						icon={fieldLabel}
 						label={__('Above field', 'eightshift-forms')}
-						subtitle={__('Below field label', 'eightshift-forms')}
 						value={fieldBeforeContent}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
 						inline

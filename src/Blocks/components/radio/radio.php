@@ -84,19 +84,21 @@ if ($componentName) {
 			<label
 				for="<?php echo esc_attr($radioName); ?>"
 				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label")); ?>">
-				<?php if ($radioIcon) {
+				<?php if ($radioIcon) { ?>
+					<?php
 					$iconAltText = get_post_meta($radioIconId ?? 0, '_wp_attachment_image_alt', true) ?: '';
 					?>
 					<img
 						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-icon', "{$componentClass}__label-icon")); ?>"
 						src="<?php echo esc_url($radioIcon); ?>"
-						alt="<?php echo esc_attr($iconAltText); ?>"
-					/>
+						alt="<?php echo esc_attr($iconAltText); ?>" />
 				<?php } ?>
 
 				<?php if (!$radioHideLabelText) { ?>
 					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-inner', "{$componentClass}__label-inner")); ?>">
-						<?php echo wp_kses_post(apply_filters('the_content', $radioLabel)); ?>
+						<?php
+						echo wp_kses_post(apply_filters('the_content', $radioLabel));
+						?>
 					</span>
 				<?php } ?>
 			</label>

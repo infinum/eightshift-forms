@@ -96,36 +96,39 @@ $formsClass = Helpers::clsx([
 
 <div
 	class="<?php echo esc_attr($formsClass); ?>"
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($formAttrs)); ?>>
 	<?php
-	echo wp_kses_post(Helpers::getAttrsOutput($formAttrs));
-	?>>
-	<?php
-	foreach ($allForms as $formId) {
-		// Convert blocks to array.
-		$blocks = parse_blocks(get_the_content(null, false, $formId));
+	try {
+		remove_filter('the_content', 'wpautop');
 
-		// Bailout if it fails for some reason.
-		if (!$blocks) {
-			return;
+		foreach ($allForms as $formId) {
+			// Convert blocks to array.
+			$blocks = parse_blocks(get_the_content(null, false, $formId));
+
+			// Bailout if it fails for some reason.
+			if (!$blocks) {
+				return;
+			}
+
+			$output = apply_filters(
+				Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
+				$blocks,
+				array_merge(
+					$attributes,
+					[
+						'formsFormPostId' => $formId,
+					]
+				),
+				$manifest
+			);
+
+			// Render blocks.
+			foreach ($output as $block) {
+				echo wp_kses_post(apply_filters('the_content', render_block($block)));
+			}
 		}
-
-		$output = apply_filters(
-			Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
-			$blocks,
-			array_merge(
-				$attributes,
-				[
-					'formsFormPostId' => $formId,
-				]
-			),
-			$manifest
-		);
-
-		// Render blocks.
-		foreach ($output as $block) {
-			// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-			echo apply_filters('the_content', render_block($block));
-		}
+	} finally {
+		add_filter('the_content', 'wpautop');
 	}
 
 	echo Helpers::render(

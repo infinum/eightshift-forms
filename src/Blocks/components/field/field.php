@@ -182,10 +182,8 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 	data-id="<?php echo esc_attr($unique); ?>"
 	<?php echo wp_kses_post(Helpers::getAttrsOutput($fieldAttrs));
 	?>>
-
 	<?php
 	echo Helpers::outputCssVariables($attributes, $manifest, $unique, '', FormsHelper::getProjectSettings());
-
 	echo Helpers::render(
 		'debug-field-details',
 		[
@@ -199,7 +197,6 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 		false,
 		'utils/partials'
 	);
-
 	?>
 	<div class="<?php echo esc_attr($innerClass); ?>">
 		<?php if ($fieldLabel && (!$fieldHideLabel || $fieldHideLabelVisually)) { ?>
@@ -232,9 +229,9 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 				</div>
 			<?php } ?>
 			<div class="<?php echo esc_attr($contentWrapClass); ?>">
-				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				<?php
+				echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 				?>
-
 				<?php if ($fieldSuffixContent) { ?>
 					<div class="<?php echo esc_attr($suffixContentClass); ?>">
 						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
@@ -271,7 +268,6 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 		}
 		?>
 	</div>
-
 	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>
 </<?php echo esc_attr($fieldTag); ?>>
