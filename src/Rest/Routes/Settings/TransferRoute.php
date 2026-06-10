@@ -28,13 +28,6 @@ use EightshiftForms\Security\SecurityInterface;
 class TransferRoute extends AbstractSimpleFormSubmit
 {
 	/**
-	 * Instance variable of TransferInterface data.
-	 *
-	 * @var TransferInterface
-	 */
-	protected $transfer;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -46,12 +39,11 @@ class TransferRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		TransferInterface $transfer
+		protected TransferInterface $transfer
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->transfer = $transfer;
 	}
 
 	/**
@@ -71,8 +63,6 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -177,7 +167,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 				$uploadStatus = $this->transfer->getImport(
 					$upload,
-					isset($params['override']) ? \filter_var($params['override'], \FILTER_VALIDATE_BOOLEAN) : false
+					isset($params['override']) && \filter_var($params['override'], \FILTER_VALIDATE_BOOLEAN)
 				);
 
 				if (!$uploadStatus) {

@@ -17,6 +17,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class EnqueueRecaptcha
@@ -32,12 +33,10 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueScriptsCaptcha']);
+		\add_action('wp_enqueue_scripts', $this->enqueueScriptsCaptcha(...));
 	}
 
 	/**
@@ -52,19 +51,15 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 		}
 
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'captcha']);
-		$scriptsDependencyOutput = [];
-
 		if (\has_filter($scriptsDependency)) {
-			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+			return \apply_filters($scriptsDependency, []);
 		}
 
-		return $scriptsDependencyOutput;
+		return [];
 	}
 
 	/**
 	 * Method that returns frontend script for captcha if settings are correct.
-	 *
-	 * @return void
 	 */
 	public function enqueueScriptsCaptcha(): void
 	{
@@ -106,6 +101,7 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 	 * @return string Whether to enqueue the script normally, with defer or async.
 	 * Default value: normal
 	 */
+	#[Override]
 	protected function scriptStrategy(): string
 	{
 		return 'defer';
@@ -113,8 +109,6 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 
 	/**
 	 * Method that returns assets name used to prefix asset handlers.
-	 *
-	 * @return string
 	 */
 	public function getAssetsPrefix(): string
 	{
@@ -123,8 +117,6 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 
 	/**
 	 * Method that returns assets version for versioning asset handlers.
-	 *
-	 * @return string
 	 */
 	public function getAssetsVersion(): string
 	{

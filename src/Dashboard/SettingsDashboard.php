@@ -39,12 +39,10 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
 	}
 
 	/**
@@ -59,28 +57,28 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		foreach ($data as $key => $value) {
+			$settingsGlobal = $value['settingsGlobal'] ?? '';
 			$use = $value['use'] ?? '';
+			$type = $value['type'] ?? '';
+			$labels = $value['labels'] ?? [];
+			$icon = $labels['icon'] ?? '';
+			$title = $labels['title'] ?? '';
 
-			if (!$use) {
+			if ($key === SettingsDashboard::SETTINGS_TYPE_KEY) {
+				continue;
+			}
+
+			if (!$settingsGlobal) {
 				continue;
 			}
 
 			$checked = SettingsHelpers::isOptionCheckboxChecked($use, $use);
 
-			$labels = $value['labels'] ?? [];
-
 			$item = [
 				'component' => 'card-inline',
-				'cardInlineTitle' => $labels['title'] ?? '',
-				'cardInlineIcon' => $labels['icon'] ?? '',
+				'cardInlineTitle' => $title,
+				'cardInlineIcon' => $icon,
 				'cardInlineRightContent' => [
-					$checked ? [
-						'component' => 'submit',
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getSettingsGlobalPageUrl($key),
-						'submitValue' => \__('Edit', 'eightshift-forms'),
-					] : [],
 					[
 						'component' => 'checkboxes',
 						'checkboxesName' => SettingsHelpers::getOptionName($use),
@@ -92,14 +90,22 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 								'checkboxValue' => $use,
 								'checkboxSingleSubmit' => true,
 								'checkboxAsToggle' => true,
-								'checkboxAsToggleSize' => 'medium',
 							],
 						],
+					],
+					[
+						'component' => 'button',
+						'buttonVariant' => 'primaryGhost',
+						'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($key),
+						'buttonIsDisabled' => !$checked,
+						'buttonLabel' => \__('Edit', 'eightshift-forms'),
 					],
 				],
 			];
 
-			$filtered[$value['type']][] = $item;
+			if ($type) {
+				$filtered[$type][] = $item;
+			}
 		}
 
 		$output = [
@@ -114,12 +120,10 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						'introTitle' => $data[$key]['labels']['title'] ?? '',
-						'introIsHeading' => false,
-						'introTitleSize' => 'small',
 					],
 					...$value,
 				],
-				'layoutType' => 'layout-v-stack-clean',
+				'additionalClass' => 'esf:gap-5!',
 			];
 		}
 

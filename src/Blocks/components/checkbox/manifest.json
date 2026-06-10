@@ -56,6 +56,9 @@
 		"checkboxIcon": {
 			"type": "string"
 		},
+		"checkboxIconId": {
+			"type": "string"
+		},
 		"checkboxFieldType": {
 			"type": "string",
 			"default": "fieldset"
@@ -75,9 +78,6 @@
 			"default": false
 		},
 		"checkboxHelp": {
-			"type": "string"
-		},
-		"checkboxAsToggleSize": {
 			"type": "string"
 		},
 		"checkboxDisabledOptions": {

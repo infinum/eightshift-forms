@@ -1,37 +1,21 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { select, useDispatch, useSelect, dispatch } from "@wordpress/data";
-import { store as noticesStore } from '@wordpress/notices';
-import { Button, PanelBody, Modal } from '@wordpress/components';
-import { icons, Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
-import {
-	updateIntegrationBlocks,
-	resetInnerBlocks,
-	syncIntegrationBlocks,
-	clearTransientCache,
-	SettingsButton,
-	LocationsButton,
-} from '../../utils';
+import { select, useSelect, dispatch } from '@wordpress/data';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
+import { BaseControl, Select, RichLabel, Button, Container, ContainerGroup, ContainerPanel, Modal, ButtonGroup, Tabs, TabList, Tab, TabPanel, TriggeredPopover, HStack } from '@eightshift/ui-components';
+import { data, formAlt, loopMode, reset, swap, warning, moreH, treeAlt2, help, plusCircleFill, trashAlt } from '@eightshift/ui-components/icons';
+import { updateIntegrationBlocks, resetInnerBlocks, syncIntegrationBlocks, clearTransientCache, SettingsButton, LocationsButton } from '../../utils';
 import { getRestUrlByType } from '../../form/assets/state-init';
 import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
+import { toast } from 'sonner';
 
-export const IntegrationsOptions = ({
-	title,
-	block,
-	attributes,
-	setAttributes,
-	clientId,
-	itemId,
-	itemIdKey,
-	innerId,
-	innerIdKey,
-}) => {
+export const IntegrationsOptions = ({ block, attributes, setAttributes, clientId, itemId, itemIdKey, innerId, innerIdKey }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
-		// Check if form selector has inner blocks.
+	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
 		const blocks = select('core/block-editor').getBlock(clientId);
 
@@ -42,8 +26,6 @@ export const IntegrationsOptions = ({
 	const [formInnerItems, setFormInnerItems] = useState([]);
 	const [isModalOpen, setModalOpen] = useState(select(FORMS_STORE_NAME).getIsSyncDialogOpen());
 	const [modalContent] = useState(select(FORMS_STORE_NAME).getSyncDialog());
-
-	const { createNotice } = useDispatch(noticesStore);
 
 	useEffect(() => {
 		apiFetch({
@@ -73,117 +55,166 @@ export const IntegrationsOptions = ({
 
 		return (
 			<Modal
-				className='es-modal-max-width-xxl es-rounded-3!'
-				title={<IconLabel icon={icons.clipboard} label={__('Sync report', 'eightshift-forms')} standalone />}
-				onRequestClose={() => {
-					setModalOpen(false);
-					dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(false);
+				title={__('Sync results', 'eightshift-forms')}
+				onOpenChange={(open) => {
+					setModalOpen(open);
+					dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(open);
 				}}
+				open={isModalOpen}
 			>
-				<Section
-					showIf={added.length > 0}
-					icon={icons.add}
-					label={__('Added fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-green-500!'
-					noBottomSpacing={changed.length < 1 && replaced.length < 1 && removed?.length < 1}
-				>
-					<div className='es-v-spaced'>
-						{added.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
-					</div>
-				</Section>
+				<ContainerGroup hidden={added.length < 1}>
+					<Container
+						className='es-uic-theme-green'
+						centered
+						elevated
+						accent
+					>
+						<RichLabel
+							icon={plusCircleFill}
+							label={__('Added fields', 'eightshift-forms')}
+						/>
+					</Container>
 
-				<Section
-					showIf={removed.length > 0} icon={icons.trash}
-					label={__('Removed fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-red-500!'
-					noBottomSpacing={changed.length < 1 && replaced.length < 1}
-				>
-					<div className='es-v-spaced'>
-						{removed.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
-					</div>
-				</Section>
+					{added.map((item, i) => (
+						<Container
+							key={i}
+							centered
+							compact
+						>
+							{item}
+						</Container>
+					))}
+				</ContainerGroup>
 
-				<Section
-					showIf={replaced.length > 0}
-					icon={icons.swap}
-					label={__('Replaced fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-yellow-500!'
-					noBottomSpacing={changed.length < 1}
-				>
-					<div className='es-v-spaced'>
-						{replaced.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
-					</div>
-				</Section>
+				<ContainerGroup hidden={removed.length < 1}>
+					<Container
+						className='es-uic-theme-orange'
+						centered
+						elevated
+						accent
+					>
+						<RichLabel
+							icon={trashAlt}
+							label={__('Removed fields', 'eightshift-forms')}
+						/>
+					</Container>
 
-				<Section
-					showIf={changed.length > 0}
-					icon={icons.edit}
-					label={__('Updated field attributes', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-blue-500!'
-					noBottomSpacing
-				>
-					<div className='es-v-spaced'>
-						{changed.map((item, i) =>
-							<IconLabel
-								icon={icons.dummySpacer}
-								label={
-									<span key={i}>
-										<code>{Object.keys(item)[0]}</code>: {Object.values(item)[0].join(', ')}
-									</span>
-								}
-								key={i}
-								standalone
-							/>)
-						}
-					</div>
-				</Section>
+					{removed.map((item, i) => (
+						<Container
+							key={i}
+							centered
+							compact
+						>
+							{item}
+						</Container>
+					))}
+				</ContainerGroup>
+
+				<ContainerGroup hidden={replaced.length < 1}>
+					<Container
+						className='es-uic-theme-blue'
+						centered
+						elevated
+						accent
+					>
+						<RichLabel
+							icon={swap}
+							label={__('Replaced fields', 'eightshift-forms')}
+						/>
+					</Container>
+
+					{replaced.map((item, i) => (
+						<Container
+							key={i}
+							centered
+							compact
+						>
+							{item}
+						</Container>
+					))}
+				</ContainerGroup>
+
+				<ContainerGroup hidden={changed.length < 1}>
+					<Container
+						className='es-uic-theme-yellow'
+						centered
+						elevated
+						accent
+					>
+						<RichLabel
+							icon={swap}
+							label={__('Updated fields', 'eightshift-forms')}
+						/>
+					</Container>
+
+					{changed.map((item, i) => (
+						<Container
+							key={i}
+							centered
+							compact
+						>
+							<code>{Object.keys(item)[0]}</code>: {Object.values(item)[0].join(', ')}
+						</Container>
+					))}
+				</ContainerGroup>
 			</Modal>
 		);
 	};
 
+	const hasSecondLevelSelection = innerIdKey && itemId;
+
 	return (
 		<>
-			<PanelBody title={title}>
-				<Control>
-					<div className='es-fifty-fifty-h es-gap-2!'>
-						<SettingsButton />
-						<LocationsButton />
-					</div>
-				</Control>
-
-				<Section icon={icons.tools} label={__('Integration options', 'eightshift-forms')}>
-					<Select
-						icon={icons.formAlt}
-						label={__('Select a form to display', 'eightshift-forms')}
-						help={!(innerIdKey && itemId) && __('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
-						value={itemId}
-						options={formItems}
-						onChange={(value) => {
-							// On clear action.
-							if (!value) {
-								resetInnerBlocks(clientId);
-								setAttributes({ [itemIdKey]: undefined });
-								setAttributes({ [innerIdKey]: undefined });
-							} else {
-								if (innerIdKey) {
-									resetInnerBlocks(clientId);
-									setAttributes({ [itemIdKey]: value.toString() });
-									setAttributes({ [innerIdKey]: undefined });
-								} else {
-									updateIntegrationBlocks(clientId, postId, block, value.toString());
-									setAttributes({ [itemIdKey]: value.toString() });
-								}
-							}
-						}}
-						reducedBottomSpacing={innerIdKey && itemId}
-						closeMenuAfterSelect
-						simpleValue
-						clearable
+			<Tabs>
+				<TabList>
+					<Tab
+						icon={formAlt}
+						label={__('Form', 'eightshift-forms')}
 					/>
 
-					{(innerIdKey && itemId) &&
+					<Tab
+						icon={treeAlt2}
+						label={__('Multi-step/flow', 'eightshift-forms')}
+					/>
+
+					<Tab
+						icon={moreH}
+						label={__('Advanced', 'eightshift-forms')}
+					/>
+				</TabList>
+
+				<TabPanel>
+					<ContainerPanel>
 						<Select
-							help={__('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+							label={hasSecondLevelSelection ? __('Form group', 'eightshift-forms') : __('Form', 'eightshift-forms')}
+							aria-label={!hasSecondLevelSelection && __('Form to display', 'eightshift-forms')}
+							value={itemId}
+							options={formItems}
+							onChange={(value) => {
+								// On clear action.
+								if (!value) {
+									resetInnerBlocks(clientId);
+									setAttributes({ [itemIdKey]: undefined });
+									setAttributes({ [innerIdKey]: undefined });
+								} else {
+									if (innerIdKey) {
+										resetInnerBlocks(clientId);
+										setAttributes({ [itemIdKey]: value.toString() });
+										setAttributes({ [innerIdKey]: undefined });
+									} else {
+										updateIntegrationBlocks(clientId, postId, block, value.toString());
+										setAttributes({ [itemIdKey]: value.toString() });
+									}
+								}
+							}}
+							simpleValue
+							searchable
+							clearable
+						/>
+
+						<Select
+							hidden={!hasSecondLevelSelection}
+							label={__('Form', 'eightshift-forms')}
 							value={innerId}
 							options={formInnerItems}
 							onChange={(value) => {
@@ -195,107 +226,179 @@ export const IntegrationsOptions = ({
 									setAttributes({ [innerIdKey]: value.toString() });
 								}
 							}}
-							closeMenuAfterSelect
 							simpleValue
+							searchable
 							clearable
 						/>
-					}
 
-					{hasInnerBlocks &&
-						<div className={'es-border-t-gray-300 es-mt-5 es-pt-5'}>
-							<Control
-								help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
-								additionalClasses={'es-border-b-gray-300 es-pb-5'}
+						<ButtonGroup>
+							<SettingsButton />
+							<LocationsButton />
+						</ButtonGroup>
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<StepMultiflowOptions
+							{...props('step', attributes, {
+								setAttributes,
+								stepMultiflowPostId: postId,
+							})}
+						/>
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<ContainerGroup>
+							<Container hidden={!hasInnerBlocks}>
+								<BaseControl
+									icon={data}
+									label={__('Integration data', 'eightshift-forms')}
+									inline
+								>
+									<ButtonGroup>
+										<TriggeredPopover
+											triggerButtonLabel={__('Clear cache', 'eightshift-forms')}
+											className='esf:max-w-xs esf:p-16'
+										>
+											<RichLabel
+												icon={help}
+												label={__('Clear integration cache?', 'eightshift-forms')}
+												subtitle={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}
+												iconClassName='esf:self-start!'
+											/>
+
+											<HStack className='esf:justify-end esf:mt-20'>
+												<Button
+													slot='close'
+													type='ghost'
+												>
+													{__('Cancel', 'eightshift-forms')}
+												</Button>
+
+												<Button
+													type='selected'
+													onClick={() => {
+														// Sync integration blocks.
+														clearTransientCache(block).then((msg) => toast.success(msg));
+													}}
+													slot='close'
+												>
+													{__('Clear', 'eightshift-forms')}
+												</Button>
+											</HStack>
+										</TriggeredPopover>
+
+										<TriggeredPopover
+											triggerButtonLabel={__('Sync', 'eightshift-forms')}
+											className='esf:max-w-xs esf:p-16'
+										>
+											<RichLabel
+												icon={loopMode}
+												label={__('Re-sync integration?', 'eightshift-forms')}
+												subtitle={__('Unsaved changes will be lost', 'eightshift-forms')}
+												iconClassName='esf:self-start!'
+											/>
+
+											<HStack className='esf:justify-end esf:mt-20'>
+												<Button
+													slot='close'
+													type='ghost'
+												>
+													{__('Cancel', 'eightshift-forms')}
+												</Button>
+
+												<Button
+													type='selected'
+													onClick={() => {
+														// Sync integration blocks.
+														syncIntegrationBlocks(clientId, postId).then((val) => {
+															if (val?.status === 'error') {
+																toast.error(val?.message);
+															} else if (val?.update) {
+																toast.success(__('Sync complete!', 'eightshift-forms'), {
+																	action: {
+																		label: __('View changes', 'eightshift-forms'),
+																		onClick: () => {
+																			setModalOpen(true);
+																			dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(true);
+																		},
+																	},
+																	actionButtonStyle: {
+																		borderRadius: '0.75rem',
+																	},
+																	duration: 6000,
+																});
+															} else {
+																toast.info(__('Nothing synced, form is up-to-date', 'eightshift-forms'));
+															}
+														});
+													}}
+													slot='close'
+												>
+													{__('Sync', 'eightshift-forms')}
+												</Button>
+											</HStack>
+										</TriggeredPopover>
+									</ButtonGroup>
+								</BaseControl>
+							</Container>
+
+							<Container
+								className='es-uic-theme-orange'
+								elevated
+								accent
 							>
-								<Button
-									icon={icons.loopMode}
-									onClick={() => {
-										// Sync integration blocks.
-										syncIntegrationBlocks(clientId, postId).then((val) => {
-											if (val?.status === 'error') {
-												createNotice(
-													'error',
-													val?.message,
-													{
-														type: 'snackbar',
-														icon: '❌',
-													}
-												);
-											} else {
-												createNotice(
-													val?.update ? 'success' : 'info',
-													val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'),
-													{
-														type: 'snackbar',
-														icon: '✅',
-													}
-												);
-											}
-										});
-									}}
-									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+								<BaseControl
+									icon={warning}
+									label={__('Danger zone', 'eightshift-forms')}
+									inline
 								>
-									{__('Sync integration', 'eightshift-forms')}
-								</Button>
-
-								{Object.keys(modalContent).length > 0 &&
-									<Button
-										onClick={() => {
-											setModalOpen(true);
-											dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(true);
+									<TriggeredPopover
+										triggerButtonLabel={__('Reset form', 'eightshift-forms')}
+										triggerButtonIcon={reset}
+										triggerButtonProps={{
+											className: 'esf:grow',
 										}}
-										className='es-rounded-1 es-mt-1 es-font-weight-500'
+										className='esf:max-w-xs esf:p-16'
+										wrapperClassName='es-uic-theme-orange'
 									>
-										{__('View changes', 'eightshift-forms')}
-									</Button>
-								}
-							</Control>
+										<RichLabel
+											icon={reset}
+											label={__('Reset form?', 'eightshift-forms')}
+											subtitle={__('Current configuration will be deleted.', 'eightshift-forms')}
+										/>
 
-							<Control help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}>
-								<Button
-									icon={icons.data}
-									onClick={() => {
-										// Sync integration blocks.
-										clearTransientCache(block).then((msg) => createNotice('success', msg, {
-											type: 'snackbar',
-										}));
-									}}
-									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-								>
-									{__('Clear cache', 'eightshift-forms')}
-								</Button>
-							</Control>
-						</div>
-					}
-				</Section>
+										<HStack className='esf:justify-end esf:mt-20'>
+											<Button
+												slot='close'
+												type='ghost'
+											>
+												{__('Cancel', 'eightshift-forms')}
+											</Button>
 
-				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')} noBottomSpacing>
-					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')} noBottomSpacing>
-						<Button
-							icon={icons.reset}
-							onClick={() => {
-								// Reset block to original state.
-								resetInnerBlocks(clientId, true);
-							}}
-							className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-						>
-							{__('Reset form', 'eightshift-forms')}
-						</Button>
-					</Control>
-				</Section>
+											<Button
+												onClick={() => {
+													// Reset block to original state.
+													resetInnerBlocks(clientId, true);
+												}}
+												type='selected'
+												slot='close'
+											>
+												{__('Reset', 'eightshift-forms')}
+											</Button>
+										</HStack>
+									</TriggeredPopover>
+								</BaseControl>
+							</Container>
+						</ContainerGroup>
+					</ContainerPanel>
+				</TabPanel>
+			</Tabs>
 
-				{isModalOpen &&
-					<SyncModal />
-				}
-
-			</PanelBody>
-
-			<StepMultiflowOptions
-				{...props('step', attributes, {
-					setAttributes,
-					stepMultiflowPostId: postId,
-				})}
-			/>
+			<SyncModal />
 		</>
 	);
 };

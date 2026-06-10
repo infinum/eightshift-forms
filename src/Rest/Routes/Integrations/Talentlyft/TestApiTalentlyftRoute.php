@@ -32,13 +32,6 @@ class TestApiTalentlyftRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsTalentlyft::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Talentlyft data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $talentlyftClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiTalentlyftRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $talentlyftClient
+		protected ClientInterface $talentlyftClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->talentlyftClient = $talentlyftClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiTalentlyftRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

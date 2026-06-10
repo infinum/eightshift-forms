@@ -67,31 +67,19 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 	public const SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY = 'validation-use-only-logged-in';
 
 	/**
-	 * Instance variable for labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 */
-	public function __construct(LabelsInterface $labels)
-	{
-		$this->labels = $labels;
-	}
+	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
 	}
 
 	/**
@@ -105,7 +93,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 	{
 		$formType = GeneralHelpers::getFormTypeById($formId);
 
-		if (!$formType) {
+		if ($formType === '' || $formType === '0') {
 			return [];
 		}
 
@@ -118,19 +106,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Messages', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => SettingsHelpers::getSettingName($key),
-								'inputFieldLabel' => \ucfirst($key),
-								'inputPlaceholder' => $this->labels->getLabels()[$formType][$key] ?? '',
-								'inputValue' => SettingsHelpers::getSettingValue($key, $formId),
-							],
-						],
-					],
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Users', 'eightshift-forms'),
@@ -187,6 +162,19 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							] : []),
 						],
 					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Messages', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => SettingsHelpers::getSettingName($key),
+								'inputFieldLabel' => \ucfirst($key),
+								'inputPlaceholder' => $this->labels->getLabels()[$formType][$key] ?? '',
+								'inputValue' => SettingsHelpers::getSettingValue($key, $formId),
+							],
+						],
+					],
 				],
 			],
 		];
@@ -209,7 +197,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 		$messagesOutput = [];
 
 		$locale = FormsHelper::getLocaleFromCountryCode();
-		if ($locale) {
+		if ($locale !== '' && $locale !== '0') {
 			\switch_to_locale($locale);
 		}
 
@@ -217,7 +205,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 		foreach ($this->labels->getLabels() as $type => $labels) {
 			$output = [
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
@@ -242,8 +229,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 
 			$messagesOutput[] = $output;
 		}
-
-		$missingExtensions = FileSecurityDiagnostics::getMissingExtensions();
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
@@ -271,12 +256,11 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
@@ -301,37 +285,23 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 								'component' => 'intro',
 								'introTitle' => \__('File upload security stack', 'eightshift-forms'),
 							],
-							[
+							...(\array_map(fn(array $extension): array => [
 								'component' => 'card-inline',
-								'cardInlineTitle' => \__('QPDF binary', 'eightshift-forms'),
-								'cardInlineSubTitle' => FileSecurityDiagnostics::getQpdfBinary()
-									? \__('Configured and executable. Full PDF scanning is active.', 'eightshift-forms')
-									: \__('Not found or not executable. PDF scanning is limited to raw-byte checks, which are less reliable.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => \__('proc_open()', 'eightshift-forms'),
-								'cardInlineSubTitle' => FileSecurityDiagnostics::isProcOpenAvailable()
-									? \__('Enabled. qpdf can be invoked when its binary path is wired.', 'eightshift-forms')
-									: \__('Disabled in php.ini. qpdf integration cannot run; raw-byte PDF scan still works.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => \__('PHP extensions', 'eightshift-forms'),
-								'cardInlineSubTitle' => empty($missingExtensions)
-									? \__('All required PHP extensions are loaded (fileinfo, zip, dom, gd or imagick).', 'eightshift-forms')
-									: \sprintf(
-										// translators: %s is a comma-separated list of missing PHP extension names.
-										\__('Missing required PHP extensions: %s.', 'eightshift-forms'),
-										'<code>' . \esc_html(\implode(', ', $missingExtensions)) . '</code>'
-									),
-							],
+								'cardInlineTitle' => $extension['title'] ?? '',
+								'cardInlineSubTitle' => $extension['subtitle'] ?? '',
+								'cardInlineRightContent' => [
+									[
+										'component' => 'status-light',
+										'statusLightType' => $extension['status'] ? 'success' : 'error',
+									],
+								],
+							], FileSecurityDiagnostics::getExtensionStatuses())),
 						],
 					],
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Messages', 'eightshift-forms'),
-						'tabNoBg' => true,
+						'tabWithBg' => false,
 						'tabContent' => $messagesOutput,
 					],
 				]

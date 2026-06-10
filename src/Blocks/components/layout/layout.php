@@ -8,42 +8,26 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$layoutUse = Helpers::checkAttr('layoutUse', $attributes, $manifest);
-if (!$layoutUse) {
-	return;
-}
-
-$componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$blockClass = $attributes['blockClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $layoutContent = Helpers::checkAttr('layoutContent', $attributes, $manifest);
-$layoutTag = Helpers::checkAttr('layoutTag', $attributes, $manifest);
 $layoutType = Helpers::checkAttr('layoutType', $attributes, $manifest);
-
-$layoutClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($blockClass, $blockClass, $selectorClass),
-	Helpers::selector($additionalClass, $additionalClass),
-]);
+$layoutWithBg = Helpers::checkAttr('layoutWithBg', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 
 ?>
 
-<<?php echo esc_attr($layoutTag); ?>
-	class="<?php echo esc_attr($layoutClass); ?>"
-	data-layout-type="<?php echo esc_attr($layoutType); ?>"
+<div
+	class="<?php echo esc_attr(Helpers::clsx([
+		'esf:grid esf:gap-12 esf:grid-cols-12',
+		$layoutWithBg ? 'esf:p-20 esf:bg-white esf:border esf:border-mist-200 esf:rounded-2xl esf:inset-shadow-sm esf:inset-shadow-gray-50' : '',
+		$layoutType === 'layout-grid-half' ? "esf:items-center esf:[&>*]:col-span-6" : 'esf:items-center esf:[&>*]:col-span-12',
+		$additionalClass,
+	])); ?>"
 	<?php
-	foreach ($additionalAttributes as $key => $value) {
-		if (!empty($key) && !empty($value)) {
-			echo wp_kses_post(" {$key}='" . $value . "'");
-		}
-	}
+	echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes));
 	?>>
-	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-		?>
-	</div>
-</<?php echo esc_attr($layoutTag); ?>>
+	<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+	?>
+</div>

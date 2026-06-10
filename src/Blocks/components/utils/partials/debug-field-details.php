@@ -20,8 +20,12 @@ if (!DeveloperHelpers::isDeveloperModeActive()) {
 
 $fieldManifest = Helpers::getComponent('field');
 
-$componentClass = Helpers::classnames([
-	Helpers::selector(true, $fieldManifest['componentClass'], 'debug'),
+$additionalClass = $attributes['additionalClass'] ?? '';
+$componentClass = $fieldManifest['componentClass'] ?? '';
+
+$debugClasses = Helpers::clsx([
+	$additionalClass,
+	Helpers::bem($componentClass, 'debug'),
 ]);
 
 $output = [
@@ -34,7 +38,7 @@ if (!array_filter(array_values($output))) {
 
 ?>
 
-<div class="<?php echo esc_attr($componentClass); ?>" role="none" aria-hidden="true" tabindex="-1">
+<div class="<?php echo esc_attr($debugClasses); ?>" role="none" aria-hidden="true" tabindex="-1">
 	<?php
 	foreach ($output as $key => $value) {
 		if (!$value) {
@@ -43,7 +47,7 @@ if (!array_filter(array_values($output))) {
 
 		$keyName = ucfirst($key);
 
-		echo esc_html("{$keyName}: {$value}");
+		echo esc_html($value);
 	}
 	?>
 </div>

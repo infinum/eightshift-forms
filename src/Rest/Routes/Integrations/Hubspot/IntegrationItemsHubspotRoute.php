@@ -20,19 +20,13 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class IntegrationItemsHubspotRoute
  */
 class IntegrationItemsHubspotRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable for Hubspot data.
-	 *
-	 * @var HubspotClientInterface
-	 */
-	protected $hubspotClient;
-
 	/**
 	 * Route slug.
 	 */
@@ -60,19 +54,17 @@ class IntegrationItemsHubspotRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		HubspotClientInterface $hubspotClient
+		protected HubspotClientInterface $hubspotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->hubspotClient = $hubspotClient;
 	}
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +72,6 @@ class IntegrationItemsHubspotRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -125,7 +115,7 @@ class IntegrationItemsHubspotRoute extends AbstractSimpleFormSubmit
 
 		$items = $this->hubspotClient->getItems();
 
-		if (!$items) {
+		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
@@ -138,7 +128,7 @@ class IntegrationItemsHubspotRoute extends AbstractSimpleFormSubmit
 		}
 
 		$items = \array_filter(\array_values(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$id = $item['id'] ?? '';
 
 				if ($id) {

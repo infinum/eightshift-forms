@@ -1,43 +1,29 @@
-import React from 'react';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { MissingName, usePreventSaveOnMissingProps } from './../../utils';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
 export const StepEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('step');
-
-	const {
-		componentClass,
-	} = manifest;
-
-	const {
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId } = attributes;
 
 	const stepName = checkAttr('stepName', attributes, manifest);
 	const stepLabel = checkAttr('stepLabel', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('stepName', attributes, manifest), stepName);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('stepName', attributes, manifest), stepName);
 
-	const stepClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	const blockProps = useBlockProps({
+		className: 'esf:flex esf:items-center es:font-sans esf:py-12',
+	});
 
 	return (
-		<div className={stepClass}>
-			<div className={`${componentClass}__inner`}>
+		<div {...blockProps}>
+			<div className='esf:grow esf:h-px esf:bg-current esf:mask-l-from-75%' />
+			<div className='esf:border esf:border-current esf:rounded-xl esf:py-4 esf:px-10 esf:text-base esf:flex esf:items-center esf:gap-6'>
 				{stepLabel ? stepLabel : stepName}
-			</div>
 
-			<MissingName value={stepName} className={`${componentClass}__missing`} />
+				<MissingName value={stepName} />
+			</div>
+			<div className='esf:grow esf:h-px esf:bg-current esf:mask-r-from-75%' />
 		</div>
 	);
 };

@@ -30,10 +30,12 @@ use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Validation\ValidationPatterns;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\IntegrationsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * EnqueueBlocks class.
@@ -46,30 +48,15 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	use SharedEnqueue;
 
 	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Instance variable of geolocation data.
-	 *
-	 * @var GeolocationInterface
-	 */
-	protected GeolocationInterface $geolocation;
-
-	/**
 	 * Create a new admin instance.
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
 	 */
-	public function __construct(EnrichmentInterface $enrichment, GeolocationInterface $geolocation)
-	{
-		$this->enrichment = $enrichment;
-		$this->geolocation = $geolocation;
-	}
+	public function __construct(
+		protected EnrichmentInterface $enrichment,
+		protected GeolocationInterface $geolocation
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -77,23 +64,25 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public function register(): void
 	{
 		// Editor only script.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScript']);
+		\add_action('enqueue_block_assets', $this->enqueueBlockEditorScript(...));
 
 		// Editor only style.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
+		\add_action('enqueue_block_assets', $this->enqueueBlockEditorStyle(...), 50);
 
 		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
+		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendStyleMandatory(...), 49);
+		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendStyleLocal(...), 50);
 
 		// Frontend only script.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript'], 11);
+		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendScript(...), 11);
+
+		if (GeneralHelpers::isEightshiftFormsCpt()) {
+			\add_action('enqueue_block_editor_assets', $this->unregisterDefaultStyleOverrides(...), 102);
+		}
 	}
 
 	/**
 	 * Method that returns assets name used to prefix asset handlers.
-	 *
-	 * @return string
 	 */
 	public function getAssetsPrefix(): string
 	{
@@ -102,8 +91,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Method that returns assets version for versioning asset handlers.
-	 *
-	 * @return string
 	 */
 	public function getAssetsVersion(): string
 	{
@@ -116,11 +103,14 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Enqueue blocks style for editor only.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function enqueueBlockEditorStyle(): void
 	{
+		if (!\is_admin()) {
+			return;
+		}
+
 		$handle = $this->getBlockEditorStyleHandle();
 
 		\wp_register_style(
@@ -136,9 +126,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Editor.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function enqueueBlockEditorScript(): void
 	{
 		// If not admin exit.
@@ -192,6 +181,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @return string[] List of all the admin dependencies.
 	 */
+	#[Override]
 	protected function getBlockEditorScriptDependencies(): array
 	{
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksEditor']);
@@ -203,9 +193,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		return \array_merge(
 			parent::getBlockEditorScriptDependencies(),
-			[
-				'lodash',
-			],
+			[],
 			$scriptsDependencyOutput
 		);
 	}
@@ -216,8 +204,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Method that returns editor and frontend style with check.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockFrontendStyleMandatory(): void
 	{
@@ -240,8 +226,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Method that returns editor and frontend style with check.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockFrontendStyleLocal(): void
 	{
@@ -260,6 +244,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @return array<int, string> List of all the style dependencies.
 	 */
+	#[Override]
 	protected function getBlockFrontendStyleDependencies(): array
 	{
 		return ["{$this->getAssetsPrefix()}-block-frontend-mandatory-style"];
@@ -267,9 +252,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Frontend.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function enqueueBlockFrontendScript(): void
 	{
 		parent::enqueueBlockFrontendScript();
@@ -337,33 +321,28 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		// layer can render the right widget without probing multiple top-level keys.
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$provider = SettingsCaptcha::getActiveProvider();
-
-			switch ($provider) {
-				case SettingsCaptcha::PROVIDER_FRIENDLY:
-					$output['captcha'] = [
-						'isUsed' => true,
-						'type' => SettingsCaptcha::PROVIDER_FRIENDLY,
-						'siteKey' => SettingsHelpers::getOptionWithConstant(
-							Variables::getFriendlyCaptchaSiteKey(),
-							SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY
-						),
-						'endpoint' => FriendlyCaptcha::getEndpoint(),
-						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
-					];
-					break;
-				default:
-					$output['captcha'] = [
-						'isUsed' => true,
-						'type' => SettingsCaptcha::PROVIDER_GOOGLE,
-						'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
-						'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY),
-						'submitAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'initAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
-						'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
-					];
-					break;
-			}
+			$output['captcha'] = match ($provider) {
+				SettingsCaptcha::PROVIDER_FRIENDLY => [
+					'isUsed' => true,
+					'type' => SettingsCaptcha::PROVIDER_FRIENDLY,
+					'siteKey' => SettingsHelpers::getOptionWithConstant(
+						Variables::getFriendlyCaptchaSiteKey(),
+						SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_SITE_KEY
+					),
+					'endpoint' => FriendlyCaptcha::getEndpoint(),
+					'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+				],
+				default => [
+					'isUsed' => true,
+					'type' => SettingsCaptcha::PROVIDER_GOOGLE,
+					'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+					'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY),
+					'submitAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'initAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+					'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+				],
+			};
 		} else {
 			$output['captcha'] = [
 				'isUsed' => false,

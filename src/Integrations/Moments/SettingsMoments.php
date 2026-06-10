@@ -86,49 +86,30 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 	public const SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY = 'moments-events-email-field';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(SettingsFallbackDataInterface $settingsFallback)
-	{
-		$this->settingsFallback = $settingsFallback;
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY);
 		$url = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY);
-
-		if (!$isUsed || !$apiKey || !$url) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$apiKey || !$url);
 	}
 
 	/**
@@ -144,7 +125,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 
 		$formFields = GeneralHelpers::getFormDetails($formId)[Config::FD_FIELD_NAMES] ?? [];
 
-		$eventsMap = !empty($formFields) ? \array_fill(1, \count($formFields) - 1, 'question') : [];
+		$eventsMap = empty($formFields) ? [] : \array_fill(1, \count($formFields) - 1, 'question');
 
 		$eventsMapValue = SettingsHelpers::getSettingValueGroup(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
 		$eventsEmailFieldValue = SettingsHelpers::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
@@ -178,7 +159,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 							...($useEvents ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
@@ -188,14 +169,12 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 									'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
 									'selectIsRequired' => true,
 									'selectContent' => \array_map(
-										static function ($option) use ($eventsEmailFieldValue) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option,
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $eventsEmailFieldValue === $option,
-											];
-										},
+										static fn($option): array => [
+											'component' => 'select-option',
+											'selectOptionLabel' => $option,
+											'selectOptionValue' => $option,
+											'selectOptionIsSelected' => $eventsEmailFieldValue === $option,
+										],
 										$formFields
 									),
 								],
@@ -211,13 +190,11 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								...(($eventsEmailFieldValue && $eventsEventNameValue) ? [
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'group',
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
-										'groupSaveOneField' => true,
-										'groupStyle' => 'default-listing',
 										'groupContent' => [
 											[
 												'component' => 'field',
@@ -227,7 +204,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 												'fieldIsFiftyFiftyHorizontal' => true,
 											],
 											...\array_map(
-												static function ($item, $index) use ($eventsMapValue, $formFields) {
+												static function (string|int $item, int $index) use ($eventsMapValue, $formFields): array {
 													$indexName = \str_pad((string) $index, 2, '0', \STR_PAD_LEFT);
 													$name = "{$item}{$indexName}";
 
@@ -241,14 +218,12 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 														'selectFieldIsFiftyFiftyHorizontal' => true,
 														'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
 														'selectContent' => \array_map(
-															static function ($option) use ($selectedValue) {
-																return [
-																	'component' => 'select-option',
-																	'selectOptionLabel' => $option,
-																	'selectOptionValue' => $option,
-																	'selectOptionIsSelected' => $selectedValue === $option,
-																];
-															},
+															static fn($option): array => [
+																'component' => 'select-option',
+																'selectOptionLabel' => $option,
+																'selectOptionValue' => $option,
+																'selectOptionIsSelected' => $selectedValue === $option,
+															],
 															$formFields
 														),
 													];
@@ -308,15 +283,13 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyMoments(),
@@ -326,7 +299,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUrlMoments(),
@@ -336,7 +309,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

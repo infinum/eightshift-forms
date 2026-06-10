@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "hubspot",
 	"title": "HubSpot form",
 	"description" : "HubSpot subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-hubspot"
+		"src": "hubspot"
 	},
 	"keywords": [
 		"hubspot"

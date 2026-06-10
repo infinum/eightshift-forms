@@ -22,7 +22,6 @@ if (!$dateName) {
 $dateValue = Helpers::checkAttr('dateValue', $attributes, $manifest);
 $datePlaceholder = Helpers::checkAttr('datePlaceholder', $attributes, $manifest);
 $dateIsDisabled = Helpers::checkAttr('dateIsDisabled', $attributes, $manifest);
-$dateIsReadOnly = Helpers::checkAttr('dateIsReadOnly', $attributes, $manifest);
 $dateIsRequired = Helpers::checkAttr('dateIsRequired', $attributes, $manifest);
 $dateTracking = Helpers::checkAttr('dateTracking', $attributes, $manifest);
 $dateType = Helpers::checkAttr('dateType', $attributes, $manifest);
@@ -33,7 +32,7 @@ $dateOutputFormat = Helpers::checkAttr('dateOutputFormat', $attributes, $manifes
 $dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
 $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
 $dateMode = Helpers::checkAttr('dateMode', $attributes, $manifest);
-$dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $manifest);
+$dateTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $dateId = $dateName . '-' . Helpers::getUnique();
 
@@ -43,9 +42,9 @@ $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes,
 
 $twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date']);
 
-$dateClass = Helpers::classnames([
+$dateClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'date', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 if ($dateValue) {
@@ -70,6 +69,11 @@ if ($dateIsRequired) {
 }
 
 $dateAttrs['aria-invalid'] = 'false';
+$dateOutput = FormsHelper::getTwSelectorsOutput($dateTwSelectorsData['date'] ?? [], 'date');
+
+if ($dateOutput !== '' && $dateOutput !== '0') {
+	$dateAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $dateOutput;
+}
 
 // Additional content filter.
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('date', $attributes);
@@ -81,8 +85,7 @@ $date = '
 		id="' . esc_attr($dateId) . '"
 		type="' . esc_attr($dateType) . '"
 		' . disabled($dateIsDisabled, true, false) . '
-		' . wp_readonly($dateIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($dateAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($dateAttrs)) . '
 	/>
 	' . $additionalContent . '
 ';

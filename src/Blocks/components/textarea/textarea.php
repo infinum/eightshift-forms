@@ -22,20 +22,16 @@ if (!$textareaName) {
 $textareaValue = Helpers::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Helpers::checkAttr('textareaPlaceholder', $attributes, $manifest);
 $textareaIsDisabled = Helpers::checkAttr('textareaIsDisabled', $attributes, $manifest);
-$textareaIsReadOnly = Helpers::checkAttr('textareaIsReadOnly', $attributes, $manifest);
 $textareaIsRequired = Helpers::checkAttr('textareaIsRequired', $attributes, $manifest);
 $textareaTracking = Helpers::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaAttrs = Helpers::checkAttr('textareaAttrs', $attributes, $manifest);
-$textareaIsMonospace = Helpers::checkAttr('textareaIsMonospace', $attributes, $manifest);
 $textareaSaveAsJson = Helpers::checkAttr('textareaSaveAsJson', $attributes, $manifest);
 $textareaTypeCustom = Helpers::checkAttr('textareaTypeCustom', $attributes, $manifest);
 $textareaFieldAttrs = Helpers::checkAttr('textareaFieldAttrs', $attributes, $manifest);
-$textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
-$textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
-$textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
 $textareaAlternativeOutputEscape = Helpers::checkAttr('textareaAlternativeOutputEscape', $attributes, $manifest);
+$textareaTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $textareaId = $textareaName . '-' . Helpers::getUnique();
 
@@ -45,12 +41,9 @@ $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $att
 
 $twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea']);
 
-$textareaClass = Helpers::classnames([
+$textareaClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
-	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),
-	Helpers::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
+	$additionalClass,
 ]);
 
 if ($textareaSaveAsJson) {
@@ -81,19 +74,14 @@ $textareaAttrs['aria-invalid'] = 'false';
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('textarea', $attributes);
 
 // For outputting textarea value as HTML, we need to escape the value.
-if ($textareaAlternativeOutputEscape) {
-	$textareaValue = esc_html($textareaValue);
-} else {
-	$textareaValue = wp_kses_post($textareaValue);
-}
+$textareaValue = $textareaAlternativeOutputEscape ? esc_html($textareaValue) : wp_kses_post($textareaValue);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
 		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
-		' . wp_readonly($textareaIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($textareaAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($textareaAttrs)) . '
 	>' . $textareaValue . '</textarea>
 	' . $additionalContent . '
 ';

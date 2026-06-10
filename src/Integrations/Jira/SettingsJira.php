@@ -117,44 +117,25 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	public const SETTINGS_JIRA_SKIP_INTEGRATION_KEY = 'jira-skip-integration';
 
 	/**
-	 * Instance variable for Jira data.
-	 *
-	 * @var JiraClientInterface
-	 */
-	protected $jiraClient;
-
-	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
-		JiraClientInterface $jiraClient,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->jiraClient = $jiraClient;
-		$this->settingsFallback = $settingsFallback;
-	}
+		protected JiraClientInterface $jiraClient,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -162,8 +143,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -173,17 +152,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 
 		$selectedProject = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
-		if (!$selectedProject) {
+		if ($selectedProject === '' || $selectedProject === '0') {
 			return false;
 		}
 
 		$selectedIssueType = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
-
-		if (!$selectedIssueType) {
-			return false;
-		}
-
-		return true;
+		return (bool) $selectedIssueType;
 	}
 
 	/**
@@ -224,38 +198,34 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'selectSingleSubmit' => true,
 								'selectPlaceholder' => \__('Select project', 'eightshift-forms'),
 								'selectContent' => \array_map(
-									static function ($option) use ($selectedProject) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['key'],
-											'selectOptionIsSelected' => $selectedProject === $option['key'],
-										];
-									},
+									static fn(array $option): array => [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['key'],
+										'selectOptionIsSelected' => $selectedProject === $option['key'],
+									],
 									$this->jiraClient->getProjects()
 								),
 							],
-							$selectedProject ? [
+							$selectedProject !== '' && $selectedProject !== '0' ? [
 								'component' => 'select',
 								'selectSingleSubmit' => true,
 								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
 								'selectFieldLabel' => \__('Issue type', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select issue type', 'eightshift-forms'),
 								'selectContent' => \array_map(
-									static function ($option) use ($selectedIssueType) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => $selectedIssueType === $option['id'],
-										];
-									},
+									static fn(array $option): array => [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => $selectedIssueType === $option['id'],
+									],
 									$this->jiraClient->getIssueType($selectedProject)
 								),
 							] : [],
 						],
 					],
-					$selectedIssueType ? [
+					$selectedIssueType !== '' && $selectedIssueType !== '0' ? [
 						'component' => 'tab',
 						'tabLabel' => \__('Parameter mapping', 'eightshift-forms'),
 						'tabContent' => [
@@ -276,16 +246,19 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES])),
+								'introSubtitle' => \sprintf(
+									// translators: %s will be replaced with the field tags.
+									\__('All fields will be outputted in the Jira issue description field using table layout but you can also map individual custom field. %s', 'eightshift-forms'),
+									SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES]))
+								),
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'checkboxes',
@@ -298,14 +271,13 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 										'checkboxIsChecked' => $manualMapParams,
 										'checkboxValue' => self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...(($customFields && !$this->jiraClient->isSelfHosted()) ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'field',
@@ -317,11 +289,9 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								[
 									'component' => 'group',
 									'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
-									'groupSaveOneField' => true,
-									'groupStyle' => 'default-listing',
 									'groupContent' => [
 										...\array_map(
-											function ($item) use ($mapParams) {
+											function (array $item) use ($mapParams) {
 												$id  = $item['id'] ?? '';
 
 												if ($id) {
@@ -349,8 +319,6 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
@@ -358,12 +326,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY);
 		$apiBoard = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY);
 		$apiUser = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY);
-
-		if (!$isUsed || !$apiKey || !$apiBoard || !$apiUser) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$apiKey || !$apiBoard || !$apiUser);
 	}
 
 	/**
@@ -407,15 +370,13 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyJira(),
@@ -425,7 +386,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiBoardJira(),
@@ -436,7 +397,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUserJira(),
@@ -447,7 +408,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -460,13 +421,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 											'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 											'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
 											'checkboxAsToggle' => true,
-											'checkboxAsToggleSize' => 'medium',
 										],
 									],
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -483,7 +443,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => false,
-								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a difference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
 							],
 						],
@@ -498,7 +458,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Jira Account.', 'eightshift-forms'),
-									// translators: %s will be replaced with the api externa link.
+									// translators: %s will be replaced with the api external link.
 									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong>.', 'eightshift-forms'), 'https://id.atlassian.com/manage-profile/security/api-tokens'),
 									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],

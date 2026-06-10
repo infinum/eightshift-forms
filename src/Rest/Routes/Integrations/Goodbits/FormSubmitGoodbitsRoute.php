@@ -37,13 +37,6 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsGoodbits::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Goodbits data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $goodbitsClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $goodbitsClient
+		protected ClientInterface $goodbitsClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +62,6 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->goodbitsClient = $goodbitsClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +107,9 @@ class FormSubmitGoodbitsRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Goodbits is missing config.
 	 * @throws DisabledIntegrationException If Goodbits is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY, SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

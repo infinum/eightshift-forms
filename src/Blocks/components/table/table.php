@@ -8,36 +8,30 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$componentClass = $manifest['componentClass'] ?? '';
-$additionalClass = $attributes['additionalClass'] ?? '';
-$selectorClass = $attributes['selectorClass'] ?? $componentClass;
-
 $tableContent = Helpers::checkAttr('tableContent', $attributes, $manifest);
 $tableHead = Helpers::checkAttr('tableHead', $attributes, $manifest);
-
-$tableWrapClass = Helpers::clsx([
-	$componentClass,
-	Helpers::bem($selectorClass, $componentClass),
-	$additionalClass,
-]);
-
-$tableClass = Helpers::selector($componentClass, $componentClass, 'table');
+$additionalClass = $attributes['additionalClass'] ?? '';
 
 if (!$tableContent) {
 	return;
 }
 
+$classes = Helpers::clsx([
+	'esf:relative',
+	'esf:overflow-auto',
+	$additionalClass,
+]);
 ?>
 
-<div class="<?php echo esc_attr($tableWrapClass); ?>">
-	<table>
+<div class="<?php echo esc_attr($classes); ?>">
+	<table class="esf:border-spacing-0 esf:w-full">
 		<?php if ($tableHead) { ?>
-			<thead>
+			<thead class="esf:bg-gray-100">
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
-						<th>
+						<th class="esf:border-r esf:border-b esf:border-mist-200 esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
-							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 							?>
 						</th>
 					<?php } ?>
@@ -48,9 +42,9 @@ if (!$tableContent) {
 			<?php foreach ($tableContent as $row) { ?>
 				<tr>
 					<?php foreach ($tableHead as $headKey => $headValue) { ?>
-						<td>
+						<td class="esf:border-r esf:border-b esf:border-mist-200 esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
-							echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+							echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 							?>
 						</td>
 					<?php } ?>

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.0.0]
+
+### Added
+
+- Compatibility for WordPress 6.9+ - apiVersion 3 blocks.
+
+### Updated
+
+- Updated admin visuals.
+- Reworked all editor options and editor components for all blocks, fields, ...
+
 ## [9.5.3]
 
 ### Fixed
@@ -1887,6 +1898,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...10.0.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
 [9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2
 [9.5.1]: https://github.com/infinum/eightshift-forms/compare/9.5.0...9.5.1

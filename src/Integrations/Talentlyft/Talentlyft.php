@@ -30,31 +30,19 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	public const FILTER_FORM_FIELDS_NAME = 'es_talentlyft_form_fields_filter';
 
 	/**
-	 * Instance variable for Talentlyft data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $talentlyftClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $talentlyftClient Inject Talentlyft which holds Talentlyft connect data.
 	 */
-	public function __construct(ClientInterface $talentlyftClient)
-	{
-		$this->talentlyftClient = $talentlyftClient;
-	}
+	public function __construct(protected ClientInterface $talentlyftClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -78,13 +66,13 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 		// Get fields.
 		$item = $this->talentlyftClient->getItem($itemId);
 
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -103,7 +91,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	private function getFields(array $data, string $formId): array
 	{
-		if (!$data) {
+		if ($data === []) {
 			return [];
 		}
 
@@ -117,41 +105,29 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			$key = $item['Key'] ?? '';
 
 			$type = $item['Type'] ?? '';
-			$name = !empty($key) ? "q_{$key}" : '';
+			$name = empty($key) ? '' : "q_{$key}";
 			$tracking = $key;
 			$label = $item['DisplayName'] ?? '';
 			$fields = $item['Choices'] ?? [];
 			$internalType = $type;
-			$required = isset($item['Required']) ? (bool) $item['Required'] : false;
+			$required = isset($item['Required']) && (bool) $item['Required'];
 
-			if (!$name) {
+			if ($name === '' || $name === '0') {
 				$name = isset($item['Id']) ? "q_{$item['Id']}" : '';
 			}
 
 			if (empty($key)) {
 				$internalType = 'customField';
 			}
-
-			if (!$name) {
+			if ($name === '') {
+				continue;
+			}
+			if ($name === '0') {
 				continue;
 			}
 
 			switch ($type) {
 				case 'text':
-					$output[] = [
-						'component' => 'input',
-						'inputName' => $name,
-						'inputTracking' => $tracking,
-						'inputFieldLabel' => $label,
-						'inputType' => 'text',
-						'inputIsRequired' => $required,
-						'inputTypeCustom' => $internalType,
-						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$required ? 'inputIsRequired' : '',
-							'inputTypeCustom',
-						]),
-					];
-					break;
 				case 'address':
 					$output[] = [
 						'component' => 'input',
@@ -244,32 +220,28 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 					if ($name === 'q_Salutation') {
 						$selectContent = \array_values(
 							\array_map(
-								function ($selectOption) {
-									return [
-										'component' => 'select-option',
-										'selectOptionValue' => $selectOption['Body'],
-										'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									];
-								},
+								fn(array $selectOption): array => [
+									'component' => 'select-option',
+									'selectOptionValue' => $selectOption['Body'],
+									'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$fields
 							),
 						);
 					} else {
 						$selectContent = \array_values(
 							\array_map(
-								function ($selectOption) {
-									return [
-										'component' => 'select-option',
-										'selectOptionValue' => (string) $selectOption['Id'],
-										'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									];
-								},
+								fn(array $selectOption): array => [
+									'component' => 'select-option',
+									'selectOptionValue' => (string) $selectOption['Id'],
+									'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$fields
 							),
 						);
@@ -313,17 +285,15 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'checkboxesIsRequired' => $required,
 						'checkboxesTypeCustom' => $internalType,
 						'checkboxesContent' => \array_map(
-							function ($checkbox) use ($tracking) {
-								return [
-									'component' => 'checkbox',
-									'checkboxValue' => (string) $checkbox['Id'],
-									'checkboxLabel' => $checkbox['DisplayName'] ?? '',
-									'checkboxTracking' => $tracking,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue',
-									], false),
-								];
-							},
+							fn(array $checkbox): array => [
+								'component' => 'checkbox',
+								'checkboxValue' => (string) $checkbox['Id'],
+								'checkboxLabel' => $checkbox['DisplayName'] ?? '',
+								'checkboxTracking' => $tracking,
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxValue',
+								], false),
+							],
 							$fields
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
@@ -341,17 +311,15 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'radiosIsRequired' => $required,
 						'radiosTypeCustom' => $internalType,
 						'radiosContent' => \array_map(
-							function ($radio) use ($tracking) {
-								return [
-									'component' => 'radio',
-									'radioValue' => (string) $radio['Id'],
-									'radioLabel' => $radio['DisplayName'] ?? '',
-									'radioTracking' => $tracking,
-									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-										'radioValue',
-									], false),
-								];
-							},
+							fn(array $radio): array => [
+								'component' => 'radio',
+								'radioValue' => (string) $radio['Id'],
+								'radioLabel' => $radio['DisplayName'] ?? '',
+								'radioTracking' => $tracking,
+								'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+									'radioValue',
+								], false),
+							],
 							$fields
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -414,7 +382,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;
@@ -429,7 +397,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	private function getComplianceFields(array $compliance): array
 	{
-		if (!$compliance) {
+		if ($compliance === []) {
 			return [];
 		}
 
@@ -456,7 +424,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	{
 		$text = SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY);
 
-		if (!$text) {
+		if ($text === '' || $text === '0') {
 			return [];
 		}
 
@@ -501,7 +469,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	{
 		$text = SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY);
 
-		if (!$text) {
+		if ($text === '' || $text === '0') {
 			return [];
 		}
 
@@ -550,7 +518,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 
 		$text = SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY);
 
-		if (!$text) {
+		if ($text === '' || $text === '0') {
 			return [];
 		}
 

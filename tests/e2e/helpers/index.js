@@ -47,13 +47,9 @@ const submitFormAction = async (page, urlPattern = SUBMIT_URL) => {
 
 	// Set up waitForRequest and waitForResponse BEFORE submitting (order matters!)
 	// Using waitForResponse ensures the API call completes and reaches the real API
-	const requestPromise = page.waitForRequest(
-		(request) => request.url().includes(urlPattern),
-	);
+	const requestPromise = page.waitForRequest((request) => request.url().includes(urlPattern));
 
-	const responsePromise = page.waitForResponse(
-		(response) => response.url().includes(urlPattern),
-	);
+	const responsePromise = page.waitForResponse((response) => response.url().includes(urlPattern));
 
 	// Submit the form - this will trigger the actual API call
 	await submitButton.click();
@@ -61,7 +57,7 @@ const submitFormAction = async (page, urlPattern = SUBMIT_URL) => {
 	// Wait for both request and response
 	const request = await requestPromise;
 	const response = await responsePromise;
-	
+
 	// Get the response body
 	const responseData = await response.json();
 
@@ -97,7 +93,10 @@ const submitFormAction = async (page, urlPattern = SUBMIT_URL) => {
 						continue;
 					}
 
-					const jsonValue = part.substring(bodyStart + 4).trim().replace(/\r\n$/, '');
+					const jsonValue = part
+						.substring(bodyStart + 4)
+						.trim()
+						.replace(/\r\n$/, '');
 
 					try {
 						result[fieldName] = JSON.parse(jsonValue);
@@ -310,10 +309,7 @@ const populateDateMultiple = async (page, name, values) => {
  * @returns {Promise<Object>} The request data including method, URL, and postData.
  */
 const getNetworkRequest = async (page, urlPattern, timeout = 10000) => {
-	const response = await page.waitForResponse(
-		(response) => response.url().includes(urlPattern),
-		{ timeout }
-	);
+	const response = await page.waitForResponse((response) => response.url().includes(urlPattern), { timeout });
 
 	const request = response.request();
 	let postData = null;
@@ -399,4 +395,3 @@ module.exports = {
 	getFieldSuffixContent,
 	getFieldHelp,
 };
-

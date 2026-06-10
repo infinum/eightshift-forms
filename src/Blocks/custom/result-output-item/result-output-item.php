@@ -43,13 +43,13 @@ if ($resultOutputData['isRedirectPage']) {
 	$resultClass[] = UtilsHelper::getStateSelector('isHidden');
 }
 
-$resultClassOutput = Helpers::classnames($resultClass);
+$resultClassOutput = Helpers::clsx($resultClass);
 
 ?>
 
 <div
 	class="<?php echo esc_attr($resultClassOutput); ?>"
-	<?php echo Helpers::getAttrsOutput($resultAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($resultAttrs));
 	?>>
 	<?php echo $renderContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>

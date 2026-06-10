@@ -22,12 +22,10 @@ class ResultOutputItemShowForm implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_shortcode('esFormsROISF', [$this, 'callback']);
+		\add_shortcode('esFormsROISF', $this->callback(...));
 	}
 
 	/**
@@ -35,8 +33,6 @@ class ResultOutputItemShowForm implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $atts Attributes passed to the shortcode.
 	 * @param string $content Content inside the shortcode.
-	 *
-	 * @return string
 	 */
 	public function callback(array $atts, string $content): string
 	{

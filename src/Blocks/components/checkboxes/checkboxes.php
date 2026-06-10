@@ -21,24 +21,21 @@ $checkboxesTypeCustom = Helpers::checkAttr('checkboxesTypeCustom', $attributes, 
 $checkboxesFieldAttrs = Helpers::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
 $checkboxesUseLabelAsPlaceholder = Helpers::checkAttr('checkboxesUseLabelAsPlaceholder', $attributes, $manifest);
 $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
-$checkboxesTwSelectorsData = Helpers::checkAttr('checkboxesTwSelectorsData', $attributes, $manifest);
 
 $checkboxesId = $checkboxesName . '-' . Helpers::getUnique();
 
 // Add internal counter name key.
-$checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
-	return 'name="' . $checkboxesName . '"';
-}, $checkboxesContent);
+$checkboxesContent = (string) preg_replace_callback('/name=""/', fn(): string => 'name="' . $checkboxesName . '"', (string) $checkboxesContent);
 
 // Add internal counter id key.
 $indexId = 0;
-$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesId) {
+$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesId): string {
 	return 'id="' . $checkboxesId . '[' . $indexId++ . ']"';
 }, $checkboxesContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesId) {
+$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesId): string {
 	return 'for="' . $checkboxesId . '[' . $indexLabel++ . ']"';
 }, $checkboxesContent);
 
@@ -85,7 +82,7 @@ $fieldOutput = [
 	'fieldId' => $checkboxesId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 	'fieldName' => $checkboxesName,
-	'fieldTwSelectorsData' => $checkboxesTwSelectorsData,
+	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

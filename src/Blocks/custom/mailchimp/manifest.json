@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "mailchimp",
 	"title": "Mailchimp form",
 	"description" : "Mailchimp subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-mailchimp"
+		"src": "mailchimp"
 	},
 	"keywords": [
 		"mailchimp"

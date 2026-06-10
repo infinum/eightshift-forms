@@ -132,10 +132,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"fieldIsFiftyFiftyHorizontal": {
-			"type": "boolean",
-			"default": false
-		},
 		"fieldIsNoneFormBlock": {
 			"type": "boolean",
 			"default": false
@@ -157,7 +153,8 @@
 			{
 				"inverse": true,
 				"variable": {
-					"es-field-width": "calc((%value% / 12) * 100%)"
+					"es-field-width": "calc((%value% / 12) * 100%)",
+					"es-field-width-tw": "%value%"
 				}
 			}
 		],

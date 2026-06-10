@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { SelectEditor } from './components/select-editor';
 import { SelectOptions } from './components/select-options';

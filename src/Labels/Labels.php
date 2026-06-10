@@ -48,7 +48,7 @@ class Labels implements LabelsInterface
 	 */
 	public function getLabels(): array
 	{
-		$output = [
+		return [
 			'validationField' => $this->getValidationFieldLabels(),
 			'validationForm' => $this->getValidationFormLabels(),
 			'validationSteps' => $this->getValidationStepsLabels(),
@@ -74,8 +74,6 @@ class Labels implements LabelsInterface
 			'calculator' => $this->getCalculatorLabels(),
 			'nationbuilder' => $this->getNationbuilderLabels(),
 		];
-
-		return $output;
 	}
 
 	/**
@@ -83,13 +81,11 @@ class Labels implements LabelsInterface
 	 *
 	 * @param string $key Label key.
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public function getLabel(string $key, string $formId = ''): string
 	{
 		// If form ID is not missing check form settings for the overrides.
-		if (!empty($formId)) {
+		if ($formId !== '' && $formId !== '0') {
 			$local = \array_flip(self::ALL_LOCAL_LABELS);
 
 			if (isset($local[$key])) {
@@ -99,7 +95,7 @@ class Labels implements LabelsInterface
 			}
 
 			// If there is an override in the DB use that.
-			if (!empty($dbLabel)) {
+			if ($dbLabel !== '' && $dbLabel !== '0') {
 				return \esc_html($dbLabel);
 			}
 		}

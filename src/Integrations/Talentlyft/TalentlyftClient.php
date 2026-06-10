@@ -52,7 +52,7 @@ class TalentlyftClient implements ClientInterface
 		if (!$output) {
 			$items = $this->getTalentlyftItems();
 
-			if ($items) {
+			if ($items !== []) {
 				foreach ($items as $item) {
 					$id = $item['Id'] ?? '';
 
@@ -188,21 +188,16 @@ class TalentlyftClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['Message'] ?? '';
 
-		switch ($msg) {
-			case 'An error has occurred':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR;
-			case 'Validation Failed':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'An error has occurred' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR,
+			'Validation Failed' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -220,17 +215,19 @@ class TalentlyftClient implements ClientInterface
 		foreach ($errors as $error) {
 			$field = $error['Field'] ?? '';
 			$message = $error['Message'] ?? '';
-
-			if (!$message || !$field) {
+			if (!$message) {
+				continue;
+			}
+			if (!$field) {
 				continue;
 			}
 
 			// Validate req fields.
-			\preg_match_all("/(The )(\w*)( field is required.)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
+			\preg_match_all("/(The )(\w*)( field is required.)/", (string) $message, $matchesReq, \PREG_SET_ORDER, 0);
 
-			if ($matchesReq) {
+			if ($matchesReq !== []) {
 				$key = $matchesReq[0][2] ?: '';
-				if ($key) {
+				if ($key !== '' && $key !== '0') {
 					$output["q_{$key}"] = 'validationRequired';
 				}
 			}
@@ -383,7 +380,7 @@ class TalentlyftClient implements ClientInterface
 				continue;
 			}
 
-			$name = \preg_replace('/^q_/', '', $name);
+			$name = \preg_replace('/^q_/', '', (string) $name);
 
 			switch ($typeCustom) {
 				case 'customField':
@@ -416,7 +413,7 @@ class TalentlyftClient implements ClientInterface
 			}
 		}
 
-		if ($outputCustom) {
+		if ($outputCustom !== []) {
 			// Due to poor API design we need to send custom fields in two different ways.
 			$output['CustomFieldAnswers'] = $outputCustom;
 			$output['Answers'] = $outputCustom;
@@ -458,7 +455,7 @@ class TalentlyftClient implements ClientInterface
 
 			$typeCustom = $items['typeCustom'] ?? '';
 
-			$name = \preg_replace('/^q_/', '', $name);
+			$name = \preg_replace('/^q_/', '', (string) $name);
 
 			foreach ($value as $file) {
 				$fileName = UploadHelpers::getFileNameFromPath($file);
@@ -487,7 +484,7 @@ class TalentlyftClient implements ClientInterface
 			}
 		}
 
-		if ($outputCustom) {
+		if ($outputCustom !== []) {
 			// Due to poor API design we need to send custom fields in two different ways.
 			$output['CustomFieldAnswers'] = $outputCustom;
 			$output['Answers'] = $outputCustom;
@@ -498,8 +495,6 @@ class TalentlyftClient implements ClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{
@@ -508,8 +503,6 @@ class TalentlyftClient implements ClientInterface
 
 	/**
 	 * Return base url.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(): string
 	{

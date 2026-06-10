@@ -1,29 +1,18 @@
-import React from 'react';
-import { select } from '@wordpress/data';
-import {
-	checkAttr,
-	props,
-	icons,
-	AsyncSelect,
-	getAttrKey,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
-import { __, sprintf } from '@wordpress/i18n';
-import { Placeholder } from '@wordpress/components';
-import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';
-import { FormEditButton, outputFormSelectItemWithIcon } from '../../../components/utils';
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
+import { form, globeAnchor } from '@eightshift/ui-components/icons';
+import { __ } from '@wordpress/i18n';
+import { FormEditButton } from '../../../components/utils';
+import { Container, ContainerGroup, Notice, RichLabel, BaseControl } from '@eightshift/ui-components';
+import { upperFirst } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
-export const FormsEditor = ({
-	attributes,
-	setAttributes,
-	preview,
-	formSelectOptions,
-}) => {
-	const manifest = select(STORE_NAME).getBlock('forms');
+export const FormsEditor = ({ attributes, preview }) => {
+	const { isGeoPreview } = preview;
 
-	const {
-		isGeoPreview,
-	} = preview;
+	const blockProps = useBlockProps({
+		className: 'esf:p-8 es:font-sans',
+	});
 
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 	const formsFormPostIdRaw = checkAttr('formsFormPostIdRaw', attributes, manifest);
@@ -31,80 +20,81 @@ export const FormsEditor = ({
 
 	if (formsFormPostId?.length < 1) {
 		return (
-			<Placeholder
-				icon={icons.form}
-				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-				className='es-max-w-80 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
-			>
-				<AsyncSelect
-					label={<span className='es-mb-0! es-mx-0! es-mt-1! es-text-3.5 es-font-weight-500'>To get started, select a form:</span>}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={outputFormSelectItemWithIcon(Object.keys(formsFormPostIdRaw).length ? formsFormPostIdRaw : {id: formsFormPostId})}
-					loadOptions={formSelectOptions}
-					onChange={(value) => {
-						setAttributes({
-							[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
-								id: value?.id,
-								label: value?.metadata?.label,
-								value: value?.metadata?.value,
-								metadata: value?.metadata?.metadata,
-							},
-							[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
-						});
-					}}
-					noBottomSpacing
+			<div className='esf:p-8 es:font-sans'>
+				<Notice
+					type='placeholder'
+					icon={form}
+					label={__('Eightshift Forms', 'eightshift-forms')}
+					subtitle={__('Select a form in the block options', 'eightshift-forms')}
+					className='esf:w-fit'
 				/>
-			</Placeholder>
+			</div>
 		);
 	}
 
+	const formId = formsFormPostIdRaw?.id ?? formsFormPostIdRaw?.value;
+
 	return (
-		<>
-			{isGeoPreview &&
-				<div className='es-text-7 es-mb-3 es-text-align-center es-font-weight-700'>
-					{__('Original form', 'eightshift-forms')}
-				</div>
-			}
+		<div {...blockProps}>
+			<ContainerGroup className='esf:max-w-sm'>
+				<Container
+					elevated
+					centered
+					compact
+					accent
+				>
+					<span className='esf:text-xs esf:font-stretch-110% esf:font-normal!'>{__('Eightshift Forms', 'eightshift-forms')}</span>
+				</Container>
 
-			<Placeholder
-				icon={icons.form}
-				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-				className='es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
-				isColumnLayout={true}
+				<Container centered>
+					<BaseControl
+						icon={form}
+						label={formsFormPostIdRaw?.label}
+						subtitle={upperFirst(formsFormPostIdRaw?.metadata)}
+						className='esf:w-full'
+						inline
+					>
+						<FormEditButton formId={formId} />
+					</BaseControl>
+				</Container>
+
+				<Container
+					hidden={!isGeoPreview}
+					centered
+				>
+					<RichLabel
+						icon={globeAnchor}
+						label={__('Original form', 'eightshift-forms')}
+						subtitle={__('Geolocation', 'eightshift-forms')}
+					/>
+				</Container>
+			</ContainerGroup>
+
+			<ContainerGroup
+				hidden={!isGeoPreview || formsFormGeolocationAlternatives?.length < 1}
+				label={__('Geolocation alternatives', 'eightshift-forms')}
+				className='esf:max-w-sm'
 			>
-				{sprintf(__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'), formsFormPostIdRaw?.label, formsFormPostIdRaw?.metadata)}
-				<br />
-				<FormEditButton formId={formsFormPostIdRaw?.id} />
-			</Placeholder>
-
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
-				isFormPicker
-			/>
-
-			{isGeoPreview &&
-				<>
-					<div className='es-mt-5 es-text-7 es-text-align-center es-font-weight-700'>
-						{__('Geolocation alternatives', 'eightshift-forms')}
-					</div>
-					{formsFormGeolocationAlternatives.map((item, index) => {
-						return (
-							<Placeholder
-								key={index}
-								icon={icons.form}
-								label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-								className='es-rounded-3! es-mt-5! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+				{formsFormGeolocationAlternatives.map((item, index) => {
+					return (
+						<Container
+							key={index}
+							icon={form}
+							label={<span>{__('Eightshift Forms', 'eightshift-forms')}</span>}
+						>
+							<BaseControl
+								icon={form}
+								label={`${item?.form?.label} (${item?.form?.metadata})`}
+								subtitle={item.geoLocation.join(', ')}
+								subtitleClassName='es:font-mono'
+								inline
 							>
-								{sprintf(__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'), item?.form?.label, item?.form?.metadata)}
-								<br />
-								{sprintf(__('Geolocation used: "%s"', 'eightshift-forms'), item.geoLocation.join(', '))}
-								<br />
-								<FormEditButton formId={item?.form?.id} />
-							</Placeholder>
-						);
-					})}
-				</>
-			}
-		</>
+								<FormEditButton formId={item?.form?.id ?? item?.form?.value} />
+							</BaseControl>
+						</Container>
+					);
+				})}
+			</ContainerGroup>
+		</div>
 	);
 };

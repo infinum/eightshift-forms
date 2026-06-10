@@ -22,24 +22,21 @@ $radiosFieldAttrs = Helpers::checkAttr('radiosFieldAttrs', $attributes, $manifes
 $radiosTracking = Helpers::checkAttr('radiosTracking', $attributes, $manifest);
 $radiosUseLabelAsPlaceholder = Helpers::checkAttr('radiosUseLabelAsPlaceholder', $attributes, $manifest);
 $radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manifest);
-$radiosTwSelectorsData = Helpers::checkAttr('radiosTwSelectorsData', $attributes, $manifest);
 
 $radiosId = $radiosName . '-' . Helpers::getUnique();
 
 // Add internal counter name key.
-$radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
-	return 'name="' . $radiosName . '"';
-}, $radiosContent);
+$radiosContent = (string) preg_replace_callback('/name=""/', fn(): string => 'name="' . $radiosName . '"', (string) $radiosContent);
 
 // Add internal counter id key.
 $indexId = 0;
-$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId) {
+$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId): string {
 	return 'id="' . $radiosId . '[' . $indexId++ . ']"';
 }, $radiosContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId) {
+$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId): string {
 	return 'for="' . $radiosId . '[' . $indexLabel++ . ']"';
 }, $radiosContent);
 
@@ -88,7 +85,7 @@ $fieldOutput = [
 	'fieldIsRequired' => $radiosIsRequired,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
 	'fieldId' => $radiosId,
-	'fieldTwSelectorsData' => $radiosTwSelectorsData,
+	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

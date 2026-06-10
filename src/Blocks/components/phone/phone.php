@@ -26,7 +26,6 @@ if (!$phoneName) {
 $phoneValue = Helpers::checkAttr('phoneValue', $attributes, $manifest);
 $phonePlaceholder = Helpers::checkAttr('phonePlaceholder', $attributes, $manifest);
 $phoneIsDisabled = Helpers::checkAttr('phoneIsDisabled', $attributes, $manifest);
-$phoneIsReadOnly = Helpers::checkAttr('phoneIsReadOnly', $attributes, $manifest);
 $phoneIsRequired = Helpers::checkAttr('phoneIsRequired', $attributes, $manifest);
 $phoneTracking = Helpers::checkAttr('phoneTracking', $attributes, $manifest);
 $phoneAttrs = Helpers::checkAttr('phoneAttrs', $attributes, $manifest);
@@ -35,7 +34,7 @@ $phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest)
 $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
-$phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
+$phoneTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 $phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
 $phoneViewType = Helpers::checkAttr('phoneViewType', $attributes, $manifest);
 $phoneValueType = Helpers::checkAttr('phoneValueType', $attributes, $manifest);
@@ -48,12 +47,12 @@ $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attribute
 
 $twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
 
-$phoneClass = Helpers::classnames([
+$phoneClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
-$phoneSelectClass = Helpers::classnames([
+$phoneSelectClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
 ]);
@@ -86,7 +85,7 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['phone']['dataset'];
 	}
 
-	$phoneSelectValue = str_replace(' ', '', strtolower($phoneSelectValue));
+	$phoneSelectValue = str_replace(' ', '', strtolower((string) $phoneSelectValue));
 
 	$phoneAttrsSelect[UtilsHelper::getStateAttribute('countryOutputType')] = esc_attr($phoneValueType);
 
@@ -94,24 +93,18 @@ if (has_filter($filterName)) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
-		$unlocalizedLabel = $option[3] ?? '';
+		$unLocalizedLabel = $option[3] ?? '';
 
-		switch ($phoneViewType) {
-			case 'number-country-code':
-				$optionLabel = "+{$value} (" . strtoupper($code) . ")";
-				break;
-			case 'number-country-label':
-				$optionLabel = "(+{$value}) {$label}";
-				break;
-			default:
-				$optionLabel = "+{$value}";
-				break;
-		}
+		$optionLabel = match ($phoneViewType) {
+									'number-country-code' => "+{$value} (" . strtoupper((string) $code) . ")",
+									'number-country-label' => "(+{$value}) {$label}",
+									default => "+{$value}",
+		};
 
 		$customProperties = [
 			UtilsHelper::getStateAttribute('countryCode') => $code,
 			UtilsHelper::getStateAttribute('countryName') => $label,
-			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unlocalizedLabel,
+			UtilsHelper::getStateAttribute('countryUnlocalizedName') => $unLocalizedLabel,
 			UtilsHelper::getStateAttribute('countryNumber') => $value,
 		];
 
@@ -122,13 +115,18 @@ if (has_filter($filterName)) {
 		$options[] = '
 			<option
 				value="' . $code . '"
-				' .  Helpers::getAttrsOutput($optionAttrs) . '
+				' .  wp_kses_post(Helpers::getAttrsOutput($optionAttrs)) . '
 				' . selected($code, $phoneSelectValue, false) . '
 			>' . $optionLabel . '</option>';
 	}
 }
 
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
+$phoneOutput = FormsHelper::getTwSelectorsOutput($phoneTwSelectorsData['phone'] ?? [], 'phone');
+
+if ($phoneOutput !== '' && $phoneOutput !== '0') {
+	$phoneAttrsSelect[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $phoneOutput;
+}
 
 if ($phoneIsRequired) {
 	$phoneAttrs['aria-required'] = 'true';
@@ -137,13 +135,14 @@ if ($phoneIsRequired) {
 $phoneAttrs['aria-invalid'] = 'false';
 $phoneAttrs['autocomplete'] = 'tel';
 
+$phoneAttrsSelect['aria-label'] = esc_attr__('Country code', 'eightshift-forms');
 
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		aria-label="' . esc_attr__('Country code', 'eightshift-forms') . '"
-		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
+		' . disabled($phoneIsDisabled, true, false) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrsSelect)) . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -152,8 +151,7 @@ $phone = '
 		type="tel"
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
-		' . wp_readonly($phoneIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($phoneAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($phoneAttrs)) . '
 	/>
 	' . $additionalContent . '
 ';

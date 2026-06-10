@@ -103,15 +103,13 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -119,36 +117,21 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
-
-		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY);
 	}
 
 	/**
@@ -170,25 +153,6 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
-			($isUsed ? [
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
-				'layoutContent' => [
-					[
-						'component' => 'card-inline',
-						'cardInlineTitle' => \__('View all entries in database', 'eightshift-forms'),
-						'cardInlineRightContent' => [
-							[
-								'component' => 'submit',
-								'submitVariant' => 'ghost',
-								'submitButtonAsLink' => true,
-								'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, $formId),
-								'submitValue' => \__('View', 'eightshift-forms'),
-							],
-						],
-					],
-				],
-			] : []),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -197,25 +161,35 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 						'tabLabel' => \__('Entries', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'checkboxes',
-								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
-								'checkboxesContent' => [
+								'component' => 'card-inline',
+								'cardInlineTitle' => \__('Store entries in database', 'eightshift-forms'),
+								'cardInlineRightContent' => [
 									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
-										'checkboxIsChecked' => $isUsed,
-										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
+										'component' => 'button',
+										'buttonVariant' => 'primaryGhost',
+										'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, $formId),
+										'buttonLabel' => \__('View', 'eightshift-forms'),
+									],
+									[
+										'component' => 'checkboxes',
+										'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
+										'checkboxesContent' => [
+											[
+												'component' => 'checkbox',
+												'checkboxHideLabelText' => true,
+												'checkboxIsChecked' => $isUsed,
+												'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
+												'checkboxSingleSubmit' => true,
+												'checkboxAsToggle' => true,
+											],
+										],
 									],
 								],
-								// translators: %s is the link to the listing page.
-								'checkboxesFieldHelp' => $isUsed ? \sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 							],
 							...($isUsed ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -235,7 +209,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -273,7 +247,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -303,7 +277,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 										'inputIsNumber' => true,
 										'inputPlaceholder' => self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_DEFAULT_VALUE,
 										'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-										'inputFieldInlineBeforeAfterContent' => true,
+										'additionalFieldClass' => 'esf-input-with-suffix',
 										'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId),
 									],
 								] : [])
@@ -340,25 +314,22 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								'introSubtitle' => \__('Entries collection will allow you to store every form submission into the database and preview the data from WordPress admin.', 'eightshift-forms'),
 							],
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('In order to use entries collection you need to activate it on every form you would like to use it.', 'eightshift-forms'),
-								'introIsHighlighted' => true,
-								'introIsHighlightedImportant' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('In order to use entries collection you need to activate it on every form you would like to use it.', 'eightshift-forms'),
+								'noticeType' => 'warning',
 							],
 							[
 								'component' => 'layout',
-								'layoutType' => 'layout-v-stack-clean',
 								'layoutContent' => [
 									[
 										'component' => 'card-inline',
 										'cardInlineTitle' => \__('View all entries in database', 'eightshift-forms'),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitVariant' => 'ghost',
-												'submitButtonAsLink' => true,
-												'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES),
-												'submitValue' => \__('View all entries', 'eightshift-forms'),
+												'component' => 'button',
+												'buttonVariant' => 'primaryGhost',
+												'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES),
+												'buttonLabel' => \__('View all entries', 'eightshift-forms'),
 											],
 										],
 									],

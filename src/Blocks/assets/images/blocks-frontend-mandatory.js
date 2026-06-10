@@ -5,4 +5,5 @@
  * Usage: `WordPress frontend screen`.
  */
 
-import './../../components/country/images/flags.png';
+import './items/flags.png';
+import './items/flags.webp';

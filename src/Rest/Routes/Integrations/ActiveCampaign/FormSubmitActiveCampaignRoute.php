@@ -38,13 +38,6 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for ActiveCampaign data.
-	 *
-	 * @var ActiveCampaignClientInterface
-	 */
-	private $activeCampaignClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -62,7 +55,10 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ActiveCampaignClientInterface $activeCampaignClient
+		/**
+		 * Instance variable for ActiveCampaign data.
+		 */
+		private readonly ActiveCampaignClientInterface $activeCampaignClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -70,7 +66,6 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->activeCampaignClient = $activeCampaignClient;
 	}
 
 	/**
@@ -85,8 +80,6 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -118,9 +111,9 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

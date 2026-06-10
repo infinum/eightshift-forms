@@ -59,49 +59,30 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 	public const SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY = 'activecampaign-skip-integration';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds fallback settings data.
 	 */
-	public function __construct(SettingsFallbackDataInterface $settingsFallback)
-	{
-		$this->settingsFallback = $settingsFallback;
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
 		$url = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
-
-		if (!$isUsed || !$apiKey || !$url) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$apiKey || !$url);
 	}
 
 	/**
@@ -145,15 +126,13 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyActiveCampaign(),
@@ -163,7 +142,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUrlActiveCampaign(),
@@ -173,7 +152,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

@@ -102,33 +102,21 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_PAYCEK_ENTRY_ID_USE_KEY = 'paycek-entry-id-use';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(SettingsFallbackDataInterface $settingsFallback)
-	{
-		$this->settingsFallback = $settingsFallback;
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -136,8 +124,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -148,12 +134,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 		$lang = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$cartDesc = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
-
-		if (!$lang || !$mapParams || !$cartDesc) {
-			return false;
-		}
-
-		return true;
+		return !(!$lang || !$mapParams || !$cartDesc);
 	}
 
 	/**
@@ -218,7 +199,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'input',
@@ -252,7 +233,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'checkboxes',
@@ -279,8 +260,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
 										'component' => 'field',
@@ -290,31 +269,27 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 										'fieldIsFiftyFiftyHorizontal' => true,
 									],
 									...\array_map(
-										function ($item) use ($params, $mapParams) {
+										function (array $item) use ($params, $mapParams): array {
 											$options = [];
 
 											if ($item['type'] === 'internal-select') {
 												$options = \array_map(
-													static function ($option) use ($mapParams, $item) {
-														return [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														];
-													},
+													static fn($option): array => [
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
+													],
 													$item['value']
 												);
 											} else {
 												$options = \array_map(
-													static function ($option) use ($mapParams, $item) {
-														return [
-															'component' => 'select-option',
-															'selectOptionLabel' => $option,
-															'selectOptionValue' => $option,
-															'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
-														];
-													},
+													static fn($option): array => [
+														'component' => 'select-option',
+														'selectOptionLabel' => $option,
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $option === ($mapParams[$item['id']] ?? ''),
+													],
 													$params
 												);
 											}
@@ -342,20 +317,13 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY);
 		$profileKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY);
-
-		if (!$isUsed || !$apiKey || !$profileKey) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$apiKey || !$profileKey);
 	}
 
 	/**

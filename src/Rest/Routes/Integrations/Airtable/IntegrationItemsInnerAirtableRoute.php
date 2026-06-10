@@ -20,19 +20,13 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class IntegrationItemsInnerAirtableRoute
  */
 class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable for Airtable data.
-	 *
-	 * @var AirtableClientInterface
-	 */
-	protected $airtableClient;
-
 	/**
 	 * Route slug.
 	 */
@@ -60,19 +54,17 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		AirtableClientInterface $airtableClient
+		protected AirtableClientInterface $airtableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->airtableClient = $airtableClient;
 	}
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +72,6 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -127,7 +117,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 
 		$items = $this->airtableClient->getItem($params['id'] ?? '');
 
-		if (!$items) {
+		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
@@ -140,7 +130,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		}
 
 		$items = \array_filter(\array_values(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$id = $item['id'] ?? '';
 
 				if ($id) {

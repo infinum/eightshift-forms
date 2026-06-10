@@ -86,8 +86,6 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 	 * Member name contains path traversal segments or absolute paths.
 	 *
 	 * @param string $name Member name.
-	 *
-	 * @return bool
 	 */
 	private function hasPathTraversal(string $name): bool
 	{
@@ -105,21 +103,13 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 		}
 
 		$normalized = \str_replace('\\', '/', $name);
-		foreach (\explode('/', $normalized) as $segment) {
-			if ($segment === '..') {
-				return true;
-			}
-		}
-
-		return false;
+		return \array_any(\explode('/', $normalized), fn($segment): bool => $segment === '..');
 	}
 
 	/**
 	 * Lowercase extension extracted from an archive member name.
 	 *
 	 * @param string $name Member name.
-	 *
-	 * @return string
 	 */
 	private function getExtension(string $name): string
 	{

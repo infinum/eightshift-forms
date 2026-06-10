@@ -1,28 +1,39 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { props } from '@eightshift/frontend-libs/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsExternalBlocks, FieldOptionsLayout } from './../../../components/field/components/field-options';
+import { Tab, TabList, TabPanel, Tabs } from '@eightshift/ui-components';
 
 // This block is only used if you want to include custom external blocks to forms.
 export const FieldOptions = ({ attributes, setAttributes }) => {
 	return (
-		<PanelBody title={__('Field', 'eightshift-forms')}>
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					setAttributes,
-				})}
-				prefix={'field'}
-				fieldWidthLarge={attributes.fieldWidthLarge}
-				fieldWidthDesktop={attributes.fieldWidthDesktop}
-				fieldWidthTablet={attributes.fieldWidthTablet}
-				fieldWidthMobile={attributes.fieldWidthMobile}
-			/>
+		<>
+			<Tabs type='chips'>
+				<TabList>
+					<Tab label={__('General', 'eightshift-forms')} />
+					<Tab label={__('Design', 'eightshift-forms')} />
+				</TabList>
 
-			<FieldOptionsExternalBlocks
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-		</PanelBody>
+				<TabPanel>
+					<FieldOptionsExternalBlocks
+						attributes={attributes}
+						setAttributes={setAttributes}
+						prefix='field'
+					/>
+				</TabPanel>
+
+				<TabPanel>
+					<FieldOptionsLayout
+						{...props('field', attributes, {
+							setAttributes,
+						})}
+						prefix='field'
+						fieldWidthLarge={attributes.fieldWidthLarge}
+						fieldWidthDesktop={attributes.fieldWidthDesktop}
+						fieldWidthTablet={attributes.fieldWidthTablet}
+						fieldWidthMobile={attributes.fieldWidthMobile}
+					/>
+				</TabPanel>
+			</Tabs>
+		</>
 	);
 };

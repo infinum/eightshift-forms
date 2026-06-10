@@ -42,8 +42,6 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -74,9 +72,9 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If custom action is not set or empty.
 	 * @throws BadRequestException If custom action request fails.
 	 *
-	 * @return mixed
+	 * @return mixed[]
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$action = $formDetails[Config::FD_ACTION];
 		$formId = $formDetails[Config::FD_FORM_ID];

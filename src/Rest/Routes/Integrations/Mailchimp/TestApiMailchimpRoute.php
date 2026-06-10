@@ -32,13 +32,6 @@ class TestApiMailchimpRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsMailchimp::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Mailchimp data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $mailchimpClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiMailchimpRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $mailchimpClient
+		protected ClientInterface $mailchimpClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->mailchimpClient = $mailchimpClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiMailchimpRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

@@ -1,58 +1,31 @@
-/* global esFormsLocalization */
+import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
+import { StatusFieldOutput } from './../../utils';
+import { useBlockProps } from '@wordpress/block-editor';
+import { HStack } from '@eightshift/ui-components';
+import manifest from '../manifest.json';
 
-import React from 'react';
-import classnames from 'classnames';
-import { isObject } from 'lodash';
-import { __ } from '@wordpress/i18n';
-import { dispatch, select } from '@wordpress/data';
-import { selector, checkAttr, outputCssVariables, STORE_NAME, props } from '@eightshift/frontend-libs/scripts';
-import { MissingName, VisibilityHidden } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-
-export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fieldName }) => {
-	const manifest = select(STORE_NAME).getComponent('field');
-
-	const { componentClass } = manifest;
-
-	const fieldClass = classnames([selector(componentClass, componentClass), selector(componentClass, componentClass, '', 'field')]);
+export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) => {
+	const blockProps = useBlockProps();
 
 	return (
-		<div className={fieldClass}>
-			{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-			<div className={`${componentClass}__inner`}>
-				<div className={`${componentClass}__content`}>
-					<div className={`${componentClass}__content-wrap`}>
-						{children}
+		<div {...blockProps}>
+			<HStack>
+				<div>{children}</div>
 
-						<MissingName
-							value={fieldName}
-							isOptional
-						/>
-
-						{fieldName && (
-							<ConditionalTagsEditor
-								{...props('conditionalTags', attributes)}
-								conditionalTagsUse={attributes?.conditionalTagsUse}
-								useCustom
-							/>
-						)}
-					</div>
-				</div>
-			</div>
+				{fieldName && <StatusFieldOutput components={attributes?.conditionalTagsUse ? ['conditionals'] : []} />}
+			</HStack>
 		</div>
 	);
 };
-
 export const FieldEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('field');
+	const { statusSlot = [] } = attributes;
 
-	const { componentClass } = manifest;
-
-	const { selectorClass = componentClass, additionalFieldClass, clientId } = attributes;
+	const blockProps = useBlockProps({
+		className: 'esf:w-full esf:flex! esf:flex-col! esf:gap-4 esf:mb-20!',
+	});
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
-	const fieldIsRequired = checkAttr('fieldIsRequired', attributes, manifest);
 
 	// Enable option to skip field and just render content.
 	if (fieldSkip) {
@@ -64,98 +37,35 @@ export const FieldEditor = (attributes) => {
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
 	const fieldSuffixContent = checkAttr('fieldSuffixContent', attributes, manifest);
-	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
-	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const fieldClass = classnames([
-		selector(componentClass, componentClass),
-		selector(componentClass, componentClass, '', selectorClass),
-		selector(additionalFieldClass, additionalFieldClass),
-		selector(fieldHidden, 'es-form-is-hidden'),
-		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
-	]);
+	const statusFieldData = [fieldHidden && 'hidden', ...statusSlot].filter(Boolean);
 
-	const labelClass = classnames([selector(componentClass, componentClass, 'label'), selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required')]);
-
-	const LabelDefault = () => (
-		<>
-			{!fieldHideLabel && (
-				<div className={labelClass}>
-					<span
-						className={`${componentClass}__label-inner`}
+	return (
+		<div {...blockProps}>
+			{fieldLabel && !fieldHideLabel && (
+				<HStack noWrap>
+					<div
+						className='esf:text-sm'
 						dangerouslySetInnerHTML={{ __html: fieldLabel }}
 					/>
-				</div>
+
+					<StatusFieldOutput components={statusFieldData} />
+				</HStack>
 			)}
-		</>
-	);
 
-	const LegendDefault = () => (
-		<>
-			{!fieldHideLabel && (
-				<div className={labelClass}>
-					<span
-						className={`${componentClass}__label-inner`}
-						dangerouslySetInnerHTML={{ __html: fieldLabel }}
-					/>
-				</div>
-			)}
-		</>
-	);
+			{!(fieldLabel && !fieldHideLabel) && <StatusFieldOutput components={statusFieldData} />}
 
-	const Content = () => (
-		<div className={`${componentClass}__content`}>
-			{fieldBeforeContent && <div className={`${componentClass}__before-content`}>{fieldBeforeContent}</div>}
-			<div className={`${componentClass}__content-wrap`}>
-				{fieldContent}
+			{fieldBeforeContent && <div className='esf:text-xs esf:text-current/80'>{fieldBeforeContent}</div>}
 
-				{fieldSuffixContent && <div className={`${componentClass}__suffix-content`}>{fieldSuffixContent}</div>}
-			</div>
-			{fieldAfterContent && <div className={`${componentClass}__after-content`}>{fieldAfterContent}</div>}
+			<div className={fieldHidden ? 'esf-field-hidden' : ''}>{fieldContent}</div>
+
+			{fieldSuffixContent && <div className='esf:text-xs esf:text-current/80'>{fieldSuffixContent}</div>}
+
+			{fieldAfterContent && <div className='esf:text-xs esf:text-current/80 esf:mt-8'>{fieldAfterContent}</div>}
+
+			{fieldHelp && <div className='esf:text-xs esf:font-medium esf:text-current/80'>{fieldHelp}</div>}
 		</div>
 	);
-
-	const Help = () => <div className={`${componentClass}__help`}>{fieldHelp}</div>;
-
-	const DivContent = () => {
-		return (
-			<div className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-
-				<div className={`${componentClass}__inner`}>
-					{fieldLabel && <LabelDefault />}
-					<Content />
-					<Help />
-				</div>
-
-				<VisibilityHidden
-					value={fieldHidden}
-					label={__('Field', 'eightshift-forms')}
-				/>
-			</div>
-		);
-	};
-
-	const FieldsetContent = () => {
-		return (
-			<fieldset className={fieldClass}>
-				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-
-				<div className={`${componentClass}__inner`}>
-					{fieldLabel && <LegendDefault />}
-					<Content />
-					<Help />
-				</div>
-
-				<VisibilityHidden
-					value={fieldHidden}
-					label={__('Field', 'eightshift-forms')}
-				/>
-			</fieldset>
-		);
-	};
-
-	return fieldType === 'div' ? <DivContent /> : <FieldsetContent />;
 };

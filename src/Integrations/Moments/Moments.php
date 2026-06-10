@@ -29,31 +29,19 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public const FILTER_FORM_FIELDS_NAME = 'es_moments_form_fields_filter';
 
 	/**
-	 * Instance variable for Moments data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $momentsClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
 	 */
-	public function __construct(ClientInterface $momentsClient)
-	{
-		$this->momentsClient = $momentsClient;
-	}
+	public function __construct(protected ClientInterface $momentsClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -77,13 +65,13 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Get fields.
 		$item = $this->momentsClient->getItem($itemId);
 
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -104,7 +92,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	{
 		$output = [];
 
-		if (!$data) {
+		if ($data === []) {
 			return $output;
 		}
 
@@ -119,12 +107,12 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				continue;
 			}
 
-			$type = $field['component'] ? \strtolower($field['component']) : '';
+			$type = $field['component'] ? \strtolower((string) $field['component']) : '';
 			$name = $field['fieldId'] ?? '';
 			$label = $field['label'] ?? '';
 			$options = $field['options'] ?? [];
-			$isRequired = isset($field['isRequired']) ? (bool) $field['isRequired'] : false;
-			$isHidden = isset($field['isHidden']) ? (bool) $field['isHidden'] : false;
+			$isRequired = isset($field['isRequired']) && (bool) $field['isRequired'];
+			$isHidden = isset($field['isHidden']) && (bool) $field['isHidden'];
 			$validationRules = $field['validationRules'] ?? [];
 			$validationMaxLength = $validationRules['maxLength'] ?? '';
 			$validationPattern = $validationRules['pattern'] ?? '';
@@ -321,61 +309,55 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$output[] = $textarea;
 					break;
 				case 'dropdown':
-					switch ($name) {
-						case 'country':
-							$dropdown = [
-								'component' => 'country',
-								'countryFieldLabel' => $label,
-								'countryFieldHidden' => $isHidden,
-								'countryName' => $name,
-								'countryTracking' => $name,
-								'countryIsRequired' => $isRequired,
-								'countryTypeCustom' => 'country',
-								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
-									$isRequired ? 'countryIsRequired' : '',
-									'countryTypeCustom',
-								]),
-								'countrySyncAttrsSkip' => [
-									'countryFieldHidden',
-								],
-							];
-							break;
-						default:
-							$dropdown = [
-								'component' => 'select',
-								'selectFieldLabel' => $label,
-								'selectFieldHidden' => $isHidden,
-								'selectName' => $name,
-								'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
-								'selectTracking' => $name,
-								'selectIsRequired' => $isRequired,
-								'selectContent' => \array_values(
-									\array_map(
-										function ($selectOption) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $selectOption['name'],
-												'selectOptionValue' => $selectOption['value'],
-												'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-													'selectOptionValue',
-												], false),
-												'selectOptionSyncAttrsSkip' => [
-													'selectOptionIsHidden',
-												],
-											];
-										},
-										$options
-									)
-								),
-								'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-									$isRequired ? 'selectIsRequired' : '',
-								]),
-								'selectSyncAttrsSkip' => [
-									'selectFieldHidden',
-								],
-							];
-							break;
-					}
+					$dropdown = match ($name) {
+						'country' => [
+							'component' => 'country',
+							'countryFieldLabel' => $label,
+							'countryFieldHidden' => $isHidden,
+							'countryName' => $name,
+							'countryTracking' => $name,
+							'countryIsRequired' => $isRequired,
+							'countryTypeCustom' => 'country',
+							'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
+								$isRequired ? 'countryIsRequired' : '',
+								'countryTypeCustom',
+							]),
+							'countrySyncAttrsSkip' => [
+								'countryFieldHidden',
+							],
+						],
+						default => [
+							'component' => 'select',
+							'selectFieldLabel' => $label,
+							'selectFieldHidden' => $isHidden,
+							'selectName' => $name,
+							'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+							'selectTracking' => $name,
+							'selectIsRequired' => $isRequired,
+							'selectContent' => \array_values(
+								\array_map(
+									fn(array $selectOption): array => [
+										'component' => 'select-option',
+										'selectOptionLabel' => $selectOption['name'],
+										'selectOptionValue' => $selectOption['value'],
+										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+											'selectOptionValue',
+										], false),
+										'selectOptionSyncAttrsSkip' => [
+											'selectOptionIsHidden',
+										],
+									],
+									$options
+								)
+							),
+							'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+								$isRequired ? 'selectIsRequired' : '',
+							]),
+							'selectSyncAttrsSkip' => [
+								'selectFieldHidden',
+							],
+						],
+					};
 
 					$output[] = $dropdown;
 					break;
@@ -388,19 +370,17 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'radiosIsRequired' => $isRequired,
 						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) {
-								return [
-									'component' => 'radio',
-									'radioLabel' => $radio['name'],
-									'radioValue' => $radio['value'],
-									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-										'radioValue',
-									], false),
-									'radioSyncAttrsSkip' => [
-										'radioIsHidden',
-									],
-								];
-							},
+							fn(array $radio): array => [
+								'component' => 'radio',
+								'radioLabel' => $radio['name'],
+								'radioValue' => $radio['value'],
+								'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+									'radioValue',
+								], false),
+								'radioSyncAttrsSkip' => [
+									'radioIsHidden',
+								],
+							],
 							$options
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -448,20 +428,18 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'checkboxesFieldHidden' => $isHidden,
 						'checkboxesIsRequired' => $isRequired,
 						'checkboxesContent' => \array_map(
-							function ($checkbox) use ($name) {
-								return [
-									'component' => 'checkbox',
-									'checkboxLabel' => $checkbox['name'],
-									'checkboxValue' => $checkbox['value'],
-									'checkboxTracking' => $name,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue',
-									], false),
-									'checkboxSyncAttrsSkip' => [
-										'checkboxIsHidden',
-									],
-								];
-							},
+							fn(array $checkbox): array => [
+								'component' => 'checkbox',
+								'checkboxLabel' => $checkbox['name'],
+								'checkboxValue' => $checkbox['value'],
+								'checkboxTracking' => $name,
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxValue',
+								], false),
+								'checkboxSyncAttrsSkip' => [
+									'checkboxIsHidden',
+								],
+							],
 							$options
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
@@ -485,7 +463,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

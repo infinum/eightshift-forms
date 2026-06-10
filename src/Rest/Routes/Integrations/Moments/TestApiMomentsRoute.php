@@ -32,13 +32,6 @@ class TestApiMomentsRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsMoments::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Moments data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $momentsClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiMomentsRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $momentsClient
+		protected ClientInterface $momentsClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->momentsClient = $momentsClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiMomentsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

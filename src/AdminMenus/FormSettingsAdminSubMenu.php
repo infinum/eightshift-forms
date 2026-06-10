@@ -18,6 +18,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
+use Override;
 
 /**
  * FormSettingsAdminSubMenu class.
@@ -25,46 +26,35 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable for all settings.
-	 *
-	 * @var SettingsBuilderInterface
-	 */
-	protected $settings;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsBuilderInterface $settings Settings builder data for injecting the form.
 	 */
-	public function __construct(SettingsBuilderInterface $settings)
-	{
-		$this->settings = $settings;
-	}
+	public function __construct(protected SettingsBuilderInterface $settings) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function register(): void
 	{
 		\add_action(
 			'admin_menu',
-			function () {
+			function (): void {
 				\add_submenu_page(
 					$this->getParentMenu(),
 					$this->getTitle(),
 					$this->getMenuTitle(),
 					$this->getCapability(),
 					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
+					$this->processAdminSubmenu(...)
 				);
 			},
 			30
 		);
 
-		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
-		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
+		\add_filter('parent_file', $this->changeHighlightParent(...), 31);
+		\add_filter('admin_title', $this->fixPageTitle(...), 10, 2);
 	}
 
 	/**
@@ -198,8 +188,9 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
-			// translators: %s will be replaced with the form edit link.
-			'adminSettingsNotice' => !$integrationTypeUsed ? \sprintf(\__('Please set a block type in the form\'s block editor. Configuration options will appear in the sidebar afterwards.  <a href="%s" target="_blank" rel="noopener noreferrer">Edit form &rarr;</a>', 'eightshift-forms'), $formEditLink) : '',
+			'adminSettingsNotice' => $integrationTypeUsed === '' || $integrationTypeUsed === '0' ?
+				// translators: %s will be replaced with the form edit link.
+				\sprintf(\__('Please set a block type in the form\'s block editor. Configuration options will appear in the sidebar afterwards.  <a href="%s" target="_blank" rel="noopener noreferrer">Edit form &rarr;</a>', 'eightshift-forms'), $formEditLink) : '',
 		];
 	}
 
@@ -225,13 +216,11 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @param string $adminTitle The page title, with extra context added.
 	 * @param string $title The original page title.
-
-	 * @return string
 	 */
 	public function fixPageTitle(string $adminTitle, string $title): string
 	{
 		if (\get_current_screen()->id === "admin_page_" . self::ADMIN_MENU_SLUG && $title === '') {
-			$adminTitle = $this->getTitle() . $adminTitle;
+			return $this->getTitle() . $adminTitle;
 		}
 
 		return $adminTitle;

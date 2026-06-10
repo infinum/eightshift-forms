@@ -1,4 +1,3 @@
-import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import { prefix, setStateWindow } from './state-init';
 
 /**

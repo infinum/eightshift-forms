@@ -34,7 +34,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 	{
 		$internalType = Config::SETTINGS_GLOBAL_TYPE_NAME;
 
-		if ($formId) {
+		if ($formId !== '' && $formId !== '0') {
 			$internalType = Config::SETTINGS_TYPE_NAME;
 		}
 
@@ -51,10 +51,8 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 
 			// Skip integration forms if they are not used in the Block editor.
 			// Mailer should be available on all integrations because it can be used as a backup option.
-			if (!$settingsForceShow) {
-				if ($formId && $type === Config::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
-					continue;
-				}
+			if (!$settingsForceShow && ($formId && $type === Config::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed)) {
+				continue;
 			}
 
 			$isUsedKey = $value['use'] ?? '';
@@ -70,7 +68,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			$output[$type][] = [
 				'label' => $labels['title'] ?? '',
 				'desc' => $labels['desc'] ?? '',
-				'url' => $formId ? GeneralHelpers::getSettingsPageUrl($formId, $key) : GeneralHelpers::getSettingsGlobalPageUrl($key),
+				'url' => $formId !== '' && $formId !== '0' ? GeneralHelpers::getSettingsPageUrl($formId, $key) : GeneralHelpers::getSettingsGlobalPageUrl($key),
 				'icon' => $labels['icon'] ?? '',
 				'type' => $type,
 				'key' => $key,
@@ -86,14 +84,12 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 	 *
 	 * @param string $type Form settings Type to show.
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public function getSettingsForm(string $type, string $formId): string
 	{
 		$internalType = Config::SETTINGS_GLOBAL_TYPE_NAME;
 
-		if ($formId) {
+		if ($formId !== '' && $formId !== '0') {
 			$internalType = Config::SETTINGS_TYPE_NAME;
 		}
 

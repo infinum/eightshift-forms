@@ -51,7 +51,7 @@ if (\class_exists(PluginFactory::class)) {
 	 */
 	\register_activation_hook(
 		__FILE__,
-		function () {
+		function (): void {
 			PluginFactory::activate();
 		}
 	);
@@ -61,7 +61,7 @@ if (\class_exists(PluginFactory::class)) {
 	 */
 	\register_deactivation_hook(
 		__FILE__,
-		function () {
+		function (): void {
 			PluginFactory::deactivate();
 		}
 	);
@@ -76,8 +76,8 @@ if (\class_exists(PluginFactory::class)) {
  */
 if (\class_exists(Main::class) && \class_exists(ManifestCache::class)) {
 	$sep = \DIRECTORY_SEPARATOR;
-	(new ManifestCache())->setAllCache();
-	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
+	new ManifestCache()->setAllCache();
+	new Main($loader->getPrefixesPsr4(), __NAMESPACE__)->register();
 
 	// Require public helper class.
 	require __DIR__ . "{$sep}src{$sep}Helpers{$sep}publicHelper.php";

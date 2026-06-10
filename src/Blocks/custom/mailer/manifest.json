@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "mailer",
 	"title": "Mailer form",
 	"description" : "A form with mailer",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form"
+		"src": "form"
 	},
 	"keywords": [
 		"form"

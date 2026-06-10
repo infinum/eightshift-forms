@@ -28,8 +28,6 @@ interface SettingsFallbackDataInterface
 	 * Get flag label.
 	 *
 	 * @param string $key Key to get label for.
-	 *
-	 * @return string
 	 */
 	public function getFlagLabel(string $key): string;
 }

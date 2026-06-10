@@ -42,8 +42,6 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -73,9 +71,9 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (!\apply_filters(SettingsCalculator::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped

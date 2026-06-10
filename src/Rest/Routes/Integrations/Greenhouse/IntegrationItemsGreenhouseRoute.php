@@ -20,19 +20,13 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class IntegrationItemsGreenhouseRoute
  */
 class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable for Greenhouse data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
 	/**
 	 * Route slug.
 	 */
@@ -60,19 +54,17 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $greenhouseClient
+		protected ClientInterface $greenhouseClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->greenhouseClient = $greenhouseClient;
 	}
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +72,6 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -125,7 +115,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 
 		$items = $this->greenhouseClient->getItems();
 
-		if (!$items) {
+		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
@@ -138,7 +128,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 		}
 
 		$items = \array_filter(\array_values(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$id = $item['id'] ?? '';
 
 				if ($id) {

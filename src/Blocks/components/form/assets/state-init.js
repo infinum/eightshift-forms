@@ -865,6 +865,8 @@ export function getState(keys, formId) {
 		if (!stateObject) {
 			return undefined;
 		}
+
+		return null;
 	});
 
 	return stateObject;
@@ -1059,7 +1061,7 @@ function isLocalStorageAvailable() {
 		localStorage.removeItem(test);
 
 		return true;
-	} catch (e) {
+	} catch {
 		return false;
 	}
 }

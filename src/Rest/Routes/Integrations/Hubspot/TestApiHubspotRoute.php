@@ -32,13 +32,6 @@ class TestApiHubspotRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsHubspot::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Hubspot data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $hubspotClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiHubspotRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $hubspotClient
+		protected ClientInterface $hubspotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->hubspotClient = $hubspotClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiHubspotRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

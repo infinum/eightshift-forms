@@ -20,8 +20,6 @@ interface SecurityInterface
 	 *
 	 * @param string $formType Form type.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isRequestValid(string $formType, string $formId): bool;
 
@@ -29,15 +27,11 @@ interface SecurityInterface
 	 * Get users Ip address.
 	 *
 	 * @param string $secureType Determine if the function will return normal, hashed or anonymized IP.
-	 *
-	 * @return string
 	 */
 	public function getIpAddress(string $secureType = 'none'): string;
 
 	/**
 	 * Get sanitized user agent string from the current request.
-	 *
-	 * @return string
 	 */
 	public function getUserAgent(): string;
 }

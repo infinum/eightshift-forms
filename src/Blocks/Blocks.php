@@ -12,11 +12,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_Block_Editor_Context;
 use WP_Post;
+use Override;
 
 /**
  * Class Blocks
@@ -25,22 +27,24 @@ class Blocks extends AbstractBlocks
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Register all custom blocks.
-		\add_action('init', [$this, 'registerBlocks'], 11);
+		\add_action('init', $this->registerBlocks(...), 11);
 
 		// Register all custom blocks from add-ons.
 		\add_filter(HooksHelpers::getFilterName(['blocks', 'allowedBlocks']), [$this, 'getAddonBlocks']);
 
 		// Create new custom category for custom blocks.
-		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+		\add_filter('block_categories_all', $this->getCustomCategory(...), 10, 2);
 
 		// Limits the usage of only custom project blocks.
-		\add_filter('allowed_block_types_all', [$this, 'getAllBlocksList'], 99999, 2);
+		\add_filter('allowed_block_types_all', $this->getAllBlocksList(...), 99999, 2);
+
+		if (GeneralHelpers::isEightshiftFormsAdminPages()) {
+			\remove_filter('the_content', 'wpautop');
+		}
 	}
 
 	/**
@@ -52,7 +56,8 @@ class Blocks extends AbstractBlocks
 	 *
 	 * @return bool|string[] The default list of blocks defined in the project.
 	 */
-	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
+	#[Override]
+	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext): bool|array
 	{
 		$settings = Helpers::getSettings()['allowedBlocksList'];
 
@@ -98,6 +103,7 @@ class Blocks extends AbstractBlocks
 	 *
 	 * @return array<array<string, mixed>> Array of categories for block types.
 	 */
+	#[Override]
 	public function getCustomCategory(array $categories, WP_Block_Editor_Context $blockEditorContext): array
 	{
 		return \array_merge(

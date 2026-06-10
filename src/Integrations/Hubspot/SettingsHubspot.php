@@ -75,60 +75,34 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 	public const SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY = 'hubspot-skip-integration';
 
 	/**
-	 * Instance variable for Hubspot data.
-	 *
-	 * @var HubspotClientInterface
-	 */
-	protected $hubspotClient;
-
-	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
-		HubspotClientInterface $hubspotClient,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->hubspotClient = $hubspotClient;
-		$this->settingsFallback = $settingsFallback;
-	}
+		protected HubspotClientInterface $hubspotClient,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY);
-
-		if (!$isUsed || !$apiKey) {
-			return false;
-		}
-
-		return true;
+		return $isUsed && $apiKey;
 	}
 
 	/**
@@ -136,7 +110,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 	 *
 	 * @param string $formId Form Id.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<mixed>
 	 */
 	public function getSettingsData(string $formId): array
 	{
@@ -165,7 +139,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'input',
@@ -228,15 +202,13 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyHubspot(),
@@ -246,7 +218,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements SettingGlo
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

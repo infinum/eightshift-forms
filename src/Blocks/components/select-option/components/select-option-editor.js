@@ -1,61 +1,30 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
+import { clsx } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
 export const SelectOptionEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('select-option');
-
-	const {
-		componentClass,
-	} = manifest;
-
-	const {
-		selectorClass = componentClass,
-		blockClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const selectOptionLabel = checkAttr('selectOptionLabel', attributes, manifest);
 	const selectOptionValue = checkAttr('selectOptionValue', attributes, manifest);
-	const selectOptionAsPlaceholder = checkAttr('selectOptionAsPlaceholder', attributes, manifest);
 	const selectOptionIsHidden = checkAttr('selectOptionIsHidden', attributes, manifest);
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
+	const selectOptionIsDisabled = checkAttr('selectOptionIsDisabled', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
-	const selectOptionClass = classnames([
-		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
-		selector(selectOptionIsHidden, 'es-form-is-hidden'),
-		selector(selectOptionLabel === '', componentClass, '', 'placeholder'),
-		selector(selectOptionIsSelected, componentClass, '', 'checked'),
-	]);
+	const blockProps = useBlockProps({
+		className: 'esf:flex esf:items-center esf:gap-12',
+	});
 
 	return (
-		<div className={selectOptionClass}>
-			<VisibilityHidden value={selectOptionIsHidden} label={__('Option', 'eightshift-forms')} />
+		<div {...blockProps}>
+			<div className={clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-mist-600!')}>{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}</div>
 
-			{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}
-
-			<MissingName value={selectOptionValue} asPlaceholder={selectOptionAsPlaceholder} />
-
-			{selectOptionValue &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
+			<StatusFieldOutput components={[selectOptionIsHidden && 'hidden', !selectOptionValue && 'missingName', selectOptionIsDisabled && 'disabled', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

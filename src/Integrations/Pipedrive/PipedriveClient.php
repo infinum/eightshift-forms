@@ -31,10 +31,8 @@ class PipedriveClient implements PipedriveClientInterface
 {
 	/**
 	 * Return Pipedrive base url.
-	 *
-	 * @var string
 	 */
-	private const BASE_URL = 'https://api.pipedrive.com/v1/';
+	private const string BASE_URL = 'https://api.pipedrive.com/v1/';
 
 	/**
 	 * Transient cache name for person fields.
@@ -90,7 +88,7 @@ class PipedriveClient implements PipedriveClientInterface
 						'key' => $item['key'] ?? '',
 						'title' => $item['name'] ?? '',
 						'fields' => \array_filter(\array_map(
-							static function ($inner) {
+							static function (array $inner): array {
 								$id = $inner['id'] ?? '';
 								if (!$id) {
 									return [];
@@ -313,8 +311,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 *
 	 * @param array<mixed> $files Files to upload from form.
 	 * @param array<mixed> $additionalParams Additional body data.
-	 *
-	 * @return boolean
 	 */
 	private function postFileMedia(array $files, array $additionalParams): bool
 	{
@@ -466,7 +462,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = [];
 
 		$personName = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
-		if (!$personName) {
+		if ($personName === '' || $personName === '0') {
 			return $output;
 		}
 
@@ -499,16 +495,14 @@ class PipedriveClient implements PipedriveClientInterface
 		$output['add_time'] = \gmdate("Y-m-d H:i:s");
 
 		$label = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
-		if ($label) {
+		if ($label !== '' && $label !== '0') {
 			$output['label'] = $label;
 		}
 
-		$output = \array_merge(
+		return \array_merge(
 			$output,
 			$additionalParams,
 		);
-
-		return $output;
 	}
 
 	/**
@@ -525,7 +519,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = [];
 
 		$leadTitle = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId);
-		if (!$leadTitle) {
+		if ($leadTitle === '' || $leadTitle === '0') {
 			return $output;
 		}
 
@@ -533,12 +527,12 @@ class PipedriveClient implements PipedriveClientInterface
 
 
 		$label = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
-		if ($label) {
+		if ($label !== '' && $label !== '0') {
 			$output['label_ids'] = [$label];
 		}
 
 		$leadValue = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
-		if ($leadValue) {
+		if ($leadValue !== '' && $leadValue !== '0') {
 			$value = FormsHelper::getParamValue($leadValue, $params);
 
 			if (!$value) {
@@ -551,12 +545,10 @@ class PipedriveClient implements PipedriveClientInterface
 			];
 		}
 
-		$output = \array_merge(
+		return \array_merge(
 			$output,
 			$additionalParams,
 		);
-
-		return $output;
 	}
 
 	/**
@@ -572,7 +564,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = [];
 
 		$organization = SettingsHelpers::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
-		if (!$organization) {
+		if ($organization === '' || $organization === '0') {
 			return $output;
 		}
 
@@ -587,25 +579,18 @@ class PipedriveClient implements PipedriveClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error'] ?? '';
 
-		switch ($msg) {
-			case 'Name must be given.':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME;
-			case 'Organization name must be given.':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION;
-			case 'Invalid organization ID provided':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID;
-			case 'provided dataset is not valid':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'Name must be given.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_NAME,
+			'Organization name must be given.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_MISSING_ORGANIZATION,
+			'Invalid organization ID provided' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_ORGANIZATION_ID,
+			'provided dataset is not valid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PIPEDRIVE_WRONG_DATASET,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -613,8 +598,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 *
 	 * @param string $url Url to get token from.
 	 * @param string $params Additional params.
-	 *
-	 * @return string
 	 */
 	private function getApiUrl(string $url, string $params = ''): string
 	{
@@ -622,8 +605,8 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$output = $url . '/?api_token=' . $this->getApiKey();
 
-		if ($params) {
-			$output = $output . '&' . $params;
+		if ($params !== '' && $params !== '0') {
+			return $output . '&' . $params;
 		}
 
 		return $output;
@@ -652,8 +635,6 @@ class PipedriveClient implements PipedriveClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

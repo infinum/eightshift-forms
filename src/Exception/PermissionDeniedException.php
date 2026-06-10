@@ -20,31 +20,21 @@ use Exception;
 final class PermissionDeniedException extends Exception implements GeneralExceptionInterface
 {
 	/**
-	 * Internal data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $data = [];
-
-	/**
-	 * Internal debug data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $debug = [];
-
-	/**
 	 * Throws error if user has no permission.
 	 *
 	 * @param array<int|string, mixed> $debug Debug data.
 	 * @param array<int|string, mixed> $data Data that is wrong.
 	 */
 	public function __construct(
-		array $debug = [],
-		array $data = []
+		/**
+		 * Internal debug data.
+		 */
+		private readonly array $debug = [],
+		/**
+		 * Internal data.
+		 */
+		private readonly array $data = []
 	) {
-		$this->data = $data;
-		$this->debug = $debug;
 		parent::__construct(\__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'), AbstractRoute::API_RESPONSE_CODE_UNAUTHORIZED);
 	}
 

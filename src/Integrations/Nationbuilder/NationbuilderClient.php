@@ -47,21 +47,11 @@ class NationbuilderClient implements NationbuilderClientInterface
 	public const NATIONBUILDER_PAGINATION_PAGE_SIZE = 100;
 
 	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthNationbuilder;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 */
-	public function __construct(OauthInterface $oauthNationbuilder)
-	{
-		$this->oauthNationbuilder = $oauthNationbuilder;
-	}
+	public function __construct(protected OauthInterface $oauthNationbuilder) {} // phpcs:ignore
 
 	/**
 	 * Return custom fields.
@@ -84,7 +74,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		if (!$output) {
 			$items = $this->getNationbuilderCustomApiData('custom_fields', true);
 
-			if ($items) {
+			if ($items !== []) {
 				foreach ($items as $item) {
 					$id = $item['attributes']['slug'] ?? '';
 
@@ -130,7 +120,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		if (!$output) {
 			$items = $this->getNationbuilderCustomApiData('lists', true);
 
-			if ($items) {
+			if ($items !== []) {
 				foreach ($items as $item) {
 					$id = $item['id'] ?? '';
 
@@ -176,7 +166,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		if (!$output) {
 			$items = $this->getNationbuilderCustomApiData('signup_tags', true);
 
-			if ($items) {
+			if ($items !== []) {
 				foreach ($items as $item) {
 					$id = $item['id'] ?? '';
 
@@ -271,14 +261,12 @@ class NationbuilderClient implements NationbuilderClientInterface
 			if ($list || $tags) {
 				$job = SettingsHelpers::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
 
-				if ($list) {
+				if ($list !== '' && $list !== '0') {
 					$job['list'][$list][] = $body['data']['id'] ?? '';
 				}
 
-				if ($tags) {
-					foreach ($tags as $tag) {
-						$job['tags'][$tag][] = $body['data']['id'] ?? '';
-					}
+				foreach ($tags as $tag) {
+					$job['tags'][$tag][] = $body['data']['id'] ?? '';
 				}
 
 				\update_option(SettingsHelpers::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $job);
@@ -421,23 +409,17 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['code'] ?? '';
 
-		switch ($msg) {
-			case 'bad_request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR;
-			case 'unauthorized':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING;
-			case 'server_error':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'bad_request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR,
+			'unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING,
+			'server_error' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -458,12 +440,17 @@ class NationbuilderClient implements NationbuilderClientInterface
 		foreach ($errors as $error) {
 			$message = $error['detail'] ?? '';
 			$key = $error['meta']['attribute'] ?? '';
-
-			if (!$message || !$key || !isset($mapParams[$key])) {
+			if (!$message) {
+				continue;
+			}
+			if (!$key) {
+				continue;
+			}
+			if (!isset($mapParams[$key])) {
 				continue;
 			}
 
-			if (\str_contains($message, 'E-mail email is already taken on signup')) {
+			if (\str_contains((string) $message, 'E-mail email is already taken on signup')) {
 				$output[$mapParams[$key]] = 'validationEmailExists';
 				continue;
 			}
@@ -479,12 +466,10 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	private function getHeaders(): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'Accept' => 'application/json',
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -499,7 +484,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	private function getNationbuilderCustomApiData(string $endpoint, bool $paginate = false, array $pagedData = [], string $nextEndpoint = ''): array
 	{
-		$url = $paginate && !empty($nextEndpoint) ? $this->getNextUrl($nextEndpoint) : $this->setPaginationAttributes($this->getBaseUrl($endpoint));
+		$url = $paginate && ($nextEndpoint !== '' && $nextEndpoint !== '0') ? $this->getNextUrl($nextEndpoint) : $this->setPaginationAttributes($this->getBaseUrl($endpoint));
 
 		$response = \wp_remote_get(
 			$url,
@@ -544,7 +529,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// In case of pagination error, return the data we have.
-		return $pagedData ?: [];
+		return $pagedData;
 	}
 
 	/**
@@ -572,14 +557,25 @@ class NationbuilderClient implements NationbuilderClientInterface
 			$value = $param['value'] ?? '';
 			$name = $param['name'] ?? '';
 			$type = $param['type'] ?? '';
-
-			if (!$value || !$name || !$type || !$param || !$mapParam) {
+			if (!$value) {
+				continue;
+			}
+			if (!$name) {
+				continue;
+			}
+			if (!$type) {
+				continue;
+			}
+			if ($param === []) {
+				continue;
+			}
+			if (!$mapParam) {
 				continue;
 			}
 
 			if ($type === 'file') {
 				$value = \array_map(
-					static function (string $file) {
+					static function (string $file): string {
 						$filename = \pathinfo($file, \PATHINFO_FILENAME);
 						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 						return "{$filename}.{$extension}";
@@ -651,8 +647,6 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 * Return base url.
 	 *
 	 * @param string $path Path.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(string $path): string
 	{
@@ -665,8 +659,6 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 * Return pagination next url.
 	 *
 	 * @param string $path Path.
-	 *
-	 * @return string
 	 */
 	private function getNextUrl(string $path): string
 	{
@@ -677,8 +669,6 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 * Return a path with pagination attributes url.
 	 *
 	 * @param string $path Path.
-	 *
-	 * @return string
 	 */
 	private function setPaginationAttributes(string $path): string
 	{

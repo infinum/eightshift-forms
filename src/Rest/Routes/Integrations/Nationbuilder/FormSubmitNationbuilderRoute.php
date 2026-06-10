@@ -25,6 +25,7 @@ use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use Override;
 
 /**
  * Class FormSubmitNationbuilderRoute
@@ -35,13 +36,6 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsNationbuilder::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Instance variable for Nationbuilder data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
 
 	/**
 	 * Create a new instance that injects classes
@@ -61,7 +55,7 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		NationbuilderClientInterface $nationbuilderClient
+		protected NationbuilderClientInterface $nationbuilderClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +63,6 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
@@ -84,8 +77,6 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +108,9 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Nationbuilder is missing config.
 	 * @throws DisabledIntegrationException If Nationbuilder is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -161,6 +152,7 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
+	#[Override]
 	protected function getEmailResponseTags(array $formDetails): array
 	{
 		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];

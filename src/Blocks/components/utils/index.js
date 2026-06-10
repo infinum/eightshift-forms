@@ -1,27 +1,18 @@
 /* global esFormsLocalization */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import { select, dispatch } from "@wordpress/data";
+import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip, Button, TextControl } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import {
-	AnimatedContentVisibility,
-	camelize,
-	classnames,
-	IconLabel,
-	icons,
-	STORE_NAME,
-	Notification,
-	lockPostEditing,
-	unlockPostEditing,
-	unescapeHTML,
-	getUnique,
-} from '@eightshift/frontend-libs/scripts';
+import { codeVariable, conditionalVisibility, edit, hide, layoutAlt, lightBulb, loader, magic, none, options, readOnly, requiredAlt, tagAlt, warning, warningFill, wrench } from '@eightshift/ui-components/icons';
+import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
+import { RichLabel, Button, InputField, Container, ContainerGroup, DecorativeTooltip } from '@eightshift/ui-components';
+import { camelCase, clsx, upperFirst } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
-import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
-import globalSettings  from './../../manifest.json';
+import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
+import { HelpTooltip } from '../../assets/scripts/help-tooltip';
+import globalSettings from './../../manifest.json';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -87,7 +78,7 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 		path: `${getRestUrlByType('prefixIntegrationEditor', 'integrationsEditorSync', true, true)}?id=${postId}`,
 	}).then((response) => {
 		if (isDeveloperMode()) {
-			console.log(response);
+			console.info(response);
 		}
 
 		dispatch(FORMS_STORE_NAME).setSyncDialog({});
@@ -155,11 +146,7 @@ export const clearTransientCache = (type) => {
  * @returns {void}
  */
 export const createBlockFromTemplate = (clientId, name, templates) => {
-	const {
-		blockName,
-		attributes = {},
-		innerBlocks = [],
-	} = templates.filter((form) => form.slug === name)[0];
+	const { blockName, attributes = {}, innerBlocks = [] } = templates.filter((form) => form.slug === name)[0];
 
 	// Build all inner blocks.
 	const inner = innerBlocks.map((item) => createBlock(item[0], item[1] ?? {}, item[2] ?? []));
@@ -221,30 +208,30 @@ export const getFormFields = () => {
 			value: '',
 			label: '',
 		},
-		...fields.map((item) => {
-			const {
-				attributes,
-				attributes: {
-					blockName,
+		...fields
+			.map((item) => {
+				const {
+					attributes,
+					attributes: { blockName },
+				} = item;
+
+				const value = attributes[camelCase(`${blockName}-${blockName}-name`)];
+				let label = attributes[camelCase(`${blockName}-${blockName}-field-label`)];
+
+				if (value === 'submit') {
+					return null;
 				}
-			} = item;
 
-			const value = attributes[camelize(`${blockName}-${blockName}-name`)];
-			let label = attributes[camelize(`${blockName}-${blockName}-field-label`)];
+				if (label === 'Label') {
+					label = value;
+				}
 
-			if (value === 'submit') {
-				return null;
-			}
-
-			if (label === 'Label') {
-				label = value;
-			}
-
-			return {
-				'label': label,
-				'value': value,
-			};
-		}).filter((elm) => elm),
+				return {
+					label: label,
+					value: value,
+				};
+			})
+			.filter((elm) => elm),
 	];
 };
 
@@ -290,8 +277,8 @@ export const getConstantsOptions = (options, useEmpty = false) => {
 	if (options) {
 		for (const [key, value] of Object.entries(options)) {
 			items.push({
-				'value': key,
-				'label': value
+				value: key,
+				label: value,
 			});
 		}
 	}
@@ -317,8 +304,8 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
 	if (options) {
 		options.map((item) => {
 			items.push({
-				'value': item[0],
-				'label': item[1],
+				value: item[0],
+				label: item[1],
 			});
 		});
 	}
@@ -331,53 +318,65 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  *
  * @param {string} value Field name value.
  * @param {bool} asPlaceholder If this is a placeholder.
- * @param {string} className Additional class name to add.
+ * @param {bool} isOptional If this is an optional field.
  *
  * @returns Component
  */
-export const MissingName = ({
-	value,
-	asPlaceholder,
-	className = '',
-	isOptional = false,
-}) => {
+export const MissingName = ({ value, asPlaceholder, isOptional = false }) => {
 	if (value || asPlaceholder) {
 		return null;
 	}
 
-	const style = classnames(
-		'es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center',
-		isOptional ? 'es-bg-yellow-500' : 'es-bg-red-500',
-		className,
-	);
-
 	return (
-		<div className={style}>
-			<Tooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>
-				{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
-			</Tooltip>
-		</div>
+		<DecorativeTooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>
+			<span className='esf:text-red-600'>{warningFill}</span>
+		</DecorativeTooltip>
 	);
 };
 
-/**
- * Outputs notification if visibility is hidden.
- *
- * @param {bool} value Field value.
- * @param {string} label Field label.
- *
- * @returns Component
- */
-export const VisibilityHidden = ({ value, label }) => {
-	if (!value) {
+export const StatusFieldOutput = ({ components }) => {
+	if (!components?.length) {
 		return null;
 	}
 
+	const statusIcons = {
+		conditionals: conditionalVisibility,
+		hidden: hide,
+		missingName: warning,
+		required: requiredAlt,
+		disabled: none,
+		readonly: readOnly,
+	};
+
+	const statusLabels = {
+		conditionals: __('Conditional visibility rules are set', 'eightshift-forms'),
+		hidden: __('Field is hidden', 'eightshift-forms'),
+		missingName: __('Name not set!', 'eightshift-forms'),
+		required: __('Field is required', 'eightshift-forms'),
+		disabled: __('Field is disabled', 'eightshift-forms'),
+		readonly: __('Field is read-only', 'eightshift-forms'),
+	};
+
 	return (
-		<div className='es-position-absolute es-right-7 es-top-0 es-nested-color-pure-white es-bg-cool-gray-650 es-nested-w-6 es-nested-h-6 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
-			<Tooltip text={__(`${label} is hidden`, 'eightshift-forms')}>
-				{icons.hide}
-			</Tooltip>
+		<div className='esf:flex esf:gap-4 esf:justify-end esf:ml-auto'>
+			{components.map((name) => {
+				const icon = statusIcons[name];
+
+				if (!icon) {
+					return null;
+				}
+
+				const classes = clsx('esf:rounded-full esf:p-5', name === 'missingName' ? 'esf:bg-orange-600/5 esf:text-orange-600' : 'esf:bg-current/5 esf:text-current');
+
+				return (
+					<DecorativeTooltip
+						text={statusLabels[name] || upperFirst(name)}
+						key={name}
+					>
+						<div className={classes}>{icon}</div>
+					</DecorativeTooltip>
+				);
+			})}
 		</div>
 	);
 };
@@ -396,85 +395,87 @@ export const VisibilityHidden = ({ value, label }) => {
  *
  * @returns Component
  */
-export const NameField = ({
-	value,
-	attribute,
-	help = '',
-	disabledOptions = [],
-	label,
-	setAttributes,
-	show = true,
-	type,
-	isChanged = false,
-	isOptional = false,
-	setIsChanged,
-}) => {
+export const NameField = ({ value, attribute, help = '', disabledOptions = [], label: rawLabel, setAttributes, show = true, type, isChanged = false, isOptional = false, setIsChanged }) => {
+	let label = rawLabel || __('Name', 'eightshift-forms');
+	let icon = tagAlt;
 
 	const isDisabled = isOptionDisabled(attribute, disabledOptions);
-
-	const NameFieldLabel = () => {
-		let labelTipText = !isOptional ? __('The form may not work correctly.', 'eightshift-forms') : __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms');
-
-		if (type === 'resultOutputItem') {
-			labelTipText = __(`Variable name you can use is "${globalSettings.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`, 'eightshift-forms');
-		}
-
-		return (
-			<div className='es-h-between es-w-full'>
-				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
-
-				<AnimatedContentVisibility showIf={!value}>
-					<Tooltip text={labelTipText}>
-						{
-							!isOptional ? 
-							<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span> :
-							<span className='es-color-pure-white es-bg-yellow-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Optional', 'eightshift-forms')}</span>
-						}
-					</Tooltip>
-				</AnimatedContentVisibility>
-
-				{(!value && !isDisabled) &&
-					<Button
-						className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-						onClick={() => {
-							setIsChanged(true);
-
-							const valueName = type === 'resultOutputItem' ? globalSettings.enums.successRedirectUrlKeys.variation : `${type}-${getUnique()}`;
-							setAttributes({ [attribute]: valueName });
-						}}
-					>
-						{type === 'resultOutputItem' ? __('Set name', 'eightshift-forms') : __('Generate name', 'eightshift-forms')}
-					</Button>
-				}
-			</div>
-		);
-	};
 
 	let helpText = sprintf(__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'), type, help);
 
 	if (type === 'resultOutputItem') {
-		helpText = __('Identifies the what result output item the user will see after successful submit redirect.', 'eightshift-forms');
+		icon = codeVariable;
+		label = __('Variable name', 'eightshift-forms');
+		helpText = __('Identifies the what result output item the user will see after successful form submission', 'eightshift-forms');
+	}
+
+	if (!show) {
+		return null;
 	}
 
 	return (
-		<>
-			{show &&
-				<>
-					<TextControl
-						label={<NameFieldLabel />}
-						help={helpText}
-						value={value}
-						onChange={(value) => {
-							setIsChanged(true);
-							setAttributes({ [attribute]: value });
-						}}
-						disabled={isDisabled}
-					/>
+		<ContainerGroup>
+			<Container>
+				<InputField
+					icon={icon}
+					label={label}
+					placeholder={!value && !isOptional && __('Required', 'eightshift-forms')}
+					actions={
+						<>
+							{!value && !isDisabled && type !== 'resultOutputItem' && (
+								<Button
+									onClick={() => {
+										setIsChanged(false);
 
-					<NameChangeWarning isChanged={isChanged} type={type} />
-				</>
-			}
-		</>
+										const valueName = type === 'resultOutputItem' ? globalSettings.enums.successRedirectUrlKeys.variation : `${type}-${getUnique()}`;
+										setAttributes({ [attribute]: valueName });
+									}}
+									icon={magic}
+									size='small'
+									type='selectedGhost'
+									className='esf:h-24!'
+								>
+									{type === 'resultOutputItem' ? __('Set', 'eightshift-forms') : __('Generate', 'eightshift-forms')}
+								</Button>
+							)}
+
+							<HelpTooltip hidden={!value && !isDisabled}>
+								{helpText}
+
+								{isOptional && type !== 'resultOutputItem' && __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms')}
+							</HelpTooltip>
+						</>
+					}
+					value={value}
+					onChange={(value) => {
+						setIsChanged(true);
+						setAttributes({ [attribute]: value });
+					}}
+					disabled={isDisabled}
+					monospaceFont={type === 'resultOutputItem'}
+				/>
+			</Container>
+
+			<Container
+				hidden={isOptional || value}
+				className='es-uic-theme-orange'
+				elevated
+				centered
+				accent
+			>
+				<RichLabel
+					icon={warning}
+					label={__('Form may not work correctly!', 'eightshift-forms')}
+				/>
+			</Container>
+
+			{value && (
+				<NameChangeWarning
+					isChanged={isChanged}
+					type={type}
+				/>
+			)}
+		</ContainerGroup>
 	);
 };
 
@@ -487,12 +488,12 @@ export const NameField = ({
  *
  * @returns void
  */
-export const preventSaveOnMissingProps = (blockClientId, key, value) => {
+export const usePreventSaveOnMissingProps = (blockClientId, key, value) => {
 	useEffect(() => {
 		// Allows triggering this action only when the block is inserted in the editor.
 		if (select('core/block-editor').getBlock(blockClientId)) {
 			// Lock/unlock depending on the value.
-			(value === '') ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
+			value === '' ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
 		}
 
 		// Use this method to detect if the block has been deleted from the block editor.
@@ -510,10 +511,7 @@ export const preventSaveOnMissingProps = (blockClientId, key, value) => {
  *
  * @returns Component
  */
-export const NameChangeWarning = ({
-		isChanged = false,
-		type = 'default'
-	}) => {
+export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 	let text = '';
 
 	if (!isChanged) {
@@ -522,24 +520,31 @@ export const NameChangeWarning = ({
 
 	switch (type) {
 		case 'value':
-			text = __('After changing the field value, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			text = __('Review conditional tags and form multi-flow configurations to avoid errors', 'eightshift-forms');
 			break;
 		case 'step':
-			text = __('After changing the step name, ensure that you review forms multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			text = __('Review multi-flow configurations to avoid errors', 'eightshift-forms');
 			break;
 		case 'resultOutputItem':
-			text = __('After changing the result item variable name, ensure that you provide the correct variation name via form settings.', 'eightshift-forms');
+			text = __('Check that the correct variation name is provided in form settings', 'eightshift-forms');
 			break;
 		default:
-			text = __('After changing the field name, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			text = __('Review conditional tags and form multi-flow configurations to avoid errors.', 'eightshift-forms');
 			break;
 	}
 
 	return (
-		<Notification
-			text={text}
-			type={'warning'}
-		/>
+		<Container
+			className='es-uic-theme-blue'
+			elevated
+			centered
+			accent
+		>
+			<RichLabel
+				icon={lightBulb}
+				label={text}
+			/>
+		</Container>
 	);
 };
 
@@ -548,20 +553,19 @@ export const NameChangeWarning = ({
  *
  * @returns Component
  */
-export const FormEditButton = ({formId}) => {
+export const FormEditButton = ({ formId }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const {
-		editFormUrl,
-	} = select(STORE_NAME).getSettings();
+	const { editFormUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${editFormUrl}&post=${formId}`}
-			icon={icons.edit}
-			className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+			onPress={() => window.open(`${wpAdminUrl}${editFormUrl}&post=${formId}`, '_blank')}
+			icon={edit}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Edit fields', 'eightshift-forms')}
+			{__('Edit', 'eightshift-forms')}
 		</Button>
 	);
 };
@@ -571,46 +575,39 @@ export const FormEditButton = ({formId}) => {
  *
  * @returns Component
  */
-export const SettingsButton = ({formId}) => {
+export const SettingsButton = ({ formId = null }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 	const postId = select('core/editor').getCurrentPostId();
 
 	const id = formId ?? postId;
 
-	const {
-		settingsPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { settingsPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${settingsPageUrl}&formId=${id}`}
-			icon={icons.options}
-			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+			onPress={() => window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank')}
+			icon={options}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Edit settings', 'eightshift-forms')}
+			{__('Settings', 'eightshift-forms')}
 		</Button>
 	);
 };
 
-/**
- * Returns global setting button component.
- *
- * @returns Component
- */
 export const GlobalSettingsButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const {
-		globalSettingsPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { globalSettingsPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${globalSettingsPageUrl}`}
-			icon={icons.globe}
-			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+			onPress={() => window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank')}
+			icon={wrench}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Edit global settings', 'eightshift-forms')}
+			{__('Plugin settings', 'eightshift-forms')}
 		</Button>
 	);
 };
@@ -620,23 +617,22 @@ export const GlobalSettingsButton = () => {
  *
  * @returns Component
  */
-export const LocationsButton = ({formId}) => {
+export const LocationsButton = ({ formId = null }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 	const postId = select('core/editor').getCurrentPostId();
 
 	const id = formId ?? postId;
 
-	const {
-		locationsPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { locationsPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${locationsPageUrl}&formId=${id}`}
-			icon={icons.notebook}
-			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+			onPress={() => window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank')}
+			icon={loader}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Locations', 'eightshift-forms')}
+			{__('Places used', 'eightshift-forms')}
 		</Button>
 	);
 };
@@ -649,56 +645,16 @@ export const LocationsButton = ({formId}) => {
 export const DashboardButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const {
-		dashboardPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { dashboardPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
-			href={`${wpAdminUrl}${dashboardPageUrl}`}
-			icon={icons.layoutAlt}
-			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+			onPress={() => window.open(`${wpAdminUrl}${dashboardPageUrl}`, '_blank')}
+			icon={layoutAlt}
+			className='esf:grow'
+			size='large'
 		>
-			{__('Visit dashboard settings', 'eightshift-forms')}
+			{__('Open Dashboard', 'eightshift-forms')}
 		</Button>
 	);
-};
-
-/**
- * Returns output select item with icon.
- *
- * @returns object
- */
-export const outputFormSelectItemWithIcon = (props) => {
-	const {
-		label,
-		id,
-		metadata,
-	} = props;
-
-	if (!id) {
-		return '';
-	}
-
-	let outputLabel = unescapeHTML(label);
-	let icon = getUtilsIcons('post');
-
-	if (!outputLabel) {
-		outputLabel = __(`Form ${id}`, 'eightshift-forms');
-	}
-
-	if (getUtilsIcons(metadata)) {
-		icon = getUtilsIcons(metadata);
-	}
-
-	if (isDeveloperMode()) {
-		outputLabel = `${outputLabel} (${id})`;
-	}
-
-	return {
-		id,
-		label: <span dangerouslySetInnerHTML={{ __html: `<span class="es-display-inline-flex es-vertical-align-middle es-mr-2">${icon}</span>${outputLabel}`}} />,
-		value: id,
-		metadata,
-	};
 };

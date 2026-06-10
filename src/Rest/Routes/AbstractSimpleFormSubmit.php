@@ -24,19 +24,13 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
+use Override;
 
 /**
  * Class AbstractSimpleFormSubmit
  */
 abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 {
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
 	/**
 	 * Instance variable of MailerInterface data.
 	 *
@@ -45,31 +39,20 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	public $mailer;
 
 	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param MailerInterface $mailer Inject mailer methods.
-	 *
-	 * @return void
 	 */
 	public function __construct(
 		SecurityInterface $security,
-		ValidatorInterface $validator,
-		LabelsInterface $labels,
+		protected ValidatorInterface $validator,
+		protected LabelsInterface $labels,
 		MailerInterface $mailer,
 	) {
 		$this->security = $security;
-		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->mailer = $mailer;
 	}
 
@@ -195,13 +178,14 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[Override]
 	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		// Get params.
 		$params = $this->getRequestParams($request, $type);
 
 		// Bailout if there are no params.
-		if (!$params) {
+		if ($params === []) {
 			return [];
 		}
 

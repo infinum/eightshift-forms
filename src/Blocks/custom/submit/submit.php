@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -28,6 +27,5 @@ echo Helpers::render(
 	'submit',
 	Helpers::props('submit', $attributes, [
 		'submitButtonComponent' => $button,
-		'twSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
 	])
 );

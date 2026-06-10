@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Pipedrive
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Pipedrive;
 
 use EightshiftForms\Integrations\ClientMappingInterface;

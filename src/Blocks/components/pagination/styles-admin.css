@@ -1,0 +1,49 @@
+@import '../../../../tailwind.css';
+@import 'tailwindcss' prefix(esf);
+
+.esf-pagination {
+	@apply esf:border-t;
+	@apply esf:border-mist-200;
+	@apply esf:px-10;
+	@apply esf:py-20;
+
+	& ul {
+		@apply esf:flex;
+		@apply esf:items-center;
+		@apply esf:justify-center;
+		@apply esf:gap-8;
+		@apply esf:list-none esf:m-0;
+	}
+
+	& li {
+		@apply esf:m-0;
+	}
+
+	& a,
+	& span.current {
+		@apply esf:text-inherit;
+		@apply esf:bg-transparent;
+		@apply esf:border;
+		@apply esf:border-mist-200;
+		@apply esf:hover:text-white;
+		@apply esf:hover:bg-mist-700;
+		@apply esf:hover:border-mist-700;
+		@apply esf:justify-center;
+		@apply esf:text-nowrap;
+		@apply esf:cursor-pointer;
+		@apply esf:no-underline;
+		@apply esf:inline-flex;
+		@apply esf:p-10;
+		@apply esf:items-center;
+		@apply esf:rounded-md;
+		@apply esf:gap-10;
+		@apply esf:transition-colors;
+		@apply esf:duration-300;
+	}
+
+	& span.current {
+		@apply esf:text-white;
+		@apply esf:bg-mist-600;
+		@apply esf:border-mist-600;
+	}
+}

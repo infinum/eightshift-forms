@@ -19,22 +19,19 @@ use InvalidArgumentException;
 final class UnverifiedRequestException extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
-	 * Internal data.
-	 *
-	 * @var array<int|string, mixed>
-	 */
-	private $data = [];
-
-	/**
 	 * Throws error if request is not verified.
 	 *
 	 * @param string $message Message to show.
 	 * @param array<int|string, mixed> $data Data that is wrong.
 	 */
-	public function __construct(string $message, array $data = [])
-	{
-			$this->data = $data;
-			parent::__construct($message);
+	public function __construct(
+		string $message,
+		/**
+		 * Internal data.
+		 */
+		private readonly array $data = []
+	) {
+		parent::__construct($message);
 	}
 
 	/**

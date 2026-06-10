@@ -26,7 +26,7 @@ final class CsvScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const DANGER_PATTERNS = [
+	private const array DANGER_PATTERNS = [
 		'=cmd|',
 		'=cmd /',
 		'=dde(',
@@ -57,7 +57,7 @@ final class CsvScanner implements FileSecurityScannerInterface
 			while (($line = \fgets($handle)) !== false) {
 				$lower = \strtolower($line);
 				foreach (self::DANGER_PATTERNS as $pattern) {
-					if (\strpos($lower, $pattern) !== false) {
+					if (\str_contains($lower, $pattern)) {
 						return 'validationFileCsvUnsafe';
 					}
 				}

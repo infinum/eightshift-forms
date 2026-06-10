@@ -1,17 +1,14 @@
-import React from 'react';
-import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { arrowLeftCircle, arrowRightCircle, tag } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
+import { Container, ContainerGroup, ContainerPanel, InputField } from '@eightshift/ui-components';
+import { HelpTooltip } from '../../../assets/scripts/help-tooltip';
+import manifest from '../manifest.json';
 
 export const StepOptions = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('step');
-
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -21,45 +18,51 @@ export const StepOptions = (attributes) => {
 	const stepNextLabel = checkAttr('stepNextLabel', attributes, manifest);
 
 	return (
-		<>
-			<PanelBody title={__('Step', 'eightshift-forms')}>
-				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<NameField
-						value={stepName}
-						help={__('Used to identify the step within form multi step flow.', 'eightshift-forms')}
-						attribute={getAttrKey('stepName', attributes, manifest)}
-						setAttributes={setAttributes}
-						type={'step'}
-						isChanged={isNameChanged}
-						setIsChanged={setIsNameChanged}
-					/>
-				</Section>
+		<ContainerPanel>
+			<NameField
+				value={stepName}
+				help={__('Used to identify the step within form multi step flow.', 'eightshift-forms')}
+				attribute={getAttrKey('stepName', attributes, manifest)}
+				setAttributes={setAttributes}
+				type={'step'}
+				isChanged={isNameChanged}
+				setIsChanged={setIsNameChanged}
+			/>
 
-				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
-					<TextControl
-						help={__('This label will not be shown on the frontend, this is only for easier configuration.', 'eightshift-forms')}
-						value={stepLabel}
-						onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
-					/>
-				</Section>
+			<Container standalone>
+				<InputField
+					icon={tag}
+					label={__('Label', 'eightshift-forms')}
+					placeholder={__('e.g. Step 1', 'eightshift-forms')}
+					actions={<HelpTooltip>{__('Not shown to users, assists with step configuration.', 'eightshift-forms')}</HelpTooltip>}
+					value={stepLabel}
+					onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
+				/>
+			</Container>
 
-				<Section icon={icons.buttonFilled} label={__('Buttons', 'eightshift-forms')}>
-
-					<TextControl
-						label={<IconLabel icon={icons.tag} label={__('Previous button label', 'eightshift-forms')} />}
+			<ContainerGroup label={__('Button labels', 'eightshift-forms')}>
+				<Container>
+					<InputField
+						icon={arrowLeftCircle}
+						label={__('Previous step', 'eightshift-forms')}
 						placeholder={__('Previous', 'eightshift-forms')}
 						value={stepPrevLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepPrevLabel', attributes, manifest)]: value })}
+						inline
 					/>
+				</Container>
 
-					<TextControl
-						label={<IconLabel icon={icons.tag} label={__('Next button label', 'eightshift-forms')} />}
+				<Container>
+					<InputField
+						icon={arrowRightCircle}
+						label={__('Next step', 'eightshift-forms')}
 						placeholder={__('Next', 'eightshift-forms')}
 						value={stepNextLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepNextLabel', attributes, manifest)]: value })}
+						inline
 					/>
-				</Section>
-			</PanelBody>
-		</>
+				</Container>
+			</ContainerGroup>
+		</ContainerPanel>
 	);
 };

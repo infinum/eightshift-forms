@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { DynamicEditor } from './components/dynamic-editor';
 import { DynamicOptions } from './components/dynamic-options';

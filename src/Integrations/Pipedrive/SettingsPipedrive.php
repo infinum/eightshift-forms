@@ -122,44 +122,25 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 	public const SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY = 'pipedrive-skip-integration';
 
 	/**
-	 * Instance variable for Pipedrive data.
-	 *
-	 * @var PipedriveClientInterface
-	 */
-	protected $pipedriveClient;
-
-	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param PipedriveClientInterface $pipedriveClient Inject Pipedrive which holds Pipedrive connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
 	public function __construct(
-		PipedriveClientInterface $pipedriveClient,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->pipedriveClient = $pipedriveClient;
-		$this->settingsFallback = $settingsFallback;
-	}
+		protected PipedriveClientInterface $pipedriveClient,
+		protected SettingsFallbackDataInterface $settingsFallback
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -167,8 +148,6 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -177,12 +156,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 		}
 
 		$personName = SettingsHelpers::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
-
-		if (!$personName) {
-			return false;
-		}
-
-		return true;
+		return (bool) $personName;
 	}
 
 	/**
@@ -239,21 +213,19 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									'selectIsRequired' => true,
 									'selectPlaceholder' => \__('Select person name field', 'eightshift-forms'),
 									'selectContent' => \array_map(
-										static function ($option) use ($personName) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => \ucfirst($option),
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $personName === $option,
-											];
-										},
+										static fn($option): array => [
+											'component' => 'select-option',
+											'selectOptionLabel' => \ucfirst((string) $option),
+											'selectOptionValue' => $option,
+											'selectOptionIsSelected' => $personName === $option,
+										],
 										$fields
 									),
 								],
-								...($personName ? [
+								...($personName !== '' && $personName !== '0' ? [
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'intro',
@@ -270,11 +242,9 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									[
 										'component' => 'group',
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY),
-										'groupSaveOneField' => true,
-										'groupStyle' => 'default-listing',
 										'groupContent' => [
 											...\array_filter(\array_map(
-												function ($item) use ($mapParams, $personName, $personFields) {
+												function ($item) use ($mapParams, $personName, $personFields): array {
 													if ($personName === $item) {
 														return [];
 													}
@@ -287,7 +257,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 														'selectFieldBeforeContent' => '&rarr;',
 														'selectContent' => [
 															...(\array_filter(\array_map(
-																static function ($option) use ($mapParams, $item) {
+																static function (array $option) use ($mapParams, $item): array {
 																	$id  = $option['key'] ?? '';
 
 																	if (!$id) {
@@ -300,9 +270,9 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 
 																	return [
 																		'component' => 'select-option',
-																		'selectOptionLabel' => \ucfirst($option['title']),
+																		'selectOptionLabel' => \ucfirst((string) $option['title']),
 																		'selectOptionValue' => $id,
-																		'selectOptionIsSelected' => isset($mapParams[$item]) ? $mapParams[$item] === $id : false,
+																		'selectOptionIsSelected' => isset($mapParams[$item]) && $mapParams[$item] === $id,
 																	];
 																},
 																$personFields
@@ -316,7 +286,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'intro',
@@ -329,7 +299,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										'selectFieldHelp' => \__('Person label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select person label', 'eightshift-forms'),
 										'selectContent' => \array_filter(\array_map(
-											static function ($option) use ($personLabel) {
+											static function (array $option) use ($personLabel): array {
 												$id  = $option['id'] ?? '';
 
 												if (!$id) {
@@ -338,18 +308,18 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 
 												return [
 													'component' => 'select-option',
-													'selectOptionLabel' => \ucfirst($option['title']),
+													'selectOptionLabel' => \ucfirst((string) $option['title']),
 													'selectOptionValue' => $id,
 													'selectOptionIsSelected' => $personLabel === $id,
 												];
 											},
-											\array_values(\array_filter($personFields, fn($item) => $item['key'] === 'label'))[0]['fields'] ?? []
+											\array_values(\array_filter($personFields, fn(array $item): bool => $item['key'] === 'label'))[0]['fields'] ?? []
 										)),
 									],
 								] : []),
 							],
 						],
-						...($personName ? [
+						...($personName !== '' && $personName !== '0' ? [
 							[
 								'component' => 'tab',
 								'tabLabel' => \__('Lead', 'eightshift-forms'),
@@ -373,7 +343,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									...($useLead ? [
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -390,7 +360,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										],
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -404,14 +374,12 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 											'selectFieldHelp' => \__('Make sure that you assign lead value to a field that can only have number value.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select lead value name field', 'eightshift-forms'),
 											'selectContent' => \array_map(
-												static function ($option) use ($leadValue) {
-													return [
-														'component' => 'select-option',
-														'selectOptionLabel' => \ucfirst($option),
-														'selectOptionValue' => $option,
-														'selectOptionIsSelected' => $leadValue === $option,
-													];
-												},
+												static fn($option): array => [
+													'component' => 'select-option',
+													'selectOptionLabel' => \ucfirst((string) $option),
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $leadValue === $option,
+												],
 												$fields
 											),
 										],
@@ -425,7 +393,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 										],
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -438,7 +406,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 											'selectFieldHelp' => \__('Lead label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select lead label', 'eightshift-forms'),
 											'selectContent' => \array_filter(\array_map(
-												static function ($option) use ($leadLabel) {
+												static function (array $option) use ($leadLabel): array {
 													$id  = $option['id'] ?? '';
 
 													if (!$id) {
@@ -447,12 +415,12 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 
 													return [
 														'component' => 'select-option',
-														'selectOptionLabel' => \ucfirst($option['title']),
+														'selectOptionLabel' => \ucfirst((string) $option['title']),
 														'selectOptionValue' => $id,
 														'selectOptionIsSelected' => $leadLabel === $id,
 													];
 												},
-												$leadFields ?? []
+												$leadFields
 											)),
 										],
 									] : []),
@@ -481,7 +449,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 									...($useOrganization ? [
 										[
 											'component' => 'divider',
-											'dividerExtraVSpacing' => true,
+											'dividerSeparator' => true,
 										],
 										[
 											'component' => 'intro',
@@ -495,14 +463,12 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 											'selectFieldHelp' => \__('Organization name is assignet to every new organization created.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select organization name field', 'eightshift-forms'),
 											'selectContent' => \array_map(
-												static function ($option) use ($organization) {
-													return [
-														'component' => 'select-option',
-														'selectOptionLabel' => \ucfirst($option),
-														'selectOptionValue' => $option,
-														'selectOptionIsSelected' => $organization === $option,
-													];
-												},
+												static fn($option): array => [
+													'component' => 'select-option',
+													'selectOptionLabel' => \ucfirst((string) $option),
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $organization === $option,
+												],
 												$fields
 											),
 										],
@@ -518,19 +484,12 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY);
-
-		if (!$isUsed || !$apiKey) {
-			return false;
-		}
-
-		return true;
+		return $isUsed && $apiKey;
 	}
 
 	/**
@@ -574,15 +533,13 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyPipedrive(),
@@ -592,7 +549,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements SettingG
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

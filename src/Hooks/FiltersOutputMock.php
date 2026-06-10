@@ -59,7 +59,7 @@ final class FiltersOutputMock
 				$settings .= '<ul>';
 				foreach ($filterData as $key => $value) {
 					$settingsValue = \implode(', ', $value);
-					$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+					$settings .= "<li>{$key} : {$settingsValue}</li>";
 				}
 				$settings .= '</ul>';
 				$filterUsed = true;
@@ -92,7 +92,7 @@ final class FiltersOutputMock
 
 		// Find global settings per integration.
 		$data = SettingsHelpers::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
-		if ($data) {
+		if ($data !== []) {
 			$data = \array_column($data, 1, 0);
 		}
 
@@ -100,7 +100,7 @@ final class FiltersOutputMock
 
 		// Find local settings for form.
 		$dataLocal = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
-		if ($dataLocal) {
+		if ($dataLocal !== []) {
 			$dataLocal = \array_column($dataLocal, 1, 0);
 			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
@@ -157,7 +157,7 @@ final class FiltersOutputMock
 		// Find local settings for form.
 		$dataLocal = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_URL_KEY, $formId);
 
-		if ($dataLocal) {
+		if ($dataLocal !== '' && $dataLocal !== '0') {
 			$data = $dataLocal;
 		}
 
@@ -296,8 +296,6 @@ final class FiltersOutputMock
 	 * @param string $data Data to wrap.
 	 * @param bool $used If false dont wrap.
 	 * @param bool $defaultPrefix Add default copy prefix.
-	 *
-	 * @return string
 	 */
 	private static function getSettingsDivWrap(string $data, bool $used = false, bool $defaultPrefix = true): string
 	{
@@ -308,13 +306,13 @@ final class FiltersOutputMock
 		$prefix = $defaultPrefix ? \__('Value set in code', 'eightshift-forms') : '';
 
 		if (empty($prefix)) {
-			return '<br /><div class="is-filter-applied">' . $data . '</div>';
+			return '<br /><div class="esf-is-filter-applied">' . $data . '</div>';
 		}
 
-		if (empty($data)) {
-			return '<div class="is-filter-applied">' . $prefix . '</div>';
+		if ($data === '' || $data === '0') {
+			return '<div class="esf-is-filter-applied">' . $prefix . '</div>';
 		}
 
-		return '<br /><br /><details class="is-filter-applied"><summary>' . $prefix . '</summary>' . $data . '</details>';
+		return '<br /><br /><details class="esf-is-filter-applied"><summary>' . $prefix . '</summary>' . $data . '</details>';
 	}
 }
