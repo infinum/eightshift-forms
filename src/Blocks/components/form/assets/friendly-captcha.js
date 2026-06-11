@@ -12,7 +12,8 @@ export class FriendlyCaptcha {
 		/** @type {import('./state').State} */
 		this.state = this.utils.getState();
 
-		this.widget = null;
+		// Map of widget instances: '__global' key for Smart/Zero-click (hidden) mode, form element for One-click mode.
+		this.widgets = new Map();
 
 		// Set all public methods.
 		this.publicMethods();
@@ -46,13 +47,29 @@ export class FriendlyCaptcha {
 	 * @returns {void}
 	 */
 	initResetOnSubmit() {
-		window.addEventListener(this.state.getStateEvent('afterFormSubmit'), () => {
-			this.widget?.reset();
+		window.addEventListener(this.state.getStateEvent('afterFormSubmit'), (event) => {
+			if (this.state.getStateCaptchaWidgetMode() !== 'one-click') {
+				this.widgets.get('__global')?.reset();
+
+				return;
+			}
+
+			const formId = event?.detail?.formId;
+
+			if (!formId) {
+				return;
+			}
+
+			const formElement = this.state.getStateFormElement(formId);
+			this.widgets.get(formElement)?.reset();
 		});
 	}
 
 	/**
-	 * Initialize Friendly Captcha widget.
+	 * Initialize Friendly Captcha widget(s).
+	 *
+	 * In standard mode: one hidden global widget shared across all forms on the page.
+	 * In one-click mode: one visible widget per form, inserted at the end of each form.
 	 *
 	 * @returns {void}
 	 */
@@ -62,17 +79,35 @@ export class FriendlyCaptcha {
 		}
 
 		const siteKey = this.state.getStateCaptchaSiteKey();
+		const apiEndpoint = this.state.getStateCaptchaEndpoint();
 
-		// Create a hidden container for the widget.
-		const container = document.createElement('div');
-		container.style.display = 'none';
-		document.body.appendChild(container);
+		if (this.state.getStateCaptchaWidgetMode() !== 'one-click') {
+			const container = document.createElement('div');
+			container.style.display = 'none';
+			document.body.appendChild(container);
 
-		this.widget = frcaptcha.createWidget({
-			element: container,
-			sitekey: siteKey,
-			startMode: 'auto',
-			apiEndpoint: this.state.getStateCaptchaEndpoint(),
+			this.widgets.set('__global', frcaptcha.createWidget({
+				element: container,
+				sitekey: siteKey,
+				startMode: 'auto',
+				apiEndpoint,
+			}));
+
+			return;
+		}
+
+		const forms = document.querySelectorAll(this.state.getStateSelector('form', true));
+		forms.forEach((form) => {
+			const container = document.createElement('div');
+			container.setAttribute('data-frc-widget', '');
+			form.appendChild(container);
+
+			this.widgets.set(form, frcaptcha.createWidget({
+				element: container,
+				sitekey: siteKey,
+				startMode: 'focus',
+				apiEndpoint,
+			}));
 		});
 	}
 
@@ -102,9 +137,21 @@ export class FriendlyCaptcha {
 			initResetOnSubmit: () => {
 				this.initResetOnSubmit();
 			},
-			getResponse: () => this.widget?.getResponse() ?? '',
-			reset: () => {
-				this.widget?.reset();
+			getResponse: (formElement = null) => {
+				if (formElement && this.state.getStateCaptchaWidgetMode() === 'one-click') {
+					return this.widgets.get(formElement)?.getResponse() ?? '';
+				}
+
+				return this.widgets.get('__global')?.getResponse() ?? '';
+			},
+			reset: (formElement = null) => {
+				if (!formElement || this.state.getStateCaptchaWidgetMode() !== 'one-click') {
+					this.widgets.get('__global')?.reset();
+
+					return;
+				}
+
+				this.widgets.get(formElement)?.reset();
 			},
 		};
 	}

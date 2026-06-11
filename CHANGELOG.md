@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.6.0]
+
+### Added
+
+- Added Friendly Captcha widget mode settings with `Smart`, `Zero-click`, and `One-click` options.
+
+### Fixed
+
+- Fixed Friendly Captcha token handling so `One-click` mode reads and resets the correct widget per form.
+- Fixed Friendly Captcha v2 siteverify handling so HTTP 200 responses with `success=false` are treated as failed captcha checks.
+
 ## [9.5.3]
 
 ### Fixed
@@ -1887,6 +1898,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
 [9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2
 [9.5.1]: https://github.com/infinum/eightshift-forms/compare/9.5.0...9.5.1

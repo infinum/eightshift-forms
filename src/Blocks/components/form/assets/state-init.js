@@ -106,6 +106,7 @@ export const StateEnum = {
 	CAPTCHA_LOAD_ON_INIT: 'loadOnInit',
 	CAPTCHA_HIDE_BADGE: 'hideBadge',
 	CAPTCHA_ENDPOINT: 'endpoint',
+	CAPTCHA_WIDGET_MODE: 'widgetMode',
 
 	CAPTCHA_TYPE_GOOGLE: 'google',
 	CAPTCHA_TYPE_FRIENDLY: 'friendly',
@@ -272,6 +273,7 @@ export function setStateInitial() {
 		switch (captcha.type) {
 			case StateEnum.CAPTCHA_TYPE_FRIENDLY:
 				setState([StateEnum.CAPTCHA_ENDPOINT], captcha.endpoint, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_WIDGET_MODE], captcha.widgetMode ?? 'smart', StateEnum.CAPTCHA);
 				break;
 			default:
 				setState([StateEnum.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), StateEnum.CAPTCHA);
@@ -379,7 +381,7 @@ export function setStateFormInitial(formId) {
 			disabled,
 		} = item;
 
-		if (name === 'search_terms' || !name) {
+		if (name === 'search_terms' || !name || item.closest('[data-frc-widget]')) {
 			return;
 		}
 

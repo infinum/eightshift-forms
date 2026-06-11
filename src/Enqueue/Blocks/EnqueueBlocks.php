@@ -349,6 +349,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 						),
 						'endpoint' => FriendlyCaptcha::getEndpoint(),
 						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
+						'widgetMode' => SettingsHelpers::getOptionValue(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 					];
 					break;
 				default:
