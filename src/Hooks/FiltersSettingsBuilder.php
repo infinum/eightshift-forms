@@ -61,6 +61,9 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Nationbuilder\NationbuilderClient;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
+use EightshiftForms\Integrations\Pardot\Pardot;
+use EightshiftForms\Integrations\Pardot\PardotClient;
+use EightshiftForms\Integrations\Pardot\SettingsPardot;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
@@ -537,6 +540,24 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'desc' => \__('NationBuilder integration settings.', 'eightshift-forms'),
 					'detail' => \__('Software designed to grow your community and move it to action. Native advocacy features. Engage your audience in new and innovative ways.', 'eightshift-forms'),
 					'externalLink' => 'https://nationbuilder.com/',
+				],
+			],
+			SettingsPardot::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsPardot::FILTER_SETTINGS_GLOBAL_NAME,
+				'fields' => Pardot::FILTER_FORM_FIELDS_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
+				'use' => SettingsPardot::SETTINGS_PARDOT_USE_KEY,
+				'settingsForceShow' => false,
+				'cache' => [
+					PardotClient::CACHE_PARDOT_FORM_HANDLERS_TRANSIENT_NAME,
+					PardotClient::CACHE_PARDOT_FORM_HANDLER_FIELDS_TRANSIENT_NAME,
+				],
+				'labels' => [
+					'title' => \__('Pardot', 'eightshift-forms'),
+					'desc' => \__('Pardot (Account Engagement) integration settings.', 'eightshift-forms'),
+					'detail' => \__('Salesforce B2B marketing automation platform for creating, deploying, and managing online marketing campaigns.', 'eightshift-forms'),
+					'externalLink' => 'https://www.salesforce.com/marketing/b2b-automation/',
 				],
 			],
 			// ------------------------------
