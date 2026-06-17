@@ -61,7 +61,6 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Nationbuilder\NationbuilderClient;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
-use EightshiftForms\Integrations\Pardot\Pardot;
 use EightshiftForms\Integrations\Pardot\PardotClient;
 use EightshiftForms\Integrations\Pardot\SettingsPardot;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
@@ -544,9 +543,10 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsPardot::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsPardot::FILTER_SETTINGS_GLOBAL_NAME,
-				'fields' => Pardot::FILTER_FORM_FIELDS_NAME,
+				'settings' => SettingsPardot::FILTER_SETTINGS_NAME,
+				'valid' => SettingsPardot::FILTER_SETTINGS_IS_VALID_NAME,
 				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsPardot::SETTINGS_PARDOT_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [

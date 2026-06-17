@@ -48,7 +48,8 @@
 			"eightshift-forms/paycek",
 			"eightshift-forms/calculator",
 			"eightshift-forms/pipedrive",
-			"eightshift-forms/nationbuilder"
+			"eightshift-forms/nationbuilder",
+			"eightshift-forms/pardot"
 		],
 		"integrationsBuilder": [
 			"eightshift-forms/mailchimp",
@@ -60,8 +61,7 @@
 			"eightshift-forms/airtable",
 			"eightshift-forms/moments",
 			"eightshift-forms/workable",
-			"eightshift-forms/talentlyft",
-			"eightshift-forms/pardot"
+			"eightshift-forms/talentlyft"
 		]
 	},
 	"showAsMap": {

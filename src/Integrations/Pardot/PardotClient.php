@@ -166,7 +166,9 @@ class PardotClient implements PardotClientInterface
 		$params = $formDetails[Config::FD_PARAMS];
 		$files = $formDetails[Config::FD_FILES];
 		$formId = $formDetails[Config::FD_FORM_ID];
-		$itemId = $formDetails[Config::FD_ITEM_ID];
+
+		$itemId = SettingsHelpers::getSettingValue(SettingsPardot::SETTINGS_PARDOT_ITEM_ID_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsPardot::SETTINGS_PARDOT_PARAMS_MAP_KEY, $formId);
 
 		// Filter override post request.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsPardot::SETTINGS_TYPE_KEY, 'overridePostRequest']);
@@ -196,7 +198,7 @@ class PardotClient implements PardotClientInterface
 			return ApiHelpers::getIntegrationErrorInternalOutput($details);
 		}
 
-		$body = $this->prepareParams($params);
+		$body = $this->prepareParams($params, $mapParams);
 
 		$response = \wp_remote_post(
 			$url,
@@ -421,18 +423,23 @@ class PardotClient implements PardotClientInterface
 	/**
 	 * Prepare params for form-encoded POST to form handler URL.
 	 *
+	 * Builds payload by mapping Pardot field names to submitted form field values
+	 * using the per-form field mapping stored in settings.
+	 *
 	 * @param array<string, mixed> $params Form params.
+	 * @param array<string, string> $mapParams Mapping of Pardot field name => form field name.
 	 *
 	 * @return string
 	 */
-	private function prepareParams(array $params): string
+	private function prepareParams(array $params, array $mapParams): string
 	{
 		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
-		$output = [];
 
+		// Index submitted form fields by name for quick lookup.
+		$formFieldsByName = [];
 		foreach ($params as $param) {
-			$value = $param['value'] ?? '';
 			$name = $param['name'] ?? '';
+			$value = $param['value'] ?? '';
 
 			if (!$name) {
 				continue;
@@ -446,7 +453,19 @@ class PardotClient implements PardotClientInterface
 				$value = \wp_strip_all_tags($value);
 			}
 
-			$output[$name] = $value;
+			$formFieldsByName[$name] = $value;
+		}
+
+		$output = [];
+
+		foreach ($mapParams as $pardotFieldName => $formFieldName) {
+			if (!$pardotFieldName || !$formFieldName) {
+				continue;
+			}
+
+			if (isset($formFieldsByName[$formFieldName])) {
+				$output[$pardotFieldName] = $formFieldsByName[$formFieldName];
+			}
 		}
 
 		return \http_build_query($output);

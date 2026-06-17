@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Pardot;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\SettingInterface;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Oauth\OauthInterface;
@@ -22,8 +23,13 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsPardot class.
  */
-class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlobalInterface, ServiceInterface
+class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
+	/**
+	 * Filter settings key.
+	 */
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_pardot';
+
 	/**
 	 * Filter global settings key.
 	 */
@@ -33,6 +39,11 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	 * Filter settings global is Valid key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_pardot';
+
+	/**
+	 * Filter settings is valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_pardot';
 
 	/**
 	 * Settings key.
@@ -75,6 +86,23 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_PARDOT_OAUTH_ALLOW_KEY = 'pardot-oauth-allow';
 
 	/**
+	 * Form handler ID key (per-form setting).
+	 */
+	public const SETTINGS_PARDOT_ITEM_ID_KEY = 'pardot-item-id';
+
+	/**
+	 * Field params map key (per-form setting).
+	 */
+	public const SETTINGS_PARDOT_PARAMS_MAP_KEY = 'pardot-params-map';
+
+	/**
+	 * Instance variable for Pardot client.
+	 *
+	 * @var PardotClientInterface
+	 */
+	protected $pardotClient;
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -91,13 +119,16 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	/**
 	 * Create a new instance.
 	 *
+	 * @param PardotClientInterface $pardotClient Inject Pardot client.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback methods.
 	 * @param OauthInterface $oauthPardot Inject Oauth methods.
 	 */
 	public function __construct(
+		PardotClientInterface $pardotClient,
 		SettingsFallbackDataInterface $settingsFallback,
 		OauthInterface $oauthPardot,
 	) {
+		$this->pardotClient = $pardotClient;
 		$this->settingsFallback = $settingsFallback;
 		$this->oauthPardot = $oauthPardot;
 	}
@@ -109,8 +140,124 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	 */
 	public function register(): void
 	{
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+	}
+
+	/**
+	 * Determine if settings are valid.
+	 *
+	 * @param bool $output Output.
+	 * @param string $formId Form ID.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsValid(bool $output, string $formId): bool
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return false;
+		}
+
+		$selectedHandler = SettingsHelpers::getSettingValue(self::SETTINGS_PARDOT_ITEM_ID_KEY, $formId);
+
+		if (!$selectedHandler) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsData(string $formId): array
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return SettingsOutputHelpers::getNoActiveFeature();
+		}
+
+		$selectedHandler = SettingsHelpers::getSettingValue(self::SETTINGS_PARDOT_ITEM_ID_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PARDOT_PARAMS_MAP_KEY, $formId);
+		$handlerFields = $selectedHandler ? $this->pardotClient->getItem($selectedHandler) : [];
+
+		return [
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Settings', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'select',
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_PARDOT_ITEM_ID_KEY),
+								'selectFieldLabel' => \__('Form handler', 'eightshift-forms'),
+								'selectSingleSubmit' => true,
+								'selectPlaceholder' => \__('Select form handler', 'eightshift-forms'),
+								'selectContent' => \array_map(
+									static function ($option) use ($selectedHandler) {
+										return [
+											'component' => 'select-option',
+											'selectOptionLabel' => $option['title'],
+											'selectOptionValue' => $option['id'],
+											'selectOptionIsSelected' => $selectedHandler === $option['id'],
+										];
+									},
+									$this->pardotClient->getItems()
+								),
+							],
+						],
+					],
+					($selectedHandler && $handlerFields) ? [
+						'component' => 'tab',
+						'tabLabel' => \__('Field mapping', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'field',
+								'fieldLabel' => '<b>' . \__('Pardot field', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('Form field name', 'eightshift-forms') . '</b>',
+								'fieldBeforeContent' => '&emsp;',
+								'fieldIsFiftyFiftyHorizontal' => true,
+							],
+							[
+								'component' => 'group',
+								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PARDOT_PARAMS_MAP_KEY),
+								'groupSaveOneField' => true,
+								'groupStyle' => 'default-listing',
+								'groupContent' => [
+									...\array_map(
+										function ($field) use ($mapParams) {
+											$fieldName = $field['id'] ?? '';
+
+											if (!$fieldName) {
+												return [];
+											}
+
+											return [
+												'component' => 'input',
+												'inputName' => $fieldName,
+												'inputFieldLabel' => $field['title'],
+												'inputValue' => $mapParams[$fieldName] ?? '',
+												'inputFieldIsFiftyFiftyHorizontal' => true,
+												'inputFieldBeforeContent' => '&rarr;',
+											];
+										},
+										$handlerFields
+									),
+								],
+							],
+						],
+					] : [],
+				],
+			],
+		];
 	}
 
 	/**

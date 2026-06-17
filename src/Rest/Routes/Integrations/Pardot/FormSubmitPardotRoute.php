@@ -104,7 +104,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 		return [
 			Config::FD_FORM_ID => 'string',
 			Config::FD_POST_ID => 'string',
-			Config::FD_ITEM_ID => 'string',
 			Config::FD_PARAMS => 'array',
 		];
 	}
@@ -133,7 +132,7 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 			// phpcs:enable
 		}
 
-		if (!\apply_filters(SettingsPardot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+		if (!\apply_filters(SettingsPardot::FILTER_SETTINGS_IS_VALID_NAME, false, $formDetails[Config::FD_FORM_ID])) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('pardotMissingConfig'),

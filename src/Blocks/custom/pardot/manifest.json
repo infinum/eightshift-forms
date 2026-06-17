@@ -16,9 +16,5 @@
 	"supports": {
 		"inserter": false
 	},
-	"attributes": {
-		"pardotIntegrationId": {
-			"type": "string"
-		}
-	}
+	"attributes": {}
 }

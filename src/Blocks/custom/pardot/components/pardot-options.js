@@ -1,22 +1,19 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
-import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
+import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { IntegrationsInternalOptions } from './../../../components/integrations/components/integrations-internal-options';
 
-export const PardotOptions = ({ attributes, setAttributes, clientId, itemIdKey }) => {
+export const PardotOptions = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('pardot');
 
-	const { title, blockName } = manifest;
+	const { title } = manifest;
 
 	return (
-		<IntegrationsOptions
+		<IntegrationsInternalOptions
 			title={title}
-			block={blockName}
+			clientId={clientId}
 			attributes={attributes}
 			setAttributes={setAttributes}
-			clientId={clientId}
-			itemId={checkAttr(itemIdKey, attributes, manifest)}
-			itemIdKey={itemIdKey}
 		/>
 	);
 };

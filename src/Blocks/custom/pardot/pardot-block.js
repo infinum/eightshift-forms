@@ -4,21 +4,12 @@ import { PardotEditor } from './components/pardot-editor';
 import { PardotOptions } from './components/pardot-options';
 
 export const Pardot = (props) => {
-	const itemIdKey = 'pardotIntegrationId';
-
 	return (
 		<>
 			<InspectorControls>
-				<PardotOptions
-					{...props}
-					clientId={props.clientId}
-					itemIdKey={itemIdKey}
-				/>
+				<PardotOptions {...props} />
 			</InspectorControls>
-			<PardotEditor
-				{...props}
-				itemIdKey={itemIdKey}
-			/>
+			<PardotEditor {...props} />
 		</>
 	);
 };
