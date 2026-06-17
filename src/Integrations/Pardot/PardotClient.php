@@ -241,7 +241,7 @@ class PardotClient implements PardotClientInterface
 	 */
 	public function getTestApi(): array
 	{
-		$url = $this->getBaseUrl('form-handlers') . 'fields=id,name&pageSize=1';
+		$url = $this->getBaseUrl('form-handlers') . 'fields=id,name';
 
 		$response = \wp_remote_get(
 			$url,
@@ -328,7 +328,7 @@ class PardotClient implements PardotClientInterface
 	 */
 	private function getPardotFormHandlers(): array
 	{
-		$url = $this->getBaseUrl('form-handlers') . 'fields=id,name,embedCode&orderBy=name&pageSize=200';
+		$url = $this->getBaseUrl('form-handlers') . 'fields=id,name,embedCode&orderBy=name';
 
 		$response = \wp_remote_get(
 			$url,
