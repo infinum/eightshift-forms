@@ -87,12 +87,11 @@ class PardotClient implements PardotClientInterface
 					}
 
 					$embedCode = $item['embedCode'] ?? '';
-					$submitUrl = $this->parseSubmitUrl($embedCode);
 
 					$output[$id] = [
 						'id' => $id,
 						'title' => $item['name'] ?? '',
-						'submitUrl' => $submitUrl,
+						'submitUrl' => $this->parseSubmitUrl($embedCode),
 					];
 				}
 
@@ -141,7 +140,7 @@ class PardotClient implements PardotClientInterface
 					}
 
 					$output[$itemId][$fieldId] = [
-						'id' => $prospectApiFieldId ?: $fieldId,
+						'id' => $field['name'] ?? $fieldId,
 						'title' => $field['name'] ?? '',
 						'dataFormat' => $field['dataFormat'] ?? 'text',
 						'isRequired' => (bool) ($field['isRequired'] ?? false),
@@ -179,7 +178,6 @@ class PardotClient implements PardotClientInterface
 			}
 		}
 
-		// Get handler submit URL from cache.
 		$handler = $this->getItems()[$itemId] ?? [];
 		$url = $handler['submitUrl'] ?? '';
 
@@ -215,7 +213,7 @@ class PardotClient implements PardotClientInterface
 			SettingsPardot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
-			[],
+			$params,
 			$files,
 			$itemId,
 			$formId
@@ -223,8 +221,7 @@ class PardotClient implements PardotClientInterface
 
 		$code = $details[Config::IARD_CODE];
 
-		// Form handlers respond with 302 redirect on success; wp_remote_post with redirection=0
-		// returns the redirect itself. Treat 2xx and 3xx as success.
+		// Form handlers respond with 302 on success.
 		if ($code >= 200 && $code < 400) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
@@ -328,7 +325,7 @@ class PardotClient implements PardotClientInterface
 	 */
 	private function getPardotFormHandlers(): array
 	{
-		$url = $this->getBaseUrl('form-handlers') . 'fields=id,name,embedCode&orderBy=name';
+		$url = $this->getBaseUrl('form-handlers') . 'fields=id,name,embedCode,isDeleted,createdBy.username,updatedBy.username,createdAt,updatedAt';
 
 		$response = \wp_remote_get(
 			$url,
@@ -370,7 +367,7 @@ class PardotClient implements PardotClientInterface
 	 */
 	private function getPardotFormHandlerFields(string $handlerId): array
 	{
-		$url = $this->getBaseUrl('form-handler-fields') . 'fields=id,name,dataFormat,isRequired,prospectApiFieldId&formHandlerId=' . \rawurlencode($handlerId);
+		$url = $this->getBaseUrl('form-handler-fields') . 'fields=id,name,isRequired,prospectApiFieldId,dataFormat&formHandlerId=' . \rawurlencode($handlerId);
 
 		$response = \wp_remote_get(
 			$url,
@@ -422,11 +419,11 @@ class PardotClient implements PardotClientInterface
 	}
 
 	/**
-	 * Prepare params for form-encoded POST to handler URL.
+	 * Prepare params for form-encoded POST to form handler URL.
 	 *
 	 * @param array<string, mixed> $params Form params.
 	 *
-	 * @return string URL-encoded body string.
+	 * @return string
 	 */
 	private function prepareParams(array $params): string
 	{
