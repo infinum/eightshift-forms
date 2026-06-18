@@ -432,10 +432,10 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								'stepsContent' => [
 									\__('Log in to your Salesforce org.', 'eightshift-forms'),
 									\__('Go to <strong>Setup → External Client App Manager</strong> and create a new App.', 'eightshift-forms'),
-									\__('Basic Information: `External Client App Name`, `Contact Email`, `Distribution State: Local`, ', 'eightshift-forms'),
-									\__('OAuth Settings: `Manage user data via APIs (api)`, `Perform requests at any time (refresh_token, offline_access)`, `Manage Pardot services (pardot_api)`', 'eightshift-forms'),
-									\__('Security: `Require secret for Web Server Flow`, `Require secret for Refresh Token Flow`', 'eightshift-forms'),
-									\__('App Policies: `Start Page: OAuth`, `*OAuth Start URL: https://login.salesforce.com/`', 'eightshift-forms'),
+									\__('Basic Information: <strong>External Client App Name</strong>, <strong>Contact Email</strong>, <strong>Distribution State: Local</strong>', 'eightshift-forms'),
+									\__('OAuth Settings: <strong>Manage user data via APIs (api)</strong>, <strong>Perform requests at any time (refresh_token, offline_access)</strong>, <strong>Manage Pardot services (pardot_api)</strong>', 'eightshift-forms'),
+									\__('Security: <strong>Require secret for Web Server Flow</strong>, <strong>Require secret for Refresh Token Flow</strong>', 'eightshift-forms'),
+									\__('App Policies: <strong>Start Page: OAuth</strong>, <strong>OAuth Start URL: https://login.salesforce.com/</strong>', 'eightshift-forms'),
 									\__('Once you create the app copy the <strong>Consumer Key</strong> and <strong>Consumer Secret</strong> into the fields above.', 'eightshift-forms'),
 									\__('Go to <strong>Marketing Setup → Business Unit Setup</strong> and copy the <strong>Business Unit ID</strong> (starts with <code>0Uv</code>).', 'eightshift-forms'),
 									// translators: %s will be replaced with the site URL.
