@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.7.0]
+
+### Added
+
+- Added Pardot integration with full Salesforce OAuth 2.0 flow, admin settings, and field mapper.
+- Added Pardot Gutenberg block for embedding Pardot forms in the block editor.
+- Added Pardot REST routes: OAuth callback, integration items, form submit, and API test.
+- Added `OauthCleanupJob` cron job to remove expired OAuth tokens.
+- Added Pardot variables, labels, filters, and fallback flag to the cross-cutting integration setup.
+
 ## [9.6.0]
 
 ### Added
@@ -1898,6 +1908,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0
 [9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
 [9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2
