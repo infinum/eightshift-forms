@@ -50,8 +50,9 @@ class Deactivate implements HasDeactivationInterface
 			}
 		}
 
-		// Remove cron job.
+		// Remove cron jobs.
 		\wp_clear_scheduled_hook(FileUploadJob::JOB_NAME);
+		\wp_clear_scheduled_hook(OauthCleanupJob::JOB_NAME);
 
 		// Do a cleanup.
 		\flush_rewrite_rules();
