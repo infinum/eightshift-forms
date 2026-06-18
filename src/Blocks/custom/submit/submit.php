@@ -15,7 +15,7 @@ $button = '';
 $value = $attributes['submitSubmitValue'] ?? '';
 
 if ($value === '') {
-	$attributes['submitSubmitValue'] = $value ?: __('Submit', 'eightshift-forms');
+	$attributes['submitSubmitValue'] = __('Submit', 'eightshift-forms');
 }
 
 // With this filter you can override default submit component and provide your own.
