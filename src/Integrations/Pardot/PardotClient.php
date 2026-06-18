@@ -200,8 +200,6 @@ class PardotClient implements PardotClientInterface
 
 		$body = $this->prepareParams($params, $mapParams);
 
-		\dump($body);
-
 		$response = \wp_remote_post(
 			$url,
 			[
@@ -222,8 +220,6 @@ class PardotClient implements PardotClientInterface
 			$itemId,
 			$formId
 		);
-
-		\dump($details);
 
 		$code = $details[Config::IARD_CODE];
 
