@@ -4,7 +4,7 @@ import { InnerBlocks } from '@wordpress/block-editor';
 import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FormEditor, additionalBlocksNoIntegration } from '../../../components/form/components/form-editor';
 
-export const JiraEditor = ({ attributes, setAttributes, clientId }) => {
+export const PardotEditor = ({ attributes, setAttributes, clientId }) => {
 	const { blockClass } = attributes;
 
 	return (

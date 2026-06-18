@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -41,6 +42,10 @@ class Blocks extends AbstractBlocks
 
 		// Limits the usage of only custom project blocks.
 		\add_filter('allowed_block_types_all', [$this, 'getAllBlocksList'], 99999, 2);
+
+		if (GeneralHelpers::isEightshiftFormsAdminPages()) {
+			\remove_filter('the_content', 'wpautop');
+		}
 	}
 
 	/**

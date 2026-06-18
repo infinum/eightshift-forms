@@ -10,9 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
-use EightshiftForms\CronJobs\FileUploadJob;
-use EightshiftForms\Permissions\Permissions;
 use EightshiftForms\Config\Config;
+use EightshiftForms\CronJobs\ActivityLogAutoDeleteJob;
+use EightshiftForms\CronJobs\ClearbitJob;
+use EightshiftForms\CronJobs\EntriesAutoDeleteJob;
+use EightshiftForms\CronJobs\FileUploadJob;
+use EightshiftForms\CronJobs\LogEntryCleanupJob;
+use EightshiftForms\CronJobs\NationbuilderJob;
+use EightshiftForms\CronJobs\OauthCleanupJob;
+use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 use WP_Role;
 
@@ -50,8 +56,14 @@ class Deactivate implements HasDeactivationInterface
 			}
 		}
 
-		// Remove cron job.
+		// Remove cron jobs.
+		\wp_clear_scheduled_hook(ActivityLogAutoDeleteJob::JOB_NAME);
+		\wp_clear_scheduled_hook(ClearbitJob::JOB_NAME);
+		\wp_clear_scheduled_hook(EntriesAutoDeleteJob::JOB_NAME);
 		\wp_clear_scheduled_hook(FileUploadJob::JOB_NAME);
+		\wp_clear_scheduled_hook(LogEntryCleanupJob::JOB_NAME);
+		\wp_clear_scheduled_hook(NationbuilderJob::JOB_NAME);
+		\wp_clear_scheduled_hook(OauthCleanupJob::JOB_NAME);
 
 		// Do a cleanup.
 		\flush_rewrite_rules();

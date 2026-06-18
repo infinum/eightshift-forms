@@ -104,32 +104,37 @@ $formsClass = Helpers::classnames([
 	echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php
-	foreach ($allForms as $formId) {
-		// Convert blocks to array.
-		$blocks = parse_blocks(get_the_content(null, false, $formId));
+	try {
+		remove_filter('the_content', 'wpautop');
 
-		// Bailout if it fails for some reason.
-		if (!$blocks) {
-			return;
+		foreach ($allForms as $formId) {
+			// Convert blocks to array.
+			$blocks = parse_blocks(get_the_content(null, false, $formId));
+
+			// Bailout if it fails for some reason.
+			if (!$blocks) {
+				return;
+			}
+
+			$output = apply_filters(
+				Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
+				$blocks,
+				array_merge(
+					$attributes,
+					[
+						'formsFormPostId' => $formId,
+					]
+				),
+				$manifest
+			);
+
+			// Render blocks.
+			foreach ($output as $block) {
+				echo apply_filters('the_content', render_block($block)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+			}
 		}
-
-		$output = apply_filters(
-			Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
-			$blocks,
-			array_merge(
-				$attributes,
-				[
-					'formsFormPostId' => $formId,
-				]
-			),
-			$manifest
-		);
-
-		// Render blocks.
-		foreach ($output as $block) {
-			// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-			echo apply_filters('the_content', render_block($block));
-		}
+	} finally {
+		add_filter('the_content', 'wpautop');
 	}
 
 	echo Helpers::render(

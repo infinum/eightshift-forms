@@ -48,7 +48,8 @@
 			"eightshift-forms/paycek",
 			"eightshift-forms/calculator",
 			"eightshift-forms/pipedrive",
-			"eightshift-forms/nationbuilder"
+			"eightshift-forms/nationbuilder",
+			"eightshift-forms/pardot"
 		],
 		"integrationsBuilder": [
 			"eightshift-forms/mailchimp",
@@ -606,26 +607,20 @@
 			"formId": "data-form-id",
 			"formFid": "data-form-fid",
 			"formGeolocation": "data-form-geolocation",
-
 			"bulkId": "data-bulk-id",
 			"bulkType": "data-bulk-type",
 			"bulkItems": "data-bulk-items",
-
 			"exportType": "data-export-type",
-
 			"manualSubmitId": "data-manual-submit-id",
-
 			"stepId": "data-step-id",
 			"submitStepDirection": "data-step-direction",
 			"postId": "data-post-id",
-
 			"fieldId": "data-field-id",
 			"fieldName": "data-field-name",
 			"fieldType": "data-field-type",
 			"fieldPreventSubmit": "data-field-prevent-submit",
 			"fieldTypeCustom": "data-type-custom",
 			"fieldUncheckedValue": "data-unchecked-value",
-
 			"formSecureData": "data-secure-data",
 			"trackingEventName": "data-tracking-event-name",
 			"trackingAdditionalData": "data-tracking-additional-data",
@@ -645,11 +640,9 @@
 			"settingsType": "data-settings-type",
 			"groupSaveAsOneField": "data-group-save-as-one-field",
 			"multistepSkipScroll": "data-multistep-skip-scroll",
-
 			"datePreviewFormat": "data-preview-format",
 			"dateOutputFormat": "data-output-format",
 			"dateMode": "data-mode",
-
 			"selectAllowSearch": "data-allow-search",
 			"selectIsMultiple": "data-is-multiple",
 			"selectMinCount": "data-min-count",
@@ -659,15 +652,12 @@
 			"selectOptionIsHidden": "data-option-is-hidden",
 			"selectId": "data-id",
 			"selectValue": "data-value",
-
 			"countryOutputType": "data-country-output-type",
 			"countryCode": "data-country-code",
 			"countryName": "data-country-name",
 			"countryNumber": "data-country-number",
 			"countryUnlocalizedName": "data-country-unlocalized-name",
-
 			"ratingValue": "data-rating",
-
 			"phoneSync": "data-phone-sync",
 			"phoneDisablePicker": "data-phone-disable-picker",
 			"saveAsJson": "data-save-as-json",
@@ -680,16 +670,13 @@
 			"hideCaptchaBadge": "data-hide-captcha-badge",
 			"reload": "data-reload",
 			"hubspotTypeId": "data-hubspot-type-id",
-
 			"resultOutputItemKey": "data-result-output-item-key",
 			"resultOutputItemValueStart": "data-result-output-item-value-start",
 			"resultOutputItemValueEnd": "data-result-output-item-value-end",
 			"resultOutputItemOperator": "data-result-output-item-operator",
 			"resultOutputPart": "data-result-output-part",
 			"resultOutputPartDefault": "data-result-output-part-default",
-
 			"singleSubmit": "data-single-submit",
-
 			"adminIntegrationType": "data-integration-type"
 		},
 		"responseOutputKeys": {

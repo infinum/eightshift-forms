@@ -152,6 +152,11 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING = 'nationbuilderErrorSettingsMissing';
 	public const SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR = 'nationbuilderServerError';
 
+	public const SETTINGS_FALLBACK_FLAG_PARDOT_MISSING_CONFIG = 'pardotMissingConfig';
+	public const SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR = 'pardotBadRequestError';
+	public const SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING = 'pardotErrorSettingsMissing';
+	public const SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR = 'pardotServerError';
+
 	public const SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR = 'momentsEventsError';
 
 	public const SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR = 'momentsBadRequestError';
@@ -701,6 +706,24 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			],
 			self::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR => [
 				'label' => \__('When Nationbuilder integrations returns a server error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+
+			// Pardot.
+			self::SETTINGS_FALLBACK_FLAG_PARDOT_MISSING_CONFIG => [
+				'label' => \__('When Pardot integration is not configured correctly, either globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR => [
+				'label' => \__('When Pardot integration returns a bad request error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING => [
+				'label' => \__('When Pardot integration returns a settings missing error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR => [
+				'label' => \__('When Pardot integration returns a server error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 

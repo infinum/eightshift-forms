@@ -176,8 +176,5 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 		}
 
 		\update_option(SettingsHelpers::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $jobs);
-
-		// Turn of OAuth after cron job is done.
-		\delete_option(SettingsHelpers::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY));
 	}
 }

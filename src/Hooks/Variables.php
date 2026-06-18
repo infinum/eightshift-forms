@@ -337,4 +337,34 @@ class Variables
 	{
 		return \defined('ES_CLIENT_SECRET_NATIONBUILDER') ? \ES_CLIENT_SECRET_NATIONBUILDER : '';
 	}
+
+	/**
+	 * Get Client ID for Pardot.
+	 *
+	 * @return string
+	 */
+	public static function getClientIdPardot(): string
+	{
+		return \defined('ES_CLIENT_ID_PARDOT') ? \ES_CLIENT_ID_PARDOT : '';
+	}
+
+	/**
+	 * Get Client Secret for Pardot.
+	 *
+	 * @return string
+	 */
+	public static function getClientSecretPardot(): string
+	{
+		return \defined('ES_CLIENT_SECRET_PARDOT') ? \ES_CLIENT_SECRET_PARDOT : '';
+	}
+
+	/**
+	 * Get Business Unit ID for Pardot.
+	 *
+	 * @return string
+	 */
+	public static function getBusinessUnitIdPardot(): string
+	{
+		return \defined('ES_BUSINESS_UNIT_ID_PARDOT') ? \ES_BUSINESS_UNIT_ID_PARDOT : '';
+	}
 }
