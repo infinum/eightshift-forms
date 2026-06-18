@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.7.1]
+
+### Updated
+
+- Pardot integration instructions.
+
 ## [9.7.0]
 
 ### Added
@@ -1908,6 +1914,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
 [9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0
 [9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
