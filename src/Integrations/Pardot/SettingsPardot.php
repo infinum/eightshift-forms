@@ -431,8 +431,12 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								'stepsTitle' => \__('How to connect to Pardot?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Salesforce org.', 'eightshift-forms'),
-									\__('Go to <strong>Setup → Apps → App Manager</strong> and find your Connected App.', 'eightshift-forms'),
-									\__('Copy the <strong>Consumer Key</strong> and <strong>Consumer Secret</strong> into the fields above.', 'eightshift-forms'),
+									\__('Go to <strong>Setup → External Client App Manager</strong> and create a new App.', 'eightshift-forms'),
+									\__('Basic Information: <strong>External Client App Name</strong>, <strong>Contact Email</strong>, <strong>Distribution State: Local</strong>', 'eightshift-forms'),
+									\__('OAuth Settings: <strong>Manage user data via APIs (api)</strong>, <strong>Perform requests at any time (refresh_token, offline_access)</strong>, <strong>Manage Pardot services (pardot_api)</strong>', 'eightshift-forms'),
+									\__('Security: <strong>Require secret for Web Server Flow</strong>, <strong>Require secret for Refresh Token Flow</strong>', 'eightshift-forms'),
+									\__('App Policies: <strong>Start Page: OAuth</strong>, <strong>OAuth Start URL: https://login.salesforce.com/</strong>', 'eightshift-forms'),
+									\__('Once you create the app copy the <strong>Consumer Key</strong> and <strong>Consumer Secret</strong> into the fields above.', 'eightshift-forms'),
 									\__('Go to <strong>Marketing Setup → Business Unit Setup</strong> and copy the <strong>Business Unit ID</strong> (starts with <code>0Uv</code>).', 'eightshift-forms'),
 									// translators: %s will be replaced with the site URL.
 									\sprintf(\__('In the Connected App, set the OAuth Callback URL to <br/><code>%s/wp-json/eightshift-forms/v1/oauth/pardot</code>', 'eightshift-forms'), \get_site_url()),
