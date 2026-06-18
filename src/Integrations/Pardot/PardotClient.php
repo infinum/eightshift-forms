@@ -200,6 +200,8 @@ class PardotClient implements PardotClientInterface
 
 		$body = $this->prepareParams($params, $mapParams);
 
+		\dump($body);
+
 		$response = \wp_remote_post(
 			$url,
 			[
@@ -220,6 +222,8 @@ class PardotClient implements PardotClientInterface
 			$itemId,
 			$formId
 		);
+
+		\dump($details);
 
 		$code = $details[Config::IARD_CODE];
 
@@ -423,11 +427,8 @@ class PardotClient implements PardotClientInterface
 	/**
 	 * Prepare params for form-encoded POST to form handler URL.
 	 *
-	 * Builds payload by mapping Pardot field names to submitted form field values
-	 * using the per-form field mapping stored in settings.
-	 *
 	 * @param array<string, mixed> $params Form params.
-	 * @param array<string, string> $mapParams Mapping of Pardot field name => form field name.
+	 * @param array<string, string> $mapParams Mapping of form field name => Pardot field name.
 	 *
 	 * @return string
 	 */
@@ -435,13 +436,16 @@ class PardotClient implements PardotClientInterface
 	{
 		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
-		// Index submitted form fields by name for quick lookup.
 		$formFieldsByName = [];
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
 			if (!$name) {
+				continue;
+			}
+
+			if (!$value) {
 				continue;
 			}
 
@@ -458,8 +462,8 @@ class PardotClient implements PardotClientInterface
 
 		$output = [];
 
-		foreach ($mapParams as $pardotFieldName => $formFieldName) {
-			if (!$pardotFieldName || !$formFieldName) {
+		foreach ($mapParams as $formFieldName => $pardotFieldName) {
+			if (!$formFieldName || !$pardotFieldName) {
 				continue;
 			}
 

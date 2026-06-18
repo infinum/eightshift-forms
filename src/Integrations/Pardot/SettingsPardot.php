@@ -10,13 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Pardot;
 
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingInterface;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Oauth\OauthInterface;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\SettingInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -185,6 +187,8 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 		$selectedHandler = SettingsHelpers::getSettingValue(self::SETTINGS_PARDOT_ITEM_ID_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PARDOT_PARAMS_MAP_KEY, $formId);
 		$handlerFields = $selectedHandler ? $this->pardotClient->getItem($selectedHandler) : [];
+		$formDetails = GeneralHelpers::getFormDetails($formId);
+		$formFields = $formDetails[Config::FD_FIELD_NAMES] ?? [];
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
@@ -213,16 +217,23 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 									$this->pardotClient->getItems()
 								),
 							],
+
 						],
 					],
-					($selectedHandler && $handlerFields) ? [
+					($selectedHandler && $handlerFields && $formFields) ? [
 						'component' => 'tab',
 						'tabLabel' => \__('Field mapping', 'eightshift-forms'),
 						'tabContent' => [
 							[
+								'component' => 'intro',
+								'introSubtitle' => \__('We recommend that every field in the Pardot is not required. If you want to make a field required, you need to add it to the form manually.', 'eightshift-forms'),
+								'introIsHighlighted' => true,
+								'introIsHighlightedImportant' => true,
+							],
+							[
 								'component' => 'field',
-								'fieldLabel' => '<b>' . \__('Pardot field', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . \__('Form field name', 'eightshift-forms') . '</b>',
+								'fieldLabel' => '<b>' . \__('Form field', 'eightshift-forms') . '</b>',
+								'fieldContent' => '<b>' . \__('Pardot field', 'eightshift-forms') . '</b>',
 								'fieldBeforeContent' => '&emsp;',
 								'fieldIsFiftyFiftyHorizontal' => true,
 							],
@@ -233,23 +244,34 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									...\array_map(
-										function ($field) use ($mapParams) {
-											$fieldName = $field['id'] ?? '';
-
-											if (!$fieldName) {
-												return [];
-											}
-
+										function ($formField) use ($mapParams, $handlerFields) {
 											return [
-												'component' => 'input',
-												'inputName' => $fieldName,
-												'inputFieldLabel' => $field['title'],
-												'inputValue' => $mapParams[$fieldName] ?? '',
-												'inputFieldIsFiftyFiftyHorizontal' => true,
-												'inputFieldBeforeContent' => '&rarr;',
+												'component' => 'select',
+												'selectName' => $formField,
+												'selectFieldLabel' => \ucfirst($formField),
+												'selectFieldIsFiftyFiftyHorizontal' => true,
+												'selectFieldBeforeContent' => '&rarr;',
+												'selectPlaceholder' => \__('Select Pardot field', 'eightshift-forms'),
+												'selectContent' => \array_filter(\array_map(
+													static function ($pardotField) use ($mapParams, $formField) {
+														$id = $pardotField['id'] ?? '';
+
+														if (!$id) {
+															return [];
+														}
+
+														return [
+															'component' => 'select-option',
+															'selectOptionLabel' => $pardotField['title'],
+															'selectOptionValue' => $id,
+															'selectOptionIsSelected' => isset($mapParams[$formField]) && $mapParams[$formField] === $id,
+														];
+													},
+													$handlerFields
+												)),
 											];
 										},
-										$handlerFields
+										$formFields
 									),
 								],
 							],
