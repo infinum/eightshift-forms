@@ -80,12 +80,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function register(): void
 	{
-		if (!\apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return;
-		}
-
 		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
 	}
 
@@ -98,28 +93,11 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	{
 		if (!\wp_next_scheduled(self::JOB_NAME)) {
 			\wp_schedule_event(
-				\time(),
-				'esFormsEvery5Minutes',
+				\strtotime('tomorrow', \time()),
+				CronJobsSchedules::CRON_JOBS_SCHEDULE_EVERY_15_MINUTES,
 				self::JOB_NAME
 			);
 		}
-	}
-
-	/**
-	 * Add job to schedule.
-	 *
-	 * @param array<mixed> $schedules WP schedules list.
-	 *
-	 * @return array<mixed>
-	 */
-	public function addJobToSchedule(array $schedules): array
-	{
-		$schedules['esFormsEvery5Minutes'] = [
-			'interval' => \MINUTE_IN_SECONDS * 5,
-			'display' => \esc_html__('Every 5 minutes', 'eightshift-forms'),
-		];
-
-		return $schedules;
 	}
 
 	/**

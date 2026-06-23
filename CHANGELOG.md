@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.8.0]
+
+### Added
+
+- Added a Cron Jobs global settings page (under Troubleshooting) to manage scheduled tasks and manually run each job from the admin.
+- Added `CronRunRoute` REST endpoint to trigger an individual cron job on demand.
+- Added `CronJobsSchedules` service that centralizes the custom WP-Cron intervals (every 15 minutes, every hour, once a day).
+- Added `cron.js` admin asset to trigger cron runs from the settings UI.
+- Added `cronRunSuccess` and `cronRunNotFound` labels.
+
+### Changed
+
+- Updated all cron jobs to use the centralized `CronJobsSchedules` interval constants instead of each registering its own schedule.
+- Updated `OauthCleanupJob` to run once a day instead of every hour.
+
 ## [9.7.1]
 
 ### Updated
@@ -1914,6 +1929,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.8.0]: https://github.com/infinum/eightshift-forms/compare/9.7.1...9.8.0
 [9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
 [9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0
 [9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0

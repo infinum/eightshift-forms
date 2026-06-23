@@ -29,6 +29,7 @@ use EightshiftForms\Rest\Routes\General\CaptchaValidateRoute;
 use EightshiftForms\Rest\Routes\General\FilesUploadRoute;
 use EightshiftForms\Rest\Routes\General\GeolocationDetectionRoute;
 use EightshiftForms\Rest\Routes\General\ValidateStepRoute;
+use EightshiftForms\Rest\Routes\Settings\CronRunRoute;
 
 /**
  * Trait SharedEnqueue
@@ -77,6 +78,7 @@ trait SharedEnqueue
 				'settings' => SettingsSubmitRoute::ROUTE_SLUG,
 				'increment' => IncrementRoute::ROUTE_SLUG,
 				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
+				'cronRun' => CronRunRoute::ROUTE_SLUG,
 				'migration' => MigrationRoute::ROUTE_SLUG,
 				'transfer' => TransferRoute::ROUTE_SLUG,
 				'bulk' => BulkRoute::ROUTE_SLUG,

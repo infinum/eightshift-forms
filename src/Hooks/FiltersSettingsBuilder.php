@@ -73,6 +73,7 @@ use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Config\Config;
+use EightshiftForms\CronJobs\SettingsCronJobs;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -632,6 +633,14 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Cache', 'eightshift-forms'),
 					'desc' => \__('Force data re-fetch for certain integrations.', 'eightshift-forms'),
+				],
+			],
+			SettingsCronJobs::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsCronJobs::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'labels' => [
+					'title' => \__('Cron Jobs', 'eightshift-forms'),
+					'desc' => \__('Manage and configure scheduled tasks for the plugin.', 'eightshift-forms'),
 				],
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [
