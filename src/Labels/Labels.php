@@ -137,6 +137,8 @@ class Labels implements LabelsInterface
 			'formFieldsSuccess' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
 			'cacheTypeNotFound' => \__('cache doesn\'t exist.', 'eightshift-forms'),
 			'cacheDeletedSuccess' => \__('cache deleted successfully!', 'eightshift-forms'),
+			'cronRunSuccess' => \__('Cron job run successfully!', 'eightshift-forms'),
+			'cronRunNotFound' => \__('Cron job not found.', 'eightshift-forms'),
 			'encryptFailed' => \__('Encrypt failed!', 'eightshift-forms'),
 			'decryptFailed' => \__('Decrypt failed!', 'eightshift-forms'),
 			'encryptSuccess' => \__('Encrypt finished successfully!', 'eightshift-forms'),
