@@ -37,7 +37,7 @@
 		"@playwright/test": "^1.61.0",
 		"husky": "^9.1.7",
 		"webpack": "^5.107.2",
-		"webpack-cli": "^6.0.1",
+		"webpack-cli": "^7.0.3",
 		"lint-staged": "^16.4.0"
 	},
 	"dependencies": {
