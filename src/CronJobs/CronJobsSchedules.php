@@ -35,12 +35,10 @@ class CronJobsSchedules implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+		\add_filter('cron_schedules', $this->addJobToSchedule(...)); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 	}
 
 	/**

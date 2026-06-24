@@ -4,10 +4,6 @@
 	"title": "Divider",
 	"componentClass": "es-divider",
 	"attributes": {
-		"dividerExtraVSpacing": {
-			"type": "boolean",
-			"default": false
-		},
 		"dividerSeparator": {
 			"type": "boolean",
 			"default": false

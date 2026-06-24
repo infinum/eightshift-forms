@@ -107,7 +107,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 			'order_number',
 			'cart',
 		];
-		$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
+		$missingOrEmpty = \array_any($reqParams, fn(string $param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {

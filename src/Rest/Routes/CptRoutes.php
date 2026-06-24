@@ -44,7 +44,7 @@ class CptRoutes implements ServiceInterface
 			'/wp/v2/' . Config::SLUG_POST_TYPE,
 			'/wp/v2/' . Config::SLUG_RESULT_POST_TYPE,
 		];
-		$find = \array_any($disableRoutes, fn($route): bool => \str_contains($request->get_route(), (string) $route));
+		$find = \array_any($disableRoutes, fn(string $route): bool => \str_contains($request->get_route(), $route));
 
 		if ($find && !\current_user_can(Config::CAP_SETTINGS)) {
 			return ApiHelpers::getApiErrorPublicOutput(

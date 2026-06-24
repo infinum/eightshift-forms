@@ -45,12 +45,10 @@ class SettingsCronJobs implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
 	}
 
 	/**
@@ -63,8 +61,7 @@ class SettingsCronJobs implements SettingGlobalInterface, ServiceInterface
 		$data = self::JOBS;
 
 		$outputIntegrations = \array_values(\array_filter(\array_map(
-			function ($value) {
-				return [
+			fn(string $value): array => [
 					'component' => 'card-inline',
 					'cardInlineTitle' => $value,
 					'cardInlineRightContent' => [
@@ -79,14 +76,13 @@ class SettingsCronJobs implements SettingGlobalInterface, ServiceInterface
 							'additionalClass' => UtilsHelper::getStateSelectorAdmin('cronRun'),
 						],
 					],
-				];
-			},
+				],
 			$data
 		)));
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
-			...($outputIntegrations ? [
+			...($outputIntegrations !== [] ? [
 				[
 					'component' => 'intro',
 					'introTitle' => \__('Integration cache', 'eightshift-forms'),

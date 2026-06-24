@@ -6,7 +6,7 @@ import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { codeVariable, conditionalVisibility, edit, hide, layoutAlt, lightBulb, loader, magic, none, options, readOnly, requiredAlt, tagAlt, warning, warningFill, wrench } from '@eightshift/ui-components/icons';
-import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
+import { lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { RichLabel, Button, InputField, Container, ContainerGroup, DecorativeTooltip } from '@eightshift/ui-components';
 import { camelCase, clsx, upperFirst } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
@@ -556,11 +556,9 @@ export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 export const FormEditButton = ({ formId }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const { editFormUrl } = select(STORE_NAME).getSettings();
-
 	return (
 		<Button
-			onPress={() => window.open(`${wpAdminUrl}${editFormUrl}&post=${formId}`, '_blank')}
+			onPress={() => window.open(`${wpAdminUrl}${globalSettings.editFormUrl}&post=${formId}`, '_blank')}
 			icon={edit}
 			className='esf:grow'
 			size='large'
@@ -581,11 +579,9 @@ export const SettingsButton = ({ formId = null }) => {
 
 	const id = formId ?? postId;
 
-	const { settingsPageUrl } = select(STORE_NAME).getSettings();
-
 	return (
 		<Button
-			onPress={() => window.open(`${wpAdminUrl}${settingsPageUrl}&formId=${id}`, '_blank')}
+			onPress={() => window.open(`${wpAdminUrl}${globalSettings.settingsPageUrl}&formId=${id}`, '_blank')}
 			icon={options}
 			className='esf:grow'
 			size='large'
@@ -598,11 +594,9 @@ export const SettingsButton = ({ formId = null }) => {
 export const GlobalSettingsButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const { globalSettingsPageUrl } = select(STORE_NAME).getSettings();
-
 	return (
 		<Button
-			onPress={() => window.open(`${wpAdminUrl}${globalSettingsPageUrl}`, '_blank')}
+			onPress={() => window.open(`${wpAdminUrl}${globalSettings.globalSettingsPageUrl}`, '_blank')}
 			icon={wrench}
 			className='esf:grow'
 			size='large'
@@ -623,11 +617,9 @@ export const LocationsButton = ({ formId = null }) => {
 
 	const id = formId ?? postId;
 
-	const { locationsPageUrl } = select(STORE_NAME).getSettings();
-
 	return (
 		<Button
-			onPress={() => window.open(`${wpAdminUrl}${locationsPageUrl}&formId=${id}`, '_blank')}
+			onPress={() => window.open(`${wpAdminUrl}${globalSettings.locationsPageUrl}&formId=${id}`, '_blank')}
 			icon={loader}
 			className='esf:grow'
 			size='large'
@@ -645,11 +637,9 @@ export const LocationsButton = ({ formId = null }) => {
 export const DashboardButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const { dashboardPageUrl } = select(STORE_NAME).getSettings();
-
 	return (
 		<Button
-			onPress={() => window.open(`${wpAdminUrl}${dashboardPageUrl}`, '_blank')}
+			onPress={() => window.open(`${wpAdminUrl}${globalSettings.dashboardPageUrl}`, '_blank')}
 			icon={layoutAlt}
 			className='esf:grow'
 			size='large'

@@ -62,8 +62,8 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**

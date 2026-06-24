@@ -300,8 +300,6 @@ class Variables
 
 	/**
 	 * Get Client ID for Pardot.
-	 *
-	 * @return string
 	 */
 	public static function getClientIdPardot(): string
 	{
@@ -310,8 +308,6 @@ class Variables
 
 	/**
 	 * Get Client Secret for Pardot.
-	 *
-	 * @return string
 	 */
 	public static function getClientSecretPardot(): string
 	{
@@ -320,8 +316,6 @@ class Variables
 
 	/**
 	 * Get Business Unit ID for Pardot.
-	 *
-	 * @return string
 	 */
 	public static function getBusinessUnitIdPardot(): string
 	{

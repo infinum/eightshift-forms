@@ -24,9 +24,9 @@ class OauthPardot extends AbstractOauth
 	/**
 	 * Retry count for refresh token.
 	 *
-	 * @var integer
+	 * @var int
 	 */
-	private $refreshTokenRetryCounter = 0;
+	private int $refreshTokenRetryCounter = 0;
 
 	/**
 	 * Access token key.
@@ -42,8 +42,6 @@ class OauthPardot extends AbstractOauth
 	 * Get Pardot data API URL (pi.pardot.com / pi.demo.pardot.com).
 	 *
 	 * @param string $path Path.
-	 *
-	 * @return string
 	 */
 	public function getApiUrl(string $path): string
 	{
@@ -54,8 +52,6 @@ class OauthPardot extends AbstractOauth
 
 	/**
 	 * Get Salesforce authorization URL.
-	 *
-	 * @return string
 	 */
 	public function getOauthAuthorizeUrl(): string
 	{
@@ -121,8 +117,6 @@ class OauthPardot extends AbstractOauth
 	 * Get access token.
 	 *
 	 * @param string $code Code.
-	 *
-	 * @return boolean
 	 */
 	public function getAccessToken(string $code): bool
 	{
@@ -133,8 +127,6 @@ class OauthPardot extends AbstractOauth
 
 	/**
 	 * Get refresh token.
-	 *
-	 * @return boolean
 	 */
 	public function getRefreshToken(): bool
 	{
@@ -157,8 +149,6 @@ class OauthPardot extends AbstractOauth
 	 * Check if token has expired (Salesforce returns INVALID_SESSION_ID).
 	 *
 	 * @param array<string, mixed> $body Body.
-	 *
-	 * @return boolean
 	 */
 	public function hasTokenExpired(array $body): bool
 	{
@@ -169,8 +159,6 @@ class OauthPardot extends AbstractOauth
 	 * Exchange or refresh token via Salesforce.
 	 *
 	 * @param array<string, mixed> $data Data with 'url' and 'args'.
-	 *
-	 * @return boolean
 	 */
 	private function getToken(array $data): bool
 	{
@@ -206,8 +194,6 @@ class OauthPardot extends AbstractOauth
 
 	/**
 	 * Return Salesforce auth host (login.salesforce.com / test.salesforce.com).
-	 *
-	 * @return string
 	 */
 	private function getSfAuthHost(): string
 	{
@@ -218,8 +204,6 @@ class OauthPardot extends AbstractOauth
 
 	/**
 	 * Determine if sandbox mode is active.
-	 *
-	 * @return boolean
 	 */
 	private function isSandbox(): bool
 	{

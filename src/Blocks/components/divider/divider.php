@@ -11,12 +11,10 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$dividerExtraVSpacing = Helpers::checkAttr('dividerExtraVSpacing', $attributes, $manifest);
 $dividerSeparator = Helpers::checkAttr('dividerSeparator', $attributes, $manifest);
 
 $dividerClass = Helpers::clsx([
 	'esf:border-t esf:border-mist-200',
-	$dividerExtraVSpacing ? 'esf:my-10' : '',
 	$dividerSeparator ? 'esf:-mx-20' : '',
 ]);
 ?>

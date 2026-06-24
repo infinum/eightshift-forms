@@ -98,27 +98,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_PARDOT_PARAMS_MAP_KEY = 'pardot-params-map';
 
 	/**
-	 * Instance variable for Pardot client.
-	 *
-	 * @var PardotClientInterface
-	 */
-	protected $pardotClient;
-
-	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthPardot;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param PardotClientInterface $pardotClient Inject Pardot client.
@@ -126,26 +105,20 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	 * @param OauthInterface $oauthPardot Inject Oauth methods.
 	 */
 	public function __construct(
-		PardotClientInterface $pardotClient,
-		SettingsFallbackDataInterface $settingsFallback,
-		OauthInterface $oauthPardot,
-	) {
-		$this->pardotClient = $pardotClient;
-		$this->settingsFallback = $settingsFallback;
-		$this->oauthPardot = $oauthPardot;
-	}
+		protected PardotClientInterface $pardotClient,
+		protected SettingsFallbackDataInterface $settingsFallback,
+		protected OauthInterface $oauthPardot
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -153,8 +126,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -163,12 +134,7 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 		}
 
 		$selectedHandler = SettingsHelpers::getSettingValue(self::SETTINGS_PARDOT_ITEM_ID_KEY, $formId);
-
-		if (!$selectedHandler) {
-			return false;
-		}
-
-		return true;
+		return (bool) $selectedHandler;
 	}
 
 	/**
@@ -186,7 +152,7 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 
 		$selectedHandler = SettingsHelpers::getSettingValue(self::SETTINGS_PARDOT_ITEM_ID_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PARDOT_PARAMS_MAP_KEY, $formId);
-		$handlerFields = $selectedHandler ? $this->pardotClient->getItem($selectedHandler) : [];
+		$handlerFields = $selectedHandler !== '' && $selectedHandler !== '0' ? $this->pardotClient->getItem($selectedHandler) : [];
 		$formDetails = GeneralHelpers::getFormDetails($formId);
 		$formFields = $formDetails[Config::FD_FIELD_NAMES] ?? [];
 
@@ -206,14 +172,12 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								'selectSingleSubmit' => true,
 								'selectPlaceholder' => \__('Select form handler', 'eightshift-forms'),
 								'selectContent' => \array_map(
-									static function ($option) use ($selectedHandler) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => $selectedHandler === $option['id'],
-										];
-									},
+									static fn(array $option): array => [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => $selectedHandler === $option['id'],
+									],
 									$this->pardotClient->getItems()
 								),
 							],
@@ -244,33 +208,31 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									...\array_map(
-										function ($formField) use ($mapParams, $handlerFields) {
-											return [
-												'component' => 'select',
-												'selectName' => $formField,
-												'selectFieldLabel' => \ucfirst($formField),
-												'selectFieldIsFiftyFiftyHorizontal' => true,
-												'selectFieldBeforeContent' => '&rarr;',
-												'selectPlaceholder' => \__('Select Pardot field', 'eightshift-forms'),
-												'selectContent' => \array_filter(\array_map(
-													static function ($pardotField) use ($mapParams, $formField) {
-														$id = $pardotField['id'] ?? '';
+										fn($formField): array => [
+											'component' => 'select',
+											'selectName' => $formField,
+											'selectFieldLabel' => \ucfirst((string) $formField),
+											'selectFieldIsFiftyFiftyHorizontal' => true,
+											'selectFieldBeforeContent' => '&rarr;',
+											'selectPlaceholder' => \__('Select Pardot field', 'eightshift-forms'),
+											'selectContent' => \array_filter(\array_map(
+												static function (array $pardotField) use ($mapParams, $formField): array {
+													$id = $pardotField['id'] ?? '';
 
-														if (!$id) {
-															return [];
-														}
+													if (!$id) {
+														return [];
+													}
 
-														return [
-															'component' => 'select-option',
-															'selectOptionLabel' => $pardotField['title'],
-															'selectOptionValue' => $id,
-															'selectOptionIsSelected' => isset($mapParams[$formField]) && $mapParams[$formField] === $id,
-														];
-													},
-													$handlerFields
-												)),
-											];
-										},
+													return [
+														'component' => 'select-option',
+														'selectOptionLabel' => $pardotField['title'],
+														'selectOptionValue' => $id,
+														'selectOptionIsSelected' => isset($mapParams[$formField]) && $mapParams[$formField] === $id,
+													];
+												},
+												$handlerFields
+											)),
+										],
 										$formFields
 									),
 								],
@@ -284,8 +246,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
@@ -293,12 +253,7 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 		$clientId = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientIdPardot(), self::SETTINGS_PARDOT_CLIENT_ID);
 		$clientSecret = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientSecretPardot(), self::SETTINGS_PARDOT_SECRET);
 		$businessUnitId = (bool) SettingsHelpers::getOptionWithConstant(Variables::getBusinessUnitIdPardot(), self::SETTINGS_PARDOT_BUSINESS_UNIT_ID);
-
-		if (!$isUsed || !$clientId || !$clientSecret || !$businessUnitId) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$clientId || !$clientSecret || !$businessUnitId);
 	}
 
 	/**
@@ -349,7 +304,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientIdPardot(),
@@ -359,7 +313,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientSecretPardot(),
@@ -369,7 +322,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getBusinessUnitIdPardot(),
@@ -379,7 +331,6 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'select',
@@ -403,12 +354,10 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getOauthConnection($this->oauthPardot->getOauthAuthorizeUrl(), OauthPardot::OAUTH_PARDOT_ACCESS_TOKEN_KEY, self::SETTINGS_PARDOT_OAUTH_ALLOW_KEY),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),

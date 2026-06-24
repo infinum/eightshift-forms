@@ -67,13 +67,6 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	public const SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT = 'smart';
 
 	/**
-	 * Instance variable for labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject labels data.
@@ -183,6 +176,37 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 								],
 							],
 						],
+						[
+							'component' => 'divider',
+						],
+						[
+							'component' => 'select',
+							'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY),
+							'selectFieldLabel' => \__('Widget mode', 'eightshift-forms'),
+							// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+							'selectFieldHelp' => \__('Must match the <strong>Widget Mode</strong> set on your sitekey in the Friendly Captcha dashboard.', 'eightshift-forms'),
+							'selectSingleSubmit' => true,
+							'selectContent' => [
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Smart (default)', 'eightshift-forms'),
+									'selectOptionValue' => 'smart',
+									'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'smart',
+								],
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('Zero-click', 'eightshift-forms'),
+									'selectOptionValue' => 'zero-click',
+									'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'zero-click',
+								],
+								[
+									'component' => 'select-option',
+									'selectOptionLabel' => \__('One-click', 'eightshift-forms'),
+									'selectOptionValue' => 'one-click',
+									'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'one-click',
+								],
+							],
+						],
 					],
 				],
 				[
@@ -202,61 +226,6 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 							],
 						],
 					],
-				],
-			],
-			[
-				'component' => 'divider',
-				'dividerExtraVSpacing' => true,
-			],
-			[
-				'component' => 'select',
-				'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY),
-				'selectFieldLabel' => \__('Widget mode', 'eightshift-forms'),
-				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
-				'selectFieldHelp' => \__('Must match the <strong>Widget Mode</strong> set on your sitekey in the Friendly Captcha dashboard.', 'eightshift-forms'),
-				'selectSingleSubmit' => true,
-				'selectContent' => [
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => \__('Smart (default)', 'eightshift-forms'),
-						'selectOptionValue' => 'smart',
-						'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'smart',
-					],
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => \__('Zero-click', 'eightshift-forms'),
-						'selectOptionValue' => 'zero-click',
-						'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'zero-click',
-					],
-					[
-						'component' => 'select-option',
-						'selectOptionLabel' => \__('One-click', 'eightshift-forms'),
-						'selectOptionValue' => 'one-click',
-						'selectOptionIsSelected' => (SettingsHelpers::getOptionValue(self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: self::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT) === 'one-click',
-					],
-				],
-			],
-		];
-	}
-
-	/**
-	 * Field list for the "Help" tab — setup steps.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public static function getHelpContent(): array
-	{
-		return [
-			[
-				'component' => 'steps',
-				'stepsTitle' => \__('How to get the Friendly Captcha API keys?', 'eightshift-forms'),
-				'stepsContent' => [
-					// translators: %s will be replaced with the external link.
-					\sprintf(\__('Visit the <a href="%s" target="_blank" rel="noopener noreferrer">Friendly Captcha dashboard</a>.', 'eightshift-forms'), 'https://app.friendlycaptcha.eu/dashboard'),
-					\__('Create a new application and copy the <strong>Site key</strong>.', 'eightshift-forms'),
-					\__('Go to <strong>API Keys</strong> and create a new API key.', 'eightshift-forms'),
-					\__('Copy both keys into the fields under the Settings tab or use the global constants.', 'eightshift-forms'),
-					\__('In the Friendly Captcha dashboard, open your application settings, go to the <strong>Protection</strong> tab, and set the <strong>Widget Mode</strong> to match the <strong>Widget mode</strong> option in the plugin settings.', 'eightshift-forms'),
 				],
 			],
 		];

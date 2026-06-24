@@ -320,11 +320,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		// Build the single captcha payload. `type` discriminates the provider so the JS
 		// layer can render the right widget without probing multiple top-level keys.
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			$provider = SettingsCaptcha::getActiveProvider();
-
-			switch ($provider) {
-				case SettingsCaptcha::PROVIDER_FRIENDLY:
-					$output['captcha'] = [
+									$provider = SettingsCaptcha::getActiveProvider();
+									$output['captcha'] = match ($provider) {
+										SettingsCaptcha::PROVIDER_FRIENDLY => [
 						'isUsed' => true,
 						'type' => SettingsCaptcha::PROVIDER_FRIENDLY,
 						'siteKey' => SettingsHelpers::getOptionWithConstant(
@@ -334,24 +332,21 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 						'endpoint' => FriendlyCaptcha::getEndpoint(),
 						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY, SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_LOAD_ON_INIT_KEY),
 						'widgetMode' => SettingsHelpers::getOptionValue(SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_KEY) ?: SettingsFriendlyCaptcha::SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-					];
-					break;
-				default:
-					$output['captcha'] = [
-						'isUsed' => true,
-						'type' => SettingsCaptcha::PROVIDER_GOOGLE,
-						'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
-						'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY),
-						'submitAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'initAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
-						'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
-					];
-					break;
-			}
+										],
+										default => [
+										'isUsed' => true,
+										'type' => SettingsCaptcha::PROVIDER_GOOGLE,
+										'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+										'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY),
+										'submitAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+										'initAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+										'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+										'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+										],
+									};
 		} else {
 			$output['captcha'] = [
-				'isUsed' => false,
+			'isUsed' => false,
 			];
 		}
 

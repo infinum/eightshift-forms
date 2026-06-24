@@ -104,7 +104,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 			'paymentId',
 			'amount',
 		];
-		$missingOrEmpty = \array_any($reqParams, fn($param): bool => !isset($params[$param]) || empty($params[$param]));
+		$missingOrEmpty = \array_any($reqParams, fn(string $param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
