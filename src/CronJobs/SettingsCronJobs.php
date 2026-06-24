@@ -62,21 +62,21 @@ class SettingsCronJobs implements SettingGlobalInterface, ServiceInterface
 
 		$outputIntegrations = \array_values(\array_filter(\array_map(
 			fn(string $value): array => [
-					'component' => 'card-inline',
-					'cardInlineTitle' => $value,
-					'cardInlineRightContent' => [
-						[
-							'component' => 'submit',
-							'submitValue' => \__('Clear', 'eightshift-forms'),
-							'submitVariant' => 'ghost',
-							'submitAttrs' => [
-								UtilsHelper::getStateAttribute('cronType') => $value,
-								UtilsHelper::getStateAttribute('reload') => 'false',
-							],
-							'additionalClass' => UtilsHelper::getStateSelectorAdmin('cronRun'),
+				'component' => 'card-inline',
+				'cardInlineTitle' => $value,
+				'cardInlineRightContent' => [
+					[
+						'component' => 'button',
+						'buttonLabel' => \__('Clear', 'eightshift-forms'),
+						'buttonVariant' => 'primaryGhost',
+						'buttonAttrs' => [
+							UtilsHelper::getStateAttribute('cronType') => $value,
+							UtilsHelper::getStateAttribute('reload') => 'false',
 						],
+						'additionalClass' => UtilsHelper::getStateSelectorAdmin('cronRun'),
 					],
 				],
+			],
 			$data
 		)));
 
@@ -90,7 +90,6 @@ class SettingsCronJobs implements SettingGlobalInterface, ServiceInterface
 				],
 				[
 					'component' => 'layout',
-					'layoutType' => 'layout-v-stack-clean',
 					'layoutContent' => $outputIntegrations,
 				],
 			] : []),
