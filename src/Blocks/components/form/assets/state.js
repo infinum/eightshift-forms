@@ -436,6 +436,9 @@ export class State {
 	getStateCaptchaEndpoint = () => {
 		return getState([StateEnum.CAPTCHA_ENDPOINT], StateEnum.CAPTCHA);
 	};
+	getStateCaptchaWidgetMode = () => {
+		return getState([StateEnum.CAPTCHA_WIDGET_MODE], StateEnum.CAPTCHA);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Geolocation getters.

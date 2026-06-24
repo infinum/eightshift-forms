@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds WP Cron job schedule event for - FileUploadJob.
+ * Class that holds WP Cron job schedule event for - OauthCleanupJob.
  *
  * @package EightshiftForms\CronJobs
  */
@@ -10,24 +10,28 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CronJobs;
 
-use EightshiftForms\Helpers\UploadHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
+use EightshiftForms\Integrations\Pardot\SettingsPardot;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * FileUploadJob class.
+ * OauthCleanupJob class.
  */
-class FileUploadJob implements ServiceInterface, ServiceCliInterface
+class OauthCleanupJob implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Job name.
 	 *
 	 * @var string
 	 */
-	public const JOB_NAME = 'es_forms_file_upload';
+	public const JOB_NAME = 'es_forms_oauth_cleanup';
 
 	/**
 	 * Register all the hooks
+	 *
+	 * @return void
 	 */
 	public function register(): void
 	{
@@ -37,6 +41,8 @@ class FileUploadJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Check if job is set and add it if not.
+	 *
+	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -51,9 +57,18 @@ class FileUploadJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
+	 *
+	 * @return void
 	 */
 	public function getJobCallback(): void
 	{
-		UploadHelpers::deleteUploadFolderContent();
+		$oauthAllowKeys = [
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY,
+			SettingsPardot::SETTINGS_PARDOT_OAUTH_ALLOW_KEY,
+		];
+
+		foreach ($oauthAllowKeys as $key) {
+			\delete_option(SettingsHelpers::getOptionName($key));
+		}
 	}
 }

@@ -39,6 +39,7 @@ class Labels implements LabelsInterface
 		'pipedriveSuccess',
 		'calculatorSuccess',
 		'nationbuilderSuccess',
+		'pardotSuccess',
 	];
 
 	/**
@@ -73,6 +74,7 @@ class Labels implements LabelsInterface
 			'pipedrive' => $this->getPipedriveLabels(),
 			'calculator' => $this->getCalculatorLabels(),
 			'nationbuilder' => $this->getNationbuilderLabels(),
+			'pardot' => $this->getPardotLabels(),
 		];
 	}
 
@@ -131,6 +133,8 @@ class Labels implements LabelsInterface
 			'formFieldsSuccess' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
 			'cacheTypeNotFound' => \__('cache doesn\'t exist.', 'eightshift-forms'),
 			'cacheDeletedSuccess' => \__('cache deleted successfully!', 'eightshift-forms'),
+			'cronRunSuccess' => \__('Cron job run successfully!', 'eightshift-forms'),
+			'cronRunNotFound' => \__('Cron job not found.', 'eightshift-forms'),
 			'encryptFailed' => \__('Encrypt failed!', 'eightshift-forms'),
 			'decryptFailed' => \__('Decrypt failed!', 'eightshift-forms'),
 			'encryptSuccess' => \__('Encrypt finished successfully!', 'eightshift-forms'),
@@ -595,6 +599,22 @@ class Labels implements LabelsInterface
 			'nationbuilderServerError' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'nationbuilderBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'nationbuilderSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Pardot
+	 *
+	 * @return array<string, string>
+	 */
+	private function getPardotLabels(): array
+	{
+		return [
+			'pardotMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'pardotErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'pardotServerError' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'pardotBadRequestError' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
+			'pardotSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

@@ -133,7 +133,9 @@ class FriendlyCaptcha implements CaptchaInterface
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['responseBody'] = $responseBody;
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['errorCode'] = $errorCode;
 
-		if (ApiHelpers::isSuccessResponse($responseCode)) {
+		// FC v2 returns HTTP 200 for both success and solution-level failures.
+		// Must check the `success` field in the body — a 200 with success=false means the solution was rejected.
+		if (ApiHelpers::isSuccessResponse($responseCode) && ($responseBody['success'] ?? false)) {
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [

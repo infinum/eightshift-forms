@@ -1,0 +1,20 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "pardot",
+	"title": "Pardot form",
+	"description": "Pardot (Account Engagement) form block",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-pardot"
+	},
+	"keywords": ["pardot", "salesforce"],
+	"components": {
+		"form": "form",
+		"step": "step"
+	},
+	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
+	"attributes": {}
+}

@@ -61,6 +61,8 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Nationbuilder\NationbuilderClient;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
+use EightshiftForms\Integrations\Pardot\PardotClient;
+use EightshiftForms\Integrations\Pardot\SettingsPardot;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
@@ -71,6 +73,7 @@ use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Config\Config;
+use EightshiftForms\CronJobs\SettingsCronJobs;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -538,6 +541,25 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'externalLink' => 'https://nationbuilder.com/',
 				],
 			],
+			SettingsPardot::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsPardot::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsPardot::FILTER_SETTINGS_NAME,
+				'valid' => SettingsPardot::FILTER_SETTINGS_IS_VALID_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
+				'use' => SettingsPardot::SETTINGS_PARDOT_USE_KEY,
+				'settingsForceShow' => false,
+				'cache' => [
+					PardotClient::CACHE_PARDOT_FORM_HANDLERS_TRANSIENT_NAME,
+					PardotClient::CACHE_PARDOT_FORM_HANDLER_FIELDS_TRANSIENT_NAME,
+				],
+				'labels' => [
+					'title' => \__('Pardot', 'eightshift-forms'),
+					'desc' => \__('Pardot (Account Engagement) integration settings.', 'eightshift-forms'),
+					'detail' => \__('Salesforce B2B marketing automation platform for creating, deploying, and managing online marketing campaigns.', 'eightshift-forms'),
+					'externalLink' => 'https://www.salesforce.com/marketing/b2b-automation/',
+				],
+			],
 			// ------------------------------
 			// MISCELLANEOUS.
 			// ------------------------------
@@ -610,6 +632,14 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Cache', 'eightshift-forms'),
 					'desc' => \__('Force data re-fetch for certain integrations.', 'eightshift-forms'),
+				],
+			],
+			SettingsCronJobs::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsCronJobs::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'labels' => [
+					'title' => \__('Cron Jobs', 'eightshift-forms'),
+					'desc' => \__('Manage and configure scheduled tasks for the plugin.', 'eightshift-forms'),
 				],
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [

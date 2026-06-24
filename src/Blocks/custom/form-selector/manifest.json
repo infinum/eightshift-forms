@@ -107,6 +107,48 @@
 			"blockName": "eightshift-forms/talentlyft"
 		},
 		{
+			"label": "Pardot",
+			"slug": "pardot",
+			"blockName": "eightshift-forms/pardot",
+			"innerBlocks": [
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "E-mail",
+						"inputInputType": "email",
+						"inputInputName": "email",
+						"inputInputIsRequired": true,
+						"inputInputIsEmail": true,
+						"inputInputDisabledOptions": ["inputInputIsRequired", "inputInputName"]
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Name",
+						"inputInputIsRequired": true,
+						"inputInputName": "name"
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Subject",
+						"inputInputIsRequired": true,
+						"inputInputName": "subject"
+					}
+				],
+				[
+					"eightshift-forms/textarea",
+					{
+						"textareaTextareaFieldLabel": "Message",
+						"textareaTextareaName": "message"
+					}
+				],
+				["eightshift-forms/submit"]
+			]
+		},
+		{
 			"label": "Jira",
 			"slug": "jira",
 			"blockName": "eightshift-forms/jira",

@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.8.0]
+
+### Added
+
+- Added a Cron Jobs global settings page (under Troubleshooting) to manage scheduled tasks and manually run each job from the admin.
+- Added `CronRunRoute` REST endpoint to trigger an individual cron job on demand.
+- Added `CronJobsSchedules` service that centralizes the custom WP-Cron intervals (every 15 minutes, every hour, once a day).
+- Added `cron.js` admin asset to trigger cron runs from the settings UI.
+- Added `cronRunSuccess` and `cronRunNotFound` labels.
+
+### Changed
+
+- Updated all cron jobs to use the centralized `CronJobsSchedules` interval constants instead of each registering its own schedule.
+- Updated `OauthCleanupJob` to run once a day instead of every hour.
+
+## [9.7.1]
+
+### Updated
+
+- Pardot integration instructions.
+
+## [9.7.0]
+
+### Added
+
+- Added Pardot integration with full Salesforce OAuth 2.0 flow, admin settings, and field mapper.
+- Added Pardot Gutenberg block for embedding Pardot forms in the block editor.
+- Added Pardot REST routes: OAuth callback, integration items, form submit, and API test.
+- Added `OauthCleanupJob` cron job to remove expired OAuth tokens.
+- Added Pardot variables, labels, filters, and fallback flag to the cross-cutting integration setup.
+
+## [9.6.0]
+
+### Added
+
+- Added Friendly Captcha widget mode settings with `Smart`, `Zero-click`, and `One-click` options.
+
+### Fixed
+
+- Fixed Friendly Captcha token handling so `One-click` mode reads and resets the correct widget per form.
+- Fixed Friendly Captcha v2 siteverify handling so HTTP 200 responses with `success=false` are treated as failed captcha checks.
+
 ## [10.0.0]
 
 ### Added
@@ -1898,6 +1940,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.8.0]: https://github.com/infinum/eightshift-forms/compare/9.7.1...9.8.0
+[9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
+[9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0
+[9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0
 [10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...10.0.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
 [9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2

@@ -38,6 +38,8 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Nationbuilder\OauthNationbuilder;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
+use EightshiftForms\Integrations\Pardot\OauthPardot;
+use EightshiftForms\Integrations\Pardot\SettingsPardot;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -319,6 +321,12 @@ final class Filters
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
+				SettingsPardot::SETTINGS_TYPE_KEY => [
+					'overridePostRequest',
+					'prePostParams',
+					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
+				],
 			],
 			'entries' => [
 				'prePostParams',
@@ -411,6 +419,9 @@ final class Filters
 					'submitSuccess',
 				],
 				SettingsNationbuilder::SETTINGS_TYPE_KEY => [
+					'submitSuccess',
+				],
+				SettingsPardot::SETTINGS_TYPE_KEY => [
 					'submitSuccess',
 				],
 				'custom' => [
@@ -506,6 +517,13 @@ final class Filters
 			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SLUG,
 			OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY,
 			OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY,
+
+			SettingsPardot::SETTINGS_PARDOT_USE_KEY,
+			SettingsPardot::SETTINGS_PARDOT_CLIENT_ID,
+			SettingsPardot::SETTINGS_PARDOT_SECRET,
+			SettingsPardot::SETTINGS_PARDOT_BUSINESS_UNIT_ID,
+			OauthPardot::OAUTH_PARDOT_ACCESS_TOKEN_KEY,
+			OauthPardot::OAUTH_PARDOT_REFRESH_TOKEN_KEY,
 
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 			SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY,
