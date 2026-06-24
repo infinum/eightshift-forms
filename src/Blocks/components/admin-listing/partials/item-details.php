@@ -67,7 +67,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 					] : []),
 				]),
 				'additionalClass' => Helpers::clsx([
-					'esf:pl-10 esf:ml-30 esf:border-l esf:border-mist-200',
+					'esf:pl-10 esf:ml-30 esf:border-l esf:border-mauve-200',
 				]),
 			]);
 		}
@@ -75,7 +75,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 		echo Helpers::render('card-listing', [
 			'cardListingSubTitle' => $emptyContent,
 			'additionalClass' => Helpers::clsx([
-				'esf:pl-10 esf:ml-30 esf:border-l esf:border-mist-200',
+				'esf:pl-10 esf:ml-30 esf:border-l esf:border-mauve-200',
 			]),
 		]);
 	}

@@ -6,7 +6,7 @@ import manifest from '../manifest.json';
 export const SubmitEditor = (attributes) => {
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 
-	const submitComponent = <button className='esf:w-full esf:p-10 esf:rounded-md esf:text-sm esf:text-white esf:bg-mist-600 esf:font-bold'>{submitValue ? submitValue : __('Submit', 'eightshift-forms')}</button>;
+	const submitComponent = <button className='esf:w-full esf:p-10 esf:rounded-md esf:text-sm esf:text-white esf:bg-mauve-600 esf:font-bold'>{submitValue ? submitValue : __('Submit', 'eightshift-forms')}</button>;
 
 	return (
 		<>

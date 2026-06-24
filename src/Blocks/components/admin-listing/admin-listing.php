@@ -43,8 +43,8 @@ $additionalAttributes = [
 	?>
 
 	<div class="esf:flex esf:flex-row esf:gap-30 <?php echo esc_attr(UtilsHelper::getStateSelectorAdmin('listingBulkItems')); ?>" <?php echo wp_kses_post(Helpers::getAttrsOutput($additionalAttributes)); ?>>
-		<div class="esf:bg-white esf:rounded-xl esf:flex-1 esf:border esf:border-mist-200">
-			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-16 esf:py-20 esf:border-b esf:border-mist-200">
+		<div class="esf:bg-white esf:rounded-xl esf:flex-1 esf:border esf:border-mauve-200">
+			<div class="esf:flex esf:items-center esf:justify-between esf:gap-8 esf:px-16 esf:py-20 esf:border-b esf:border-mauve-200">
 				<div class="esf:flex esf:flex-row esf:gap-8 esf:items-center">
 					<?php
 					if (isset($adminListingTopItems['left'])) {
@@ -77,7 +77,7 @@ $additionalAttributes = [
 		</div>
 
 		<div class="esf:max-w-sm esf:flex esf:flex-col esf:gap-20">
-			<div class="esf:bg-white esf:rounded-xl esf:p-16 esf:border esf:border-mist-200">
+			<div class="esf:bg-white esf:rounded-xl esf:p-16 esf:border esf:border-mauve-200">
 				<?php
 				echo Helpers::render('intro', [
 					'introTitle' => __('Need help?', 'eightshift-forms'),

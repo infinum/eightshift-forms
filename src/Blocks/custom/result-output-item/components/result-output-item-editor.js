@@ -84,16 +84,16 @@ export const ResultOutputItemEditor = ({ attributes }) => {
 						<RichLabel
 							icon={visible}
 							label={__('Show', 'eightshift-forms')}
-							className='esf:font-bold! es:text-mist-600-600'
+							className='esf:font-bold! es:text-mauve-600-600'
 						/>
 						&nbsp;
 						{__('if the variable name is', 'eightshift-forms')}
 						&nbsp;
-						<span className='esf:font-medium es:font-mono es:text-mist-600-600'>{resultOutputItemName}</span>
+						<span className='esf:font-medium es:font-mono es:text-mauve-600-600'>{resultOutputItemName}</span>
 						&nbsp;
 						{__('and variable value', 'eightshift-forms')}
 						&nbsp;
-						<span className='esf:font-medium es:font-mono es:text-mist-600-600'>{outputName}</span>
+						<span className='esf:font-medium es:font-mono es:text-mauve-600-600'>{outputName}</span>
 					</Container>
 				</ContainerGroup>
 			</div>

@@ -23,7 +23,7 @@ $cardListingUseCheckbox = Helpers::checkAttr('cardListingUseCheckbox', $attribut
 $cardListingId = Helpers::checkAttr('cardListingId', $attributes, $manifest);
 
 $classes = Helpers::clsx([
-	'esf:hover:bg-mist-600/10 esf:transition-colors esf:duration-300',
+	'esf:hover:bg-mauve-600/10 esf:transition-colors esf:duration-300',
 	UtilsHelper::getStateSelectorAdmin('listingItem'),
 	$cardListingInvalid ? 'esf:bg-red-500/5' : '',
 	$additionalClass,

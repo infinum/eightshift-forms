@@ -1085,7 +1085,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'component' => 'checkbox',
 				'checkboxLabel' => $key,
 				// translators: %1$s will be replaced with the flag label. %2$s will be replaced with the recommended text.
-				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="esf:text-mist-600 esf:font-medium">Recommended.</strong>', 'eightshift-forms') : '')),
+				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="esf:text-mauve-600 esf:font-medium">Recommended.</strong>', 'eightshift-forms') : '')),
 				'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($key, self::SETTINGS_FALLBACK_FLAGS_KEY),
 				'checkboxValue' => $key,
 				'checkboxAsToggle' => true,

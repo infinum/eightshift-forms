@@ -3,7 +3,7 @@
 
 .esf-pagination {
 	@apply esf:border-t;
-	@apply esf:border-mist-200;
+	@apply esf:border-mauve-200;
 	@apply esf:px-10;
 	@apply esf:py-20;
 
@@ -24,10 +24,10 @@
 		@apply esf:text-inherit;
 		@apply esf:bg-transparent;
 		@apply esf:border;
-		@apply esf:border-mist-200;
+		@apply esf:border-mauve-200;
 		@apply esf:hover:text-white;
-		@apply esf:hover:bg-mist-700;
-		@apply esf:hover:border-mist-700;
+		@apply esf:hover:bg-mauve-700;
+		@apply esf:hover:border-mauve-700;
 		@apply esf:justify-center;
 		@apply esf:text-nowrap;
 		@apply esf:cursor-pointer;
@@ -43,7 +43,7 @@
 
 	& span.current {
 		@apply esf:text-white;
-		@apply esf:bg-mist-600;
-		@apply esf:border-mist-600;
+		@apply esf:bg-mauve-600;
+		@apply esf:border-mauve-600;
 	}
 }

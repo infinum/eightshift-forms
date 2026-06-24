@@ -143,53 +143,53 @@
 
 .esf-button-primary {
 	@apply esf:text-white;
-	@apply esf:bg-mist-500;
-	@apply esf:border-mist-500;
+	@apply esf:bg-mauve-500;
+	@apply esf:border-mauve-500;
 	@apply esf:hover:text-white;
-	@apply esf:hover:bg-mist-700;
-	@apply esf:hover:border-mist-600;
+	@apply esf:hover:bg-mauve-700;
+	@apply esf:hover:border-mauve-600;
 	@apply esf:active:text-white;
-	@apply esf:active:bg-mist-700;
-	@apply esf:active:border-mist-700;
+	@apply esf:active:bg-mauve-700;
+	@apply esf:active:border-mauve-700;
 	@apply esf:focus:text-white;
-	@apply esf:focus-visible:bg-mist-900;
-	@apply esf:focus-visible:border-mist-800;
+	@apply esf:focus-visible:bg-mauve-900;
+	@apply esf:focus-visible:border-mauve-800;
 }
 
 .esf-button-primary-outline {
-	@apply esf:text-mist-600;
-	@apply esf:border-mist-600;
+	@apply esf:text-mauve-600;
+	@apply esf:border-mauve-600;
 	@apply esf:hover:text-white;
-	@apply esf:hover:bg-mist-700;
-	@apply esf:hover:border-mist-600;
+	@apply esf:hover:bg-mauve-700;
+	@apply esf:hover:border-mauve-600;
 	@apply esf:active:text-white;
-	@apply esf:active:bg-mist-800;
-	@apply esf:active:border-mist-800;
+	@apply esf:active:bg-mauve-800;
+	@apply esf:active:border-mauve-800;
 	@apply esf:focus:text-white;
-	@apply esf:focus:bg-mist-800;
-	@apply esf:focus:border-mist-800;
+	@apply esf:focus:bg-mauve-800;
+	@apply esf:focus:border-mauve-800;
 }
 
 .esf-button-primary-ghost {
-	@apply esf:text-mist-600;
-	@apply esf:hover:text-mist-600;
+	@apply esf:text-mauve-600;
+	@apply esf:hover:text-mauve-600;
 	@apply esf:border-transparent;
-	@apply esf:hover:bg-mist-600/5;
-	@apply esf:active:text-mist-700;
-	@apply esf:active:bg-mist-600/30;
-	@apply esf:focus:text-mist-700;
-	@apply esf:focus:bg-mist-600/8;
+	@apply esf:hover:bg-mauve-600/5;
+	@apply esf:active:text-mauve-700;
+	@apply esf:active:bg-mauve-600/30;
+	@apply esf:focus:text-mauve-700;
+	@apply esf:focus:bg-mauve-600/8;
 }
 
 .esf-button-secondary-ghost {
 	@apply esf:text-inherit;
 	@apply esf:border-transparent;
 	@apply esf:hover:text-inherit;
-	@apply esf:hover:bg-mist-600/30;
+	@apply esf:hover:bg-mauve-600/30;
 	@apply esf:active:text-inherit;
-	@apply esf:active:bg-mist-600/30;
+	@apply esf:active:bg-mauve-600/30;
 	@apply esf:focus:text-inherit;
-	@apply esf:focus:bg-mist-600/30;
+	@apply esf:focus:bg-mauve-600/30;
 }
 
 .esf-button-primary-basic {

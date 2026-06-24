@@ -30,13 +30,13 @@ $introTitleClass = Helpers::clsx([
 
 $introSubtitleClass = Helpers::clsx([
 	'esf:text-xs esf:text-gray-500',
-	'esf:[&_a]:text-mist-600 esf:[&_a]:underline esf:[&_a]:hover:text-mist-700 esf:[&_a]:transition-colors esf:[&_a]:duration-300',
+	'esf:[&_a]:text-mauve-600 esf:[&_a]:underline esf:[&_a]:hover:text-mauve-700 esf:[&_a]:transition-colors esf:[&_a]:duration-300',
 	'esf:[&_ul]:list-disc esf:[&_ul]:list-inside esf:[&_ul]:m-0 esf:[&_ul]:mt-5 esf:[&_ul]:p-0 esf:[&_ul]:gap-5 esf:[&_ul]:flex esf:[&_ul]:flex-col',
 	'esf:[&_li]:m-0',
 ]);
 
 $introIconClass = Helpers::clsx([
-	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-mist-600',
+	'esf:[&>svg]:w-128 esf:[&>svg]:h-128 esf:[&>svg]:text-mauve-600',
 ]);
 
 ?>

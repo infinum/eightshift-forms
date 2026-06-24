@@ -22,7 +22,7 @@ export const SelectOptionEditor = (attributes) => {
 
 	return (
 		<div {...blockProps}>
-			<div className={clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-mist-600!')}>{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}</div>
+			<div className={clsx('esf-fieldset-item', selectOptionIsHidden && 'esf-field-hidden', selectOptionIsSelected && 'esf:text-mauve-600!')}>{selectOptionLabel ? selectOptionLabel : __('Enter option label in sidebar.', 'eightshift-forms')}</div>
 
 			<StatusFieldOutput components={[selectOptionIsHidden && 'hidden', !selectOptionValue && 'missingName', selectOptionIsDisabled && 'disabled', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>

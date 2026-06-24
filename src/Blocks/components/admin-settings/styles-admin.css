@@ -21,7 +21,7 @@
 }
 
 .esf-is-filter-applied {
-	@apply esf:bg-mist-600/10 esf:text-mist-600;
+	@apply esf:bg-mauve-600/10 esf:text-mauve-600;
 	@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
 	@apply esf:w-fit;
 	@apply esf:cursor-pointer;

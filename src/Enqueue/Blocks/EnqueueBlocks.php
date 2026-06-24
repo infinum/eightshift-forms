@@ -77,7 +77,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendScript(...), 11);
 
 		if (GeneralHelpers::isEightshiftFormsCpt()) {
-			\add_action('enqueue_block_editor_assets', $this->unregisterDefaultStyleOverrides(...), 102);
+			\add_action('enqueue_block_assets', $this->unregisterDefaultStyleOverrides(...), 102);
 		}
 	}
 
