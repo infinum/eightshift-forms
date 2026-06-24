@@ -1,7 +1,6 @@
 /* stylelint-disable at-rule-no-unknown, selector-max-specificity, custom-property-empty-line-before, custom-property-pattern, nesting-selector-no-missing-scoping-root, no-invalid-position-declaration */
 
 @source '/src/*.{html,js,php,json,css}';
-@source '/*.php';
 
 @theme {
 	--spacing: 0.0625rem; /* 1px */

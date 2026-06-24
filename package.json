@@ -23,7 +23,7 @@
 		"lintStyle": "stylelint **/*.css",
 		"lintJs": "eslint src/",
 		"test": "bun run lintStyle && bun run lintJs",
-		"start": "webpack --watch --mode development",
+		"start": "webpack --watch --mode development --progress --color",
 		"build": "webpack --mode production",
 		"build:sourcemaps": "webpack --mode production --env sourcemaps",
 		"prepare": "husky",
@@ -38,7 +38,7 @@
 		"husky": "^9.1.7",
 		"webpack": "^5.107.2",
 		"webpack-cli": "^7.0.3",
-		"lint-staged": "^16.4.0"
+		"lint-staged": "^17.0.7"
 	},
 	"dependencies": {
 		"@eightshift/frontend-libs-tailwind": "^3.3.0",
