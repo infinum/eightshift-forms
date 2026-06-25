@@ -242,32 +242,23 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(self::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, [$this, 'shouldLogActivity'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
+		\add_filter(self::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, $this->shouldLogActivity(...), 10, 2);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
 		$isActivityLogUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_ACTIVITY_LOG_USE_KEY, self::SETTINGS_FALLBACK_ACTIVITY_LOG_USE_KEY);
-
-		if (!$isUsed || !$isActivityLogUsed) {
-			return false;
-		}
-
-		return true;
+		return $isUsed && $isActivityLogUsed;
 	}
 
 	/**
@@ -275,12 +266,10 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 *
 	 * @param bool $isSettingsValid Is settings valid.
 	 * @param string $key Key to check.
-	 *
-	 * @return bool
 	 */
 	public function shouldLogActivity(bool $isSettingsValid, string $key): bool
 	{
-		if (!$key) {
+		if ($key === '' || $key === '0') {
 			return false;
 		}
 
@@ -309,18 +298,16 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('View all activity logs in database', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitVariant' => 'ghost',
-								'submitButtonAsLink' => true,
-								'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS, $formId),
-								'submitValue' => \__('View', 'eightshift-forms'),
+								'component' => 'button',
+								'buttonVariant' => 'primaryGhost',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS, $formId),
+								'buttonLabel' => \__('View', 'eightshift-forms'),
 							],
 						],
 					],
@@ -371,22 +358,20 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							...($activityLogUse ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'layout',
-									'layoutType' => 'layout-v-stack-clean',
 									'layoutContent' => [
 										[
 											'component' => 'card-inline',
 											'cardInlineTitle' => \__('View all activity logs in database', 'eightshift-forms'),
 											'cardInlineRightContent' => [
 												[
-													'component' => 'submit',
-													'submitVariant' => 'ghost',
-													'submitButtonAsLink' => true,
-													'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
-													'submitValue' => \__('View all activity logs', 'eightshift-forms'),
+													'component' => 'button',
+													'buttonVariant' => 'primaryGhost',
+													'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
+													'buttonLabel' => \__('View all activity logs', 'eightshift-forms'),
 												],
 											],
 										],
@@ -420,13 +405,13 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 										'inputIsNumber' => true,
 										'inputPlaceholder' => self::SETTINGS_FALLBACK_AUTO_DELETE_RETENTION_DEFAULT_VALUE,
 										'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-										'inputFieldInlineBeforeAfterContent' => true,
+										'additionalFieldClass' => 'esf-input-with-suffix',
 										'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_FALLBACK_AUTO_DELETE_RETENTION_KEY),
 									],
 								] : []),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -438,12 +423,14 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
 									'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_FALLBACK_LOG_LEVEL_KEY),
 									'selectValue' => $logLevel,
+									'selectSingleSubmit' => true,
+									'selectIsRequired' => true,
 									'selectFieldLabel' => \__('Log level', 'eightshift-forms'),
 									'selectFieldHelp' => \__('The log level to use for the activity log.', 'eightshift-forms'),
 									'selectContent' => [
@@ -495,7 +482,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 				[
 					'component' => 'divider',
-					'dividerExtraVSpacing' => true,
+					'dividerSeparator' => true,
 				],
 				[
 					'component' => 'input',
@@ -513,8 +500,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 * Get flag label.
 	 *
 	 * @param string $key Key to get label for.
-	 *
-	 * @return string
 	 */
 	public function getFlagLabel(string $key): string
 	{
@@ -1100,7 +1085,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				'component' => 'checkbox',
 				'checkboxLabel' => $key,
 				// translators: %1$s will be replaced with the flag label. %2$s will be replaced with the recommended text.
-				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="info-strong">Recommended.</strong>', 'eightshift-forms') : '')),
+				'checkboxHelp' => \sprintf(\__('%1$s %2$s', 'eightshift-forms'), $label, ($isRecommended ? \__('<br/><strong class="esf:text-mauve-600 esf:font-medium">Recommended.</strong>', 'eightshift-forms') : '')),
 				'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked($key, self::SETTINGS_FALLBACK_FLAGS_KEY),
 				'checkboxValue' => $key,
 				'checkboxAsToggle' => true,

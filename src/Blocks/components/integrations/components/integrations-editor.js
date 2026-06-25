@@ -1,22 +1,13 @@
-/* global esFormsLocalization */
-
-import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { InnerBlocks } from '@wordpress/block-editor';
-import { BlockInserter, props } from '@eightshift/frontend-libs/scripts';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+import { BlockInserter, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { additionalBlocksIntegration, FormEditor } from './../../form/components/form-editor';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
+import { form } from '@eightshift/ui-components/icons';
 
-export const IntegrationsEditor = ({
-	attributes,
-	setAttributes,
-	itemId,
-	innerId,
-	clientId,
-	useInnerId = false,
-	allowedBlocks = [],
-}) => {
+export const IntegrationsEditor = ({ attributes, setAttributes, itemId, innerId, clientId, useInnerId = false, allowedBlocks = [] }) => {
+	const blockProps = useBlockProps();
 
 	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
@@ -27,32 +18,29 @@ export const IntegrationsEditor = ({
 
 	const InvalidPlaceholder = () => {
 		return (
-			<InvalidEditor
-				heading={__('Please use the sidebar settings to choose your desired form.', 'eightshift-forms')}
-			/>
+			<div {...blockProps}>
+				<InvalidEditor
+					icon={form}
+					heading={__('Select a form in the sidebar', 'eightshift-forms')}
+				/>
+			</div>
 		);
 	};
 
 	const OutputDefault = () => {
-		return (
-			<>
-				{itemId ?
-					<Output /> :
-					<InvalidPlaceholder />
-				}
-			</>
-		);
+		if (itemId) {
+			return <Output />;
+		}
+
+		return <InvalidPlaceholder />;
 	};
 
 	const OutputWithInner = () => {
-		return (
-			<>
-				{(itemId && innerId) ?
-					<Output /> :
-					<InvalidPlaceholder />
-				}
-			</>
-		);
+		if (itemId && innerId) {
+			return <Output />;
+		}
+
+		return <InvalidPlaceholder />;
 	};
 
 	const Output = () => {
@@ -60,27 +48,24 @@ export const IntegrationsEditor = ({
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={
-							[
-								...allowedBlocks,
-								...additionalBlocksIntegration,
-							]
-						}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={[...allowedBlocks, ...additionalBlocksIntegration]}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		);
 	};
 
 	if (hasInnerBlocks) {
-		return (
-			useInnerId ? <OutputWithInner /> : <OutputDefault />
-		);
+		if (useInnerId) {
+			return <OutputWithInner />;
+		}
+
+		return <OutputDefault />;
 	}
 
-	return (
-		<InvalidPlaceholder />
-	);
+	return <InvalidPlaceholder />;
 };

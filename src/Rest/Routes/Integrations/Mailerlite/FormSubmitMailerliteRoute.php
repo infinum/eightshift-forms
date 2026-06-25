@@ -37,13 +37,6 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsMailerlite::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Mailerlite data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $mailerliteClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $mailerliteClient
+		protected ClientInterface $mailerliteClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +62,6 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->mailerliteClient = $mailerliteClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +107,9 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { ActivecampaignEditor } from './components/activecampaign-editor';
 import { ActivecampaignOptions } from './components/activecampaign-options';

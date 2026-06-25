@@ -41,23 +41,15 @@ class PardotClient implements PardotClientInterface
 	/**
 	 * Pardot API version.
 	 */
-	private const API_VERSION = 'v5';
-
-	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthPardot;
+	private const string API_VERSION = 'v5';
 
 	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param OauthInterface $oauthPardot Inject Oauth methods.
 	 */
-	public function __construct(OauthInterface $oauthPardot)
+	public function __construct(protected OauthInterface $oauthPardot)
 	{
-		$this->oauthPardot = $oauthPardot;
 	}
 
 	/**
@@ -78,11 +70,13 @@ class PardotClient implements PardotClientInterface
 		if (!$output) {
 			$items = $this->getPardotFormHandlers();
 
-			if ($items) {
+			if ($items !== []) {
 				foreach ($items as $item) {
 					$id = (string) ($item['id'] ?? '');
-
-					if (!$id) {
+					if ($id === '') {
+						continue;
+					}
+					if ($id === '0') {
 						continue;
 					}
 
@@ -130,12 +124,14 @@ class PardotClient implements PardotClientInterface
 		if (!$output || empty($output[$itemId])) {
 			$fields = $this->getPardotFormHandlerFields($itemId);
 
-			if ($fields) {
+			if ($fields !== []) {
 				foreach ($fields as $field) {
 					$fieldId = (string) ($field['id'] ?? '');
 					$prospectApiFieldId = $field['prospectApiFieldId'] ?? '';
-
-					if (!$fieldId) {
+					if ($fieldId === '') {
+						continue;
+					}
+					if ($fieldId === '0') {
 						continue;
 					}
 
@@ -272,23 +268,17 @@ class PardotClient implements PardotClientInterface
 	 * Map service error to fallback flag.
 	 *
 	 * @param array<mixed> $body Response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$errorCode = $body['errorCode'] ?? '';
 
-		switch ($errorCode) {
-			case 'INVALID_SESSION_ID':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING;
-			case 'SERVER_ERROR':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR;
-			case 'BAD_REQUEST':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($errorCode) {
+									'INVALID_SESSION_ID' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING,
+									'SERVER_ERROR' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR,
+									'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR,
+									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -312,8 +302,6 @@ class PardotClient implements PardotClientInterface
 	 * Build Pardot API base URL for an object endpoint.
 	 *
 	 * @param string $object Object name (e.g. 'form-handlers').
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(string $object): string
 	{
@@ -406,12 +394,10 @@ class PardotClient implements PardotClientInterface
 	 * Parse the form handler POST URL from its embed code.
 	 *
 	 * @param string $embedCode Embed code HTML string.
-	 *
-	 * @return string
 	 */
 	private function parseSubmitUrl(string $embedCode): string
 	{
-		if (!$embedCode) {
+		if ($embedCode === '' || $embedCode === '0') {
 			return '';
 		}
 
@@ -425,8 +411,6 @@ class PardotClient implements PardotClientInterface
 	 *
 	 * @param array<string, mixed> $params Form params.
 	 * @param array<string, string> $mapParams Mapping of form field name => Pardot field name.
-	 *
-	 * @return string
 	 */
 	private function prepareParams(array $params, array $mapParams): string
 	{
@@ -459,10 +443,15 @@ class PardotClient implements PardotClientInterface
 		$output = [];
 
 		foreach ($mapParams as $formFieldName => $pardotFieldName) {
-			if (!$formFieldName || !$pardotFieldName) {
+			if ($formFieldName === '') {
+													continue;
+			}
+			if ($formFieldName === '0') {
 				continue;
 			}
-
+			if (!$pardotFieldName) {
+				continue;
+			}
 			if (isset($formFieldsByName[$formFieldName])) {
 				$output[$pardotFieldName] = $formFieldsByName[$formFieldName];
 			}

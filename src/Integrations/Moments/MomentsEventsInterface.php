@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Moments
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Moments;
 
 /**

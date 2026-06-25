@@ -30,8 +30,6 @@ interface SettingsBuilderInterface
 	 *
 	 * @param string $type Form settings Type to show.
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public function getSettingsForm(string $type, string $formId): string;
 }

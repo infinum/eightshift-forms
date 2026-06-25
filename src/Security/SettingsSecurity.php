@@ -74,29 +74,21 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(): bool
 	{
-		if (!$this->isSettingsGlobalValid()) {
-			return false;
-		}
-
-		return true;
+		return $this->isSettingsGlobalValid();
 	}
 
 
@@ -128,7 +120,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputFieldLabel' => \__('Rate limit (submission attempts / seconds)', 'eightshift-forms'),
 								'inputFieldHelp' => \__('If set, the form will be rate limited based on the provided value, in addition to global rate limits.', 'eightshift-forms'),
 								'inputFieldAfterContent' => \__('per second', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputMax' => 1000,
@@ -144,16 +136,10 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 	}
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY);
 	}
 
 	/**
@@ -194,7 +180,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputStep' => 1,
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 							],
 							[
@@ -208,7 +194,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputStep' => 1,
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
 							],
 							[
@@ -222,13 +208,12 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface, Sett
 								'inputStep' => 1,
 								'inputPlaceholder' => Security::RATE_LIMIT_WINDOW,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_SECURITY_IP_IGNORE_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Ignore IPs', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.

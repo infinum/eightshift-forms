@@ -25,17 +25,13 @@ class ClearbitClient implements ClearbitClientInterface
 {
 	/**
 	 * Return Clearbit base url.
-	 *
-	 * @var string
 	 */
-	private const BASE_URL = 'https://person-stream.clearbit.com/v2/';
+	private const string BASE_URL = 'https://person-stream.clearbit.com/v2/';
 
 	/**
 	 * Set queue for Clearbit.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return bool
 	 */
 	public function setQueue(array $formDetails): bool
 	{
@@ -52,7 +48,7 @@ class ClearbitClient implements ClearbitClientInterface
 
 		$email = GeneralHelpers::getEmailParamsField($params);
 
-		if (!$email) {
+		if ($email === '' || $email === '0') {
 			return false;
 		}
 
@@ -140,13 +136,7 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	public function getParams(): array
 	{
-		$output = [];
-
-		foreach ($this->prepareParams() as $key => $value) {
-			$output[] = $key;
-		}
-
-		return $output;
+		return \array_keys($this->prepareParams());
 	}
 
 	/**
@@ -287,21 +277,16 @@ class ClearbitClient implements ClearbitClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error']['type'] ?? '';
 
-		switch ($msg) {
-			case 'auth_required':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR;
-			case 'email_invalid':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'auth_required' => SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_AUTH_REQUIRED_ERROR,
+			'email_invalid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_INVALID_EMAIL_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -319,8 +304,6 @@ class ClearbitClient implements ClearbitClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

@@ -37,13 +37,6 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsGreenhouse::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $greenhouseClient
+		protected ClientInterface $greenhouseClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,13 +62,10 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->greenhouseClient = $greenhouseClient;
 	}
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +107,9 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

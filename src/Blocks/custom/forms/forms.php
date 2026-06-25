@@ -22,7 +22,7 @@ if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $m
 
 echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
-$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
+$blockClass = $attributes['blockClass'] ?? "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
 
 // Check formPost ID prop.
 $formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
@@ -33,9 +33,7 @@ $formsFormGeolocationAlternatives = Helpers::checkAttr('formsFormGeolocationAlte
 $formsStyleOutput = [];
 if ($formsStyle && gettype($formsStyle) === 'array') {
 	$formsStyleOutput = array_map(
-		static function ($item) use ($blockClass) {
-			return Helpers::selector(true, $blockClass, '', $item);
-		},
+		static fn(string $item): string => Helpers::bem($blockClass, '', $item),
 		$formsStyle
 	);
 }
@@ -65,9 +63,7 @@ if ($formsFormGeolocationAlternatives && apply_filters(SettingsGeolocation::FILT
 	$allForms = [
 		...$allForms,
 		...array_map(
-			static function ($item) {
-				return $item['formId'];
-			},
+			static fn(array $item) => $item['formId'],
 			$formsFormGeolocationAlternatives
 		),
 	];
@@ -88,7 +84,7 @@ if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 $twClassesData = FormsHelper::getTwSelectorsData($attributes);
 $twClasses = FormsHelper::getTwSelectors($twClassesData, ['forms']);
 
-$formsClass = Helpers::classnames([
+$formsClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'forms', $blockClass),
 	UtilsHelper::getStateSelector('forms'),
 	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
@@ -100,9 +96,7 @@ $formsClass = Helpers::classnames([
 
 <div
 	class="<?php echo esc_attr($formsClass); ?>"
-	<?php
-	echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-	?>>
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($formAttrs)); ?>>
 	<?php
 	try {
 		remove_filter('the_content', 'wpautop');
@@ -130,7 +124,7 @@ $formsClass = Helpers::classnames([
 
 			// Render blocks.
 			foreach ($output as $block) {
-				echo apply_filters('the_content', render_block($block)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+				echo wp_kses_post(apply_filters('the_content', render_block($block)));
 			}
 		}
 	} finally {
@@ -141,7 +135,6 @@ $formsClass = Helpers::classnames([
 		'loader',
 		Helpers::props('loader', $attributes, [
 			'loaderIsGeolocation' => true,
-			'loaderTwSelectorsData' => $twClassesData,
 		])
 	);
 	?>

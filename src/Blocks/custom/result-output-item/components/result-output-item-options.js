@@ -1,26 +1,14 @@
-import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	icons,
-	IconLabel,
-	Select,
-} from '@eightshift/frontend-libs/scripts';
-import {
-	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
-	CONDITIONAL_TAGS_OPERATORS_LABELS,
-} from './../../../components/conditional-tags/components/conditional-tags-labels';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { ContainerPanel, InputField, OptionSelect, Container, ContainerGroup } from '@eightshift/ui-components';
+import { chevronLeft, chevronRight, experiment, rename } from '@eightshift/ui-components/icons';
+import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../../components/conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
 
-export const ResultOutputItemOptions = ({
-	attributes,
-	setAttributes,
-}) => {
+export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const resultOutputItemName = checkAttr('resultOutputItemName', attributes, manifest);
@@ -31,7 +19,7 @@ export const ResultOutputItemOptions = ({
 	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended);
 
 	return (
-		<PanelBody title={__('Result item', 'eightshift-forms')}>
+		<ContainerPanel>
 			<NameField
 				value={resultOutputItemName}
 				attribute={getAttrKey('resultOutputItemName', attributes, manifest)}
@@ -41,47 +29,49 @@ export const ResultOutputItemOptions = ({
 				setIsChanged={setIsNameChanged}
 			/>
 
-			<Select
-				label={<IconLabel icon={icons.containerSpacing} label={__('Compare operator', 'eightshift-forms')} />}
-				value={resultOutputItemOperator}
-				options={getConstantsOptions(
-					{
+			<Container standalone>
+				<OptionSelect
+					icon={experiment}
+					label={__('Operator', 'eightshift-forms')}
+					value={resultOutputItemOperator}
+					options={getConstantsOptions({
 						...CONDITIONAL_TAGS_OPERATORS_LABELS,
 						...CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
-					}
-				)}
-				onChange={(value) => {
-					setShowEndValue(value.toUpperCase() in globalManifest.comparatorExtended);
-					setAttributes({ [getAttrKey('resultOutputItemOperator', attributes, manifest)]: value });
-				}}
-				simpleValue
-				closeMenuAfterSelect
-			/>
-
-			<TextControl
-				label={
-					<IconLabel icon={icons.positionHStart}
-						label={
-							showEndValue ?
-							__('Variable value start', 'eightshift-forms'):
-							__('Variable value', 'eightshift-forms')
-						}
-					/>
-				}
-				help={showEndValue && __('Start value must be number.', 'eightshift-forms')}
-				value={resultOutputItemValueStart}
-				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
-			/>
-
-			{showEndValue && 
-				<TextControl
-					label={<IconLabel icon={icons.positionHEnd} label={__('Variable value end', 'eightshift-forms')} />}
-					value={resultOutputItemValueEnd}
-					onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValueEnd', attributes, manifest)]: value })}
-					help={showEndValue && __('End value must be number.', 'eightshift-forms')}
+					})}
+					onChange={(value) => {
+						setShowEndValue(value.toUpperCase() in globalManifest.comparatorExtended);
+						setAttributes({ [getAttrKey('resultOutputItemOperator', attributes, manifest)]: value });
+					}}
+					type='menu'
+					inline
 				/>
-			}
+			</Container>
 
-		</PanelBody>
+			<ContainerGroup>
+				<Container>
+					<InputField
+						type={showEndValue ? 'number' : 'text'}
+						icon={showEndValue ? chevronRight : rename}
+						label={showEndValue ? __('Start value', 'eightshift-forms') : __('Value', 'eightshift-forms')}
+						value={resultOutputItemValueStart}
+						onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
+						placeholder={showEndValue && __('(number)', 'eightshift-forms')}
+						inline
+					/>
+				</Container>
+
+				<Container hidden={!showEndValue}>
+					<InputField
+						type='number'
+						icon={chevronLeft}
+						label={__('End value', 'eightshift-forms')}
+						value={resultOutputItemValueEnd}
+						onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValueEnd', attributes, manifest)]: value })}
+						placeholder={__('(number)', 'eightshift-forms')}
+						inline
+					/>
+				</Container>
+			</ContainerGroup>
+		</ContainerPanel>
 	);
 };

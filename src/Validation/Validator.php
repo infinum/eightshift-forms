@@ -26,26 +26,12 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 class Validator extends AbstractValidation
 {
 	/**
-	 * Instance variable for labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
-	 * File security scanner.
-	 *
-	 * @var FileSecurityScanner
-	 */
-	protected FileSecurityScanner $fileSecurityScanner;
-
-	/**
 	 * Validation Fields to check.
 	 * If adding a new validation type put it here.
 	 *
 	 * @var array<int, string>
 	 */
-	private const VALIDATION_FIELDS = [
+	private const array VALIDATION_FIELDS = [
 		'validationPattern',
 		'isRequiredCount',
 		'isEmail',
@@ -69,7 +55,7 @@ class Validator extends AbstractValidation
 	 *
 	 * @var array<int, string>
 	 */
-	private const VALIDATION_MANUAL_COMPONENTS = [
+	private const array VALIDATION_MANUAL_COMPONENTS = [
 		'input',
 		'textarea',
 		'select',
@@ -89,11 +75,10 @@ class Validator extends AbstractValidation
 	 * @param LabelsInterface     $labels              Inject documentsData which holds labels data.
 	 * @param FileSecurityScanner $fileSecurityScanner Inject the file security scanner.
 	 */
-	public function __construct(LabelsInterface $labels, FileSecurityScanner $fileSecurityScanner)
-	{
-		$this->labels = $labels;
-		$this->fileSecurityScanner = $fileSecurityScanner;
-	}
+	public function __construct(
+		protected LabelsInterface $labels,
+		protected FileSecurityScanner $fileSecurityScanner
+	) {} // phpcs:ignore
 
 	/**
 	 * Validate params.
@@ -138,10 +123,8 @@ class Validator extends AbstractValidation
 			$paramKey = $paramValue['name'] ?? '';
 
 			// Validate only step params.
-			if ($stepFields) {
-				if (!isset($stepFields[$paramKey])) {
-					continue;
-				}
+			if ($stepFields !== [] && !isset($stepFields[$paramKey])) {
+				continue;
 			}
 
 			// Find validation reference by ID.
@@ -153,46 +136,41 @@ class Validator extends AbstractValidation
 			}
 
 			// Sort order or validation by the keys.
-			\uksort($reference, function ($key1, $key2) use ($order) {
-				return \array_search($key1, $order, true) <=> \array_search($key2, $order, true);
-			});
+			\uksort($reference, fn($key1, $key2): int => \array_search($key1, $order, true) <=> \array_search($key2, $order, true));
 
 			// Validate all files are uploaded to the server and not a external link.
 			$isFilesError = false;
-			if ($paramType === 'file') {
-				if (\is_array($inputValue)) {
-					// Check if single or multiple and output error.
-					if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
-						$output[$paramKey] = $this->labels->getLabel('validationFileMaxAmount', $formId);
-						$isFilesError = true;
-					}
-
-					// Check if wrong upload path.
-					foreach ($inputValue as $value) {
-						if (UploadHelpers::isUploadError($value)) {
-							$output[$paramKey] = $this->labels->getLabel('validationFileNotLocated', $formId);
-							$isFilesError = true;
-							break;
-						}
-
-						// Explode and remove empty files.
-						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
-						if (!$fileName) {
-							continue;
-						}
-
-						$fileName = \array_flip($fileName);
-
-						// Bailout if file is ok.
-						if (isset($fileName[Config::TEMP_UPLOAD_DIR])) {
-							continue;
-						}
-
-						// Output error if file is not uploaded to the correct path.
-						$output[$paramKey] = $this->labels->getLabel('validationFileWrongUploadPath', $formId);
+			if ($paramType === 'file' && \is_array($inputValue)) {
+				// Check if single or multiple and output error.
+				if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
+					$output[$paramKey] = $this->labels->getLabel('validationFileMaxAmount', $formId);
+					$isFilesError = true;
+				}
+				// Check if wrong upload path.
+				foreach ($inputValue as $value) {
+					if (UploadHelpers::isUploadError($value)) {
+						$output[$paramKey] = $this->labels->getLabel('validationFileNotLocated', $formId);
 						$isFilesError = true;
 						break;
 					}
+
+					// Explode and remove empty files.
+					$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, (string) $value));
+					if ($fileName === []) {
+						continue;
+					}
+
+					$fileName = \array_flip($fileName);
+
+					// Bailout if file is ok.
+					if (isset($fileName[Config::TEMP_UPLOAD_DIR])) {
+						continue;
+					}
+
+					// Output error if file is not uploaded to the correct path.
+					$output[$paramKey] = $this->labels->getLabel('validationFileWrongUploadPath', $formId);
+					$isFilesError = true;
+					break;
 				}
 			}
 
@@ -209,15 +187,13 @@ class Validator extends AbstractValidation
 							if (\preg_match('/^\s*$/u', $inputValue) === 1) {
 								$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 							}
-						} else {
-							if (empty($inputValue)) {
-								$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
-							}
+						} elseif (empty($inputValue)) {
+							$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 						}
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if (\is_array($inputValue) && \count($inputValue) < $dataValue && !empty($inputValue)) {
+						if (\is_array($inputValue) && \count($inputValue) < $dataValue && $inputValue !== []) {
 							$output[$paramKey] = \sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
@@ -227,13 +203,10 @@ class Validator extends AbstractValidation
 							if (!empty($inputValue)) {
 								$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 							}
-						} else {
-							if (!empty($inputValue) && SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								$tldList = Helpers::getCache()[ManifestCache::TYPE_FORMS][ManifestCache::TLD_KEY];
-
-								if (!$this->isEmailTldValid($inputValue, \array_values($tldList))) {
-									$output[$paramKey] = $this->labels->getLabel('validationEmailTld', $formId);
-								}
+						} elseif (!empty($inputValue) && SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+							$tldList = Helpers::getCache()[ManifestCache::TYPE_FORMS][ManifestCache::TLD_KEY];
+							if (!$this->isEmailTldValid($inputValue, \array_values($tldList))) {
+								$output[$paramKey] = $this->labels->getLabel('validationEmailTld', $formId);
 							}
 						}
 						break;
@@ -274,13 +247,13 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for min characters length.
 					case 'minLength':
-						if ($dataValue > \strlen($inputValue)) {
+						if ($dataValue > \strlen((string) $inputValue)) {
 							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMinLength', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max characters length.
 					case 'maxLength':
-						if ($dataValue < \strlen($inputValue)) {
+						if ($dataValue < \strlen((string) $inputValue)) {
 							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMaxLength', $formId), $dataValue);
 						}
 						break;
@@ -298,9 +271,9 @@ class Validator extends AbstractValidation
 							$inputValue = $this->fixMomentsEmailValidationPattern($inputValue, $pattern);
 
 							// Match pattern.
-							\preg_match_all("/$patternValue/", $inputValue, $matches, \PREG_SET_ORDER, 0);
+							\preg_match_all("/$patternValue/", (string) $inputValue, $matches, \PREG_SET_ORDER, 0);
 
-							$isMatch = isset($matches[0][0]) ? $matches[0][0] === $inputValue : false;
+							$isMatch = isset($matches[0][0]) && $matches[0][0] === $inputValue;
 
 							if (!$isMatch && !empty($inputValue)) {
 								$patternOutput = $pattern['output'] ?? '';
@@ -337,10 +310,11 @@ class Validator extends AbstractValidation
 	 * Validate files from the validation reference.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, string> $manualValidationReference Manual validation reference.
 	 *
 	 * @return array<int|string, string>
 	 */
-	public function validateFiles(array $formDetails): array
+	public function validateFiles(array $formDetails, array $manualValidationReference = []): array
 	{
 		$output = [];
 		$file = $formDetails[Config::FD_FILES_UPLOAD];
@@ -356,6 +330,10 @@ class Validator extends AbstractValidation
 
 		// Find validation reference by ID.
 		$reference = $validationReference[$fieldName] ?? [];
+
+		if ($manualValidationReference !== []) {
+			$reference = \array_merge($reference, $manualValidationReference);
+		}
 
 		// Loop all validations from the reference.
 		foreach ($reference as $dataKey => $dataValue) {
@@ -407,12 +385,10 @@ class Validator extends AbstractValidation
 	 *
 	 * @param array<string, mixed> $items Params to validate or FormDetails.
 	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
-	 *
-	 * @return boolean
 	 */
 	public function validateMandatoryParams(array $items, array $mandatoryParams): bool
 	{
-		if (!$items) {
+		if ($items === []) {
 			return true;
 		}
 
@@ -450,9 +426,7 @@ class Validator extends AbstractValidation
 	public function getValidationLabelItems(array $items, string $formId): array
 	{
 		return \array_map(
-			function ($item) use ($formId) {
-				return $this->labels->getLabel($item, $formId);
-			},
+			fn(string $item): string => $this->labels->getLabel($item, $formId),
 			$items
 		);
 	}
@@ -461,8 +435,6 @@ class Validator extends AbstractValidation
 	 * Set validation submit once.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return bool
 	 */
 	public function setValidationSubmitOnce(string $formId): bool
 	{
@@ -491,8 +463,6 @@ class Validator extends AbstractValidation
 	 * Check if user is logged in.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return bool
 	 */
 	public function validateSubmitOnlyLoggedIn(string $formId): bool
 	{
@@ -508,8 +478,6 @@ class Validator extends AbstractValidation
 	 * Check if user has already submitted the form.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return bool
 	 */
 	public function validateSubmitOnlyOnce(string $formId): bool
 	{
@@ -540,7 +508,7 @@ class Validator extends AbstractValidation
 		foreach ($blocks as $block) {
 			$innerOptions = $this->getValidationReferenceInner($block);
 
-			if ($innerOptions) {
+			if ($innerOptions !== []) {
 				$output = \array_merge($output, $innerOptions);
 			}
 		}
@@ -555,7 +523,7 @@ class Validator extends AbstractValidation
 	 *
 	 * @return array<int|string, array<string, mixed>>
 	 */
-	private function getValidationReferenceInner($block): array
+	private function getValidationReferenceInner(array $block): array
 	{
 		$output = [];
 
@@ -575,9 +543,7 @@ class Validator extends AbstractValidation
 			// Get all validation fields with the correct prefix.
 			$valid = \array_flip(
 				\array_map(
-					static function ($item) use ($attrName) {
-						return Helpers::kebabToCamelCase("{$attrName}-{$item}");
-					},
+					static fn(string $item): string => Helpers::kebabToCamelCase("{$attrName}-{$item}"),
 					self::VALIDATION_FIELDS
 				)
 			);
@@ -612,13 +578,11 @@ class Validator extends AbstractValidation
 			if (isset($nestedKeys[$name]) && isset($block["{$name}Content"])) {
 				// Do recursive loop.
 				$output = \array_merge($output, $this->flattenValidationReferenceManual($block["{$name}Content"]));
-			} else {
+			} elseif (\is_array($block)) {
 				// Only output arrays of components not the actual components attribute.
-				if (\is_array($block)) {
-					// Output only allowed fields that are relevant for the validation.
-					if (isset($allowed[$name])) {
-						$output[] = $block;
-					}
+				// Output only allowed fields that are relevant for the validation.
+				if (isset($allowed[$name])) {
+					$output[] = $block;
 				}
 			}
 		}
@@ -639,7 +603,7 @@ class Validator extends AbstractValidation
 		$output = [];
 
 		$items = $this->flattenValidationReferenceManual($blocks);
-		if (!$items) {
+		if ($items === []) {
 			return $output;
 		}
 
@@ -682,12 +646,12 @@ class Validator extends AbstractValidation
 	 *
 	 * @return mixed
 	 */
-	private function fixMomentsEmailValidationPattern($inputValue, $pattern)
+	private function fixMomentsEmailValidationPattern($inputValue, array $pattern)
 	{
 		$label = $pattern['label'] ?? '';
 
 		if ($label === 'momentsEmail') {
-			return \strtolower($inputValue);
+			return \strtolower((string) $inputValue);
 		}
 
 		return $inputValue;

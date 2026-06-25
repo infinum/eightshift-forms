@@ -8,7 +8,9 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -16,33 +18,33 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $globalMsgAttrs = [];
 
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
-$globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attributes, $manifest);
+$globalMsgTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg']);
 
-$globalMsgClass = Helpers::classnames([
+$globalMsgClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);
 
-$headings = [
-	'success' => '',
-	'error' => '',
-];
+$headings = apply_filters(
+	HooksHelpers::getFilterName(['block', 'form', 'globalMsgHeadings']),
+	[
+		'success' => SettingsHelpers::getOptionValue(SettingsSettings::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_SUCCESS),
+		'error' => SettingsHelpers::getOptionValue(SettingsSettings::SETTINGS_GENERAL_GLOBAL_MSG_HEADING_ERROR),
+	]
+);
 
-$filterName = HooksHelpers::getFilterName(['block', 'form', 'globalMsgHeadings']);
+$globalMsgHeadingSuccess = $headings['success'] ?? '';
+$globalMsgHeadingError = $headings['error'] ?? '';
 
-if (has_filter($filterName) && !is_admin()) {
-	$headings = apply_filters($filterName, []);
+if ($globalMsgHeadingSuccess) {
+	$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingSuccess')] = $globalMsgHeadingSuccess;
+}
 
-	if (isset($headings['success'])) {
-		$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingSuccess')] = $headings['success'];
-	}
-
-	if (isset($headings['error'])) {
-		$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingError')] = $headings['error'];
-	}
+if ($globalMsgHeadingError) {
+	$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingError')] = $globalMsgHeadingError;
 }
 
 ?>
@@ -51,7 +53,6 @@ if (has_filter($filterName) && !is_admin()) {
 	class="<?php echo esc_attr($globalMsgClass); ?>"
 	role="status"
 	aria-live="polite"
-	<?php echo Helpers::getAttrsOutput($globalMsgAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-	?>>
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($globalMsgAttrs)); ?>>
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

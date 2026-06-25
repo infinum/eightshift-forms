@@ -32,13 +32,6 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsNationbuilder::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Workable data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		NationbuilderClientInterface $nationbuilderClient
+		protected NationbuilderClientInterface $nationbuilderClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

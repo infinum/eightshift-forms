@@ -186,9 +186,7 @@ export class ConditionalTags {
 
 				// Select fields can have multiple or single select inner options.
 				if (type === 'select') {
-					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId)
-						? this.getFieldInnerSelectMultiple(formId, name)
-						: this.getFieldInnerSelectSingle(formId, name);
+					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ? this.getFieldInnerSelectMultiple(formId, name) : this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
 					innerOutput = this.getFieldInner(formId, name);
@@ -382,7 +380,7 @@ export class ConditionalTags {
 	 */
 	getFieldTopLevel(formId, name, isNoneFormBlock = false) {
 		// Find defaults to know what direction to use.
-		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId); // eslint-disable-line max-len
+		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
 
 		const ref = !isNoneFormBlock ? this.state.getStateElementConditionalTagsRef(name, formId) : this.state.getStateElementFieldConditionalTagsRef(name, formId);
 
@@ -549,7 +547,7 @@ export class ConditionalTags {
 		const custom = this.state.getStateElementCustom(name, formId);
 
 		// Get active items.
-		custom?.getValue(true).forEach((innerName) => {
+		custom?.getValue(true)?.forEach((innerName) => {
 			// Remove active items by name.
 			if (this.getFieldInnerByName(formId, name, innerName)) {
 				custom?.removeActiveItemsByValue(innerName);
@@ -612,7 +610,9 @@ export class ConditionalTags {
 		// Loop all conditional tags.
 		this.state.getStateElementConditionalTagsTagsInner(topName, innerName, formId).forEach((items, parent) => {
 			// Loop all inner fields.
-			items.forEach(([innerName, innerCondition, innerValue], index) => {
+			items.forEach(([innerName, innerConditionRaw, innerValue], index) => {
+				let innerCondition = innerConditionRaw;
+
 				// Placeholder value to check later.
 				let value = '';
 

@@ -3,7 +3,7 @@ import { ConditionalTags } from './conditional-tags';
 import { Enrichment } from './enrichment';
 import { Geolocation } from './geolocation';
 import { State } from './state';
-import { StateEnum, prefix, setStateWindow, setStateValues, getState } from './state-init';
+import { StateEnum, prefix, setStateWindow, setStateValues } from './state-init';
 import { Steps } from './step';
 import globalManifest from './../../../manifest.json';
 
@@ -408,7 +408,6 @@ export class Utils {
 		for (const [name] of this.state.getStateElements(formId)) {
 			const value = this.state.getStateElementValue(name, formId);
 			const trackingName = this.state.getStateElementTracking(name, formId);
-			const field = this.state.getStateElementField(name, formId);
 
 			if (!trackingName) {
 				continue;
@@ -1076,7 +1075,10 @@ export class Utils {
 					newValue.forEach((item, index) => {
 						const option = [...custom.passedElement?.element?.options].find((option) => option.value === item);
 
-						if (option) {
+						const isOptionHidden = Boolean(option?.getAttribute(this.state.getStateAttribute('selectOptionIsHidden')));
+						const isOptionDisabled = Boolean(option?.getAttribute(this.state.getStateAttribute('disabled')) || option?.disabled);
+
+						if (option && !isOptionHidden && !isOptionDisabled) {
 							custom.setChoiceByValue(item);
 						} else {
 							newValue.splice(index, 1);
@@ -1484,9 +1486,7 @@ export class Utils {
 
 		if (Object.keys(outputItems).length) {
 			for (const [key, value] of Object.entries(outputItems)) {
-				const itemElements = outputElement.querySelectorAll(
-					`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"]`,
-				);
+				const itemElements = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"]`);
 
 				itemElements.forEach((item) => {
 					const operator = item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || globalManifest.comparator.IS;
@@ -1498,9 +1498,7 @@ export class Utils {
 					}
 				});
 
-				const partElement = outputElement.querySelectorAll(
-					`${this.state.getStateSelector('resultOutputPart', true)}[${this.state.getStateAttribute('resultOutputPart')}="${key}"]`,
-				);
+				const partElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputPart', true)}[${this.state.getStateAttribute('resultOutputPart')}="${key}"]`);
 
 				if (partElement.length && value) {
 					partElement.forEach((item) => {
@@ -1608,8 +1606,7 @@ export class Utils {
 			[globalManifest.comparatorExtended.BN]: (start, value, end) => {
 				return parseFloat(String(value)) < parseFloat(String(start)) || parseFloat(String(value)) > parseFloat(String(end));
 			},
-			[globalManifest.comparatorExtended.BNS]: (start, value, end) =>
-				parseFloat(String(value)) <= parseFloat(String(start)) || parseFloat(String(value)) >= parseFloat(String(end)),
+			[globalManifest.comparatorExtended.BNS]: (start, value, end) => parseFloat(String(value)) <= parseFloat(String(start)) || parseFloat(String(value)) >= parseFloat(String(end)),
 		};
 	}
 

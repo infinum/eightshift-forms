@@ -14,7 +14,6 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\EncryptionHelpers;
@@ -44,14 +43,12 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS, [$this, 'updateFormComponentAttributesOutput']);
-		\add_filter(self::FILTER_FORMS_BLOCK_MODIFICATIONS, [$this, 'updateFormsBlockOutput'], 10, 3);
-		\add_filter(self::FILTER_FORMS_BLOCK_SHOULD_RENDER, [$this, 'checkFormsBlockShouldRender'], 10, 3);
+		\add_filter(self::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS, $this->updateFormComponentAttributesOutput(...));
+		\add_filter(self::FILTER_FORMS_BLOCK_MODIFICATIONS, $this->updateFormsBlockOutput(...), 10, 3);
+		\add_filter(self::FILTER_FORMS_BLOCK_SHOULD_RENDER, $this->checkFormsBlockShouldRender(...), 10, 3);
 	}
 
 	/**
@@ -74,7 +71,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Custom form name.
 		$customFormName = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
-		if ($customFormName) {
+		if ($customFormName !== '' && $customFormName !== '0') {
 			$attributes["{$prefix}ParentSettings"]['customName'] = $customFormName;
 		}
 
@@ -84,7 +81,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Output secure data.
 		$outputSecureData = $this->getSecureFormData($prefix, $attributes);
-		if ($outputSecureData) {
+		if ($outputSecureData !== '' && $outputSecureData !== '0') {
 			$attributes["{$prefix}SecureData"] = $outputSecureData;
 		}
 
@@ -120,8 +117,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
 
-		$checkStyleEnqueue = SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
-
 		// Iterate blocks an children by passing them form ID.
 		foreach ($blocks as $block) {
 			if ($block['blockName'] !== "{$formsNamespace}/form-selector") {
@@ -154,7 +149,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					'variationData' => $formsVariationData,
 					'variationDataFiles' => $formsVariationDataFiles,
 					'conditionalTags' => \wp_json_encode($formsConditionalTagsRulesForms),
-					'disabledDefaultStyles' => $checkStyleEnqueue,
 					'dataTypeSelector' => $formsFormDataTypeSelector,
 					'postId' => $formsFormPostId,
 					'formType' => $blockName,
@@ -220,11 +214,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 						// Change the forms attributes to a correct prefix and remove them from the original block.
 						$customUsedAttrs = [];
-						if ($customUsedAttrsDiff) {
-							foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
-								$customUsedAttrs['field' . \ucfirst($customDiffKey)] = $customDiffValue;
-								unset($inBlock['attrs'][$customDiffKey]);
-							}
+						foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
+							$customUsedAttrs['field' . \ucfirst((string) $customDiffKey)] = $customDiffValue;
+							unset($inBlock['attrs'][$customDiffKey]);
 						}
 
 						// Change the original output of the custom block.
@@ -280,7 +272,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 							$inBlockOutput[$stepKey]['attrs']['stepStepSubmit'] = \apply_filters('the_content', \render_block($inBlock));
 						} else {
 							// Blocks in steps are passed as an attribute and we need to convert block to HTML string and append to the previous.
-							$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . \apply_filters('the_content', \render_block($inBlock));
+							$inBlockOutput[$stepKey]['attrs']['stepStepContent'] .= \apply_filters('the_content', \render_block($inBlock));
 						}
 					} else {
 						// Just populate normal blocks if there are no steps here.
@@ -345,20 +337,13 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 * @param bool $output Should block render.
 	 * @param array<string, mixed> $attributes Block Attributes.
 	 * @param array<string, mixed> $manifest Manifest of the block.
-	 *
-	 * @return bool
 	 */
 	public function checkFormsBlockShouldRender(bool $output, array $attributes, array $manifest): bool
 	{
 		$formId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 
 		$loggedInOnlyForm = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId);
-
-		if ($loggedInOnlyForm && !\is_user_logged_in()) {
-			return false;
-		}
-
-		return true;
+		return !($loggedInOnlyForm && !\is_user_logged_in());
 	}
 
 	/**
@@ -404,7 +389,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$output = $this->getShowAsOutputItem($name, $showAs, $namespace, $attrs, $innerBlocks, true);
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return $block;
 		}
 
@@ -469,7 +454,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		foreach ($attrs as $attrKey => $attrsValue) {
-			if (\strpos($attrKey, 'Field') !== false) {
+			if (\str_contains($attrKey, 'Field')) {
 				$output['attrs'][\str_replace($mapPrefix[$name]['from'], $mapPrefix[$name]['to'], $attrKey)] = $attrsValue;
 			}
 		}
@@ -542,8 +527,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 *
 	 * @param string $prefix Prefix of the form.
 	 * @param array<string, mixed> $attributes Attributes of the form.
-	 *
-	 * @return string
 	 */
 	private function getSecureFormData(string $prefix, array $attributes): string
 	{
@@ -561,8 +544,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			foreach ($variation as $value) {
 				$title = $value['title'] ?? '';
 				$slug = $value['slug'] ?? '';
-
-				if (!$title || !$slug) {
+				if (!$title) {
+					continue;
+				}
+				if (!$slug) {
 					continue;
 				}
 
@@ -607,7 +592,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			}
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return '';
 		}
 

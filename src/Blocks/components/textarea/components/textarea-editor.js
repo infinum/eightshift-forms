@@ -1,72 +1,34 @@
-import React from 'react';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { usePreventSaveOnMissingProps } from './../../utils';
+import manifest from '../manifest.json';
 
 export const TextareaEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('textarea');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
 	const textareaName = checkAttr('textareaName', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
-
-	const textareaClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
 	const textarea = (
-		<>
-			<textarea
-				className={textareaClass}
-				placeholder={textareaPlaceholder}
-				readOnly
-			>
-				{textareaValue}
-			</textarea>
-
-			<MissingName value={textareaName} />
-
-			{textareaName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
-		</>
+		<textarea
+			className='esf-input esf:h-80'
+			placeholder={textareaPlaceholder}
+			disabled
+		>
+			{textareaValue}
+		</textarea>
 	);
 
 	return (
-		<>
-			<FieldEditor
-				{...props('field', attributes, {
-					fieldContent: textarea,
-					fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
-				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
-			/>
-		</>
+		<FieldEditor
+			{...props('field', attributes, {
+				fieldContent: textarea,
+				fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
+			})}
+			statusSlot={[!textareaName && 'missingName', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
+		/>
 	);
 };

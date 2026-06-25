@@ -27,10 +27,8 @@ class GoodbitsClient implements ClientInterface
 {
 	/**
 	 * Return Goodbits base url.
-	 *
-	 * @var string
 	 */
-	private const BASE_URL = 'https://app.goodbits.io/api/v1/';
+	private const string BASE_URL = 'https://app.goodbits.io/api/v1/';
 
 	/**
 	 * Return items.
@@ -56,7 +54,7 @@ class GoodbitsClient implements ClientInterface
 			}
 
 			return $output;
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return [
 				'Goodbits' => [
 					'title' => \__('Goodbits', 'eightshift-forms'),
@@ -175,25 +173,20 @@ class GoodbitsClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error'] ?? '';
 
 		if (!$msg) {
-			$msg = !\is_array($body['errors']) ? $body['errors'] : '';
+			$msg = \is_array($body['errors']) ? '' : $body['errors'];
 		}
 
-		switch ($msg) {
-			case 'Bad Request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR;
-			case 'Invalid API Key has been submitted, please refer to your API key under your settings':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR,
+			'Invalid API Key has been submitted, please refer to your API key under your settings' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+		};
 	}
 
 	/**
@@ -214,10 +207,8 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		foreach ($errors as $value) {
-			switch ($value) {
-				case 'Email is invalid':
-					$output['email'] = 'validationEmail';
-					break;
+			if ($value === 'Email is invalid') {
+				$output['email'] = 'validationEmail';
 			}
 		}
 
@@ -233,12 +224,10 @@ class GoodbitsClient implements ClientInterface
 	 */
 	private function getHeaders(string $itemId): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'Authorization' => $itemId,
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -258,8 +247,6 @@ class GoodbitsClient implements ClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

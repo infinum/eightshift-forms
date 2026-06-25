@@ -23,7 +23,7 @@ final class TextScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const SCRIPT_PATTERNS = [
+	private const array SCRIPT_PATTERNS = [
 		'<?php',
 		'<?=',
 		'<%@ page',

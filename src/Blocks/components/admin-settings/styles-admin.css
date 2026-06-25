@@ -1,0 +1,30 @@
+/* stylelint-disable selector-max-specificity */
+
+@import '../../../../tailwind.css';
+@import 'tailwindcss' prefix(esf);
+
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cache'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='location'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='dashboard'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='debug'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='documentation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='migration'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='transfer'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wp'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wpml'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='calculator'] {
+	.es-submit--global {
+		@apply esf:hidden;
+	}
+}
+
+.esf-is-filter-applied {
+	@apply esf:bg-mauve-600/10 esf:text-mauve-600;
+	@apply esf:px-8 esf:py-5 esf:rounded-md esf:text-xs;
+	@apply esf:w-fit;
+	@apply esf:cursor-pointer;
+	@apply esf:block;
+	@apply esf:[&_ul]:mt-5 esf:[&_ul]:text-gray-400;
+}

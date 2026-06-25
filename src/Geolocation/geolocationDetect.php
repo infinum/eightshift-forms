@@ -5,3 +5,5 @@
  *
  * @package EightshiftForms\Geolocation;
  */
+
+declare(strict_types=1);

@@ -33,20 +33,6 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'bulk';
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
-
-	/**
-	 * Instance variable of TransferInterface data.
-	 *
-	 * @var TransferInterface
-	 */
-	protected $transfer;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -59,14 +45,12 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff,
-		TransferInterface $transfer
+		protected IntegrationSyncInterface $integrationSyncDiff,
+		protected TransferInterface $transfer
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
-		$this->transfer = $transfer;
 	}
 
 	/**
@@ -81,8 +65,6 @@ class BulkRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -115,7 +97,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	 */
 	protected function submitAction(array $params): array
 	{
-		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
+		$ids = isset($params['ids']) ? \json_decode((string) $params['ids'], true) : [];
 
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
@@ -167,7 +149,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				return [
 					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel('genericSuccess'),
 					AbstractBaseRoute::R_DEBUG => [
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst($type),
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst((string) $type),
 					],
 				];
 			case 'warning':
@@ -175,7 +157,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				throw new BadRequestException(
 					$output['msg'] ?? $this->getLabels()->getLabel('genericWarning'),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst($type),
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst((string) $type),
 					]
 				);
 				// phpcs:enable
@@ -184,7 +166,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				throw new BadRequestException(
 					$output['msg'] ?? $this->getLabels()->getLabel('genericError'),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst($type),
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst((string) $type),
 					]
 				);
 				// phpcs:enable
@@ -239,7 +221,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				break;
 		}
 
-		if (!$details) {
+		if ($details === []) {
 			return [
 				'status' => 'error',
 				// translators: %s replaces form msg type.

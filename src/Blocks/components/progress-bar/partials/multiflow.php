@@ -6,9 +6,11 @@
  * @package EightshiftForms
  */
 
+declare(strict_types=1);
+
 $count = $attributes['count'] ? (int) $attributes['count'] : 0;
 
-if (!$count) {
+if ($count === 0) {
 	return;
 }
 

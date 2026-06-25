@@ -1,7 +1,7 @@
 /* global grecaptcha */
 
-import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import selectManifest from './../../select/manifest.json';
+import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
+import { debounce } from '@eightshift/ui-components/utilities';
 import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm } from './state-init';
 
 /**
@@ -81,9 +81,7 @@ export class Form {
 
 					// Bailout if 0 as formId === 0 can only be used in admin.
 					if (formId === '0') {
-						throw new Error(
-							`It looks like we can't find formId for your form, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`,
-						);
+						throw new Error(`It looks like we can't find formId for your form, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`);
 					}
 
 					// If forms element don't have geolocation data attribute, init forms the regular way.
@@ -159,8 +157,7 @@ export class Form {
 
 			// Remove loading class from forms element.
 			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
-
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -343,9 +340,9 @@ export class Form {
 			this.CONTROLLER = null;
 
 			return parsedResponse;
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
-				return;
+				return null;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmit', name, message));
@@ -397,7 +394,7 @@ export class Form {
 			this.steps.formStepSubmit(formId, parsedResponse);
 			this.steps.formStepSubmitAfter(formId, parsedResponse);
 			this.state.setStateFormIsProcessing(false, formId);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -633,7 +630,7 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch ({name, message}) {
+			} catch ({ name, message }) {
 				if (name === 'AbortError') {
 					return;
 				}
@@ -683,7 +680,7 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch ({name, message}) {
+			} catch ({ name, message }) {
 				if (name === 'AbortError') {
 					return;
 				}
@@ -984,7 +981,7 @@ export class Form {
 			return output;
 		}
 
-		for (const [key, group] of Object.entries(groups)) {
+		for (const [_key, group] of Object.entries(groups)) {
 			const groupSaveAsOneField = Boolean(group.getAttribute(this.state.getStateAttribute('groupSaveAsOneField')));
 
 			if (!groupSaveAsOneField) {
@@ -999,7 +996,7 @@ export class Form {
 
 			const groupInnerItems = {};
 
-			for (const [key, groupInnerItem] of Object.entries(groupInner)) {
+			for (const [_key, groupInnerItem] of Object.entries(groupInner)) {
 				const { name, value, disabled } = groupInnerItem;
 
 				// Skip select search field.
@@ -1042,13 +1039,16 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataStep(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('steps'),
-				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
-				custom: this.state.getStateFormStepsCurrent(formId),
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('steps'),
+					value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
+					custom: this.state.getStateFormStepsCurrent(formId),
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1059,32 +1059,35 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCommon(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('formId'),
-				value: this.state.getStateFormFid(formId),
-			},
-			{
-				name: this.state.getStateParam('postId'),
-				value: this.state.getStateFormPostId(formId),
-			},
-			{
-				name: this.state.getStateParam('type'),
-				value: this.state.getStateFormType(formId),
-			},
-			{
-				name: this.state.getStateParam('action'),
-				value: this.state.getStateFormAction(formId) ?? '',
-			},
-			{
-				name: this.state.getStateParam('actionExternal'),
-				value: this.state.getStateFormActionExternal(formId) ?? '',
-			},
-			{
-				name: this.state.getStateParam('secureData'),
-				value: this.state.getStateFormSecureData(formId) ?? '',
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('formId'),
+					value: this.state.getStateFormFid(formId),
+				},
+				{
+					name: this.state.getStateParam('postId'),
+					value: this.state.getStateFormPostId(formId),
+				},
+				{
+					name: this.state.getStateParam('type'),
+					value: this.state.getStateFormType(formId),
+				},
+				{
+					name: this.state.getStateParam('action'),
+					value: this.state.getStateFormAction(formId) ?? '',
+				},
+				{
+					name: this.state.getStateParam('actionExternal'),
+					value: this.state.getStateFormActionExternal(formId) ?? '',
+				},
+				{
+					name: this.state.getStateParam('secureData'),
+					value: this.state.getStateFormSecureData(formId) ?? '',
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1102,12 +1105,15 @@ export class Form {
 		const data = this.enrichment.getLocalStorage(this.state.getStateEnrichmentStorageName());
 
 		if (data) {
-			this.utils.buildFormDataItems([
-				{
-					name: this.state.getStateParam('storage'),
-					value: data,
-				},
-			], this.FORM_DATA);
+			this.utils.buildFormDataItems(
+				[
+					{
+						name: this.state.getStateParam('storage'),
+						value: data,
+					},
+				],
+				this.FORM_DATA,
+			);
 		}
 	}
 
@@ -1119,12 +1125,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataAdmin(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('settingsType'),
-				value: this.state.getStateFormTypeSettings(formId),
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('settingsType'),
+					value: this.state.getStateFormTypeSettings(formId),
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1168,12 +1177,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCaptcha(data) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('captcha'),
-				value: data,
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('captcha'),
+					value: data,
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1200,10 +1212,7 @@ export class Form {
 		input.addEventListener('blur', this.onBlurEvent);
 		input.addEventListener('keydown', this.onKeyDownEvent);
 
-		if (
-			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && this.state.getStateElementTypeCustom(name, formId) === 'number')
-		) {
+		if ((this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) || (this.state.getStateFormConfigUseSingleSubmit(formId) && this.state.getStateElementTypeCustom(name, formId) === 'number')) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
@@ -1312,6 +1321,8 @@ export class Form {
 		const field = state.getStateElementField(name, formId);
 		const fieldName = field.getAttribute(this.state.getStateAttribute('fieldName'), formId);
 
+		const twSelectorsData = JSON.parse(input.getAttribute(state.getStateAttribute('tailwindSelectorsData'))) ?? [];
+
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
 				enableTime: state.getStateElementTypeField(name, formId) === 'dateTime',
@@ -1324,6 +1335,7 @@ export class Form {
 					const id = instance.element.id;
 
 					instance.calendarContainer.classList.add(fieldName);
+					instance.calendarContainer.classList.add(...twSelectorsData);
 					instance.element.setAttribute('tabindex', '-1');
 					instance.element.setAttribute('role', 'group');
 					instance.element.setAttribute('aria-hidden', 'true');
@@ -1337,7 +1349,7 @@ export class Form {
 
 					utils.setFieldFilledState(formId, name);
 				},
-				onOpen: function (selectedDates, dateStr, instance) {
+				onOpen: function () {
 					utils.setActiveState(formId, name);
 
 					if (!state.getStateSettingsDisableScrollToFieldOnFocus()) {
@@ -1382,6 +1394,8 @@ export class Form {
 				this.state.getStateAttribute('selectOptionIsHidden'),
 			];
 
+			const twSelectorsData = JSON.parse(input.getAttribute(this.state.getStateAttribute('tailwindSelectorsData'))) ?? {};
+
 			const choices = new Choices.default(input, {
 				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
@@ -1400,8 +1414,22 @@ export class Form {
 					`customProperties.${this.state.getStateAttribute('countryUnlocalizedName')}`,
 				],
 				itemSelectText: '',
+				removeItemIconText: '✕',
 				classNames: {
-					containerOuter: ['choices', `${selectManifest.componentClass}`],
+					containerOuter: ['choices', ...(twSelectorsData.containerOuter ?? [])],
+					containerInner: ['choices__inner', ...(twSelectorsData.containerInner ?? [])],
+					input: ['choices__input', ...(twSelectorsData.input ?? [])],
+					inputCloned: ['choices__input--cloned', ...(twSelectorsData.inputCloned ?? [])],
+					list: ['choices__list', ...(twSelectorsData.list ?? [])],
+					listItems: ['choices__list--multiple', ...(twSelectorsData.listMultiple ?? [])],
+					listSingle: ['choices__list--single', ...(twSelectorsData.listSingle ?? [])],
+					listDropdown: ['choices__list--dropdown', ...(twSelectorsData.listDropdown ?? [])],
+					item: ['choices__item', ...(twSelectorsData.item ?? [])],
+					itemSelectable: ['choices__item--selectable', ...(twSelectorsData.itemSelectable ?? [])],
+					itemDisabled: ['choices__item--disabled', ...(twSelectorsData.itemDisabled ?? [])],
+					itemChoice: ['choices__item--choice', ...(twSelectorsData.itemChoice ?? [])],
+					placeholder: ['choices__placeholder', ...(twSelectorsData.placeholder ?? [])],
+					button: ['choices__button', ...(twSelectorsData.button ?? [])],
 				},
 				callbackOnCreateTemplates: function () {
 					return {
@@ -1595,7 +1623,7 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch ({name, message}) {
+				} catch ({ name, message }) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);
@@ -1621,7 +1649,7 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch ({name, message}) {
+				} catch ({ name, message }) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);
@@ -1956,7 +1984,7 @@ export class Form {
 				this.utils.setManualCountryValue(formId, name, options, true, false);
 				break;
 			case 'select':
-				this.utils.setManualSelectValue(formId, name, options, true, false);
+				this.utils.setManualSelectValue(formId, name, options, true);
 				break;
 		}
 
@@ -2047,11 +2075,7 @@ export class Form {
 		}
 
 		// Used only on frontend for single submit.
-		if (
-			!this.state.getStateConfigIsAdmin() &&
-			this.state.getStateFormConfigUseSingleSubmit(formId) &&
-			(typeCustom === 'range' || typeCustom === 'number' || typeCustom === 'checkbox' || typeCustom === 'radio' || typeCustom === 'rating')
-		) {
+		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId) && (typeCustom === 'range' || typeCustom === 'number' || typeCustom === 'checkbox' || typeCustom === 'radio' || typeCustom === 'rating')) {
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);
 			} else {

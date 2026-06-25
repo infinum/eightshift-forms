@@ -53,13 +53,6 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	use MigrationHelper;
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -71,12 +64,11 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff
+		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -96,8 +88,6 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -131,25 +121,19 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	{
 		$type = $params['type'] ?? '';
 
-		switch ($type) {
-			case SettingsMigration::VERSION_2_3_GENERAL:
-				return $this->getMigration2To3General();
-			case SettingsMigration::VERSION_2_3_FORMS:
-				return $this->getMigration2To3Forms();
-			case SettingsMigration::VERSION_2_3_LOCALE:
-				return $this->getMigration2To3Locale();
-			case SettingsMigration::VERSION_CLEARBIT:
-				return $this->getMigrationClearbit();
-			default:
-				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-				throw new BadRequestException(
-					$this->getLabels()->getLabel('migrationTypeNotFound'),
-					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
-					]
-				);
-				// phpcs:enable
-		}
+		return match ($type) {
+			SettingsMigration::VERSION_2_3_GENERAL => $this->getMigration2To3General(),
+			SettingsMigration::VERSION_2_3_FORMS => $this->getMigration2To3Forms(),
+			SettingsMigration::VERSION_2_3_LOCALE => $this->getMigration2To3Locale(),
+			SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			default => throw new BadRequestException(
+				$this->getLabels()->getLabel('migrationTypeNotFound'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
+				]
+			),
+		};
 	}
 
 	/**
@@ -170,7 +154,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		// Migrate global fallback.
 		$globalFallback = SettingsHelpers::getOptionValue($config['options']['old']);
 
-		if ($globalFallback) {
+		if ($globalFallback !== '' && $globalFallback !== '0') {
 			\update_option(SettingsHelpers::getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
 			\update_option(SettingsHelpers::getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
 			\delete_option(SettingsHelpers::getOptionName($config['options']['old']));
@@ -185,7 +169,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 
 			$globalIntegrationFallback = SettingsHelpers::getOptionValue($config['options']['old'] . '-' . $key);
 
-			if ($globalIntegrationFallback) {
+			if ($globalIntegrationFallback !== '' && $globalIntegrationFallback !== '0') {
 				\update_option(SettingsHelpers::getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
 				\delete_option(SettingsHelpers::getOptionName($config['options']['old'] . '-' . $key));
 			}
@@ -202,7 +186,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 
 		foreach ($configDelimiter as $key) {
 			$option = SettingsHelpers::getOptionValue($key);
-			if ($option) {
+			if ($option !== '' && $option !== '0') {
 				$option = \explode(', ', $option);
 				$option = \implode(Config::DELIMITER, $option);
 				\update_option(SettingsHelpers::getOptionName($key), \maybe_unserialize($option));
@@ -262,9 +246,11 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			}
 
 			$type = GeneralHelpers::getFormTypeById($id);
-
 			// If there is nothing in the content, skip this form.
-			if (!$type) {
+			if ($type === '') {
+				continue;
+			}
+			if ($type === '0') {
 				continue;
 			}
 
@@ -447,10 +433,10 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		\wp_reset_postdata();
 
 		if ($forms) {
-			foreach ($forms as $key => $form) {
+			foreach ($forms as $form) {
 				$formId = (int) $form->ID;
 
-				if (!$formId) {
+				if ($formId === 0) {
 					continue;
 				}
 
@@ -558,10 +544,10 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		\wp_reset_postdata();
 
 		if ($forms) {
-			foreach ($forms as $key => $form) {
+			foreach ($forms as $form) {
 				$formId = (int) $form->ID;
 
-				if (!$formId) {
+				if ($formId === 0) {
 					continue;
 				}
 

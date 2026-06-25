@@ -25,26 +25,24 @@ final class GeneralHelpers
 	 * @param string $formId Form ID.
 	 * @param string $parent Parent key.
 	 * @param string $page Top page key.
-	 *
-	 * @return string
 	 */
 	public static function getListingPageUrl(string $type = '', string $formId = '', string $parent = '', string $page = Config::SLUG_ADMIN): string
 	{
 		$output = [];
 
-		if ($page) {
+		if ($page !== '' && $page !== '0') {
 			$output['page'] = $page;
 		}
 
-		if ($type) {
+		if ($type !== '' && $type !== '0') {
 			$output['type'] = $type;
 		}
 
-		if ($formId) {
+		if ($formId !== '' && $formId !== '0') {
 			$output['formId'] = $formId;
 		}
 
-		if ($parent) {
+		if ($parent !== '' && $parent !== '0') {
 			$output['parent'] = $parent;
 		}
 
@@ -56,8 +54,6 @@ final class GeneralHelpers
 	 *
 	 * @param string $formId Form ID.
 	 * @param string $type Type key.
-	 *
-	 * @return string
 	 */
 	public static function getSettingsPageUrl(string $formId, string $type): string
 	{
@@ -68,8 +64,6 @@ final class GeneralHelpers
 	 * Method that returns form settings global page url.
 	 *
 	 * @param string $type Type key.
-	 *
-	 * @return string
 	 */
 	public static function getSettingsGlobalPageUrl(string $type): string
 	{
@@ -80,14 +74,12 @@ final class GeneralHelpers
 	 * Method that returns new form page url.
 	 *
 	 * @param string $postType Post type.
-	 *
-	 * @return string
 	 */
 	public static function getNewFormPageUrl(string $postType): string
 	{
 		$output = [];
 
-		if ($postType) {
+		if ($postType !== '' && $postType !== '0') {
 			$output['post_type'] = $postType;
 		}
 
@@ -98,8 +90,6 @@ final class GeneralHelpers
 	 * Method that returns form edit page url.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public static function getFormEditPageUrl(string $formId): string
 	{
@@ -108,8 +98,6 @@ final class GeneralHelpers
 
 	/**
 	 * Method that checks if request is a part of the forms.
-	 *
-	 * @return bool
 	 */
 	public static function isEightshiftFormsAdminPages(): bool
 	{
@@ -125,12 +113,33 @@ final class GeneralHelpers
 	}
 
 	/**
+	 * Method that checks if request is for forms custom post type.
+	 */
+	public static function isEightshiftFormsCpt(): bool
+	{
+		$list = [
+			Config::SLUG_POST_TYPE => 0,
+			Config::SLUG_RESULT_POST_TYPE => 1,
+		];
+
+		$postType = isset($_GET['post_type']) ? \sanitize_text_field(\wp_unslash($_GET['post_type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if (!$postType) {
+			$postType = isset($_GET['post']) ? \get_post_type((int)\sanitize_text_field(\wp_unslash($_GET['post']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		if (!$postType) {
+			return false;
+		}
+
+		return isset($list[$postType]) && \is_admin();
+	}
+
+	/**
 	 * Method that returns form trash action url.
 	 *
 	 * @param string $formId Form ID.
 	 * @param bool $permanent Permanently delete.
-	 *
-	 * @return string
 	 */
 	public static function getFormTrashActionUrl(string $formId, bool $permanent = false): string
 	{
@@ -141,8 +150,6 @@ final class GeneralHelpers
 	 * Method that returns form trash restore action url.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public static function getFormTrashRestoreActionUrl(string $formId): string
 	{
@@ -153,8 +160,6 @@ final class GeneralHelpers
 	 * Minify string
 	 *
 	 * @param string $string String to check.
-	 *
-	 * @return string
 	 */
 	public static function minifyString(string $string): string
 	{
@@ -186,8 +191,6 @@ final class GeneralHelpers
 	 * Output the form type used by checking the post_content and extracting the block used for the integration.
 	 *
 	 * @param string $formId Form ID to check.
-	 *
-	 * @return string
 	 */
 	public static function getFormTypeById(string $formId): string
 	{
@@ -221,6 +224,12 @@ final class GeneralHelpers
 	 */
 	public static function getFormDetails(string $formId): array
 	{
+		static $cache = [];
+
+		if (isset($cache[$formId])) {
+			return $cache[$formId];
+		}
+
 		$output = [
 			Config::FD_FORM_ID => $formId,
 			Config::FD_IS_VALID => false,
@@ -285,7 +294,7 @@ final class GeneralHelpers
 				}
 				break;
 			case Config::INTEGRATION_TYPE_NO_BUILDER:
-				if ($output[Config::FD_TYPE]) {
+				if ($output[Config::FD_TYPE] !== '' && $output[Config::FD_TYPE] !== '0') {
 					$output[Config::FD_IS_VALID] = true;
 
 					if ($output[Config::FD_FIELDS_ONLY]) {
@@ -309,8 +318,14 @@ final class GeneralHelpers
 			'submit' => 1,
 		];
 
+		$hasSteps = false;
+
 		foreach ($output[Config::FD_FIELDS_ONLY] as $item) {
 			$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+
+			if (!$hasSteps && $blockItemName === 'step') {
+				$hasSteps = true;
+			}
 
 			$value = $item['attrs'][Helpers::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
 
@@ -327,10 +342,6 @@ final class GeneralHelpers
 			$output[Config::FD_FIELD_NAMES][] = $value;
 		}
 
-		// Check if this form uses steps.
-		$hasSteps = \array_search($namespace . '/step', \array_column($output[Config::FD_FIELDS_ONLY], 'blockName'), true);
-		$hasSteps = $hasSteps !== false;
-
 		if ($hasSteps) {
 			$stepCurrent = 'step-init';
 
@@ -342,7 +353,7 @@ final class GeneralHelpers
 						'blockName' => "{$namespace}/step",
 						'attrs' => [
 							'stepStepName' => $stepCurrent,
-							'stepStepLabel' => \__('Step init', 'eightshift-forms'),
+							'stepStepLabel' => \__('Starting step', 'eightshift-forms'),
 							'stepStepContent' => '',
 						],
 						'innerBlocks' => [],
@@ -387,6 +398,8 @@ final class GeneralHelpers
 			$output[Config::FD_STEPS_SETUP]['multiflow'] = $output[Config::FD_FIELDS]['innerBlocks'][0]['attrs']["{$type}StepMultiflowRules"] ?? [];
 		}
 
+		$cache[$formId] = $output;
+
 		return $output;
 	}
 
@@ -400,9 +413,7 @@ final class GeneralHelpers
 	 */
 	public static function getFieldDetailsByName(array $params, string $key): array
 	{
-		return \array_values(\array_filter($params, function ($item) use ($key) {
-			return isset($item['name']) && $item['name'] === $key;
-		}))[0] ?? [];
+		return \array_values(\array_filter($params, fn(array $item): bool => isset($item['name']) && $item['name'] === $key))[0] ?? [];
 	}
 
 
@@ -410,8 +421,6 @@ final class GeneralHelpers
 	 * Find email field from params sent by form.
 	 *
 	 * @param array<string, mixed> $params Params to check.
-	 *
-	 * @return string
 	 */
 	public static function getEmailParamsField(array $params): string
 	{
@@ -424,7 +433,7 @@ final class GeneralHelpers
 
 		$field = \array_filter(
 			$params,
-			fn($item) => isset($allowed[$item['name'] ?? ''])
+			fn(array $item): bool => isset($allowed[$item['name'] ?? ''])
 		);
 
 		return \reset($field)['value'] ?? '';
@@ -435,8 +444,6 @@ final class GeneralHelpers
 	 *
 	 * @param string $date Date to convert.
 	 * @param string $separator Date separator.
-	 *
-	 * @return string
 	 */
 	public static function getCorrectLibDateFormats(string $date, string $separator): string
 	{
@@ -498,8 +505,6 @@ final class GeneralHelpers
 	 *
 	 * @param string $name Name of the block/component.
 	 * @param array<string, mixed> $attributes To load in filter.
-	 *
-	 * @return string
 	 */
 	public static function getBlockAdditionalContentViaFilter(string $name, array $attributes): string
 	{
@@ -534,12 +539,12 @@ final class GeneralHelpers
 		$output = \str_replace('>\n\t', '>', $output);
 		$output = \str_replace('\n\t', ' ', $output);
 		$output = \str_replace('\n\t', ' ', $output);
-		$output = \trim(\json_decode($output));
+		$output = \trim((string) \json_decode($output));
 
 		\preg_match_all('/<option value="(.*?)">(.*?)<\/option>/m', $output, $matches, \PREG_SET_ORDER, 0);
 
 		return \array_values(\array_filter(\array_map(
-			static function ($item) {
+			static function (array $item): false|array {
 				$slug = $item[1] ?: '';
 				$label = $item[2] ?: '';
 
@@ -558,8 +563,6 @@ final class GeneralHelpers
 
 	/**
 	 * Is block editor page.
-	 *
-	 * @return boolean
 	 */
 	public static function isBlockEditor(): bool
 	{
@@ -591,16 +594,11 @@ final class GeneralHelpers
 
 		return \array_filter(
 			$params,
-			static function ($item) use ($customFields, $additional) {
+			static function (array $item) use ($customFields, $additional): bool {
 				if (isset($customFields[$item['name'] ?? ''])) {
 					return false;
 				}
-
-				if ($additional && isset($additional[$item['name'] ?? ''])) {
-					return false;
-				}
-
-				return true;
+				return !($additional && isset($additional[$item['name'] ?? '']));
 			}
 		);
 	}
@@ -609,8 +607,6 @@ final class GeneralHelpers
 	 * Check if integration can use sync feature.
 	 *
 	 * @param string $integrationName Integration name.
-	 *
-	 * @return boolean
 	 */
 	public static function canIntegrationUseSync(string $integrationName): bool
 	{
@@ -627,14 +623,10 @@ final class GeneralHelpers
 	 */
 	public static function getBlockLocations(string $formId, string $type): array
 	{
-		switch ($type) {
-			case Config::SLUG_RESULT_POST_TYPE:
-				$outputString = "%\"resultOutputPostId\":\"{$formId}\"%";
-				break;
-			default:
-				$outputString = "%\"formsFormPostId\":\"{$formId}\"%";
-				break;
-		}
+		$outputString = match ($type) {
+			Config::SLUG_RESULT_POST_TYPE => "%\"resultOutputPostId\":\"{$formId}\"%",
+			default => "%\"formsFormPostId\":\"{$formId}\"%",
+		};
 
 		global $wpdb;
 
@@ -657,7 +649,7 @@ final class GeneralHelpers
 		$isDeveloperModeActive = DeveloperHelpers::isDeveloperModeActive();
 
 		return \array_map(
-			function ($item) use ($isDeveloperModeActive) {
+			function ($item) use ($isDeveloperModeActive): array {
 				$id = $item->ID;
 				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 				$title = $isDeveloperModeActive ? "{$id} - {$title}" : $title;
@@ -697,6 +689,6 @@ final class GeneralHelpers
 				'{invalidFieldsArray}' => \__('array of invalid fields', 'eightshift-forms'),
 			],
 		];
-		return isset($data[$type]) ? $data[$type] : [];
+		return $data[$type] ?? [];
 	}
 }

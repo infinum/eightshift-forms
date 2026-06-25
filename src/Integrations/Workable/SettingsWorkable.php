@@ -82,49 +82,30 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 	public const SETTINGS_WORKABLE_LIST_TYPE_KEY = 'workable-list-type';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(SettingsFallbackDataInterface $settingsFallback)
-	{
-		$this->settingsFallback = $settingsFallback;
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY);
 		$subdomain = (bool) SettingsHelpers::getOptionWithConstant(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
-
-		if (!$isUsed || !$apiKey || !$subdomain) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$apiKey || !$subdomain);
 	}
 
 	/**
@@ -172,15 +153,13 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyWorkable(),
@@ -190,7 +169,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getSubdomainWorkable(),
@@ -200,7 +179,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -219,7 +198,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputFieldAfterContent' => 'MB',
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputPlaceholder' => self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,
@@ -228,7 +207,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'select',
@@ -265,14 +244,12 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							'tabLabel' => \__('Geolocation Tags', 'eightshift-forms'),
 							'tabContent' => [
 								[
-									'component' => 'intro',
-									'introSubtitle' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
-									'introIsHighlighted' => true,
+									'component' => 'notice',
+									'noticeContent' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
 								],
 								[
 									'component' => 'textarea',
 									'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY),
-									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Geolocation tags', 'eightshift-forms'),
 									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
@@ -308,7 +285,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'steps',

@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { ResultOutputItemEditor } from './components/result-output-item-editor';
 import { ResultOutputItemOptions } from './components/result-output-item-options';

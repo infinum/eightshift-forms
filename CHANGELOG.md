@@ -46,6 +46,17 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Fixed Friendly Captcha token handling so `One-click` mode reads and resets the correct widget per form.
 - Fixed Friendly Captcha v2 siteverify handling so HTTP 200 responses with `success=false` are treated as failed captcha checks.
 
+## [10.0.0]
+
+### Added
+
+- Compatibility for WordPress 6.9+ - apiVersion 3 blocks.
+
+### Updated
+
+- Updated admin visuals.
+- Reworked all editor options and editor components for all blocks, fields, ...
+
 ## [9.5.3]
 
 ### Fixed
@@ -1933,6 +1944,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 [9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
 [9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0
 [9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0
+[10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...10.0.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
 [9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2
 [9.5.1]: https://github.com/infinum/eightshift-forms/compare/9.5.0...9.5.1

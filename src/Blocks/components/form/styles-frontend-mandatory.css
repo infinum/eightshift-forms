@@ -1,0 +1,7 @@
+@import 'tailwindcss' prefix(esf);
+
+body[data-hide-captcha-badge='true'] {
+	.grecaptcha-badge {
+		@apply esf:invisible!;
+	}
+}

@@ -37,13 +37,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsTalentlyft::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $talentlyftClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $talentlyftClient
+		protected ClientInterface $talentlyftClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +62,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->talentlyftClient = $talentlyftClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +107,9 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If test API fails.
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

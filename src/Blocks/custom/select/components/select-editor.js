@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { select } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter } from '@eightshift/frontend-libs-tailwind/scripts';
 import { SelectEditor as SelectEditorComponent } from '../../../components/select/components/select-editor';
 import globalManifest from '../../../manifest.json';
+import manifest from '../manifest.json';
 
 export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
-	const manifest = select(STORE_NAME).getBlock('select');
-
 	const { template } = manifest;
 
 	const [parentBlock, setParentBlock] = useState([]);

@@ -32,13 +32,6 @@ class TestApiActiveCampaignRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for ActiveCampaign data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $activeCampaignClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -50,12 +43,11 @@ class TestApiActiveCampaignRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		ClientInterface $activeCampaignClient
+		protected ClientInterface $activeCampaignClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->activeCampaignClient = $activeCampaignClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class TestApiActiveCampaignRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

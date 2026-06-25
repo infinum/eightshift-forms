@@ -45,18 +45,32 @@ final class SettingsOutputHelpers
 	/**
 	 * No active feature settings output.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<int, array<string, list<array<string, list<array<string, string>>|string>>|string>>
 	 */
 	public static function getNoActiveFeature(): array
 	{
 		return [
 			[
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Feature not active', 'eightshift-forms'),
-				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Oh no it looks like this feature is not active, please go to your <a href="%s">dashboard</a> and activate it.', 'eightshift-forms'), GeneralHelpers::getSettingsGlobalPageUrl(Config::SLUG_ADMIN_DASHBOARD)),
-				'highlightedContentIcon' => 'tools',
+				'component' => 'layout',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Feature not active', 'eightshift-forms'),
+						'introSubtitle' => \__('Oh no it looks like this feature is not active, please go to your dashboard and activate it.', 'eightshift-forms'),
+						'introIcon' => 'tools',
+						'introType' => 'highlighted',
+						'introActions' => [
+							[
+								'component' => 'button',
+								'buttonLabel' => \__('Go to dashboard', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl(Config::SLUG_ADMIN_DASHBOARD),
+							],
+						],
+					],
+				],
 			],
+
 		];
 	}
 
@@ -65,7 +79,7 @@ final class SettingsOutputHelpers
 	 *
 	 * @param string $type Settings/Integration type.
 	 *
-	 * @return array<int, array<string, string>>
+	 * @return array<int, array<string, list<array<string, list<array<string, string>>|string>>|string>>
 	 */
 	public static function getNoValidGlobalConfig(string $type): array
 	{
@@ -77,12 +91,26 @@ final class SettingsOutputHelpers
 
 		return [
 			[
-				'component' => 'highlighted-content',
-				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
-				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $title, GeneralHelpers::getSettingsGlobalPageUrl($type)),
-				'highlightedContentIcon' => 'tools',
-			],
+				'component' => 'layout',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \__('Some config required', 'eightshift-forms'),
+						// translators: %s will be replaced with the integration name.
+						'introSubtitle' => \sprintf(\__('Before using %s you need to configure it in global settings.', 'eightshift-forms'), $title),
+						'introIcon' => 'tools',
+						'introType' => 'highlighted',
+						'introActions' => [
+							[
+								'component' => 'button',
+								'buttonLabel' => \__('Go to global settings', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getSettingsGlobalPageUrl($type),
+							],
+						],
+					],
+				],
+			]
 		];
 	}
 
@@ -94,10 +122,8 @@ final class SettingsOutputHelpers
 	public static function getDataMappedIntegrationMissingFields(): array
 	{
 		return [
-			'component' => 'intro',
-			'introSubtitle' => \__("Your form is missing form fields, please edit your form before making integration connection!", 'eightshift-forms'),
-			'introIsHighlighted' => true,
-			'introIsHighlightedImportant' => true,
+			'component' => 'notice',
+			'noticeContent' => \__('Your form is missing form fields, please edit your form before making integration connection!', 'eightshift-forms'),
 		];
 	}
 
@@ -112,13 +138,13 @@ final class SettingsOutputHelpers
 	{
 		return [
 			'component' => 'layout',
-			'layoutType' => 'layout-v-stack-card',
 			'layoutContent' => [
 				[
 					'component' => 'intro',
 					'introTitle' => \__('Disclaimer', 'eightshift-forms'),
 					// translators: %s will be replaced with the type of disclaimer.
 					'introSubtitle' => \sprintf(\__("Eightshift Forms doesn't configure the %s or any other third-party tools. However, enabling this feature adds necessary configurations in the backend for everything to function correctly.", 'eightshift-forms'), \esc_html($type)),
+					'introTitleType' => 'medium',
 				],
 			],
 		];
@@ -142,10 +168,10 @@ final class SettingsOutputHelpers
 		string $label,
 		string $help = ''
 	): array {
-		$options = static::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
+		$options = self::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
 
-		$internalHelp = !empty($help) ? $help . '<br/><br/>' : '';
-		$optionsHelp = !empty($options['help']) ? "{$internalHelp}{$options['help']}" : $help;
+		$internalHelp = $help === '' || $help === '0' ? '' : $help . '<br/><br/>';
+		$optionsHelp = empty($options['help']) ? $help : "{$internalHelp}{$options['help']}";
 
 		return [
 			'component' => 'input',
@@ -177,7 +203,7 @@ final class SettingsOutputHelpers
 		string $label,
 		string $help = ''
 	): array {
-		$options = static::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
+		$options = self::getOptionFieldWithConstant($constantValue, $optionName, $constantName);
 
 		$general = [
 			'component' => 'input',
@@ -238,13 +264,13 @@ final class SettingsOutputHelpers
 		string $optionName,
 		string $constantName
 	): array {
-		$isDisabled = !empty($constantValue);
+		$isDisabled = $constantValue !== '' && $constantValue !== '0';
 		$value = '';
 		$isConstantValueUsed = false;
 
 		$option = SettingsHelpers::getOptionValue($optionName);
 
-		if (empty($constantValue)) {
+		if ($constantValue === '' || $constantValue === '0') {
 			$value = $option;
 		} else {
 			$value = $constantValue;
@@ -253,11 +279,11 @@ final class SettingsOutputHelpers
 
 		$helpOutput = '';
 
-		if ($constantName) {
+		if ($constantName !== '' && $constantName !== '0') {
 			// translators: %s will be replaced with global variable name.
 			$helpOutput .= \sprintf(\__('
-				<details class="is-filter-applied">
-					<summary>Available global variables</summary>
+				<details class="esf-is-filter-applied">
+					<summary class="esf-focus-ring">Available global variables</summary>
 					<ul>
 						<li>%s</li>
 					</ul>
@@ -266,7 +292,7 @@ final class SettingsOutputHelpers
 				</details>', 'eightshift-forms'), $constantName);
 
 			if ($isConstantValueUsed) {
-				$helpOutput = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
+				$helpOutput = '<span class="esf-is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
 			}
 		}
 
@@ -290,13 +316,13 @@ final class SettingsOutputHelpers
 	public static function getTestApiConnection(string $key): array
 	{
 		return [
-			'component' => 'submit',
-			'submitValue' => \__('Test API connection', 'eightshift-forms'),
-			'submitVariant' => 'outline',
-			'submitAttrs' => [
+			'component' => 'button',
+			'buttonLabel' => \__('Test API connection', 'eightshift-forms'),
+			'buttonVariant' => 'primaryOutline',
+			'buttonAttrs' => [
 				UtilsHelper::getStateAttribute('testApiType') => $key,
 			],
-			'additionalClass' => UtilsHelper::getStateSelectorAdmin('testApi') . ' es-submit--api-test',
+			'additionalClass' => UtilsHelper::getStateSelectorAdmin('testApi'),
 		];
 	}
 
@@ -318,7 +344,6 @@ final class SettingsOutputHelpers
 
 		return [
 			'component' => 'layout',
-			'layoutType' => 'layout-v-stack-clean-full',
 			'layoutContent' => [
 				[
 					'component' => 'checkboxes',
@@ -337,24 +362,26 @@ final class SettingsOutputHelpers
 					]
 				],
 				$allowIsChecked ? [
-					'component' => 'intro',
-					'introSubtitle' => \__('Make sure you turn off the Oauth connection when the connection is created or it will turn off automatically after 5 minutes if your Cron events are set correctly. ', 'eightshift-forms'),
-					'introIsHighlighted' => true,
-					'introIsHighlightedImportant' => true,
+					'component' => 'notice',
+					'noticeContent' => \__('Make sure you turn off the Oauth connection when the connection is created or it will turn off automatically after 5 minutes if your Cron events are set correctly. ', 'eightshift-forms'),
 				] : [],
 				[
 					'component' => 'card-inline',
 					'cardInlineTitle' => \__('Connect with Oauth', 'eightshift-forms'),
-					'cardInlineSubTitle' => $token ? \__('Oauth connected.', 'eightshift-forms') : \__('Oauth connection required!', 'eightshift-forms'),
+					'cardInlineSubTitle' => $token !== '' && $token !== '0' ? \__('Oauth connected.', 'eightshift-forms') : \__('Oauth connection required!', 'eightshift-forms'),
 					'cardInlineRightContent' => [
 						[
-							'component' => 'submit',
-							'submitValue' => \__('Oauth Connect', 'eightshift-forms'),
-							'submitVariant' => $token ? 'success' : 'error',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $url,
-							'submitIsDisabled' => $allowIsChecked ? false : true,
+							'component' => 'status-light',
+							'statusLightType' => $token !== '' && $token !== '0' ? 'success' : 'error',
 						],
+						[
+							'component' => 'button',
+							'buttonLabel' => \__('Oauth Connect', 'eightshift-forms'),
+							'buttonVariant' => $token !== '' && $token !== '0' ? 'primary' : 'primaryOutline',
+							'buttonUrl' => $url,
+							'buttonIsDisabled' => !$allowIsChecked,
+						],
+
 					],
 				],
 				$msg ? [
@@ -368,25 +395,22 @@ final class SettingsOutputHelpers
 	// --------------------------------------------------
 	// Partials output helpers.
 	// --------------------------------------------------
-
 	/**
 	 * Get response tags output copy.
 	 *
 	 * @param string $formFieldTags Response tags to output.
-	 *
-	 * @return string
 	 */
 	public static function getPartialFieldTags(string $formFieldTags): string
 	{
-		if (!$formFieldTags) {
+		if ($formFieldTags === '' || $formFieldTags === '0') {
 			return '';
 		}
 
 		// translators: %s will be replaced with form field names.
 		return \sprintf(\__('
 			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
-			<details class="is-filter-applied">
-				<summary>Available tags</summary>
+			<details class="esf-is-filter-applied">
+				<summary class="esf-focus-ring">Available tags</summary>
 				<ul>
 					%s
 				</ul>
@@ -399,19 +423,17 @@ final class SettingsOutputHelpers
 	 * Get response tags copy output.
 	 *
 	 * @param string $formResponseTags Response tags to output.
-	 *
-	 * @return string
 	 */
 	public static function getPartialResponseTags(string $formResponseTags): string
 	{
-		if (!$formResponseTags) {
+		if ($formResponseTags === '' || $formResponseTags === '0') {
 			return '';
 		}
 
 		// translators: %s will be replaced with integration response tags.
 		return \sprintf(\__('
-			<details class="is-filter-applied">
-				<summary>Response tags</summary>
+			<details class="esf-is-filter-applied">
+				<summary class="esf-focus-ring">Response tags</summary>
 				<ul>
 					%s
 				</ul>
@@ -425,8 +447,6 @@ final class SettingsOutputHelpers
 	 *
 	 * @param array<int, string> $fieldNames Form field IDs.
 	 * @param string $wrapper Wrapper for the field name.
-	 *
-	 * @return string
 	 */
 	public static function getPartialFormFieldNames(array $fieldNames, string $wrapper = '{}'): string
 	{
@@ -434,14 +454,10 @@ final class SettingsOutputHelpers
 
 		// Populate output.
 		foreach ($fieldNames as $item) {
-			switch ($wrapper) {
-				case '$':
-					$output[] = "<li><code>$" . $item . "</code></li>";
-					break;
-				default:
-					$output[] = "<li><code>{" . $item . "}</code></li>";
-					break;
-			}
+			$output[] = match ($wrapper) {
+				'$' => "<li><code>$" . $item . "</code></li>",
+				default => "<li><code>{" . $item . "}</code></li>",
+			};
 		}
 
 		return \implode("\n", $output);
@@ -451,8 +467,6 @@ final class SettingsOutputHelpers
 	 * Get all field names from the form.
 	 *
 	 * @param string $formType Form type to check.
-	 *
-	 * @return string
 	 */
 	public static function getPartialFormResponseTags(string $formType): string
 	{
@@ -469,8 +483,6 @@ final class SettingsOutputHelpers
 	 * Settings output data deactivated integration.
 	 *
 	 * @param string $key Key to return.
-	 *
-	 * @return string
 	 */
 	public static function getPartialDeactivatedIntegration(string $key): string
 	{

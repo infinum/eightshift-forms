@@ -23,7 +23,7 @@
 		"adminListingTopItems": {
 			"type": "array"
 		},
-		"adminListingPagination": {
+		"adminListingData": {
 			"type": "array"
 		}
 	}

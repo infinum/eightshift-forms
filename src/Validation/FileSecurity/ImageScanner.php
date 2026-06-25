@@ -22,7 +22,7 @@ final class ImageScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const RASTER_MIMES = [
+	private const array RASTER_MIMES = [
 		'image/jpeg',
 		'image/png',
 		'image/gif',
@@ -37,7 +37,7 @@ final class ImageScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const SVG_MIMES = [
+	private const array SVG_MIMES = [
 		'image/svg+xml',
 		'image/svg',
 	];
@@ -48,7 +48,7 @@ final class ImageScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const SVG_DANGER_PATTERNS = [
+	private const array SVG_DANGER_PATTERNS = [
 		'<script',
 		'<foreignobject',
 		'<iframe',
@@ -117,7 +117,7 @@ final class ImageScanner implements FileSecurityScannerInterface
 
 		$haystack = \strtolower($contents);
 		foreach (self::SVG_DANGER_PATTERNS as $pattern) {
-			if (\strpos($haystack, $pattern) !== false) {
+			if (\str_contains($haystack, $pattern)) {
 				return 'validationFileImageUnsafe';
 			}
 		}

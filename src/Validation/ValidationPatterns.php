@@ -42,6 +42,7 @@ class ValidationPatterns
 	 * Custom validation patterns - private.
 	 */
 	public const VALIDATION_PATTERNS_PRIVATE = [
+		// phpcs:disable Generic.Files.LineLength.TooLong
 		[
 			'value' => "(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$",
 			'label' => 'momentsEmail',
@@ -52,6 +53,7 @@ class ValidationPatterns
 			'label' => 'momentsNumber',
 			'output' => '123456789',
 		],
+		// phpcs:enable Generic.Files.LineLength.TooLong
 	];
 
 	/**
@@ -62,7 +64,7 @@ class ValidationPatterns
 	public static function getValidationPatternsEditor(): array
 	{
 		return \array_map(
-			static function ($item) {
+			static function (array $item): array {
 				$label = $item['label'] ?? '';
 
 				// Output label as value for enum.
@@ -86,9 +88,7 @@ class ValidationPatterns
 	{
 		$patterns = \array_filter(
 			static::getValidationPatterns(),
-			static function ($item) use ($pattern) {
-				return $item['label'] === $pattern;
-			}
+			static fn(array $item): bool => $item['label'] === $pattern
 		);
 
 		$patterns = \reset($patterns);
@@ -121,8 +121,13 @@ class ValidationPatterns
 		if ($userPatterns) {
 			foreach ($userPatterns as $pattern) {
 				$pattern = \explode(' : ', $pattern);
-
-				if (!isset($pattern[0]) || !isset($pattern[1]) || !isset($pattern[2])) {
+				if (!isset($pattern[0])) {
+					continue;
+				}
+				if (!isset($pattern[1])) {
+					continue;
+				}
+				if (!isset($pattern[2])) {
 					continue;
 				};
 

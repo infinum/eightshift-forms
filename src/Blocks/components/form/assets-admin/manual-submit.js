@@ -15,7 +15,7 @@ export class ManualSubmit {
 		this.importErrorMsg = options.importErrorMsg;
 	}
 
-	init () {
+	init() {
 		[...document.querySelectorAll(this.triggerSelector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
@@ -65,10 +65,7 @@ export class ManualSubmit {
 			const response = await fetch(this.state.getRestUrlByType('prefixSubmit', this.FORM_TYPE), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-			} = parsedResponse;
+			const { message, status } = parsedResponse;
 
 			this.utils.hideLoader(this.FORM_ID);
 			this.utils.setGlobalMsg(this.FORM_ID, message, status);
@@ -76,14 +73,14 @@ export class ManualSubmit {
 			setTimeout(() => {
 				this.utils.unsetGlobalMsg(this.FORM_ID);
 			}, 6000);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'adminManualSubmit', name, message));
 		}
-	};
+	}
 
 	/**
 	 * Get integration data.
@@ -110,7 +107,7 @@ export class ManualSubmit {
 
 		const formData = new FormData();
 
-		for(const [name, value] of Object.entries(params)) {
+		for (const [name, value] of Object.entries(params)) {
 			formData.append(name, JSON.stringify(value));
 
 			if (name === this.state.getStateParam('type')) {

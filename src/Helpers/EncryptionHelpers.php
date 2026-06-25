@@ -20,10 +20,8 @@ class EncryptionHelpers
 	 *
 	 * @param string $value Value used.
 	 * @param string $action Action used.
-	 *
-	 * @return string|bool
 	 */
-	public static function encryptor(string $value, string $action = 'encrypt')
+	public static function encryptor(string $value, string $action = 'encrypt'): string|false
 	{
 		$filterNameSecretKey = HooksHelpers::getFilterName(['encryption', 'secretKey']);
 		$secretKey = \apply_filters($filterNameSecretKey, \wp_salt()); // user define private key.
@@ -32,8 +30,8 @@ class EncryptionHelpers
 		$secretIv = \apply_filters($filterNameSecretIv, \wp_salt('SECURE_AUTH_KEY')); // user define secret key.
 
 		$encryptMethod = 'AES-256-CBC';
-		$key = \hash('sha256', $secretKey);
-		$iv = \substr(\hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
+		$key = \hash('sha256', (string) $secretKey);
+		$iv = \substr(\hash('sha256', (string) $secretIv), 0, 16); // sha256 is hash_hmac_algo.
 
 		if ($action === 'encrypt') {
 			$output = \openssl_encrypt($value, $encryptMethod, $key, 0, $iv);
@@ -48,10 +46,8 @@ class EncryptionHelpers
 	 * Decrypt method.
 	 *
 	 * @param string $value Value used.
-	 *
-	 * @return string|bool
 	 */
-	public static function decryptor(string $value)
+	public static function decryptor(string $value): string|false
 	{
 		return self::encryptor($value, 'decryptor');
 	}

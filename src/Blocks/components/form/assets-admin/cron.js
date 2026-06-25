@@ -23,11 +23,10 @@ export class Cron {
 
 	async submit(target) {
 		const formId = this.state.getFormIdByElement(target);
-		const field = this.state.getFormFieldElementByChild(target);
 
 		const formData = new FormData();
 
-		formData.append('type', field.getAttribute(this.state.getStateAttribute('cronType')));
+		formData.append('type', target.getAttribute(this.state.getStateAttribute('cronType')));
 
 		this.utils.showLoader(formId);
 

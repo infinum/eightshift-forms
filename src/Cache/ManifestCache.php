@@ -15,6 +15,7 @@ namespace EightshiftForms\Cache;
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * The project cache class.
@@ -47,8 +48,6 @@ class ManifestCache extends AbstractManifestCache
 
 	/**
 	 * Get cache version.
-	 *
-	 * @return string
 	 */
 	public function getVersion(): string
 	{
@@ -57,9 +56,8 @@ class ManifestCache extends AbstractManifestCache
 
 	/**
 	 * Get cache for geolocation
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	public function useGeolocation(): bool
 	{
 		return true;
@@ -70,6 +68,7 @@ class ManifestCache extends AbstractManifestCache
 	 *
 	 * @return array<string, array<mixed>> Array of cache builder.
 	 */
+	#[Override]
 	protected function getCacheBuilder(): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;

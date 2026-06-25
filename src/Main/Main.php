@@ -16,6 +16,7 @@ namespace EightshiftForms\Main;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
+use Override;
 
 /**
  * The main start class.
@@ -34,19 +35,16 @@ class Main extends AbstractMain
 	 * The register_service method will call the register() method in every service class,
 	 * which holds the actions and filters - effectively replacing the need to manually add
 	 * them in one place.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('plugins_loaded', [$this, 'registerServices']);
+		\add_action('plugins_loaded', $this->registerServices(...));
 	}
 
 	/**
 	 * Register all the services and trigger custom action hook used for addons.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function registerServices(): void
 	{
 		// Define global variable for all public filters/actions.

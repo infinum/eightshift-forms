@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Airtable
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Integrations\ClientInterface;

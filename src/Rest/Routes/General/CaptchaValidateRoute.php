@@ -30,13 +30,6 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'captcha';
 
 	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -48,12 +41,11 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		CaptchaInterface $captcha
+		protected CaptchaInterface $captcha
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->captcha = $captcha;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

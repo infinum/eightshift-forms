@@ -88,10 +88,10 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$output = $this->getItems();
 
 		// Check if form exists in cache.
-		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId])) {
+		if ($output === [] || !isset($output[$itemId]) || empty($output[$itemId])) {
 			$fields = $this->getActiveCampaignListFields($itemId);
 
-			if ($fields) {
+			if ($fields !== []) {
 				$output[$itemId]['fields'] = $fields;
 
 				\set_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
@@ -175,7 +175,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$tagId = $this->getExistingTagId($tag);
 
 		// If tag is missing create new using api.
-		if (!$tagId) {
+		if ($tagId === '' || $tagId === '0') {
 			$tagId = $this->createNewTag($tag);
 		}
 
@@ -269,8 +269,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 * Check if tag exist by returning tag ID from api.
 	 *
 	 * @param string $tag Tag name.
-	 *
-	 * @return string
 	 */
 	private function getExistingTagId(string $tag): string
 	{
@@ -299,18 +297,13 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			// Find tag id from array.
 			$tagId = \array_filter(
 				$body['tags'],
-				static function ($item) use ($tag) {
-					return $item['tag'] === $tag && $item['tagType'] === 'contact';
-				}
+				static fn(array $item): bool => $item['tag'] === $tag && $item['tagType'] === 'contact'
 			);
 
 			$tagId = \array_values($tagId);
 
 			return $tagId[0]['id'] ?? '';
 		}
-
-		// Output error.
-		ApiHelpers::getIntegrationErrorInternalOutput($details);
 
 		return '';
 	}
@@ -319,7 +312,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 * Create a new tag via api.
 	 *
 	 * @param string $tag Tag name.
-	 * @return string
 	 */
 	private function createNewTag(string $tag): string
 	{
@@ -359,45 +351,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			return $body['id'] ?? '';
 		}
 
-		// Output error.
-		ApiHelpers::getIntegrationErrorInternalOutput($details);
-
 		return '';
-	}
-
-	/**
-	 * Map service messages with our own.
-	 *
-	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
-	 */
-	private function getErrorMsg(array $body): string // @phpstan-ignore-line
-	{
-		$msg = '';
-		$code = '';
-
-		if (isset($body[0]['code'])) {
-			$code = $body[0]['code'] ?? '';
-			$msg = $body[0]['error'] ?? '';
-		}
-
-		if (!$msg) {
-			$msg = $code;
-		}
-
-		switch ($msg) {
-			case 'contact_email_was_not_provided':
-				return 'activeCampaignInvalidEmailError';
-			case 'duplicate':
-				return 'activeCampaignDuplicateError';
-			case 'activeCampaign500':
-				return 'activeCampaign500Error';
-			case 'activeCampaignForbidden':
-				return 'activeCampaignForbiddenError';
-			default:
-				return 'submitWpError';
-		}
 	}
 
 	/**
@@ -407,12 +361,10 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getHeaders(): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'Api-Token' => $this->getApiKey(),
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -422,7 +374,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getActiveCampaignListFields(string $listId)
+	private function getActiveCampaignListFields(string $listId): array
 	{
 		$url = "{$this->getBaseUrl()}forms/{$listId}";
 
@@ -567,7 +519,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			if (isset($standardFields[$name])) {
 				// On full name explode first space and output it as first and last name.
 				if ($name === 'fullName') {
-					$value = \explode(' ', $value, 2);
+					$value = \explode(' ', (string) $value, 2);
 					$output['firstName'] = $value[0] ?? '';
 					$output['lastName'] = $value[1] ?? '';
 				} else {
@@ -587,8 +539,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 	/**
 	 * Return ActiveCampaign base url.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(): string
 	{
@@ -599,8 +549,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{
@@ -609,8 +557,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 	/**
 	 * Return Api Url from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiUrl(): string
 	{

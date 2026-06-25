@@ -20,19 +20,13 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class IntegrationItemsPardotRoute
  */
 class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable for Pardot data.
-	 *
-	 * @var PardotClientInterface
-	 */
-	protected $pardotClient;
-
 	/**
 	 * Route slug.
 	 */
@@ -60,19 +54,17 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		PardotClientInterface $pardotClient
+		protected PardotClientInterface $pardotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->pardotClient = $pardotClient;
 	}
 
 	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
+				 * Returns allowed methods for this route.
+				 */
+				#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +72,6 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -124,7 +114,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 
 		$items = $this->pardotClient->getItems();
 
-		if (!$items) {
+		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('integrationItemsMissing'),
@@ -137,7 +127,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 		}
 
 		$items = \array_filter(\array_values(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$id = $item['id'] ?? '';
 
 				if ($id) {

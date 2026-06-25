@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "select",
 	"title": "Select",
 	"description" : "An item selection field",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-select"
+		"src": "select"
 	},
 	"keywords": [
 		"select"

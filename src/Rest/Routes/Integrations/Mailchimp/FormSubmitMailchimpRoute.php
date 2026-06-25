@@ -37,13 +37,6 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsMailchimp::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Mailchimp data.
-	 *
-	 * @var MailchimpClientInterface
-	 */
-	protected $mailchimpClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		MailchimpClientInterface $mailchimpClient
+		protected MailchimpClientInterface $mailchimpClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +62,6 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->mailchimpClient = $mailchimpClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +107,9 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Mailchimp is missing config.
 	 * @throws DisabledIntegrationException If Mailchimp is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

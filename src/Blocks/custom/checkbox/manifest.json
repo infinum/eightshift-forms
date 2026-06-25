@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "checkbox",
 	"title": "Checkbox",
 	"description" : "Simple true/false toggle",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-checkbox"
+		"src": "checkbox"
 	},
 	"keywords": [
 		"checkbox"

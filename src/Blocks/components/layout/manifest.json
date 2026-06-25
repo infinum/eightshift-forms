@@ -3,28 +3,17 @@
 	"componentName": "layout",
 	"title": "Layout",
 	"componentClass": "es-layout",
-	"example": {
-		"attributes": {
-			"layoutType": "layout-grid-3",
-			"layoutTag": "div",
-			"layoutUse": true
-		}
-	},
 	"attributes": {
 		"layoutContent": {
 			"type": "string"
 		},
-		"layoutType": {
-			"type": "string",
-			"default": "layout-grid-3"
-		},
-		"layoutTag": {
-			"type": "string",
-			"default": "div"
-		},
-		"layoutUse": {
+		"layoutWithBg": {
 			"type": "boolean",
 			"default": true
+		},
+		"layoutType": {
+			"type": "string",
+			"default": "layout-grid-full"
 		}
 	}
 }

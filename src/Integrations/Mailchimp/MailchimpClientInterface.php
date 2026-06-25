@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Mailchimp
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Integrations\ClientInterface;

@@ -37,13 +37,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsPardot::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Pardot data.
-	 *
-	 * @var PardotClientInterface
-	 */
-	protected $pardotClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
@@ -61,7 +54,7 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		PardotClientInterface $pardotClient
+		protected PardotClientInterface $pardotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
@@ -69,7 +62,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->pardotClient = $pardotClient;
 	}
 
 	/**
@@ -84,8 +76,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -116,9 +106,9 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Pardot is missing config.
 	 * @throws DisabledIntegrationException If Pardot is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPardot::SETTINGS_PARDOT_SKIP_INTEGRATION_KEY, SettingsPardot::SETTINGS_PARDOT_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);

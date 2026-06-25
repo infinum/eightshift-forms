@@ -27,8 +27,6 @@ interface LabelsInterface
 	 *
 	 * @param string $key Label key.
 	 * @param string $formId Form ID.
-	 *
-	 * @return string
 	 */
 	public function getLabel(string $key, string $formId = ''): string;
 }

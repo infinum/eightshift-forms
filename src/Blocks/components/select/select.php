@@ -33,7 +33,7 @@ $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder',
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
 $selectMinCount = Helpers::checkAttr('selectMinCount', $attributes, $manifest);
 $selectMaxCount = Helpers::checkAttr('selectMaxCount', $attributes, $manifest);
-$selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
+$selectTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
 
@@ -41,9 +41,9 @@ $selectId = $selectName . '-' . Helpers::getUnique();
 $selectHideLabel = false;
 $selectFieldLabel = $attributes[Helpers::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
 
-$selectClass = Helpers::classnames([
+$selectClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'select'),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -62,6 +62,11 @@ if ($selectIsMultiple) {
 	if ($selectMaxCount) {
 		$selectAttrs[UtilsHelper::getStateAttribute('selectMaxCount')] = esc_attr($selectMaxCount);
 	}
+}
+$selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [], 'select');
+
+if ($selectOutput !== '' && $selectOutput !== '0') {
+	$selectAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $selectOutput;
 }
 
 $placeholderLabel = '';
@@ -92,7 +97,6 @@ if ($selectIsRequired) {
 
 $selectAttrs['aria-invalid'] = 'false';
 
-
 // Additional content filter.
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('select', $attributes);
 
@@ -102,7 +106,7 @@ $select = '
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
 		' . disabled($selectIsDisabled, true, false) . '
-		' . Helpers::getAttrsOutput($selectAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($selectAttrs)) . '
 	>
 		' . $placeholder . '
 		' . $selectContent . '

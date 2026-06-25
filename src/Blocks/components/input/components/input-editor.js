@@ -1,24 +1,10 @@
-import React from 'react';
-import classnames from 'classnames';
-import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { usePreventSaveOnMissingProps } from './../../utils';
+import manifest from '../manifest.json';
 
 export const InputEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('input');
-
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
@@ -27,13 +13,10 @@ export const InputEditor = (attributes) => {
 	const inputMin = checkAttr('inputMin', attributes, manifest);
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
+	const inputIsDisabled = checkAttr('inputIsDisabled', attributes, manifest);
+	const inputIsRequired = checkAttr('inputIsRequired', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
-
-	const inputClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
 
 	let additionalProps = {};
 
@@ -47,36 +30,23 @@ export const InputEditor = (attributes) => {
 	}
 
 	const input = (
-		<>
-			<input
-				className={inputClass}
-				value={inputValue}
-				placeholder={inputPlaceholder}
-				type={inputType}
-				readOnly
-				{...additionalProps}
-			/>
-
-			<MissingName value={inputName} />
-
-			{inputName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
-		</>
+		<input
+			className='esf-input'
+			value={inputValue}
+			placeholder={inputPlaceholder}
+			type={inputType}
+			disabled
+			{...additionalProps}
+		/>
 	);
 
 	return (
-		<>
-			<FieldEditor
-				{...props('field', attributes, {
-					fieldContent: input,
-					fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
-				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
-			/>
-		</>
+		<FieldEditor
+			{...props('field', attributes, {
+				fieldContent: input,
+				fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
+			})}
+			statusSlot={[!inputName && 'missingName', inputIsDisabled && 'disabled', inputIsRequired && 'required', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)}
+		/>
 	);
 };
