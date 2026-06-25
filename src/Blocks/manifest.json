@@ -1,8 +1,8 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/globalManifest.json",
 	"namespace": "eightshift-forms",
-	"background": "#F4FAFA",
-	"foreground": "#79697b",
+	"background": "#79697b",
+	"foreground": "#ffffff",
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "admin.php?page=es-settings",
 	"globalSettingsPageUrl": "admin.php?page=es-settings-global",
