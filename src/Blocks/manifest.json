@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/globalManifest.json",
 	"namespace": "eightshift-forms",
 	"background": "#F4FAFA",
-	"foreground": "#29A3A3",
+	"foreground": "#79697b",
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "admin.php?page=es-settings",
 	"globalSettingsPageUrl": "admin.php?page=es-settings-global",
@@ -42,16 +42,7 @@
 		],
 		"fieldsIntegration": ["eightshift-forms/step"],
 		"fieldsWithChildren": ["eightshift-forms/checkbox", "eightshift-forms/radio", "eightshift-forms/select-option"],
-		"integrationsNoBuilder": [
-			"eightshift-forms/mailer",
-			"eightshift-forms/jira",
-			"eightshift-forms/corvus",
-			"eightshift-forms/paycek",
-			"eightshift-forms/calculator",
-			"eightshift-forms/pipedrive",
-			"eightshift-forms/nationbuilder",
-			"eightshift-forms/pardot"
-		],
+		"integrationsNoBuilder": ["eightshift-forms/mailer", "eightshift-forms/jira", "eightshift-forms/corvus", "eightshift-forms/paycek", "eightshift-forms/calculator", "eightshift-forms/pipedrive", "eightshift-forms/nationbuilder", "eightshift-forms/pardot"],
 		"integrationsBuilder": [
 			"eightshift-forms/mailchimp",
 			"eightshift-forms/greenhouse",

@@ -69,7 +69,7 @@ export const ResultOutputItemEditor = ({ attributes }) => {
 	}
 
 	return (
-		<div className={clsx(blockClass, 'esf:p-8 esf:border esf:border-current/10 esf:border-dashed esf:rounded-2xl')}>
+		<div className={clsx(blockClass, 'esf:p-8 esf:border esf:border-current/10 esf:border-dashed esf:rounded-md')}>
 			<div className='es:font-sans es:text-sm'>
 				<ContainerGroup>
 					<Container

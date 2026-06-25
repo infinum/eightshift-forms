@@ -47,7 +47,7 @@ $svgClasses = Helpers::clsx([
 
 ?>
 
-<div class="esf:flex esf:items-center esf:gap-10 <?php echo esc_attr($noticeTypeClass); ?> esf:border esf:p-12 esf:text-lg esf:rounded-xl esf:inset-shadow-sm esf:inset-shadow-white/30">
+<div class="esf:flex esf:items-center esf:gap-10 <?php echo esc_attr($noticeTypeClass); ?> esf:border esf:p-12 esf:text-lg esf:rounded-md esf:inset-shadow-sm esf:inset-shadow-white/30">
 	<div class="<?php echo esc_attr($svgClasses); ?>">
 		<?php echo wp_kses_post($noticeIcon);
 		?>

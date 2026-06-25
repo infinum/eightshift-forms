@@ -59,7 +59,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		$outputIntegrations = \array_values(\array_filter(\array_map(
-			function (int|string $key, int $value) {
+			function (int|string $key, array $value) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';

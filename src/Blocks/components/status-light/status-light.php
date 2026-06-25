@@ -21,7 +21,7 @@ $iconColorClass = match ($statusLightType) {
 	default => 'esf:bg-yellow-500 esf:border-yellow-600 esf:shadow-yellow-700/30',
 };
 $iconClass = Helpers::clsx([
-	'esf:size-20 esf:rounded-full esf:border esf:bg-radial esf:from-white/25 esf:to-white/0 esf:inset-shadow-sm esf:inset-shadow-black/5 esf:shadow-sm',
+	'esf:size-10 esf:rounded-full esf:border esf:bg-radial esf:from-white/25 esf:to-white/0 esf:inset-shadow-sm esf:inset-shadow-black/5 esf:shadow-sm',
 	$iconColorClass,
 ]);
 

@@ -174,7 +174,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.<br /><br />
 									If you need to include some of the submitted data, use template tags (e.g. <code>{field-name}</code>).<br />
 									<details class="esf-is-filter-applied">
-										<summary>Available tags</summary>
+										<summary class="esf-focus-ring">Available tags</summary>
 										<ul>
 											%1$s
 										</ul>

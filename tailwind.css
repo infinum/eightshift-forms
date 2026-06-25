@@ -24,8 +24,8 @@
 
 	/* Safari-only */
 	@supports (font: -apple-system-body) {
-		outline: 2px solid #ffffff !important;
-		box-shadow: 0 0 0 3px #000000 !important;
+		outline: 2px solid var(--esf-color-white) !important;
+		box-shadow: 0 0 0 3px var(--esf-color-mauve-500) !important;
 	}
 	/* stylelint-enable declaration-no-important */
 }
@@ -37,7 +37,8 @@
 }
 
 @custom-variant is-check {
-	&:is(.es-checkbox__input, .es-checkbox) {
+	&:is(.es-checkbox__input, .es-checkbox),
+	&:is(.es-radio__input, .es-radio) {
 		@slot;
 	}
 }
@@ -99,9 +100,11 @@
 .esf-focus-ring,
 .esf-focus-ring a,
 .esf-focus-ring button {
-	@apply esf:focus-visible:outline-auto!;
-	@apply esf:focus-visible:shadow-none;
-	@apply esf:focus:shadow-none;
+	@apply esf:focus:ring-2;
+	@apply esf:focus:ring-mauve-500;
+	@apply esf:focus-visible:ring-2;
+	@apply esf:focus-visible:ring-mauve-500;
+	@apply esf:focus-visible:outline-hidden!;
 	@apply esf:focus:outline-hidden!;
 }
 
@@ -127,7 +130,7 @@
 	@apply esf:items-center;
 	@apply esf:justify-center;
 	@apply esf:gap-10;
-	@apply esf:rounded-xl;
+	@apply esf:rounded-md;
 	@apply esf:px-11 esf:py-9;
 	@apply esf:text-xs!;
 	@apply esf:border;

@@ -264,7 +264,7 @@ final class FiltersOutputMock
 
 		if ($filterUsed) {
 			$settings .= '<details>';
-			$settings .= '<summary>' . \__('Additional parameters were provided through code', 'eightshift-forms') . '</summary>';
+			$settings .= '<summary class="esf-focus-ring">' . \__('Additional parameters were provided through code', 'eightshift-forms') . '</summary>';
 
 			foreach ($trackingAdditionalDataFilterValue as $key => $value) {
 				$settingsDetails[$key] = "{$settings}<ul>";

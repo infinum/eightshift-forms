@@ -23,7 +23,7 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset {
-	@apply esf:flex esf:flex-col esf:gap-1 esf:border esf:border-dashed esf:border-gray-300 esf:bg-white esf:p-10 esf:rounded-xl esf:text-sm esf:text-black;
+	@apply esf:flex esf:flex-col esf:gap-1 esf:border esf:border-dashed esf:border-gray-300 esf:bg-white esf:p-10 esf:rounded-md esf:text-sm esf:text-black;
 }
 
 .esf-fieldset-item {

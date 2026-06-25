@@ -63,6 +63,9 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 				'input' => [
 					'base' => [
 						'esf:text-xs',
+						'esf:[.es-field\_\_content-wrap_&]:rounded-none',
+						'esf:[.es-field\_\_content-wrap:first-child_>_&]:rounded-l-md',
+						'esf:[.es-field\_\_content-wrap:last-child_>_&]:rounded-r-md',
 					],
 				],
 				'date' => [
@@ -114,7 +117,7 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 							'esf:group-[&.esf-input-with-suffix]/field:border-gray-300',
 							'esf:group-[&.esf-input-with-suffix]/field:border-s-0',
 							'esf:group-[&.esf-input-with-suffix]/field:h-46',
-							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-xl',
+							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-md',
 							'esf:group-[&.esf-input-with-suffix]/field:-ml-5',
 							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-100',
 						],
@@ -122,42 +125,29 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 					],
 				],
 				'checkbox' => [
-					'base' => [
-						'esf:grid esf:grid-cols-[1fr_auto] esf:grid-rows-1 esf:has-[.es-checkbox-toggle__help]:grid-rows-[auto_auto] esf:not-has-[.es-checkbox\_\_label-inner:empty]:gap-x-16 esf:has-[.es-checkbox-toggle__help]:gap-y-2 esf:not-has-[.es-checkbox-toggle__help]:items-center',
-					],
-
 					'parts' => [
 						'input' => [
-							'esf:relative',
-							'esf:appearance-none',
-							'esf:is-toggle:w-40 esf:is-toggle:h-24 esf:is-check:size-24',
-							'esf:is-toggle:rounded-full esf:is-check:rounded-md',
-							'esf:bg-white esf:checked:bg-mauve-500',
-							'esf:border esf:border-gray-300 esf:checked:border-mauve-500',
-							'esf:shadow-none',
-							'esf:transition esf:after:transition',
-							'esf:is-toggle:after:content-[""] esf:is-check:after:content-["✓"]',
-							'esf:after:absolute esf:is-toggle:after:top-3 esf:is-toggle:after:left-3 esf:is-check:after:left-2 esf:is-check:after:top-2 esf:is-check:not-checked:after:opacity-0',
-							'esf:is-check:after:text-white',
-							'esf:is-toggle:after:size-16 esf:is-check:after:size-18 esf:is-toggle:after:scale-90 esf:is-toggle:checked:after:scale-110',
-							'esf:after:flex esf:after:items-center esf:after:justify-center esf:after:text-base',
+							'esf:is-toggle:before:hidden!',
+							'esf:is-toggle:w-40',
+							'esf:is-toggle:h-24',
+							'esf:is-toggle:rounded-full',
 							'esf:is-toggle:checked:after:translate-x-16',
-							'esf:is-toggle:after:bg-gray-500 esf:is-toggle:checked:after:bg-white esf:is-toggle:after:rounded-full',
-							'esf:before:hidden!',
-							'esf:col-2 esf:row-start-1 esf:row-end-3 esf:items-center',
-							'esf:mx-0! esf:my-auto!',
-							'esf:cursor-pointer',
+							'esf:is-toggle:checked:after:bg-white',
+							'esf:is-toggle:checked:after:scale-110',
+							'esf:is-toggle:after:bg-gray-500',
+							'esf:is-toggle:after:rounded-full',
+							'esf:is-toggle:after:content-[""]',
+							'esf:is-toggle:after:top-3',
+							'esf:is-toggle:after:left-3',
+							'esf:is-toggle:after:size-16',
+							'esf:is-toggle:after:scale-90',
 						],
 						'label' => [
 							'esf:text-xs',
-							'esf:col-1 esf:grid-row-1',
 						],
 						'help' => [
-							'esf:col-1 esf:grid-row-2',
+							'esf:pl-50',
 							...self::THEME_SELECTORS['help-extended'],
-						],
-						'content' => [
-							'esf:contents',
 						],
 					],
 				],
@@ -194,7 +184,7 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 				'submit' => [
 					'base' => [
 						'esf-button-primary',
-						'esf:text-xs',
+						'esf:text-xs!',
 					],
 					'parts' => [
 						'field-content-wrap' => [

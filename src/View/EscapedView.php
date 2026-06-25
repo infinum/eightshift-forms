@@ -42,7 +42,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 
 		$output = \array_merge($tags, self::FORM, $this->getSvg());
 
-		$items = ['button', 'form', 'select', 'input', 'textarea', 'label', 'span'];
+		$items = ['button', 'form', 'select', 'input', 'textarea', 'label', 'span', 'option'];
 		foreach ($items as $item) {
 			$output[$item]['data-*'] = true;
 		}
