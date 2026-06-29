@@ -11,16 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\ActivityLog\ActivityLogHelper;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class BulkRoute
@@ -129,6 +132,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		}
 
 		$type = $params['type'] ?? '';
+		$viewType = $params['viewType'] ?? '';
 
 		$output = [];
 
@@ -160,6 +164,9 @@ class BulkRoute extends AbstractSimpleFormSubmit
 			case 'duplicate-activity-log':
 				$output = $this->duplicateActivityLog($ids);
 				break;
+			case 'locations':
+				$output = $this->getBlockLocations($ids, $viewType);
+				break;
 		}
 
 		switch ($output['status']) {
@@ -168,6 +175,9 @@ class BulkRoute extends AbstractSimpleFormSubmit
 					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel('genericSuccess'),
 					AbstractBaseRoute::R_DEBUG => [
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst($type),
+					],
+					AbstractBaseRoute::R_DATA => [
+						UtilsHelper::getStateResponseOutputKey('adminLocations') => $output['data'] ?? [],
 					],
 				];
 			case 'warning':
@@ -568,5 +578,54 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		}
 
 		return $this->output($output, 'duplicate-activity-log');
+	}
+
+	/**
+	 * Get block locations by Ids.
+	 *
+	 * @param array<int> $ids Form Ids.
+	 * @param string $type Type of view.
+	 *
+	 * @return array<string, list<array<string, int|string>>|string>
+	 */
+	private function getBlockLocations(array $ids, string $type): array
+	{
+		$output = [
+			'msg' => \esc_html__('Locations loaded successfully.', 'eightshift-forms'),
+			'status' => 'success',
+		];
+
+		switch ($type) {
+			case Result::POST_TYPE_SLUG:
+				$errorMsg = $this->getLabels()->getLabel('locationsResultOutputError');
+				break;
+			default:
+				$errorMsg = $this->getLabels()->getLabel('locationsFormError');
+				break;
+		}
+
+		foreach ($ids as $id) {
+			// translators: %s replaces form id.
+			$output['data'][] = [
+				'id' => $id,
+				'html' =>  Helpers::render(
+					'item-details',
+					[
+						'items' => GeneralHelpers::getBlockLocations((string) $id, $type),
+						'type' => $type,
+						'sectionClass' => Helpers::getComponent('admin-listing')['componentClass'],
+						'emptyContent' => $errorMsg,
+						'additionalAttributes' => [
+							UtilsHelper::getStateAttribute('adminIntegrationType') => $type,
+						],
+					],
+					'components',
+					false,
+					'admin-listing/partials'
+				)
+			];
+		}
+
+		return $output;
 	}
 }

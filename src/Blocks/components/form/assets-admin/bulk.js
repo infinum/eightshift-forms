@@ -12,6 +12,9 @@ export class Bulk {
 		this.itemsSelector = options.itemsSelector;
 		this.itemSelector = options.itemSelector;
 		this.selectAllSelector = options.selectAllSelector;
+		this.locationSelector = options.locationSelector;
+
+		this.DISABLE_RELOAD = ['locations'];
 	}
 
 	init() {
@@ -68,7 +71,8 @@ export class Bulk {
 			return;
 		}
 
-		formData.append('type', field?.getAttribute(this.state.getStateAttribute('bulkType')));
+		formData.append('type', type);
+		formData.append('viewType', field?.getAttribute(this.state.getStateAttribute('viewType')));
 		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
 
 		this.utils.showLoader(this.FORM_ID);
@@ -90,22 +94,25 @@ export class Bulk {
 			const response = await fetch(this.state.getRestUrl('bulk'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-			} = parsedResponse;
+			const { message, status, data } = parsedResponse;
 
 			this.utils.hideLoader(this.FORM_ID);
 			this.utils.setGlobalMsg(this.FORM_ID, message, status);
 
 			if (status === 'success') {
-				setTimeout(() => {
-					location.reload();
-				}, 1000);
+				if (!this.DISABLE_RELOAD.includes(type)) {
+					setTimeout(() => {
+						location.reload();
+					}, 1000);
+				}
+
+				if (type === 'locations') {
+					this.populateLocations(data);
+				}
 			}
 
 			this.hideGlobalMsg();
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -127,7 +134,7 @@ export class Bulk {
 		}
 	}
 
-	selectItem(formId, status=false) {
+	selectItem(formId, status = false) {
 		const itemsElement = document.querySelector(this.itemsSelector);
 		const items = itemsElement?.getAttribute(this.state.getStateAttribute('bulkItems'));
 
@@ -162,7 +169,7 @@ export class Bulk {
 	}
 
 	onGlobalMsgFocus = () => {
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 		}
 	};
@@ -175,5 +182,23 @@ export class Bulk {
 		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
 			this.utils.unsetGlobalMsg(this.FORM_ID);
 		}, 6000);
+	}
+
+	populateLocations(data) {
+		if (!data || !data[this.state.getStateResponseOutputKey('adminLocations')]) {
+			return;
+		}
+
+		document.querySelectorAll(`${this.locationSelector}`).forEach((element) => {
+			element.remove();
+		});
+
+		const { id, html } = data[this.state.getStateResponseOutputKey('adminLocations')];
+
+		[...data[this.state.getStateResponseOutputKey('adminLocations')]].forEach((location) => {
+			[...document.querySelectorAll(`${this.itemSelector}[${this.state.getStateAttribute('bulkId')}="${location.id}"]`)].forEach((element) => {
+				element.insertAdjacentHTML('afterend', location.html);
+			});
+		});
 	}
 }

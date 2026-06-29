@@ -509,6 +509,16 @@ class FormAdminMenu extends AbstractAdminMenu
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
 						],
 					]),
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Locations', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'locations',
+							UtilsHelper::getStateAttribute('viewType') => Result::POST_TYPE_SLUG,
+						],
+					]),
 				];
 
 				$right = [
@@ -613,6 +623,16 @@ class FormAdminMenu extends AbstractAdminMenu
 								UtilsHelper::getStateAttribute('bulkType') => 'restore',
 							],
 						]),
+						Helpers::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Locations', 'eightshift-forms'),
+							'submitIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'locations',
+								UtilsHelper::getStateAttribute('viewType') => Result::POST_TYPE_SLUG,
+							],
+						]),
 					];
 				} else {
 					$left = [
@@ -624,6 +644,16 @@ class FormAdminMenu extends AbstractAdminMenu
 							'additionalClass' => $bulkSelector,
 							'submitAttrs' => [
 								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
+						Helpers::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Locations', 'eightshift-forms'),
+							'submitIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'locations',
+								UtilsHelper::getStateAttribute('viewType') => Forms::POST_TYPE_SLUG,
 							],
 						]),
 					];
@@ -669,6 +699,16 @@ class FormAdminMenu extends AbstractAdminMenu
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
+						],
+					]),
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Locations', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'locations',
+							UtilsHelper::getStateAttribute('viewType') => Forms::POST_TYPE_SLUG,
 						],
 					]),
 				];
@@ -1055,15 +1095,6 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
-						'submitValue' => \__('Locations', 'eightshift-forms'),
-						'submitAttrs' => [
-							UtilsHelper::getStateAttribute('locationsId') => $formId,
-							UtilsHelper::getStateAttribute('locationsType') => Result::POST_TYPE_SLUG,
-						],
-						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
-					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $editLink,
 						'submitValue' => \__('Edit', 'eightshift-forms'),
@@ -1077,15 +1108,6 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === '') {
 					$output = [
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitValue' => \__('Locations', 'eightshift-forms'),
-							'submitAttrs' => [
-								UtilsHelper::getStateAttribute('locationsId') => $formId,
-								UtilsHelper::getStateAttribute('locationsType') => Forms::POST_TYPE_SLUG,
-							],
-							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
-						]),
 						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 							Helpers::render('submit', [
 								'submitVariant' => 'ghost',
@@ -1104,15 +1126,6 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			default:
 				$output = [
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Locations', 'eightshift-forms'),
-						'submitAttrs' => [
-							UtilsHelper::getStateAttribute('locationsId') => $formId,
-							UtilsHelper::getStateAttribute('locationsType') => Forms::POST_TYPE_SLUG,
-						],
-						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
-					]),
 					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
