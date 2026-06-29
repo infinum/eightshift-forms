@@ -627,6 +627,14 @@ final class GeneralHelpers
 	 */
 	public static function getBlockLocations(string $formId, string $type): array
 	{
+		$cacheKey = "block_locations_{$type}_{$formId}";
+		$cacheGroup = 'eightshift_forms';
+
+		$cached = \wp_cache_get($cacheKey, $cacheGroup);
+		if ($cached !== false) {
+			return $cached;
+		}
+
 		switch ($type) {
 			case Config::SLUG_RESULT_POST_TYPE:
 				$outputString = "%\"resultOutputPostId\":\"{$formId}\"%";
@@ -638,25 +646,25 @@ final class GeneralHelpers
 
 		global $wpdb;
 
-		$items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->prepare(
 				"SELECT ID, post_type, post_title, post_status
 				 FROM $wpdb->posts
-				 WHERE post_content
-				 LIKE %s
-				 AND (post_status='publish' OR post_status='draft')
+				 WHERE post_content LIKE %s
+				 AND post_status IN ('publish', 'draft')
 				",
 				$outputString
 			)
 		);
 
 		if (!$items) {
+			\wp_cache_add($cacheKey, [], $cacheGroup, \HOUR_IN_SECONDS);
 			return [];
 		}
 
 		$isDeveloperModeActive = DeveloperHelpers::isDeveloperModeActive();
 
-		return \array_map(
+		$output = \array_map(
 			function ($item) use ($isDeveloperModeActive) {
 				$id = $item->ID;
 				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
@@ -679,6 +687,10 @@ final class GeneralHelpers
 			},
 			$items
 		);
+
+		\wp_cache_add($cacheKey, $output, $cacheGroup, \HOUR_IN_SECONDS);
+
+		return $output;
 	}
 
 	/**

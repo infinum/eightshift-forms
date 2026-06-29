@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.9.0]
+
+### Added
+
+- Added object caching to `GeneralHelpers::getBlockLocations()` to avoid repeated direct database queries for block locations.
+- Added a `locations` bulk type to `BulkRoute` and the `viewType` state attribute, so locations are loaded and rendered inline without a full page reload.
+
+### Changed
+
+- Updated location loading to run through the unified bulk operation flow (`BulkRoute` and `bulk.js`) instead of a dedicated route and asset.
+
+### Removed
+
+- Removed the standalone `LocationsRoute` REST endpoint and `locations.js` admin asset, merging their functionality into `BulkRoute` and `bulk.js`.
+
 ## [9.8.0]
 
 ### Added
@@ -1929,6 +1944,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.9.0]: https://github.com/infinum/eightshift-forms/compare/9.8.0...9.9.0
 [9.8.0]: https://github.com/infinum/eightshift-forms/compare/9.7.1...9.8.0
 [9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
 [9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0

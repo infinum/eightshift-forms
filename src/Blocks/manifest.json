@@ -612,6 +612,7 @@
 			"bulkType": "data-bulk-type",
 			"bulkItems": "data-bulk-items",
 			"exportType": "data-export-type",
+			"viewType": "data-view-type",
 			"manualSubmitId": "data-manual-submit-id",
 			"stepId": "data-step-id",
 			"submitStepDirection": "data-step-direction",
