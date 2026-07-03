@@ -137,6 +137,25 @@ final class SettingsHelpers
 	}
 
 	/**
+	 * Get option checkbox multiple value.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function getSettingCheckboxValues(string $key, string $formId): array
+	{
+		$value = self::getSettingValue($key, $formId);
+
+		if ($value === '' || $value === '0') {
+			return [];
+		};
+
+		return \explode(Config::DELIMITER, $value);
+	}
+
+	/**
 	 * Determine if checkbox settings is checked (used for checkbox).
 	 *
 	 * @param string $key Key to find.

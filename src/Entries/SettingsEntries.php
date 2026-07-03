@@ -64,6 +64,11 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
 
 	/**
+	 * Ignore fields when saving entries key.
+	 */
+	public const SETTINGS_ENTRIES_IGNORE_FIELDS_KEY = 'entries-ignore-fields';
+
+	/**
 	 * Entries settings send entry in form submit key.
 	 */
 	public const SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY = 'entries-save-additional-values';
@@ -150,6 +155,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 
 		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 		$autoDeleteIsUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, $formId);
+		$formFields = GeneralHelpers::getFormDetails($formId)[Config::FD_FIELD_NAMES] ?? [];
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
@@ -252,6 +258,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								[
 									'component' => 'checkboxes',
 									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_AUTO_DELETE_KEY),
+									'checkboxesFieldLabel' => \__('Entries retention', 'eightshift-forms'),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
@@ -280,7 +287,28 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 										'additionalFieldClass' => 'esf-input-with-suffix',
 										'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId),
 									],
-								] : [])
+								] : []),
+								...($formFields ? [
+									[
+										'component' => 'divider',
+										'dividerSeparator' => true,
+									],
+									[
+										'component' => 'checkboxes',
+										'checkboxesFieldLabel' => \__('Fields to ignore when saving entries', 'eightshift-forms'),
+										'checkboxesFieldHelp' => \__('Selected fields will not be saved to the database on form submission.', 'eightshift-forms'),
+										'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_IGNORE_FIELDS_KEY),
+										'checkboxesContent' => \array_map(
+											static fn(string $fieldName): array => [
+													'component' => 'checkbox',
+													'checkboxLabel' => $fieldName,
+													'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked($fieldName, self::SETTINGS_ENTRIES_IGNORE_FIELDS_KEY, $formId),
+													'checkboxValue' => $fieldName,
+												],
+											$formFields
+										),
+									],
+								] : []),
 							] : []),
 						],
 					],

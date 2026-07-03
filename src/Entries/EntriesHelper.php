@@ -58,6 +58,7 @@ class EntriesHelper
 		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$saveEmptyFields = SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
+		$ignoredFields = SettingsHelpers::getSettingCheckboxValues(SettingsEntries::SETTINGS_ENTRIES_IGNORE_FIELDS_KEY, $formId);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -67,6 +68,10 @@ class EntriesHelper
 				continue;
 			}
 			if (!$type) {
+				continue;
+			}
+
+			if ($ignoredFields && \in_array($name, $ignoredFields, true)) {
 				continue;
 			}
 
@@ -91,6 +96,10 @@ class EntriesHelper
 		// Output skipped params as empty strings.
 		if ($paramsSkipped && $saveEmptyFields) {
 			foreach ($paramsSkipped as $key => $value) {
+				if ($ignoredFields && \in_array($key, $ignoredFields, true)) {
+					continue;
+				}
+
 				$output[$key] = '';
 			}
 		}
