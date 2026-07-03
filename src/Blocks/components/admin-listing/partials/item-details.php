@@ -11,7 +11,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getComponent('admin-listing');
-$selectorJsItem = UtilsHelper::getStateSelectorAdmin('listingItem');
+$selectorJsItem = UtilsHelper::getStateSelectorAdmin('listingLocations');
 
 $isDevMode = DeveloperHelpers::isDeveloperModeActive();
 

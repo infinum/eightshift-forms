@@ -155,6 +155,7 @@ domReady(() => {
 				itemsSelector: state.getStateSelectorAdmin('listingBulkItems', true),
 				itemSelector: state.getStateSelectorAdmin('listingItem', true),
 				selectAllSelector: state.getStateSelectorAdmin('listingSelectAll', true),
+				locationSelector: state.getStateSelectorAdmin('listingLocations', true),
 			}).init();
 		});
 	}
@@ -171,22 +172,6 @@ domReady(() => {
 				utils: utils,
 				selector: selectorExport,
 				itemsSelector: state.getStateSelectorAdmin('listingBulkItems', true),
-			}).init();
-		});
-	}
-
-	////////////////////////////////////////////////////////////////
-	// Locations
-	////////////////////////////////////////////////////////////////
-
-	const selectorLocations = state.getStateSelectorAdmin('listingLocations', true);
-
-	if (document.querySelector(selectorLocations)) {
-		import('./locations').then(({ Locations }) => {
-			new Locations({
-				utils: utils,
-				selector: selectorLocations,
-				itemSelector: state.getStateSelectorAdmin('listingItem', true),
 			}).init();
 		});
 	}

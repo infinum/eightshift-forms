@@ -12,6 +12,9 @@ export class Bulk {
 		this.itemsSelector = options.itemsSelector;
 		this.itemSelector = options.itemSelector;
 		this.selectAllSelector = options.selectAllSelector;
+		this.locationSelector = options.locationSelector;
+
+		this.DISABLE_RELOAD = ['locations'];
 	}
 
 	init() {
@@ -68,6 +71,7 @@ export class Bulk {
 		}
 
 		formData.append('type', type);
+		formData.append('viewType', target?.getAttribute(this.state.getStateAttribute('viewType')));
 		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
 
 		this.utils.showLoader(this.FORM_ID);
@@ -89,15 +93,21 @@ export class Bulk {
 			const response = await fetch(this.state.getRestUrl('bulk'), body);
 			const parsedResponse = await response.json();
 
-			const { message, status } = parsedResponse;
+			const { message, status, data } = parsedResponse;
 
 			this.utils.hideLoader(this.FORM_ID);
 			this.utils.setGlobalMsg(this.FORM_ID, message, status);
 
 			if (status === 'success') {
-				setTimeout(() => {
-					location.reload();
-				}, 1000);
+				if (!this.DISABLE_RELOAD.includes(type)) {
+					setTimeout(() => {
+						location.reload();
+					}, 1000);
+				}
+
+				if (type === 'locations') {
+					this.populateLocations(data);
+				}
 			}
 
 			this.hideGlobalMsg();
@@ -171,5 +181,21 @@ export class Bulk {
 		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
 			this.utils.unsetGlobalMsg(this.FORM_ID);
 		}, 6000);
+	}
+
+	populateLocations(data) {
+		if (!data || !data[this.state.getStateResponseOutputKey('adminLocations')]) {
+			return;
+		}
+
+		document.querySelectorAll(`${this.locationSelector}`).forEach((element) => {
+			element.remove();
+		});
+
+		[...data[this.state.getStateResponseOutputKey('adminLocations')]].forEach(({ id, html }) => {
+			[...document.querySelectorAll(`${this.itemSelector}[${this.state.getStateAttribute('bulkId')}="${id}"]`)].forEach((element) => {
+				element.insertAdjacentHTML('afterend', html);
+			});
+		});
 	}
 }

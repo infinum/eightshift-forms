@@ -18,7 +18,6 @@ use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Rest\Routes\Settings\IncrementRoute;
 use EightshiftForms\Rest\Routes\Settings\DebugEncryptRoute;
 use EightshiftForms\Rest\Routes\Settings\ExportRoute;
-use EightshiftForms\Rest\Routes\Settings\LocationsRoute;
 use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
 use EightshiftForms\Rest\Routes\Settings\SettingsSubmitRoute;
 use EightshiftForms\Rest\Routes\Settings\TransferRoute;
@@ -82,7 +81,6 @@ trait SharedEnqueue
 				'migration' => MigrationRoute::ROUTE_SLUG,
 				'transfer' => TransferRoute::ROUTE_SLUG,
 				'bulk' => BulkRoute::ROUTE_SLUG,
-				'locations' => LocationsRoute::ROUTE_SLUG,
 				'export' => ExportRoute::ROUTE_SLUG,
 				'debugEncrypt' => DebugEncryptRoute::ROUTE_SLUG,
 

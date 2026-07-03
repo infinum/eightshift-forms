@@ -1,6 +1,6 @@
 {
 	"name": "@eightshift/eightshift-forms",
-	"version": "9.8.0",
+	"version": "9.9.0",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
 	"authors": [
 		{
@@ -34,11 +34,11 @@
 		"test:e2e:report:pdf": "node tests/e2e/helpers/generate-pdf-report.js"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.61.0",
+		"@playwright/test": "^1.61.1",
 		"husky": "^9.1.7",
 		"webpack": "^5.107.2",
 		"webpack-cli": "^7.0.3",
-		"lint-staged": "^17.0.7"
+		"lint-staged": "^17.0.8"
 	},
 	"dependencies": {
 		"@eightshift/frontend-libs-tailwind": "^3.3.0",
@@ -46,7 +46,7 @@
 		"@tailwindcss/postcss": "^4.3.1",
 		"@tailwindcss/typography": "^0.5.20",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.37",
+		"baseline-browser-mapping": "^2.10.38",
 		"caniuse-lite": "^1.0.30001799",
 		"choices.js": "^11.2.3",
 		"dropzone": "^6.0.0-beta.2",
@@ -54,7 +54,7 @@
 		"reactflow": "^11.11.4",
 		"tailwindcss": "^4.3.1",
 		"tailwindcss-motion": "^1.1.1",
-		"tailwindcss-react-aria-components": "^2.1.1"
+		"tailwindcss-react-aria-components": "^2.2.0"
 	},
 	"lint-staged": {
 		"*.js": "bun lintJs",

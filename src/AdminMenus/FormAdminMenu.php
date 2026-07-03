@@ -305,7 +305,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			[
 				'adminListingShowNoItems' => $count === 0,
 				'adminListingItems' => $this->getListingItems($items, $type, $parent),
-				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $search, $perPage),
+				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent, $search, $perPage),
 				'adminListingNoItems' => $this->getNoItemsMessage($type, $parent),
 				'adminListingData' => $data,
 			]
@@ -491,11 +491,12 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @param string $type Type of the listing.
 	 * @param string $formId Form ID.
+	 * @param string $parent Parent type of the listing.
 	 * @param string $search Search query.
 	 * @param int $perPage Number of items per page.
 	 * @return array<string, mixed>
 	 */
-	private function getTopBarItems(string $type, string $formId, string $search, int $perPage): array
+	private function getTopBarItems(string $type, string $formId, string $parent, string $search, int $perPage): array
 	{
 		$bulkSelector = UtilsHelper::getStateSelectorAdmin('listingBulk');
 		$exportSelector = UtilsHelper::getStateSelectorAdmin('listingExport');
@@ -533,6 +534,16 @@ class FormAdminMenu extends AbstractAdminMenu
 						'additionalClass' => $bulkSelector,
 						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
+						],
+					]),
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Locations', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'buttonAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'locations',
+							UtilsHelper::getStateAttribute('viewType') => Result::POST_TYPE_SLUG,
 						],
 					]),
 				];
@@ -627,18 +638,53 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
-				$left = [
-					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-					Helpers::render('button', [
-						'buttonVariant' => 'primaryGhost',
-						'buttonLabel' => \__('Restore', 'eightshift-forms'),
-						'buttonIsDisabled' => true,
-						'additionalClass' => $bulkSelector,
-						'buttonAttrs' => [
-							UtilsHelper::getStateAttribute('bulkType') => 'restore',
-						],
-					]),
-				];
+				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
+					$left = [
+						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Restore', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'buttonAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Locations', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'buttonAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'locations',
+								UtilsHelper::getStateAttribute('viewType') => Result::POST_TYPE_SLUG,
+							],
+						]),
+					];
+				} else {
+					$left = [
+						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Restore', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'buttonAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Locations', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'buttonAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'locations',
+								UtilsHelper::getStateAttribute('viewType') => Forms::POST_TYPE_SLUG,
+							],
+						]),
+					];
+				}
 
 				$right = [
 					Helpers::render('button', [
@@ -681,6 +727,16 @@ class FormAdminMenu extends AbstractAdminMenu
 						'additionalClass' => $bulkSelector,
 						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
+						],
+					]),
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Locations', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'buttonAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'locations',
+							UtilsHelper::getStateAttribute('viewType') => Forms::POST_TYPE_SLUG,
 						],
 					]),
 				];
@@ -1058,19 +1114,11 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
-					Helpers::render('button', [
-						'buttonVariant' => 'primaryGhost',
-						'buttonLabel' => \__('Locations', 'eightshift-forms'),
-						'buttonAttrs' => [
-							UtilsHelper::getStateAttribute('locationsId') => $formId,
-							UtilsHelper::getStateAttribute('locationsType') => Result::POST_TYPE_SLUG,
-						],
-						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
-					]),
-					Helpers::render('button', [
-						'buttonVariant' => 'primaryGhost',
-						'buttonUrl' => $editLink,
-						'buttonLabel' => \__('Edit', 'eightshift-forms'),
+					Helpers::render('submit', [
+						'submitVariant' => 'primaryGhost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => $editLink,
+						'submitValue' => \__('Edit', 'eightshift-forms'),
 					]),
 				];
 				break;
@@ -1081,15 +1129,6 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === '') {
 					$output = [
-						Helpers::render('button', [
-							'buttonVariant' => 'primaryGhost',
-							'buttonLabel' => \__('Locations', 'eightshift-forms'),
-							'buttonAttrs' => [
-								UtilsHelper::getStateAttribute('locationsId') => $formId,
-								UtilsHelper::getStateAttribute('locationsType') => Forms::POST_TYPE_SLUG,
-							],
-							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
-						]),
 						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 							Helpers::render('button', [
 								'buttonVariant' => 'primaryGhost',
@@ -1106,15 +1145,6 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			default:
 				$output = [
-					Helpers::render('button', [
-						'buttonVariant' => 'primaryGhost',
-						'buttonLabel' => \__('Locations', 'eightshift-forms'),
-						'buttonAttrs' => [
-							UtilsHelper::getStateAttribute('locationsId') => $formId,
-							UtilsHelper::getStateAttribute('locationsType') => Forms::POST_TYPE_SLUG,
-						],
-						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
-					]),
 					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
 						Helpers::render('button', [
 							'buttonVariant' => 'primaryGhost',
