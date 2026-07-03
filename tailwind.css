@@ -85,27 +85,126 @@
 	}
 }
 
-@custom-variant any-focus {
-	&:is(:focus-visible, [data-rac][data-focus-visible], :focus, [data-rac][data-focused]) {
-		@slot;
-	}
-}
-
 @custom-variant any-icon {
 	& svg {
 		@slot;
 	}
 }
 
-.esf-focus-ring,
-.esf-focus-ring a,
-.esf-focus-ring button {
-	@apply esf:focus:ring-2;
-	@apply esf:focus:ring-mauve-500;
-	@apply esf:focus-visible:ring-2;
-	@apply esf:focus-visible:ring-mauve-500;
-	@apply esf:focus-visible:outline-hidden!;
-	@apply esf:focus:outline-hidden!;
+@custom-variant field-disabled {
+	&:is(:where(.es-form-is-disabled) *) {
+		@slot;
+	}
+}
+
+@custom-variant field-error {
+	&:is(:where(.es-form-has-error) *) {
+		@slot;
+	}
+}
+
+@custom-variant step-preview {
+	&:is(:where(.es-form-is-step-preview-active) *) {
+		@slot;
+	}
+}
+
+@custom-variant slider-track {
+	&::-webkit-slider-runnable-track {
+		@slot;
+	}
+
+	&::-moz-range-track {
+		@slot;
+	}
+}
+
+@custom-variant slider-thumb {
+	&::-webkit-slider-thumb {
+		@slot;
+	}
+
+	&::-moz-range-thumb {
+		@slot;
+	}
+}
+
+@custom-variant choices-one-inner {
+	&[data-type='select-one'] .choices__inner {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-inner {
+	&[data-type='select-multiple'] .choices__inner {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-item {
+	&[data-type='select-multiple'] .choices__inner .choices__item {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-button {
+	&[data-type='select-multiple'] .choices__inner .choices__item .choices__button {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-cloned {
+	&[data-type='select-multiple'] .choices__inner .choices__input--cloned {
+		@slot;
+	}
+}
+
+@custom-variant hover-focus {
+	&:is(:hover, :focus) {
+		@slot;
+	}
+}
+
+@custom-variant form-active {
+	&:is(.es-form-is-active) {
+		@slot;
+	}
+}
+
+@custom-variant label-required {
+	&:is(:where(.es-field__label--is-required) *) {
+		@slot;
+	}
+}
+
+@utility hidden-fully {
+	display: none;
+	visibility: hidden;
+	user-select: none;
+	pointer-events: none;
+}
+
+@utility focus-ring-clear {
+	&:is(:where(:focus, :focus-visible)) {
+		@apply esf:outline-hidden!;
+		@apply esf:shadow-none!;
+	}
+}
+
+@utility focus-ring {
+	&:is(:where(:focus, :focus-visible)) {
+		@apply esf:ring-2;
+		@apply esf:ring-mauve-500;
+		@apply esf:outline-hidden!;
+		@apply esf:ring-offset-2;
+	}
+}
+
+@utility focus-ring-direct {
+	@apply esf:ring-2;
+	@apply esf:ring-mauve-500;
+	@apply esf:outline-hidden!;
+	@apply esf:ring-offset-2;
 }
 
 /* Frontend facing helpers */
@@ -136,8 +235,7 @@
 	@apply esf:border;
 	@apply esf:duration-300;
 	@apply esf:transition-colors;
-	@apply esf:focus:outline-hidden;
-	@apply esf:focus-visible:outline-auto;
+	@apply esf:focus-ring;
 	@apply esf:disabled:opacity-60;
 	@apply esf:disabled:cursor-not-allowed;
 	@apply esf:disabled:pointer-events-none;

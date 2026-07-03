@@ -283,7 +283,7 @@ final class SettingsOutputHelpers
 			// translators: %s will be replaced with global variable name.
 			$helpOutput .= \sprintf(\__('
 				<details class="esf-is-filter-applied">
-					<summary class="esf-focus-ring">Available global variables</summary>
+					<summary class="esf:focus-ring">Available global variables</summary>
 					<ul>
 						<li>%s</li>
 					</ul>
@@ -410,7 +410,7 @@ final class SettingsOutputHelpers
 		return \sprintf(\__('
 			Use template tags to use submitted form data (e.g. <code>{field-name}</code>)
 			<details class="esf-is-filter-applied">
-				<summary class="esf-focus-ring">Available tags</summary>
+				<summary class="esf:focus-ring">Available tags</summary>
 				<ul>
 					%s
 				</ul>
@@ -433,7 +433,7 @@ final class SettingsOutputHelpers
 		// translators: %s will be replaced with integration response tags.
 		return \sprintf(\__('
 			<details class="esf-is-filter-applied">
-				<summary class="esf-focus-ring">Response tags</summary>
+				<summary class="esf:focus-ring">Response tags</summary>
 				<ul>
 					%s
 				</ul>
