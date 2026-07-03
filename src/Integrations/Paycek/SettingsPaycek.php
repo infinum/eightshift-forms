@@ -262,11 +262,21 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY),
 								'groupContent' => [
 									[
-										'component' => 'field',
-										'fieldLabel' => '<b>' . \__('Paycek field', 'eightshift-forms') . '</b>',
-										'fieldContent' => '<b>' . \__('Value', 'eightshift-forms') . '</b>',
-										'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-										'fieldIsFiftyFiftyHorizontal' => true,
+										'component' => 'layout',
+										'layoutContent' => [
+											[
+												'component' => 'intro',
+												'introTitle' => \__('Paycek field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+											[
+												'component' => 'intro',
+												'introTitle' => \__('Form field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+										],
+										'layoutType' => 'layout-grid-half',
+										'layoutWithBg' => false,
 									],
 									...\array_map(
 										function (array $item) use ($params, $mapParams): array {
@@ -293,15 +303,26 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 													$params
 												);
 											}
+
 											return [
-												'component' => 'select',
-												'selectName' => $item['id'],
-												'selectFieldLabel' => $item['title'],
-												'selectFieldIsFiftyFiftyHorizontal' => true,
-												'selectFieldBeforeContent' => '&rarr;',
-												'selectIsRequired' => $item['required'],
-												'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
-												'selectContent' => $options,
+												'component' => 'layout',
+												'layoutType' => 'layout-grid-half',
+												'layoutWithBg' => false,
+												'layoutContent' => [
+													[
+														'component' => 'intro',
+														'introTitle' => $item['required'] ? $item['title'] . ' <span class="esf:text-red-500">*</span>' : $item['title'],
+														'introTitleType' => 'small',
+													],
+													[
+														'component' => 'select',
+														'selectFieldHideLabel' => true,
+														'selectName' => $item['id'],
+														'selectIsRequired' => $item['required'],
+														'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+														'selectContent' => $options,
+													],
+												],
 											];
 										},
 										$this->getPaycekParams()

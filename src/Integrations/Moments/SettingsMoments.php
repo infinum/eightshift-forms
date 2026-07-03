@@ -197,11 +197,21 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
 										'groupContent' => [
 											[
-												'component' => 'field',
-												'fieldLabel' => '<b>' . \__('Moments event key', 'eightshift-forms') . '</b>',
-												'fieldContent' => '<b>' . \__('Form fields', 'eightshift-forms') . '</b>',
-												'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-												'fieldIsFiftyFiftyHorizontal' => true,
+												'component' => 'layout',
+												'layoutContent' => [
+													[
+														'component' => 'intro',
+														'introTitle' => \__('Moments event key', 'eightshift-forms'),
+														'introTitleType' => 'medium',
+													],
+													[
+														'component' => 'intro',
+														'introTitle' => \__('Form field', 'eightshift-forms'),
+														'introTitleType' => 'medium',
+													],
+												],
+												'layoutType' => 'layout-grid-half',
+												'layoutWithBg' => false,
 											],
 											...\array_map(
 												static function (string|int $item, int $index) use ($eventsMapValue, $formFields): array {
@@ -209,23 +219,34 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 													$name = "{$item}{$indexName}";
 
 													$selectedValue = $eventsMapValue[$name] ?? '';
+
 													return [
-														'component' => 'select',
-														'selectName' => "{$item}{$indexName}",
-														'selectFieldLabel' => '<code>' . $name . '</code>',
-														'selectFieldBeforeContent' => '&rarr;',
-														'selectIsRequired' => true,
-														'selectFieldIsFiftyFiftyHorizontal' => true,
-														'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
-														'selectContent' => \array_map(
-															static fn($option): array => [
-																'component' => 'select-option',
-																'selectOptionLabel' => $option,
-																'selectOptionValue' => $option,
-																'selectOptionIsSelected' => $selectedValue === $option,
+														'component' => 'layout',
+														'layoutType' => 'layout-grid-half',
+														'layoutWithBg' => false,
+														'layoutContent' => [
+															[
+																'component' => 'intro',
+																'introTitle' => $name,
+																'introTitleType' => 'small',
 															],
-															$formFields
-														),
+															[
+																'component' => 'select',
+																'selectFieldHideLabel' => true,
+																'selectName' => "{$item}{$indexName}",
+																'selectIsRequired' => true,
+																'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+																'selectContent' => \array_map(
+																	static fn($option): array => [
+																		'component' => 'select-option',
+																		'selectOptionLabel' => $option,
+																		'selectOptionValue' => $option,
+																		'selectOptionIsSelected' => $selectedValue === $option,
+																	],
+																	$formFields
+																),
+															],
+														],
 													];
 												},
 												$eventsMap,

@@ -219,7 +219,7 @@ class JiraClient implements JiraClientInterface
 	 *
 	 * @param string $projectId Project Id to get fields from.
 	 *
-	 * @return array<string, mixed>
+	 * @return list<array>
 	 */
 	public function getProjectsCustomFields(string $projectId): array
 	{
@@ -232,14 +232,14 @@ class JiraClient implements JiraClientInterface
 
 		$projectId = $this->getProjectIdByKey($projectId);
 
-		return \array_map(
+		return \array_values(\array_filter(\array_map(
 			static function (array $item) use ($ignoreKeys) {
 				if (!isset($ignoreKeys[$item['id']])) {
 					return $item;
 				}
 			},
 			$this->getProjects()[$projectId]['customFields'] ?? [],
-		);
+		)));
 	}
 
 	/**

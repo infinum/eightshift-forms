@@ -195,43 +195,62 @@ class SettingsPardot extends AbstractSettingsIntegrations implements SettingGlob
 								'introIsHighlightedImportant' => true,
 							],
 							[
-								'component' => 'field',
-								'fieldLabel' => '<b>' . \__('Form field', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . \__('Pardot field', 'eightshift-forms') . '</b>',
-								'fieldBeforeContent' => '&emsp;',
-								'fieldIsFiftyFiftyHorizontal' => true,
-							],
-							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PARDOT_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
+									[
+										'component' => 'layout',
+										'layoutContent' => [
+											[
+												'component' => 'intro',
+												'introTitle' => \__('Form field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+											[
+												'component' => 'intro',
+												'introTitle' => \__('Pardot field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+										],
+										'layoutType' => 'layout-grid-half',
+										'layoutWithBg' => false,
+									],
 									...\array_map(
-										fn($formField): array => [
-											'component' => 'select',
-											'selectName' => $formField,
-											'selectFieldLabel' => \ucfirst((string) $formField),
-											'selectFieldIsFiftyFiftyHorizontal' => true,
-											'selectFieldBeforeContent' => '&rarr;',
-											'selectPlaceholder' => \__('Select Pardot field', 'eightshift-forms'),
-											'selectContent' => \array_filter(\array_map(
-												static function (array $pardotField) use ($mapParams, $formField): array {
-													$id = $pardotField['id'] ?? '';
+										fn($formField): array =>
+										[
+											'component' => 'layout',
+											'layoutType' => 'layout-grid-half',
+											'layoutWithBg' => false,
+											'layoutContent' => [
+												[
+													'component' => 'intro',
+													'introTitle' => \ucfirst((string) $formField),
+													'introTitleType' => 'small',
+												],
+												[
+													'component' => 'select',
+													'selectFieldHideLabel' => true,
+													'selectName' => $formField,
+													'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+													'selectContent' => \array_filter(\array_map(
+														static function (array $pardotField) use ($mapParams, $formField): array {
+															$id = $pardotField['id'] ?? '';
 
-													if (!$id) {
-														return [];
-													}
+															if (!$id) {
+																return [];
+															}
 
-													return [
-														'component' => 'select-option',
-														'selectOptionLabel' => $pardotField['title'],
-														'selectOptionValue' => $id,
-														'selectOptionIsSelected' => isset($mapParams[$formField]) && $mapParams[$formField] === $id,
-													];
-												},
-												$handlerFields
-											)),
+															return [
+																'component' => 'select-option',
+																'selectOptionLabel' => $pardotField['title'],
+																'selectOptionValue' => $id,
+																'selectOptionIsSelected' => isset($mapParams[$formField]) && $mapParams[$formField] === $id,
+															];
+														},
+														$handlerFields
+													)),
+												],
+											],
 										],
 										$formFields
 									),

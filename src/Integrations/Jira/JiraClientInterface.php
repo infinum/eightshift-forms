@@ -45,7 +45,7 @@ interface JiraClientInterface extends ClientMappingInterface
 	 *
 	 * @param string $projectId Project Id to get fields from.
 	 *
-	 * @return array<string, mixed>
+	 * @return list<array>
 	 */
 	public function getProjectsCustomFields(string $projectId): array;
 

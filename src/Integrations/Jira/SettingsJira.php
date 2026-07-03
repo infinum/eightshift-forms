@@ -181,6 +181,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 		$manualMapParams = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
 		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 		$customFields = $this->jiraClient->getProjectsCustomFields($selectedProject);
+		$formFields = $formDetails[Config::FD_FIELD_NAMES] ?? [];
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
@@ -280,28 +281,57 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 									'dividerSeparator' => true,
 								],
 								[
-									'component' => 'field',
-									'fieldLabel' => '<b>' . \__('Jira field', 'eightshift-forms') . '</b>',
-									'fieldContent' => '<b>' . \__('Value', 'eightshift-forms') . '</b>',
-									'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-									'fieldIsFiftyFiftyHorizontal' => true,
-								],
-								[
 									'component' => 'group',
 									'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
 									'groupContent' => [
+										[
+											'component' => 'layout',
+											'layoutContent' => [
+												[
+													'component' => 'intro',
+													'introTitle' => \__('Jira field', 'eightshift-forms'),
+													'introTitleType' => 'medium',
+												],
+												[
+													'component' => 'intro',
+													'introTitle' => \__('Form field', 'eightshift-forms'),
+													'introTitleType' => 'medium',
+												],
+											],
+											'layoutType' => 'layout-grid-half',
+											'layoutWithBg' => false,
+										],
 										...\array_map(
-											function (array $item) use ($mapParams) {
-												$id  = $item['id'] ?? '';
+											function (array $item) use ($mapParams, $formFields) {
+												$id = $item['id'] ?? '';
 
 												if ($id) {
 													return [
-														'component' => 'input',
-														'inputName' => $id,
-														'inputFieldLabel' => $item['title'],
-														'inputValue' => $mapParams[$id] ?? '',
-														'inputFieldIsFiftyFiftyHorizontal' => true,
-														'inputFieldBeforeContent' => '&rarr;',
+														'component' => 'layout',
+														'layoutType' => 'layout-grid-half',
+														'layoutWithBg' => false,
+														'layoutContent' => [
+															[
+																'component' => 'intro',
+																'introTitle' => $item['title'],
+																'introTitleType' => 'small',
+															],
+															[
+																'component' => 'select',
+																'selectFieldHideLabel' => true,
+																'selectName' => $id,
+																'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+																'selectContent' => \array_filter(\array_map(
+																	static fn(string $name): array => [
+																		'component' => 'select-option',
+																		'selectOptionLabel' => \ucfirst($name),
+																		'selectOptionValue' => $name,
+																		'selectOptionIsSelected' => isset($mapParams[$id]) && $mapParams[$id] === $name,
+																	],
+																	$formFields
+																)),
+															],
+														],
 													];
 												}
 											},

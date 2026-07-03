@@ -53,7 +53,7 @@ $introIconClass = Helpers::clsx([
 
 	<?php if ($introTitle) { ?>
 		<div class="<?php echo esc_attr($introTitleClass); ?>">
-			<?php echo esc_html($introTitle); ?>
+			<?php echo wp_kses_post($introTitle); ?>
 		</div>
 	<?php } ?>
 

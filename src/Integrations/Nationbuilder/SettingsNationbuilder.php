@@ -153,29 +153,50 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
 								'groupContent' => [
 									[
-										'component' => 'field',
-										'fieldLabel' => '<b>' . \__('Form field', 'eightshift-forms') . '</b>',
-										'fieldContent' => '<b>' . \__('NationBuilder fields', 'eightshift-forms') . '</b>',
-										'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-										'fieldIsFiftyFiftyHorizontal' => true,
+										'component' => 'layout',
+										'layoutContent' => [
+											[
+												'component' => 'intro',
+												'introTitle' => \__('Form field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+											[
+												'component' => 'intro',
+												'introTitle' => \__('NationBuilder field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+										],
+										'layoutType' => 'layout-grid-half',
+										'layoutWithBg' => false,
 									],
 									...\array_map(
 										fn($item): array => [
-											'component' => 'select',
-											'selectName' => $item,
-											'selectFieldLabel' => \ucfirst((string) $item),
-											'selectValue' => $mapParams[$item] ?? '',
-											'selectFieldIsFiftyFiftyHorizontal' => true,
-											'selectFieldBeforeContent' => '&rarr;',
-											'selectContent' => \array_map(
-												static fn(array $option): array => [
-													'component' => 'select-option',
-													'selectOptionLabel' => $option['title'],
-													'selectOptionValue' => $option['id'],
-													'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
+											'component' => 'layout',
+											'layoutType' => 'layout-grid-half',
+											'layoutWithBg' => false,
+											'layoutContent' => [
+												[
+													'component' => 'intro',
+													'introTitle' => \ucfirst((string) $item),
+													'introTitleType' => 'small',
 												],
-												$this->getFields()
-											),
+												[
+													'component' => 'select',
+													'selectFieldHideLabel' => true,
+													'selectName' => $item,
+													'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+													'selectValue' => $mapParams[$item] ?? '',
+													'selectContent' => \array_map(
+														static fn(array $option): array => [
+															'component' => 'select-option',
+															'selectOptionLabel' => $option['title'],
+															'selectOptionValue' => $option['id'],
+															'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
+														],
+														$this->getFields()
+													),
+												],
+											],
 										],
 										$params
 									),
