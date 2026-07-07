@@ -2,7 +2,7 @@ import { checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { form, globeAnchor } from '@eightshift/ui-components/icons';
 import { __ } from '@wordpress/i18n';
 import { FormEditButton } from '../../../components/utils';
-import { Container, ContainerGroup, Notice, RichLabel, BaseControl } from '@eightshift/ui-components';
+import { Container, ContainerGroup, RichLabel, BaseControl } from '@eightshift/ui-components';
 import { upperFirst } from '@eightshift/ui-components/utilities';
 import { useBlockProps } from '@wordpress/block-editor';
 import manifest from '../manifest.json';
@@ -20,14 +20,21 @@ export const FormsEditor = ({ attributes, preview }) => {
 
 	if (formsFormPostId?.length < 1) {
 		return (
-			<div className='esf:p-8 es:font-sans'>
-				<Notice
-					type='placeholder'
-					icon={form}
-					label={__('Eightshift Forms', 'eightshift-forms')}
-					subtitle={__('Select a form in the block options', 'eightshift-forms')}
-					className='esf:w-fit'
-				/>
+			<div {...blockProps}>
+				<ContainerGroup className='esf:max-w-sm'>
+					<Container
+						elevated
+						centered
+						compact
+						accent
+					>
+						<span className='esf:text-xs esf:font-stretch-110% esf:font-normal!'>{__('Eightshift Forms', 'eightshift-forms')}</span>
+					</Container>
+
+					<Container centered>
+						<RichLabel label={__('Select a form in the block options', 'eightshift-forms')} />
+					</Container>
+				</ContainerGroup>
 			</div>
 		);
 	}
