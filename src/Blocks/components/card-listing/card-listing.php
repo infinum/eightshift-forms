@@ -23,7 +23,7 @@ $cardListingUseCheckbox = Helpers::checkAttr('cardListingUseCheckbox', $attribut
 $cardListingId = Helpers::checkAttr('cardListingId', $attributes, $manifest);
 
 $classes = Helpers::clsx([
-	'esf:hover:bg-mauve-600/10 esf:transition-colors esf:duration-300',
+	'esf:hover:bg-mauve-100 esf:transition-colors esf:duration-300 esf:last:rounded-b-xl',
 	UtilsHelper::getStateSelectorAdmin('listingItem'),
 	$cardListingInvalid ? 'esf:bg-red-500/5' : '',
 	$additionalClass,
@@ -42,7 +42,7 @@ $classes = Helpers::clsx([
 				]) ?>
 			<?php } ?>
 
-			<div class="esf:flex esf:flex-wrap esf:gap-4">
+			<div class="esf:flex esf:flex-wrap esf:gap-4 esf:any-icon:text-mauve-600">
 				<?php echo Helpers::render('button', [
 					'buttonVariant' => 'primaryBasic',
 					'buttonLabel' => $cardListingTitle,
@@ -51,7 +51,7 @@ $classes = Helpers::clsx([
 				]); ?>
 
 				<?php if ($cardListingSubTitle) { ?>
-					<div class="esf:text-gray-400 esf:text-xs esf:flex esf:gap-5 esf:items-center">
+					<div class="esf:text-mauve-400 esf:text-xs esf:flex esf:gap-5 esf:items-center">
 						<?php echo wp_kses_post($cardListingSubTitle); ?>
 					</div>
 				<?php } ?>
@@ -66,7 +66,7 @@ $classes = Helpers::clsx([
 	</div>
 
 	<?php if ($cardListingContent) { ?>
-		<div class="esf:text-gray-400 esf:text-xs esf:pt-8">
+		<div class="esf:text-mauve-400 esf:text-xs esf:pt-8">
 			<?php echo wp_kses_post($cardListingContent); ?>
 		</div>
 	<?php } ?>

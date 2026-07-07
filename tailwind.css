@@ -229,7 +229,7 @@
 	@apply esf:items-center;
 	@apply esf:justify-center;
 	@apply esf:gap-10;
-	@apply esf:rounded-md;
+	@apply esf:rounded-lg;
 	@apply esf:px-11 esf:py-9;
 	@apply esf:text-xs!;
 	@apply esf:border;

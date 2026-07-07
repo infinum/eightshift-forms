@@ -201,7 +201,7 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 						'esf:max-w-288',
 						'esf:max-h-[80vh]',
 						'esf:overflow-x-hidden',
-						'esf:rounded-md',
+						'esf:rounded-lg',
 						'esf:translate-x-32',
 						'esf:[&.es-form-is-active]:translate-x-0',
 						// Other statuses added by frontend.
