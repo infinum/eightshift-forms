@@ -98,6 +98,14 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		}
 	}
 
+	let selectedForm = undefined;
+
+	if (Object.keys(formsFormPostIdRaw ?? {}).length) {
+		selectedForm = formsFormPostIdRaw;
+	} else if (formsFormPostId) {
+		selectedForm = { id: formsFormPostId };
+	}
+
 	return (
 		<>
 			<Tabs>
@@ -136,7 +144,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					<ContainerPanel>
 						<AsyncSelect
 							aria-label={__('Form to display', 'eightshift-forms')}
-							value={Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : { id: formsFormPostId }}
+							value={selectedForm}
 							fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
 								noCache: true,
 								processLabel: ({ title: { rendered: label } }) => label,
