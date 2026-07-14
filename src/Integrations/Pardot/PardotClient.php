@@ -196,12 +196,19 @@ class PardotClient implements PardotClientInterface
 
 		$body = $this->prepareParams($params, $mapParams);
 
+		$headers = [
+			'Content-Type' => 'application/x-www-form-urlencoded',
+		];
+
+		$visitorCookieHeader = $this->getVisitorCookieHeader($url);
+		if ($visitorCookieHeader) {
+			$headers['Cookie'] = $visitorCookieHeader;
+		}
+
 		$response = \wp_remote_post(
 			$url,
 			[
-				'headers' => [
-					'Content-Type' => 'application/x-www-form-urlencoded',
-				],
+				'headers' => $headers,
 				'body' => $body,
 				'redirection' => 0,
 			]
@@ -404,6 +411,40 @@ class PardotClient implements PardotClientInterface
 		\preg_match('/action=["\']([^"\']+)["\']/', $embedCode, $matches);
 
 		return $matches[1] ?? '';
+	}
+
+	/**
+	 * Get Pardot visitor tracking cookie header to forward with the form handler POST.
+	 *
+	 * The visitor_id{accountId} cookie is set first-party on the site by the Pardot tracking
+	 * script (pd.js). Forwarding it links the submission to the prospect's activity history
+	 * and campaign, matching the behavior of a native browser POST.
+	 *
+	 * @param string $url Form handler submit URL.
+	 *
+	 * @return string
+	 */
+	private function getVisitorCookieHeader(string $url): string
+	{
+		if (!\preg_match('~/l/(\d+)/~', $url, $matches)) {
+			return '';
+		}
+
+		$accountId = $matches[1];
+
+		$output = [];
+
+		foreach (["visitor_id{$accountId}", "visitor_id{$accountId}-hash"] as $name) {
+			$value = isset($_COOKIE[$name]) ? \sanitize_text_field(\wp_unslash($_COOKIE[$name])) : ''; // phpcs:ignore
+
+			if (!$value || \preg_match('/[^A-Za-z0-9._%-]/', $value)) {
+				continue;
+			}
+
+			$output[] = "{$name}={$value}";
+		}
+
+		return \implode('; ', $output);
 	}
 
 	/**

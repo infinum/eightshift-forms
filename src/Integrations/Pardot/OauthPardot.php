@@ -184,7 +184,11 @@ class OauthPardot extends AbstractOauth
 
 		if (ApiHelpers::isSuccessResponse($code)) {
 			\update_option(SettingsHelpers::getSettingName(OauthPardot::OAUTH_PARDOT_ACCESS_TOKEN_KEY), $body['access_token']);
-			\update_option(SettingsHelpers::getSettingName(OauthPardot::OAUTH_PARDOT_REFRESH_TOKEN_KEY), $body['refresh_token']);
+
+			// Salesforce doesn't rotate refresh tokens - the refresh_token grant response omits it, so keep the stored one.
+			if (!empty($body['refresh_token'])) {
+				\update_option(SettingsHelpers::getSettingName(OauthPardot::OAUTH_PARDOT_REFRESH_TOKEN_KEY), $body['refresh_token']);
+			}
 
 			return true;
 		}

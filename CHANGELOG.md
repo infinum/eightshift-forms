@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.9.1]
+
+### Added
+
+- Added forwarding of the Pardot visitor tracking cookie (`visitor_id{accountId}`) with form handler submissions, so submissions are linked to the prospect's activity history and campaign.
+
+### Fixed
+
+- Fixed Pardot OAuth refresh token being overwritten with an empty value on token refresh — Salesforce doesn't rotate refresh tokens, so the stored one is now kept when the response omits it.
+
 ## [9.9.0]
 
 ### Added
@@ -1955,6 +1965,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.9.1]: https://github.com/infinum/eightshift-forms/compare/9.9.0...9.9.1
 [9.9.0]: https://github.com/infinum/eightshift-forms/compare/9.8.0...9.9.0
 [9.8.0]: https://github.com/infinum/eightshift-forms/compare/9.7.1...9.8.0
 [9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
