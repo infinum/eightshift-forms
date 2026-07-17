@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.10.0]
+
+### Added
+
+- Added a Connected form feature — a new "Connected" tab in the form's general settings where you can select another form and map its fields; after a successful submission, the connected form's fields are auto-populated with the submitted values.
+- Added `connectedFormId` and `connectedFormMap` response output keys sent with integration form submissions.
+- Added `esFormsBeforeEnrichmentConnectedFormFill` and `esFormsAfterEnrichmentConnectedFormFill` JS events dispatched around the connected form fill.
+- Added a `setManualValuesByFieldType` utility (also exposed on the public JS API) that sets a field's value based on its type, replacing the repeated per-type switch statements.
+
+### Changed
+
+- Updated general settings tab labels: "After form submission" is now "Redirect" and "Single submit" is now "Auto-submit".
+- Updated conditional tags, enrichment, and form reset logic to set field values through the new `setManualValuesByFieldType` utility.
+
 ## [9.9.1]
 
 ### Added
@@ -1954,6 +1968,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.10.0]: https://github.com/infinum/eightshift-forms/compare/9.9.1...9.10.0
 [9.9.1]: https://github.com/infinum/eightshift-forms/compare/9.9.0...9.9.1
 [9.9.0]: https://github.com/infinum/eightshift-forms/compare/9.8.0...9.9.0
 [9.8.0]: https://github.com/infinum/eightshift-forms/compare/9.7.1...9.8.0

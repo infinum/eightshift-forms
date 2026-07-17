@@ -159,8 +159,7 @@ export class Form {
 
 			// Remove loading class from forms element.
 			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
-
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -343,7 +342,7 @@ export class Form {
 			this.CONTROLLER = null;
 
 			return parsedResponse;
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -397,7 +396,7 @@ export class Form {
 			this.steps.formStepSubmit(formId, parsedResponse);
 			this.steps.formStepSubmitAfter(formId, parsedResponse);
 			this.state.setStateFormIsProcessing(false, formId);
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
@@ -483,6 +482,15 @@ export class Form {
 				// Remove local storage for prefill.
 				if (this.state.getStateEnrichmentIsUsed()) {
 					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
+				}
+
+				if (data?.[this.state.getStateResponseOutputKey('connectedFormId')]) {
+					this.enrichment.populateConnectedForm(
+						formId,
+						data?.[this.state.getStateResponseOutputKey('connectedFormId')],
+						data?.[this.state.getStateResponseOutputKey('connectedFormMap')],
+						data?.[this.state.getStateResponseOutputKey('variation')],
+					);
 				}
 
 				// Return to original first step.
@@ -633,7 +641,7 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch ({name, message}) {
+			} catch ({ name, message }) {
 				if (name === 'AbortError') {
 					return;
 				}
@@ -683,7 +691,7 @@ export class Form {
 				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
 					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 				}
-			} catch ({name, message}) {
+			} catch ({ name, message }) {
 				if (name === 'AbortError') {
 					return;
 				}
@@ -1042,13 +1050,16 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataStep(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('steps'),
-				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
-				custom: this.state.getStateFormStepsCurrent(formId),
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('steps'),
+					value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
+					custom: this.state.getStateFormStepsCurrent(formId),
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1059,32 +1070,35 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCommon(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('formId'),
-				value: this.state.getStateFormFid(formId),
-			},
-			{
-				name: this.state.getStateParam('postId'),
-				value: this.state.getStateFormPostId(formId),
-			},
-			{
-				name: this.state.getStateParam('type'),
-				value: this.state.getStateFormType(formId),
-			},
-			{
-				name: this.state.getStateParam('action'),
-				value: this.state.getStateFormAction(formId) ?? '',
-			},
-			{
-				name: this.state.getStateParam('actionExternal'),
-				value: this.state.getStateFormActionExternal(formId) ?? '',
-			},
-			{
-				name: this.state.getStateParam('secureData'),
-				value: this.state.getStateFormSecureData(formId) ?? '',
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('formId'),
+					value: this.state.getStateFormFid(formId),
+				},
+				{
+					name: this.state.getStateParam('postId'),
+					value: this.state.getStateFormPostId(formId),
+				},
+				{
+					name: this.state.getStateParam('type'),
+					value: this.state.getStateFormType(formId),
+				},
+				{
+					name: this.state.getStateParam('action'),
+					value: this.state.getStateFormAction(formId) ?? '',
+				},
+				{
+					name: this.state.getStateParam('actionExternal'),
+					value: this.state.getStateFormActionExternal(formId) ?? '',
+				},
+				{
+					name: this.state.getStateParam('secureData'),
+					value: this.state.getStateFormSecureData(formId) ?? '',
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1102,12 +1116,15 @@ export class Form {
 		const data = this.enrichment.getLocalStorage(this.state.getStateEnrichmentStorageName());
 
 		if (data) {
-			this.utils.buildFormDataItems([
-				{
-					name: this.state.getStateParam('storage'),
-					value: data,
-				},
-			], this.FORM_DATA);
+			this.utils.buildFormDataItems(
+				[
+					{
+						name: this.state.getStateParam('storage'),
+						value: data,
+					},
+				],
+				this.FORM_DATA,
+			);
 		}
 	}
 
@@ -1119,12 +1136,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataAdmin(formId) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('settingsType'),
-				value: this.state.getStateFormTypeSettings(formId),
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('settingsType'),
+					value: this.state.getStateFormTypeSettings(formId),
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	/**
@@ -1168,12 +1188,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setFormDataCaptcha(data) {
-		this.utils.buildFormDataItems([
-			{
-				name: this.state.getStateParam('captcha'),
-				value: data,
-			},
-		], this.FORM_DATA);
+		this.utils.buildFormDataItems(
+			[
+				{
+					name: this.state.getStateParam('captcha'),
+					value: data,
+				},
+			],
+			this.FORM_DATA,
+		);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1595,7 +1618,7 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch ({name, message}) {
+				} catch ({ name, message }) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);
@@ -1621,7 +1644,7 @@ export class Form {
 
 					button.focus();
 					this.utils.setOnFocus(button);
-				} catch ({name, message}) {
+				} catch ({ name, message }) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 					button.focus();
 					this.utils.setOnFocus(button);

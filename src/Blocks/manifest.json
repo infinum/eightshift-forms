@@ -496,6 +496,8 @@
 			"afterEnrichmentUrlPrefill": "esFormsAfterEnrichmentUrlPrefill",
 			"beforeEnrichmentLocalstoragePrefill": "esFormsBeforeEnrichmentLocalstoragePrefill",
 			"afterEnrichmentLocalstoragePrefill": "esFormsAfterEnrichmentLocalstoragePrefill",
+			"beforeEnrichmentConnectedFormFill": "esFormsBeforeEnrichmentConnectedFormFill",
+			"afterEnrichmentConnectedFormFill": "esFormsAfterEnrichmentConnectedFormFill",
 			"onFieldChange": "esFormsOnFieldChange",
 			"afterResultsOutput": "esFormsAfterResultsOutput"
 		},
@@ -700,6 +702,8 @@
 			"hideFormOnSuccess": "hideFormOnSuccess",
 			"skipResetFormOnSuccess": "skipResetFormOnSuccess",
 			"variation": "variation",
+			"connectedFormId": "connectedFormId",
+			"connectedFormMap": "connectedFormMap",
 			"entry": "entry",
 			"formId": "formId",
 			"geoId": "geoId",
