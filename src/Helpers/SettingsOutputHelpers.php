@@ -438,6 +438,9 @@ final class SettingsOutputHelpers
 				case '$':
 					$output[] = "<li><code>$" . $item . "</code></li>";
 					break;
+				case '':
+					$output[] = "<li><code>" . $item . "</code></li>";
+					break;
 				default:
 					$output[] = "<li><code>{" . $item . "}</code></li>";
 					break;
