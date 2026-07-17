@@ -19,6 +19,7 @@ use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\I18n\I18n;
+use EightshiftForms\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -126,6 +127,23 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public const string SETTINGS_FORCE_LOCALE = 'force-locale';
 
 	/**
+	 * Connected form key.
+	 */
+	public const string SETTINGS_CONNECTED_FORM = 'connected-form';
+
+	/**
+	 * Connected form map key.
+	 */
+	public const string SETTINGS_CONNECTED_FORM_MAP = 'connected-form-map';
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param FormListingInterface $formsListing Inject form listing data.
+	 */
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
+
+	/**
 	 * Register all the hooks
 	 */
 	public function register(): void
@@ -156,6 +174,8 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 		$trackingEventName = FiltersOutputMock::getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = FiltersOutputMock::getTrackingAdditionalDataFilterValue($formType, $formId);
 
+		$connectedFormValue = SettingsHelpers::getSettingValue(self::SETTINGS_CONNECTED_FORM, $formId);
+
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -163,7 +183,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('After form submission', 'eightshift-forms'),
+						'tabLabel' => \__('Redirect', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
@@ -395,7 +415,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Single submit', 'eightshift-forms'),
+						'tabLabel' => \__('Auto-submit', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
@@ -498,6 +518,66 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									],
 								],
 							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Connected', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'select',
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_CONNECTED_FORM),
+								'selectId' => SettingsHelpers::getSettingName(self::SETTINGS_CONNECTED_FORM),
+								'selectSingleSubmit' => true,
+								'selectFieldLabel' => \__('Connected form', 'eightshift-forms'),
+								'selectFieldHelp' => \__('Select form you want to connect to this form.', 'eightshift-forms'),
+								'selectContent' => \array_map(static function (array $item) use ($connectedFormValue): array {
+									$id = $item['id'] ?? '';
+									$title = $item['title'] ?? '';
+
+									return [
+										'component' => 'select-option',
+										// translators: %s will be replaced by the form id.
+										'selectOptionLabel' => $title === '' ? \sprintf(\__('Form %s', 'eightshift-forms'), $id) : $title,
+										'selectOptionValue' => $id,
+										'selectOptionIsSelected' => $id === (int) $connectedFormValue,
+									];
+								}, $this->formsListing->getFormsList()['items'] ?? []),
+								'selectValue' => $connectedFormValue,
+							],
+							...($connectedFormValue !== '' && $connectedFormValue !== '0') ? [
+								[
+									'component' => 'textarea',
+									'textareaFieldLabel' => \__('Connected fields', 'eightshift-forms'),
+									'textareaIsMonospace' => true,
+									'textareaSaveAsJson' => true,
+									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_CONNECTED_FORM_MAP),
+									'textareaFieldHelp' => \sprintf(
+										// translators: %1$s will be replaced by current form fields, %2$s will be replaced by connected form fields.
+										\__('After a successful submission, this form will auto populate the fields in the connected form.<br /><br />
+										<details class="esf-is-filter-applied">
+											<summary class="esf:focus-ring">Available field names</summary>
+											<ul>
+												%1$s
+											</ul>
+											<br />
+											Tag missing? Make sure its field has a <b>Name</b> set!
+										</details>
+										<br />
+										<details class="esf-is-filter-applied">
+											<summary class="esf:focus-ring">Available connected field names</summary>
+											<ul>
+												%2$s
+											</ul>
+											<br />
+											Tag missing? Make sure its field has a <b>Name</b> set!
+										</details>', 'eightshift-forms'),
+										SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES], ''),
+										SettingsOutputHelpers::getPartialFormFieldNames(GeneralHelpers::getFormDetails($connectedFormValue)[Config::FD_FIELD_NAMES], '')
+									),
+									'textareaValue' => SettingsHelpers::getSettingValueAsJson(self::SETTINGS_CONNECTED_FORM_MAP, $formId, 2),
+								],
+							] : [],
 						],
 					],
 				]

@@ -482,6 +482,10 @@ export class Form {
 					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
 				}
 
+				if (data?.[this.state.getStateResponseOutputKey('connectedFormId')]) {
+					this.enrichment.populateConnectedForm(formId, data?.[this.state.getStateResponseOutputKey('connectedFormId')], data?.[this.state.getStateResponseOutputKey('connectedFormMap')], data?.[this.state.getStateResponseOutputKey('variation')]);
+				}
+
 				// Return to original first step.
 				if (isFinalStep) {
 					this.steps.resetSteps(formId, !this.state.getStateFormMultistepSkipScroll(formId));

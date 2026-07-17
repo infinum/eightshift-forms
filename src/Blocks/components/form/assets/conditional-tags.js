@@ -923,36 +923,20 @@ export class ConditionalTags {
 	 * @returns {void}
 	 */
 	removeActiveFieldsOnHideItem(formId, name) {
+		let value = '';
+
 		switch (this.state.getStateElementTypeField(name, formId)) {
-			case 'range':
-				this.utils.setManualRangeValue(formId, name, '', false);
-				break;
-			case 'rating':
-				this.utils.setManualRatingValue(formId, name, '', false);
-				break;
-			case 'radio':
-				this.utils.setManualRadioValue(formId, name, '', false);
-				break;
 			case 'checkbox':
-				this.utils.setManualCheckboxValue(formId, name, {}, false);
+			case 'phone':
+				value = {};
 				break;
 			case 'select':
-				this.utils.setManualSelectValue(formId, name, [], false);
-				break;
 			case 'country':
-				this.utils.setManualCountryValue(formId, name, [], false);
-				break;
-			case 'phone':
-				this.utils.setManualPhoneValue(formId, name, {}, false);
-				break;
-			case 'date':
-			case 'dateTime':
-				this.utils.setManualDateValue(formId, name, '', false);
-				break;
-			default:
-				this.utils.setManualInputValue(formId, name, '', false);
+				value = [];
 				break;
 		}
+
+		this.utils.setManualValuesByFieldType(formId, name, value, false);
 	}
 
 	////////////////////////////////////////////////////////////////

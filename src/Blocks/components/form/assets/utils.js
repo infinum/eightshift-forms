@@ -623,39 +623,12 @@ export class Utils {
 
 		for (const [name] of this.state.getStateElements(formId)) {
 			const initial = this.state.getStateElementInitial(name, formId);
+			const type = this.state.getStateElementTypeField(name, formId);
 
-			switch (this.state.getStateElementTypeField(name, formId)) {
-				case 'phone':
-					this.setManualPhoneValue(formId, name, initial);
-					break;
-				case 'date':
-				case 'dateTime':
-					this.setManualDateValue(formId, name, initial);
-					break;
-				case 'country':
-					this.setManualCountryValue(formId, name, initial);
-					break;
-				case 'select':
-					this.setManualSelectValue(formId, name, initial);
-					break;
-				case 'checkbox':
-					this.setManualCheckboxValue(formId, name, initial);
-					break;
-				case 'radio':
-					this.setManualRadioValue(formId, name, initial);
-					break;
-				case 'rating':
-					this.setManualRatingValue(formId, name, initial);
-					break;
-				case 'range':
-					this.setManualRangeValue(formId, name, initial);
-					break;
-				case 'file':
-					this.state.getStateElementCustom(name, formId)?.removeAllFiles();
-					break;
-				default:
-					this.setManualInputValue(formId, name, initial);
-					break;
+			if (type === 'file') {
+				this.state.getStateElementCustom(name, formId)?.removeAllFiles();
+			} else {
+				this.setManualValuesByFieldType(formId, name, initial);
 			}
 		}
 
@@ -1462,6 +1435,48 @@ export class Utils {
 	}
 
 	/**
+	 * Set manual field values by field type
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {string} value Field value.
+	 *
+	 * @returns {void}
+	 */
+	setManualValuesByFieldType(formId, name, value, fullSet = true) {
+		switch (this.state.getStateElementTypeField(name, formId)) {
+			case 'phone':
+				this.setManualPhoneValue(formId, name, value, fullSet);
+				break;
+			case 'date':
+			case 'dateTime':
+				this.setManualDateValue(formId, name, value, fullSet);
+				break;
+			case 'country':
+				this.setManualCountryValue(formId, name, value, fullSet);
+				break;
+			case 'select':
+				this.setManualSelectValue(formId, name, value, fullSet);
+				break;
+			case 'checkbox':
+				this.setManualCheckboxValue(formId, name, value, fullSet);
+				break;
+			case 'radio':
+				this.setManualRadioValue(formId, name, value, fullSet);
+				break;
+			case 'rating':
+				this.setManualRatingValue(formId, name, value, fullSet);
+				break;
+			case 'range':
+				this.setManualRangeValue(formId, name, value, fullSet);
+				break;
+			default:
+				this.setManualInputValue(formId, name, value, fullSet);
+				break;
+		}
+	}
+
+	/**
 	 * Set output results.
 	 *
 	 * @param {string} formId Form Id.
@@ -1912,6 +1927,9 @@ export class Utils {
 			},
 			setRangeCurrentValue: (formId, name) => {
 				this.setRangeCurrentValue(formId, name);
+			},
+			setManualValuesByFieldType: (formId, name, value, fullSet = true) => {
+				this.setManualValuesByFieldType(formId, name, value, fullSet);
 			},
 			setResultsOutput: (formId, data) => {
 				this.setResultsOutput(formId, data);

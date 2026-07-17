@@ -534,6 +534,9 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		// Update created entry with additional values.
 		$output = $this->setIntegrationResponseEntryUpdate($output, $formDetails);
 
+		// Set connected forms data.
+		$output = $this->setIntegrationResponseConnectedForms($output, $formDetails);
+
 		$finalOutput = [
 			'private' => $output['private'],
 			'public' => $output['public'],
@@ -919,6 +922,52 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		}
 
 		$output['public'][UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
+
+		return $output;
+	}
+
+	/**
+	 * Set integration response - connected forms.
+	 *
+	 * @param array<string, mixed> $output Output data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function setIntegrationResponseConnectedForms(array $output, array $formDetails): array
+	{
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+
+		$connectedFormId = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_CONNECTED_FORM, $formId);
+
+		if ($connectedFormId === '' || $connectedFormId === '0') {
+			return $output;
+		}
+
+		$output['public'][UtilsHelper::getStateResponseOutputKey('connectedFormId')] = $connectedFormId;
+
+		$connectedFormMap = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_CONNECTED_FORM_MAP, $formId);
+
+		if ($connectedFormMap === []) {
+			return $output;
+		}
+
+		$connectedMap = [];
+
+		foreach ($connectedFormMap as $item) {
+			$form1 = $item[0] ?? '';
+			$form2 = $item[1] ?? '';
+			if (!$form1) {
+				continue;
+			}
+			if (!$form2) {
+				continue;
+			}
+
+			$connectedMap[$item[0]] = $item[1];
+		}
+
+		$output['public'][UtilsHelper::getStateResponseOutputKey('connectedFormMap')] = $connectedMap;
 
 		return $output;
 	}

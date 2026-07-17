@@ -456,6 +456,7 @@ final class SettingsOutputHelpers
 		foreach ($fieldNames as $item) {
 			$output[] = match ($wrapper) {
 				'$' => "<li><code>$" . $item . "</code></li>",
+				'' => "<li><code>" . $item . "</code></li>",
 				default => "<li><code>{" . $item . "}</code></li>",
 			};
 		}

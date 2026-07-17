@@ -376,11 +376,7 @@ export class Enrichment {
 						value: phoneValue[0],
 					};
 
-					this.utils.setManualPhoneValue(formId, name, newPhoneValue);
-					break;
-				case 'date':
-				case 'dateTime':
-					this.utils.setManualDateValue(formId, name, value);
+					this.utils.setManualValuesByFieldType(formId, name, newPhoneValue);
 					break;
 				case 'select':
 					const selectValue = value.split('---');
@@ -389,7 +385,7 @@ export class Enrichment {
 						break;
 					}
 
-					this.utils.setManualSelectValue(formId, name, selectValue);
+					this.utils.setManualValuesByFieldType(formId, name, selectValue);
 					break;
 				case 'country':
 					const countryValue = value.split('---');
@@ -398,7 +394,7 @@ export class Enrichment {
 						break;
 					}
 
-					this.utils.setManualCountryValue(formId, name, countryValue);
+					this.utils.setManualValuesByFieldType(formId, name, countryValue);
 					break;
 				case 'checkbox':
 					const checkboxValue = value.split('---');
@@ -407,19 +403,10 @@ export class Enrichment {
 						break;
 					}
 
-					this.utils.setManualCheckboxValue(formId, name, checkboxValue);
-					break;
-				case 'radio':
-					this.utils.setManualRadioValue(formId, name, value);
-					break;
-				case 'rating':
-					this.utils.setManualRatingValue(formId, name, value);
-					break;
-				case 'range':
-					this.utils.setManualRangeValue(formId, name, value);
+					this.utils.setManualValuesByFieldType(formId, name, checkboxValue);
 					break;
 				default:
-					this.utils.setManualInputValue(formId, name, value);
+					this.utils.setManualValuesByFieldType(formId, name, value);
 					break;
 			}
 		});
@@ -443,39 +430,46 @@ export class Enrichment {
 				return;
 			}
 
-			switch (this.state.getStateElementTypeField(name, formId)) {
-				case 'phone':
-					this.utils.setManualPhoneValue(formId, name, value);
-					break;
-				case 'date':
-				case 'dateTime':
-					this.utils.setManualDateValue(formId, name, value);
-					break;
-				case 'select':
-					this.utils.setManualSelectValue(formId, name, value);
-					break;
-				case 'country':
-					this.utils.setManualCountryValue(formId, name, value);
-					break;
-				case 'checkbox':
-					this.utils.setManualCheckboxValue(formId, name, value);
-					break;
-				case 'radio':
-					this.utils.setManualRadioValue(formId, name, value);
-					break;
-				case 'rating':
-					this.utils.setManualRatingValue(formId, name, value);
-					break;
-				case 'range':
-					this.utils.setManualRangeValue(formId, name, value);
-					break;
-				default:
-					this.utils.setManualInputValue(formId, name, value);
-					break;
-			}
+			this.utils.setManualValuesByFieldType(formId, name, value);
 		});
 
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterEnrichmentLocalstoragePrefill'), formId, data);
+	}
+
+	/**
+	 * Populate connected form fields with data from API response.
+	 *
+	 * @param {string} form1Id Form 1 ID.
+	 * @param {string} form2RealId Form 2 Real ID.
+	 * @param {object} data Map data.
+	 * @param {object} variationData Variation data.
+	 *
+	 * @returns {void}
+	 */
+	populateConnectedForm(form1Id, form2RealId, data, variationData) {
+		const form2 = document.querySelector(`${this.state.getStateSelector('form', true)}[${this.state.getStateAttribute('formFid')}="${form2RealId}"]`);
+
+		if (!form2) {
+			return;
+		}
+
+		const form2Id = this.state.getFormId(form2);
+
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('beforeEnrichmentConnectedFormFill'), form1Id, data);
+
+		if (data) {
+			Object.entries(data).forEach(([form1FieldName, form2FieldName]) => {
+				this.utils.setManualValuesByFieldType(form2Id, form2FieldName, this.state.getStateElementValue(form1FieldName, form1Id));
+			});
+		}
+
+		if (variationData) {
+			Object.entries(variationData).forEach(([variationName, variationValue]) => {
+				this.utils.setManualValuesByFieldType(form2Id, variationName, variationValue);
+			});
+		}
+
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterEnrichmentConnectedFormFill'), form1Id, data);
 	}
 
 	////////////////////////////////////////////////////////////////

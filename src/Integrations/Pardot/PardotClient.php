@@ -48,9 +48,7 @@ class PardotClient implements PardotClientInterface
 	 *
 	 * @param OauthInterface $oauthPardot Inject Oauth methods.
 	 */
-	public function __construct(protected OauthInterface $oauthPardot)
-	{
-	}
+	public function __construct(protected OauthInterface $oauthPardot) {} // phpcs:ignore
 
 	/**
 	 * Return all Pardot form handlers.
@@ -201,7 +199,7 @@ class PardotClient implements PardotClientInterface
 		];
 
 		$visitorCookieHeader = $this->getVisitorCookieHeader($url);
-		if ($visitorCookieHeader) {
+		if ($visitorCookieHeader !== '' && $visitorCookieHeader !== '0') {
 			$headers['Cookie'] = $visitorCookieHeader;
 		}
 
@@ -281,10 +279,10 @@ class PardotClient implements PardotClientInterface
 		$errorCode = $body['errorCode'] ?? '';
 
 		return match ($errorCode) {
-									'INVALID_SESSION_ID' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING,
-									'SERVER_ERROR' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR,
-									'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR,
-									default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'INVALID_SESSION_ID' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING,
+			'SERVER_ERROR' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR,
+			'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR,
+			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 
@@ -421,8 +419,6 @@ class PardotClient implements PardotClientInterface
 	 * and campaign, matching the behavior of a native browser POST.
 	 *
 	 * @param string $url Form handler submit URL.
-	 *
-	 * @return string
 	 */
 	private function getVisitorCookieHeader(string $url): string
 	{
@@ -435,9 +431,12 @@ class PardotClient implements PardotClientInterface
 		$output = [];
 
 		foreach (["visitor_id{$accountId}", "visitor_id{$accountId}-hash"] as $name) {
-			$value = isset($_COOKIE[$name]) ? \sanitize_text_field(\wp_unslash($_COOKIE[$name])) : ''; // phpcs:ignore
-
-			if (!$value || \preg_match('/[^A-Za-z0-9._%-]/', $value)) {
+			$value = isset($_COOKIE[$name]) ? \sanitize_text_field(\wp_unslash($_COOKIE[$name])) : '';
+			// phpcs:ignore
+			if (!$value) {
+				continue;
+			}
+			if (\preg_match('/[^A-Za-z0-9._%-]/', $value)) {
 				continue;
 			}
 
@@ -485,7 +484,7 @@ class PardotClient implements PardotClientInterface
 
 		foreach ($mapParams as $formFieldName => $pardotFieldName) {
 			if ($formFieldName === '') {
-													continue;
+				continue;
 			}
 			if ($formFieldName === '0') {
 				continue;

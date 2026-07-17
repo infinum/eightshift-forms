@@ -72,7 +72,7 @@ class Enrichment implements EnrichmentInterface
 			$tagsAdditional = \str_replace(',', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \array_values(\array_filter(\explode(\PHP_EOL, $tagsAdditional)));
 			$tagsAdditional = \array_unique(\array_map(
-				static fn($item): ?string => \preg_replace('/[^a-zA-Z0-9_ -]/s', '', (string) $item),
+				static fn(string $item): ?string => \preg_replace('/[^a-zA-Z0-9_ -]/s', '', $item),
 				$tagsAdditional
 			));
 

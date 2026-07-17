@@ -343,7 +343,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 
 		$loggedInOnlyForm = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId);
-		return !($loggedInOnlyForm && !\is_user_logged_in());
+		return !$loggedInOnlyForm || \is_user_logged_in();
 	}
 
 	/**

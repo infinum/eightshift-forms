@@ -450,7 +450,7 @@ final class GeneralHelpers
 		return \implode(
 			$separator,
 			\array_map(
-				static function ($item) {
+				static function ($item): string {
 					$item = \count_chars($item, 3);
 
 					if ($item === 'Y') {
@@ -598,7 +598,7 @@ final class GeneralHelpers
 				if (isset($customFields[$item['name'] ?? ''])) {
 					return false;
 				}
-				return !($additional && isset($additional[$item['name'] ?? '']));
+				return !$additional || !isset($additional[$item['name'] ?? '']);
 			}
 		);
 	}
