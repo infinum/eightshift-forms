@@ -1703,13 +1703,13 @@ export class Utils {
 			return [];
 		}
 
-		const options = this.state.getStateElementCustom(name, formId).passedElement?.element?.selectedOptions;
+		const options = this.state.getStateElementCustom(name, formId)?.passedElement?.element?.selectedOptions;
 
 		if (!options.length) {
 			return [];
 		}
 
-		const type = this.state.getStateElementCustom(name, formId).passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
+		const type = this.state.getStateElementCustom(name, formId)?.passedElement?.element?.getAttribute(this.state.getStateAttribute('countryOutputType'));
 
 		const output = [];
 

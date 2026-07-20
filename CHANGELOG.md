@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.10.1]
+
+### Fixed
+
+- Fixed a crash in the country field's select-options handling when `getStateElementCustom` returns no matching state element.
+
 ## [9.10.0]
 
 ### Added
@@ -1989,6 +1995,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.10.1]: https://github.com/infinum/eightshift-forms/compare/9.10.0...9.10.1
 [9.10.0]: https://github.com/infinum/eightshift-forms/compare/9.9.1...9.10.0
 [9.9.1]: https://github.com/infinum/eightshift-forms/compare/9.9.0...9.9.1
 [9.9.0]: https://github.com/infinum/eightshift-forms/compare/9.8.0...9.9.0
