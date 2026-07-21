@@ -16,7 +16,6 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\Labels;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -48,18 +47,15 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param PardotClientInterface $pardotClient Inject Pardot client.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected PardotClientInterface $pardotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -105,7 +101,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 		if (!\apply_filters(SettingsPardot::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_GLOBAL_NOT_CONFIGURED),
+				Labels::getLabel(Labels::LABEL_GLOBAL_NOT_CONFIGURED),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
@@ -118,7 +114,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
+				Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
@@ -142,7 +138,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 		)));
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
 				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',

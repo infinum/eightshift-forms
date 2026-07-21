@@ -14,7 +14,6 @@ use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -37,18 +36,15 @@ class IntegrationEditorSyncRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**

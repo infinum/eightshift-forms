@@ -15,7 +15,6 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClientInterface;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\Labels;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -37,18 +36,15 @@ class TestApiPipedriveRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator.
-	 * @param LabelsInterface $labels Inject labels.
 	 * @param PipedriveClientInterface $pipedriveClient Inject Pipedrive which holds Pipedrive connect data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected PipedriveClientInterface $pipedriveClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -99,7 +95,7 @@ class TestApiPipedriveRoute extends AbstractSimpleFormSubmit
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_TEST_API_ERROR),
+				Labels::getLabel(Labels::LABEL_TEST_API_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
 					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
@@ -109,7 +105,7 @@ class TestApiPipedriveRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_TEST_API_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_TEST_API_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
 				AbstractBaseRoute::R_DEBUG_KEY => 'testApiSuccess',

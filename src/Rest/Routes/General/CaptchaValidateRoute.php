@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
@@ -34,18 +33,15 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected CaptchaInterface $captcha
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -94,7 +90,7 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		// Bailout if troubleshooting skip captcha is on.
 		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_CAPTCHA_SKIP_CHECK),
+				AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CAPTCHA_SKIP_CHECK),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_DEBUG_SKIP_CHECK,
 				],

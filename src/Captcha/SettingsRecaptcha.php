@@ -13,7 +13,6 @@ namespace EightshiftForms\Captcha;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -91,13 +90,6 @@ class SettingsRecaptcha implements ServiceInterface
 	 * Hide badge key.
 	 */
 	public const SETTINGS_CAPTCHA_HIDE_BADGE_KEY = 'captcha-hide-badge';
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
-	 */
-	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks

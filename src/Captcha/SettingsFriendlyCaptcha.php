@@ -13,7 +13,6 @@ namespace EightshiftForms\Captcha;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -65,13 +64,6 @@ class SettingsFriendlyCaptcha implements ServiceInterface
 	 * Friendly Captcha widget mode default value.
 	 */
 	public const SETTINGS_FRIENDLY_CAPTCHA_WIDGET_MODE_DEFAULT = 'smart';
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param LabelsInterface $labels Inject labels data.
-	 */
-	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks.

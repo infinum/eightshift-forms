@@ -69,7 +69,7 @@ class IncrementRoute extends AbstractSimpleFormSubmit
 		FormsHelper::resetIncrement($params['formId'] ?? '');
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_INCREMENT_RESET_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INCREMENT_RESET_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'incrementResetSuccess',
 			],

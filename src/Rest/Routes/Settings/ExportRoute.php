@@ -78,7 +78,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_EXPORT_MISSING_ITEMS),
+				Labels::getLabel(Labels::LABEL_EXPORT_MISSING_ITEMS),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportMissingItems',
 				]
@@ -95,7 +95,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		if ($output === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_EXPORT_DATA_EMPTY),
+				Labels::getLabel(Labels::LABEL_EXPORT_DATA_EMPTY),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
 				]
@@ -104,7 +104,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_EXPORT_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_EXPORT_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
 			],

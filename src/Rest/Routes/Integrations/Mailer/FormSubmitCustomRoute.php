@@ -85,7 +85,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (!$action) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(Labels::LABEL_CUSTOM_NO_ACTION),
+				Labels::getLabel(Labels::LABEL_CUSTOM_NO_ACTION),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_NO_ACTION,
@@ -106,7 +106,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 			\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CUSTOM_SUCCESS_REDIRECT),
+				AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CUSTOM_SUCCESS_REDIRECT),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_SUCCESS_REDIRECT,
@@ -142,7 +142,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (\is_wp_error($customResponse)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(Labels::LABEL_CUSTOM_ERROR, $formId),
+				Labels::getLabel(Labels::LABEL_CUSTOM_ERROR, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_WP_ERROR,
@@ -157,7 +157,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (ApiHelpers::isErrorResponse($customResponseCode)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(Labels::LABEL_CUSTOM_ERROR, $formId),
+				Labels::getLabel(Labels::LABEL_CUSTOM_ERROR, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_ERROR,
@@ -174,7 +174,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CUSTOM_SUCCESS, $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CUSTOM_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_SUCCESS,

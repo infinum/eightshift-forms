@@ -15,7 +15,6 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\Labels;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -37,18 +36,15 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected AirtableClientInterface $airtableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -99,7 +95,7 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_TEST_API_ERROR),
+				Labels::getLabel(Labels::LABEL_TEST_API_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
 					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
@@ -109,7 +105,7 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_TEST_API_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_TEST_API_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
 				AbstractBaseRoute::R_DEBUG_KEY => 'testApiSuccess',

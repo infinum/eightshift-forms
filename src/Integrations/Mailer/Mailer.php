@@ -18,7 +18,6 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -36,12 +35,10 @@ class Mailer implements MailerInterface
 	 * Create a new instance that injects classes.
 	 *
 	 * @param SecurityInterface $security Security interface.
-	 * @param LabelsInterface $labels Labels interface.
 	 * @param SettingsFallbackDataInterface $settingsFallback Settings fallback data interface.
 	 */
 	public function __construct(
 		protected SecurityInterface $security,
-		protected LabelsInterface $labels,
 		protected SettingsFallbackDataInterface $settingsFallback
 	) {} // phpcs:ignore
 
@@ -63,7 +60,7 @@ class Mailer implements MailerInterface
 		if (!\apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(Labels::LABEL_MAILER_MISSING_CONFIG),
+				Labels::getLabel(Labels::LABEL_MAILER_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_MISSING_CONFIG,
@@ -95,7 +92,7 @@ class Mailer implements MailerInterface
 		if (!$response) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(Labels::LABEL_MAILER_ERROR_EMAIL_SEND),
+				Labels::getLabel(Labels::LABEL_MAILER_ERROR_EMAIL_SEND),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_ERROR_EMAIL_SEND,
@@ -107,7 +104,7 @@ class Mailer implements MailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_MAILER_SUCCESS, $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MAILER_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_SUCCESS,

@@ -161,7 +161,7 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_SETTINGS_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_SETTINGS_SUCCESS),
 
 		];
 	}

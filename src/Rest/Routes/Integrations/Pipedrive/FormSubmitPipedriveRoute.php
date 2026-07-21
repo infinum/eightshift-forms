@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClientInterface;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -42,7 +41,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -51,7 +49,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
@@ -59,7 +56,6 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
@@ -128,7 +124,7 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPipedrive::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_PIPEDRIVE_MISSING_CONFIG),
+				Labels::getLabel(Labels::LABEL_PIPEDRIVE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PIPEDRIVE_MISSING_CONFIG,

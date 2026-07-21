@@ -18,7 +18,6 @@ use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -33,18 +32,15 @@ class TransferRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param LabelsInterface $labels Inject labels.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected TransferInterface $transfer
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -114,7 +110,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				if (!$items) {
 					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
-						$this->getLabels()->getLabel(Labels::LABEL_TRANSFER_EXPORT_MISSING_FORMS),
+						Labels::getLabel(Labels::LABEL_TRANSFER_EXPORT_MISSING_FORMS),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingForms',
 						]
@@ -133,7 +129,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				if (!$items) {
 					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
-						$this->getLabels()->getLabel(Labels::LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS),
+						Labels::getLabel(Labels::LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingResultOutputs',
 						]
@@ -158,7 +154,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				if (!$upload) {
 					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
-						$this->getLabels()->getLabel(Labels::LABEL_TRANSFER_UPLOAD_MISSING_FILE),
+						Labels::getLabel(Labels::LABEL_TRANSFER_UPLOAD_MISSING_FILE),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingFile',
 						]
@@ -174,7 +170,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				if (!$uploadStatus) {
 					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 					throw new BadRequestException(
-						$this->getLabels()->getLabel(Labels::LABEL_TRANSFER_UPLOAD_ERROR),
+						Labels::getLabel(Labels::LABEL_TRANSFER_UPLOAD_ERROR),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadError',
 						]
@@ -187,7 +183,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 			default:
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$this->getLabels()->getLabel(Labels::LABEL_TRANSFER_UPLOAD_MISSING_TYPE),
+					Labels::getLabel(Labels::LABEL_TRANSFER_UPLOAD_MISSING_TYPE),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingType',
 					]
@@ -200,7 +196,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 		return [
 			// translators: %1$s will be replaced with the transfer type. %2$s will be replaced with the transfer success text.
-			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), \ucfirst($internalType), $this->getLabels()->getLabel(Labels::LABEL_TRANSFER_SUCCESS)),
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), \ucfirst($internalType), Labels::getLabel(Labels::LABEL_TRANSFER_SUCCESS)),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'transferSuccess',
 			],

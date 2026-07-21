@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Pardot\PardotClientInterface;
 use EightshiftForms\Integrations\Pardot\SettingsPardot;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -41,7 +40,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -50,7 +48,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
@@ -58,7 +55,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
@@ -125,7 +121,7 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPardot::FILTER_SETTINGS_IS_VALID_NAME, false, $formDetails[Config::FD_FORM_ID])) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_PARDOT_MISSING_CONFIG),
+				Labels::getLabel(Labels::LABEL_PARDOT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PARDOT_MISSING_CONFIG,

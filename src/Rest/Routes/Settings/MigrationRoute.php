@@ -36,7 +36,6 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -58,18 +57,15 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -129,7 +125,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			default => throw new BadRequestException(
-				$this->getLabels()->getLabel(Labels::LABEL_MIGRATION_TYPE_NOT_FOUND),
+				Labels::getLabel(Labels::LABEL_MIGRATION_TYPE_NOT_FOUND),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
 				]
@@ -200,7 +196,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
 			],
@@ -394,7 +390,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
 			],
@@ -508,7 +504,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
 			],
@@ -599,7 +595,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
 			],

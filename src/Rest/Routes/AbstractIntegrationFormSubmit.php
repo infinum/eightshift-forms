@@ -23,7 +23,6 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
@@ -60,7 +59,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -68,7 +66,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	public function __construct(
 		SecurityInterface $security,
 		protected ValidatorInterface $validator,
-		protected LabelsInterface $labels,
 		protected CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		/**
@@ -127,7 +124,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
-					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN, $formDetails[Config::FD_FORM_ID] ?? ''),
+					Labels::getLabel(Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN, $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN,
@@ -140,7 +137,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->getValidator()->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
-					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_SUBMIT_ONCE, $formDetails[Config::FD_FORM_ID] ?? ''),
+					Labels::getLabel(Labels::LABEL_VALIDATION_SUBMIT_ONCE, $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_ONCE,
@@ -153,7 +150,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if (!$this->getValidator()->validateMandatoryParams($formDetails, $this->getMandatoryParams($formDetails))) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS),
+					Labels::getLabel(Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
@@ -166,7 +163,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->shouldCheckSecurity() && !$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE], $formDetails[Config::FD_FORM_ID])) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new RequestLimitException(
-					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_SECURITY),
+					Labels::getLabel(Labels::LABEL_VALIDATION_SECURITY),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SECURITY,
@@ -179,7 +176,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->shouldCheckParamsValidation() && $validate = $this->getValidator()->validateParams($formDetails)) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
+					Labels::getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_PARAMS,
@@ -223,7 +220,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			$output = $this->submitAction($formDetails);
 
 			$return = [
-				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel(Labels::LABEL_GENERIC_SUCCESS),
+				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $output[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -250,7 +247,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			);
 		} catch (DisabledIntegrationException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel(Labels::LABEL_GENERIC_SUCCESS),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -277,7 +274,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel(Labels::LABEL_SUBMIT_FALLBACK_ERROR),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: Labels::getLabel(Labels::LABEL_SUBMIT_FALLBACK_ERROR),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -397,7 +394,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		if ($status === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),
+				Labels::getLabel($response[Config::IARD_MSG], $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => $response[Config::IARD_MSG],
@@ -453,7 +450,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		\do_action(HooksHelpers::getActionName(['integrations', $type, 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success", $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel("{$type}Success", $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SUBMIT_INTEGRATION_SUCCESS,
@@ -680,16 +677,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected function getValidator()
 	{
 		return $this->validator;
-	}
-
-	/**
-	 * Returns validator labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getLabels()
-	{
-		return $this->labels;
 	}
 
 	/**

@@ -42,7 +42,7 @@ use EightshiftForms\Validation\SettingsValidation;
 /**
  * Labels class.
  */
-class Labels implements LabelsInterface
+class Labels
 {
 	public const TYPE_GENERIC = 'generic';
 
@@ -346,7 +346,7 @@ class Labels implements LabelsInterface
 	 *
 	 * @return array<string, array<string, string>>
 	 */
-	public function getLabels(): array
+	public static function getLabels(): array
 	{
 		return [];
 	}
@@ -357,7 +357,7 @@ class Labels implements LabelsInterface
 	 * @param string $key Label key.
 	 * @param string $formId Form ID.
 	 */
-	public function getLabel(string $key, string $formId = ''): string
+	public static function getLabel(string $key, string $formId = ''): string
 	{
 		// If form ID is not missing check form settings for the overrides.
 		if ($formId !== '' && $formId !== '0') {
@@ -379,7 +379,7 @@ class Labels implements LabelsInterface
 		static $labels = [];
 
 		if (!$labels) {
-			$labels = \array_merge(...\array_values($this->getLabels()));
+			$labels = \array_merge(...\array_values(self::getLabels()));
 		}
 
 		return \esc_html($labels[$key] ?? '');
