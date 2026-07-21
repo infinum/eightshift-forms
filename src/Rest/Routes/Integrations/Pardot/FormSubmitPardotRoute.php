@@ -24,7 +24,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitPardotRoute
@@ -128,7 +128,7 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('pardotMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PARDOT_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

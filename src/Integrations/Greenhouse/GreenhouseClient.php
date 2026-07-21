@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * GreenhouseClient integration class.
@@ -220,8 +220,8 @@ class GreenhouseClient implements ClientInterface
 		$msg = $body['error'] ?? '';
 
 		return match ($msg) {
-			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_BAD_REQUEST_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => Labels::LABEL_GREENHOUSE_BAD_REQUEST_ERROR,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

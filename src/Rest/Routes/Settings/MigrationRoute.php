@@ -30,7 +30,7 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
@@ -40,6 +40,7 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use WP_Query;
 
 /**

@@ -22,7 +22,7 @@ use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitPaycekRoute
@@ -88,7 +88,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('paycekMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -112,7 +112,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('paycekMissingReqParams', $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS,
 				],
 			);
 			// phpcs:enable
@@ -146,7 +146,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],

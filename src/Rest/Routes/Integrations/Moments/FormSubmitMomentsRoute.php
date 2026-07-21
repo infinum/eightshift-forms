@@ -26,6 +26,7 @@ use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use Override;
 
@@ -134,7 +135,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('momentsMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MOMENTS_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -198,7 +199,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 			return;
 		}
 
-		if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR)) {
+		if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_MOMENTS_EVENTS_ERROR)) {
 			$this->getMailer()->sendTroubleshootingEmail(
 				[
 					Config::FD_FORM_ID => (string) $formId,
@@ -208,7 +209,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 					'response' => $response[Config::IARD_RESPONSE] ?? [],
 					'body' => $response[Config::IARD_BODY] ?? [],
 				],
-				SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR
+				Labels::LABEL_MOMENTS_EVENTS_ERROR
 			);
 		}
 	}

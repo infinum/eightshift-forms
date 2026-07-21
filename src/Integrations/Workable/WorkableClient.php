@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * WorkableClient integration class.
@@ -203,10 +203,10 @@ class WorkableClient implements ClientInterface
 		$msg = $body['error'] ?? '';
 
 		return match ($msg) {
-			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR,
-			'position is draft or archived' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR,
-			'Filename should contain less characters' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => Labels::LABEL_WORKABLE_BAD_REQUEST_ERROR,
+			'position is draft or archived' => Labels::LABEL_WORKABLE_ARCHIVED_JOB_ERROR,
+			'Filename should contain less characters' => Labels::LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

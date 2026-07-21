@@ -16,7 +16,7 @@ use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -96,7 +96,7 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 			return [
 				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('captchaSkipCheck'),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_DEBUG_SKIP_CHECK,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_DEBUG_SKIP_CHECK,
 				],
 			];
 		}

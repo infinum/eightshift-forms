@@ -22,7 +22,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitCorvusRoute
@@ -88,7 +88,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('corvusMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -116,7 +116,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_REQ_PARAMS,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_MISSING_REQ_PARAMS,
 				],
 			);
 			// phpcs:enable
@@ -129,7 +129,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_STORE_ID,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_MISSING_STORE_ID,
 				],
 			);
 			// phpcs:enable
@@ -161,7 +161,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],

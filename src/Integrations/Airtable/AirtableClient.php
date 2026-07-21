@@ -19,7 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * AirtableClient integration class.
@@ -237,12 +237,12 @@ class AirtableClient implements AirtableClientInterface
 		$msg = $body['error']['type'] ?? '';
 
 		return match ($msg) {
-			'NOT_FOUND' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_NOT_FOUND_ERROR,
-			'INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR,
-			'INVALID_PERMISSIONS' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_PERMISSIONS_ERROR,
-			'INVALID_REQUEST_UNKNOWN' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR,
-			'INVALID_VALUE_FOR_COLUMN' => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'NOT_FOUND' => Labels::LABEL_AIRTABLE_NOT_FOUND_ERROR,
+			'INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND' => Labels::LABEL_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR,
+			'INVALID_PERMISSIONS' => Labels::LABEL_AIRTABLE_INVALID_PERMISSIONS_ERROR,
+			'INVALID_REQUEST_UNKNOWN' => Labels::LABEL_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR,
+			'INVALID_VALUE_FOR_COLUMN' => Labels::LABEL_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

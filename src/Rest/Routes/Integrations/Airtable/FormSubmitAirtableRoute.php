@@ -24,7 +24,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitAirtableRoute
@@ -118,7 +118,7 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('airtableMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_AIRTABLE_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_AIRTABLE_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

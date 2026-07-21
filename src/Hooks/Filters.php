@@ -29,7 +29,7 @@ use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Captcha\SettingsRecaptcha;
@@ -48,6 +48,7 @@ use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * The Filters class for all public filters/actions.

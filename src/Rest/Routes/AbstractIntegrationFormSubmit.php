@@ -37,6 +37,7 @@ use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\I18n\I18n;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
@@ -116,7 +117,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new PermissionDeniedException(
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PERMISSION_DENIED,
 					]
 				);
 				// phpcs:enable
@@ -129,7 +130,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_LOGGED_IN,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN,
 					]
 				);
 				// phpcs:enable
@@ -142,7 +143,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_ONCE,
 					]
 				);
 				// phpcs:enable
@@ -155,7 +156,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
 				// phpcs:enable
@@ -168,7 +169,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$this->getLabels()->getLabel('validationSecurity'),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SECURITY,
 					]
 				);
 				// phpcs:enable
@@ -181,7 +182,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_PARAMS,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_PARAMS,
 					],
 					[
 						UtilsHelper::getStateResponseOutputKey('validation') => $validate,
@@ -455,7 +456,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success", $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SUBMIT_INTEGRATION_SUCCESS,
 				AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA => $successAdditionalData,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(

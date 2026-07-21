@@ -13,6 +13,7 @@ namespace EightshiftForms\CronJobs;
 use DateTime;
 use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

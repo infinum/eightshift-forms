@@ -19,7 +19,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -104,7 +104,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 				$this->getLabels()->getLabel('geolocationSkipCheck'),
 				[
 					AbstractBaseRoute::R_DEBUG => $params,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_FEATURE_DISABLED,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_FEATURE_DISABLED,
 				],
 			);
 			// phpcs:enable
@@ -117,7 +117,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_MALFORMED_DECRYPT_DATA,
 				]
 			);
 			// phpcs:enable
@@ -130,7 +130,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_MALFORMED_DECRYPT_DATA,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_MALFORMED_DECRYPT_DATA,
 				]
 			);
 			// phpcs:enable
@@ -148,7 +148,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
 					AbstractBaseRoute::R_DEBUG => $dataOutput,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_DETECTION_FAILED,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_DETECTION_FAILED,
 				]
 			);
 			// phpcs:enable
@@ -157,7 +157,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GEOLOCATION_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('geoId') => $geolocation,

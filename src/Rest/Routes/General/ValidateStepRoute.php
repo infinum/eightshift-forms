@@ -16,7 +16,7 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use Override;
 
 /**
@@ -128,7 +128,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
 				],
 			);
 			// phpcs:enable
@@ -141,7 +141,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('validationStepsFieldsProblem'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM,
 				],
 			);
 			// phpcs:enable
@@ -154,7 +154,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('validationStepsNextStepProblem'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
 				],
 			);
 			// phpcs:enable
@@ -177,7 +177,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 					$this->getLabels()->getLabel('validationStepsParametersProblem'),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM,
 					],
 				);
 				// phpcs:enable
@@ -229,7 +229,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationStepsSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('stepType') => $type,

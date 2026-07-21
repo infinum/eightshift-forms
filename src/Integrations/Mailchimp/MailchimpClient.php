@@ -20,7 +20,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * MailchimpClient integration class.
@@ -237,9 +237,9 @@ class MailchimpClient implements MailchimpClientInterface
 		$msg = $body['detail'] ?? '';
 
 		return match ($msg) {
-			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR,
-			'Your request did not include an API key.' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => Labels::LABEL_MAILCHIMP_BAD_REQUEST_ERROR,
+			'Your request did not include an API key.' => Labels::LABEL_MAILCHIMP_MISSING_CONFIG,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

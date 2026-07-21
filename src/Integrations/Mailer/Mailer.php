@@ -13,7 +13,7 @@ namespace EightshiftForms\Integrations\Mailer;
 use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\FormsHelper;
@@ -21,6 +21,7 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftForms_Parsedown as Parsedown;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -65,7 +66,7 @@ class Mailer implements MailerInterface
 				$this->labels->getLabel('mailerMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -97,7 +98,7 @@ class Mailer implements MailerInterface
 				$this->labels->getLabel('mailerErrorEmailSend'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_ERROR_EMAIL_SEND,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_ERROR_EMAIL_SEND,
 				],
 			);
 			// phpcs:enable
@@ -109,7 +110,7 @@ class Mailer implements MailerInterface
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('mailerSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_SUCCESS,
 			],
 		];
 	}

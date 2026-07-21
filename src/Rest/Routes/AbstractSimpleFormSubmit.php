@@ -20,7 +20,7 @@ use EightshiftForms\Integrations\Mailer\MailerInterface; // phpcs:ignore Slevoma
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
@@ -79,7 +79,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				throw new PermissionDeniedException(
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PERMISSION_DENIED,
 					]
 				);
 			}
@@ -89,7 +89,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
 			}

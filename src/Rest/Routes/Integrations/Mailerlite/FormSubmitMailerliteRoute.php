@@ -24,7 +24,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitMailerliteRoute
@@ -129,7 +129,7 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('mailerliteMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILERLITE_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

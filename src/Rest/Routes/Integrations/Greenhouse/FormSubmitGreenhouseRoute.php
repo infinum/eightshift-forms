@@ -24,7 +24,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitGreenhouseRoute
@@ -129,7 +129,7 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('greenhouseMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GREENHOUSE_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

@@ -19,7 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * JiraClient integration class.
@@ -714,25 +714,25 @@ class JiraClient implements JiraClientInterface
 		$msg = $body['errors'] ?? [];
 
 		if (isset($body['errors']['project'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_PROJECT;
+			return Labels::LABEL_JIRA_MISSING_PROJECT;
 		}
 
 		if (isset($body['errors']['issuetype'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_ISSUE_TYPE;
+			return Labels::LABEL_JIRA_MISSING_ISSUE_TYPE;
 		}
 
 		if (isset($body['errors']['summary'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_SUMMARY;
+			return Labels::LABEL_JIRA_MISSING_SUMMARY;
 		}
 
 		if (isset($body['errors']['customfield_10011'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_EPIC_NAME;
+			return Labels::LABEL_JIRA_MISSING_EPIC_NAME;
 		}
 
 		return match ($msg) {
-			'auth_required' => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR,
-			'email_invalid' => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'auth_required' => Labels::LABEL_JIRA_AUTH_REQUIRED_ERROR,
+			'email_invalid' => Labels::LABEL_JIRA_INVALID_EMAIL_ERROR,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

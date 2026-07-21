@@ -18,7 +18,7 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitCalculatorRoute
@@ -81,7 +81,7 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('calculatorMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CALCULATOR_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -115,7 +115,7 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CALCULATOR_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],

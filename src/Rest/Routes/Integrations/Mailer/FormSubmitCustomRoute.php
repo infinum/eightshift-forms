@@ -18,7 +18,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitCustomRoute
@@ -88,7 +88,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 				$this->labels->getLabel('customNoAction'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_NO_ACTION,
 				],
 			);
 			// phpcs:enable
@@ -109,7 +109,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccessRedirect'),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_SUCCESS_REDIRECT,
 				],
 				AbstractBaseRoute::R_DATA => \array_merge(
 					$successAdditionalData['public'],
@@ -145,7 +145,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 				$this->labels->getLabel('customError', $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_WP_ERROR,
 				],
 			);
 			// phpcs:enable
@@ -160,7 +160,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 				$this->labels->getLabel('customError', $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_ERROR,
 				],
 				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 			);
@@ -177,7 +177,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccess', $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],

@@ -24,7 +24,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
@@ -133,7 +133,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 				$this->getLabels()->getLabel('activeCampaignMissingConfig'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_ACTIVE_CAMPAIGN_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

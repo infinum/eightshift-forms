@@ -54,7 +54,7 @@ use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
@@ -76,6 +76,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\CronJobs\SettingsCronJobs;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

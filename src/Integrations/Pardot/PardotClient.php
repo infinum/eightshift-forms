@@ -20,7 +20,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use WP_Error;
 
 /**
@@ -187,7 +187,7 @@ class PardotClient implements PardotClientInterface
 				$itemId,
 				$formId
 			);
-			$details[Config::IARD_MSG] = SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_MISSING_CONFIG;
+			$details[Config::IARD_MSG] = Labels::LABEL_PARDOT_MISSING_CONFIG;
 
 			return ApiHelpers::getIntegrationErrorInternalOutput($details);
 		}
@@ -279,10 +279,10 @@ class PardotClient implements PardotClientInterface
 		$errorCode = $body['errorCode'] ?? '';
 
 		return match ($errorCode) {
-			'INVALID_SESSION_ID' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_ERROR_SETTINGS_MISSING,
-			'SERVER_ERROR' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_SERVER_ERROR,
-			'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_BAD_REQUEST_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'INVALID_SESSION_ID' => Labels::LABEL_PARDOT_ERROR_SETTINGS_MISSING,
+			'SERVER_ERROR' => Labels::LABEL_PARDOT_SERVER_ERROR,
+			'BAD_REQUEST' => Labels::LABEL_PARDOT_BAD_REQUEST_ERROR,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

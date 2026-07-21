@@ -16,9 +16,9 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
 use WP_Error;
 
 /**
@@ -64,7 +64,7 @@ class Recaptcha implements CaptchaInterface
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FEATURE_DISABLED,
 				],
 			];
 		}
@@ -83,7 +83,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaBadRequest'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_MISSING_TOKEN,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -96,9 +96,9 @@ class Recaptcha implements CaptchaInterface
 		if (\is_wp_error($response)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP),
+				$this->labels->getLabel(Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_WP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -213,7 +213,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 
 				],
@@ -231,7 +231,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -276,7 +276,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FREE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FREE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				],
 				[
@@ -326,7 +326,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_WRONG_ACTION,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_WRONG_ACTION,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -341,7 +341,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SCORE_SPAM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SCORE_SPAM,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				],
 				[
@@ -354,7 +354,7 @@ class Recaptcha implements CaptchaInterface
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SUCCESS,
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 			],
 			AbstractBaseRoute::R_DATA => [

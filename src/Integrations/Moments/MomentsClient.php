@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * MomentsClient integration class.
@@ -170,9 +170,9 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		$msg = $body['requestError']['serviceException']['messageId'] ?? '';
 
 		return match ($msg) {
-			'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR,
-			'UNAUTHORIZED' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'BAD_REQUEST' => Labels::LABEL_MOMENTS_BAD_REQUEST_ERROR,
+			'UNAUTHORIZED' => Labels::LABEL_MOMENTS_MISSING_CONFIG,
+			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
 		};
 	}
 

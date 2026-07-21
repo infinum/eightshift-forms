@@ -15,9 +15,9 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * FriendlyCaptcha class.
@@ -73,7 +73,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FEATURE_DISABLED,
 				],
 			];
 		}
@@ -87,7 +87,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaBadRequest'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_MISSING_TOKEN,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -116,9 +116,9 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\is_wp_error($response)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel(SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP),
+				$this->labels->getLabel(Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_WP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -139,7 +139,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SUCCESS,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				],
 			];
@@ -151,7 +151,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaAuthError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_AUTH_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -164,7 +164,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaBadRequest'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_BAD_REQUEST,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -177,7 +177,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaTimeoutOrDuplicate'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_TIMEOUT_OR_DUPLICATE,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -190,7 +190,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaInvalidSolution'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_INVALID_SOLUTION,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -203,7 +203,7 @@ class FriendlyCaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('friendlyCaptchaHttpError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_HTTP_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_HTTP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
@@ -215,7 +215,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		throw new BadRequestException(
 			$this->labels->getLabel('friendlyCaptchaError'),
 			[
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_OUTPUT_ERROR,
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 			]
 		);
