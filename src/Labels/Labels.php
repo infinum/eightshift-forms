@@ -46,6 +46,29 @@ class Labels implements LabelsInterface
 {
 	public const TYPE_GENERIC = 'generic';
 
+	public const LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG = 'activeCampaignMissingConfig';
+	public const LABEL_ACTIVE_CAMPAIGN_INVALID_EMAIL_ERROR = 'activeCampaignInvalidEmailError';
+	public const LABEL_ACTIVE_CAMPAIGN_DUPLICATE_ERROR = 'activeCampaignDuplicateError';
+	public const LABEL_ACTIVE_CAMPAIGN500_ERROR = 'activeCampaign500Error';
+	public const LABEL_ACTIVE_CAMPAIGN_FORBIDDEN_ERROR = 'activeCampaignForbiddenError';
+	public const LABEL_ACTIVE_CAMPAIGN_SUCCESS = 'activeCampaignSuccess';
+
+	public const LABEL_AIRTABLE_MISSING_CONFIG = 'airtableMissingConfig';
+	public const LABEL_AIRTABLE_NOT_FOUND_ERROR = 'airtableNotFoundError';
+	public const LABEL_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR = 'airtableInvalidPermissionsOrModelNotFoundError';
+	public const LABEL_AIRTABLE_INVALID_PERMISSIONS_ERROR = 'airtableInvalidPermissionsError';
+	public const LABEL_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR = 'airtableInvalidRequestUnknownError';
+	public const LABEL_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR = 'airtableInvalidValueForColumnError';
+	public const LABEL_AIRTABLE_SUCCESS = 'airtableSuccess';
+
+	public const LABEL_CACHE_TYPE_NOT_FOUND = 'cacheTypeNotFound';
+	public const LABEL_CACHE_DELETED_SUCCESS = 'cacheDeletedSuccess';
+
+	public const LABEL_CALCULATOR_MISSING_CONFIG = 'calculatorMissingConfig';
+	public const LABEL_CALCULATOR_SUCCESS = 'calculatorSuccess';
+	public const LABEL_CALCULATOR_BAD_REQUEST_ERROR = 'calculatorBadRequestError';
+	public const LABEL_CALCULATOR_ERROR_SETTINGS_MISSING = 'calculatorErrorSettingsMissing';
+
 	public const LABEL_CAPTCHA_FEATURE_DISABLED = 'captchaFeatureDisabled';
 	public const LABEL_CAPTCHA_REQUEST_MISSING_TOKEN = 'captchaRequestMissingToken';
 	public const LABEL_CAPTCHA_REQUEST_WP_ERROR = 'captchaRequestWpError';
@@ -55,90 +78,79 @@ class Labels implements LabelsInterface
 	public const LABEL_CAPTCHA_SCORE_SPAM = 'captchaScoreSpam';
 	public const LABEL_CAPTCHA_SUCCESS = 'captchaSuccess';
 	public const LABEL_CAPTCHA_DEBUG_SKIP_CHECK = 'captchaDebugSkipCheck';
-
+	public const LABEL_CAPTCHA_MISSING_CONFIG = 'captchaMissingConfig';
+	public const LABEL_CAPTCHA_SKIP_CHECK = 'captchaSkipCheck';
+	public const LABEL_CAPTCHA_BAD_REQUEST = 'captchaBadRequest';
+	public const LABEL_CAPTCHA_ERROR = 'captchaError';
 	public const LABEL_CAPTCHA_FRIENDLY_OUTPUT_ERROR = 'friendlyCaptchaOutputError';
 	public const LABEL_CAPTCHA_FRIENDLY_HTTP_ERROR = 'friendlyCaptchaHttpError';
 	public const LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR = 'friendlyCaptchaAuthError';
 	public const LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST = 'friendlyCaptchaBadRequest';
 	public const LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION = 'friendlyCaptchaInvalidSolution';
 	public const LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE = 'friendlyCaptchaTimeoutOrDuplicate';
-
-	public const LABEL_GEOLOCATION_FEATURE_DISABLED = 'geolocationFeatureDisabled';
-	public const LABEL_GEOLOCATION_MALFORMED_DECRYPT_DATA = 'geolocationMalformedDecryptData';
-	public const LABEL_GEOLOCATION_DETECTION_FAILED = 'geolocationDetectionFailed';
-	public const LABEL_GEOLOCATION_SUCCESS = 'geolocationSuccess';
-
-	public const LABEL_PERMISSION_DENIED = 'permissionDenied';
-	public const LABEL_VALIDATION_MISSING_MANDATORY_PARAMS = 'validationMissingMandatoryParams';
-	public const LABEL_VALIDATION_SUBMIT_LOGGED_IN = 'validationSubmitLoggedIn';
-	public const LABEL_VALIDATION_SUBMIT_ONCE = 'validationSubmitOnce';
-	public const LABEL_VALIDATION_SECURITY = 'validationSecurity';
-	public const LABEL_VALIDATION_PARAMS = 'validationParams';
-	public const LABEL_VALIDATION_FILES = 'validationFiles';
-	public const LABEL_FILES_UPLOAD_SUCCESS = 'filesUploadSuccess';
-	public const LABEL_FILES_UPLOAD_ERROR = 'filesUploadError';
-	public const LABEL_SUBMIT_INTEGRATION_SUCCESS = 'submitIntegrationSuccess';
-	public const LABEL_SUBMIT_INTEGRATION_ERROR_WP = 'submitWpError';
+	public const LABEL_CAPTCHA_FRIENDLY_ERROR = 'friendlyCaptchaError';
+	public const LABEL_CAPTCHA_FRIENDLY_SUCCESS = 'friendlyCaptchaSuccess';
 
 	public const LABEL_CLEARBIT_CRON_ERROR = 'clearbitCronError';
 	public const LABEL_CLEARBIT_AUTH_REQUIRED_ERROR = 'clearbitAuthRequiredError';
 	public const LABEL_CLEARBIT_INVALID_EMAIL_ERROR = 'clearbitInvalidEmailError';
 
-	public const LABEL_NATIONBUILDER_LIST_ERROR = 'nationbuilderListError';
-	public const LABEL_NATIONBUILDER_TAGS_ERROR = 'nationbuilderTagsError';
+	public const LABEL_CORVUS_MISSING_CONFIG = 'corvusMissingConfig';
+	public const LABEL_CORVUS_MISSING_REQ_PARAMS = 'corvusMissingReqParams';
+	public const LABEL_CORVUS_MISSING_STORE_ID = 'corvusMissingStoreId';
+	public const LABEL_CORVUS_SUCCESS = 'corvusSuccess';
 
-	public const LABEL_WORKABLE_MISSING_CONFIG = 'workableMissingConfig';
-	public const LABEL_WORKABLE_BAD_REQUEST_ERROR = 'workableBadRequestError';
-	public const LABEL_WORKABLE_ARCHIVED_JOB_ERROR = 'workableArchivedJobError';
-	public const LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR = 'workableTooLongFileNameError';
+	public const LABEL_CRON_RUN_SUCCESS = 'cronRunSuccess';
+	public const LABEL_CRON_RUN_NOT_FOUND = 'cronRunNotFound';
 
-	public const LABEL_TALENTLYFT_MISSING_CONFIG = 'talentlyftMissingConfig';
-	public const LABEL_TALENTLYFT_BAD_REQUEST_ERROR = 'talentlyftBadRequestError';
-	public const LABEL_TALENTLYFT_VALIDATION_ERROR = 'talentlyftValidationError';
+	public const LABEL_CUSTOM_NO_ACTION = 'customNoAction';
+	public const LABEL_CUSTOM_SUCCESS_REDIRECT = 'customSuccessRedirect';
+	public const LABEL_CUSTOM_ERROR = 'customError';
+	public const LABEL_CUSTOM_WP_ERROR = 'customWpError';
+	public const LABEL_CUSTOM_SUCCESS = 'customSuccess';
+	public const LABEL_CUSTOM_MISSING_CONFIG = 'customMissingConfig';
 
-	public const LABEL_PIPEDRIVE_MISSING_CONFIG = 'pipedriveMissingConfig';
-	public const LABEL_PIPEDRIVE_MISSING_NAME = 'pipedriveMissingName';
-	public const LABEL_PIPEDRIVE_MISSING_ORGANIZATION = 'pipedriveMissingOrganization';
-	public const LABEL_PIPEDRIVE_WRONG_ORGANIZATION_ID = 'pipedriveWrongOrganizationId';
-	public const LABEL_PIPEDRIVE_WRONG_DATASET = 'pipedriveWrongDataset';
+	public const LABEL_ENCRYPT_FAILED = 'encryptFailed';
+	public const LABEL_DECRYPT_FAILED = 'decryptFailed';
+	public const LABEL_ENCRYPT_SUCCESS = 'encryptSuccess';
+	public const LABEL_DECRYPT_SUCCESS = 'decryptSuccess';
 
-	public const LABEL_PAYCEK_MISSING_CONFIG = 'paycekMissingConfig';
-	public const LABEL_PAYCEK_MISSING_REQ_PARAMS = 'paycekMissingReqParams';
-	public const LABEL_PAYCEK_SUCCESS = 'paycekSuccess';
+	public const LABEL_SUBMIT_INTEGRATION_SUCCESS = 'submitIntegrationSuccess';
+	public const LABEL_SUBMIT_INTEGRATION_ERROR_WP = 'submitWpError';
+	public const LABEL_SUBMIT_FALLBACK_ERROR = 'submitFallbackError';
+	public const LABEL_TEST_API_SUCCESS = 'testApiSuccess';
+	public const LABEL_TEST_API_ERROR = 'testApiError';
+	public const LABEL_GLOBAL_NOT_CONFIGURED = 'globalNotConfigured';
+	public const LABEL_INTEGRATION_ITEMS_MISSING = 'integrationItemsMissing';
+	public const LABEL_INTEGRATION_ITEMS_SUCCESS = 'integrationItemsSuccess';
+	public const LABEL_FORM_FIELDS_MISSING = 'formFieldsMissing';
+	public const LABEL_FORM_FIELDS_SUCCESS = 'formFieldsSuccess';
+	public const LABEL_INCREMENT_RESET_SUCCESS = 'incrementResetSuccess';
+	public const LABEL_LOCATIONS_RESULT_OUTPUT_ERROR = 'locationsResultOutputError';
+	public const LABEL_LOCATIONS_FORM_ERROR = 'locationsFormError';
+	public const LABEL_LOCATIONS_SUCCESS = 'locationsSuccess';
+	public const LABEL_BULK_MISSING_ITEMS = 'bulkMissingItems';
+	public const LABEL_GENERIC_SUCCESS = 'genericSuccess';
+	public const LABEL_GENERIC_WARNING = 'genericWarning';
+	public const LABEL_GENERIC_ERROR = 'genericError';
+	public const LABEL_SETTINGS_SUCCESS = 'settingsSuccess';
 
-	public const LABEL_NATIONBUILDER_MISSING_CONFIG = 'nationbuilderMissingConfig';
-	public const LABEL_NATIONBUILDER_BAD_REQUEST_ERROR = 'nationbuilderBadRequestError';
-	public const LABEL_NATIONBUILDER_ERROR_SETTINGS_MISSING = 'nationbuilderErrorSettingsMissing';
-	public const LABEL_NATIONBUILDER_SERVER_ERROR = 'nationbuilderServerError';
+	public const LABEL_GEOLOCATION_FEATURE_DISABLED = 'geolocationFeatureDisabled';
+	public const LABEL_GEOLOCATION_MALFORMED_DECRYPT_DATA = 'geolocationMalformedDecryptData';
+	public const LABEL_GEOLOCATION_DETECTION_FAILED = 'geolocationDetectionFailed';
+	public const LABEL_GEOLOCATION_SUCCESS = 'geolocationSuccess';
+	public const LABEL_GEOLOCATION_SKIP_CHECK = 'geolocationSkipCheck';
+	public const LABEL_GEOLOCATION_MALFORMED_OR_NOT_VALID = 'geolocationMalformedOrNotValid';
+	public const LABEL_GEOLOCATION_COUNTRIES_MISSING = 'geolocationCountriesMissing';
+	public const LABEL_GEOLOCATION_COUNTRIES_SUCCESS = 'geolocationCountriesSuccess';
 
-	public const LABEL_PARDOT_MISSING_CONFIG = 'pardotMissingConfig';
-	public const LABEL_PARDOT_BAD_REQUEST_ERROR = 'pardotBadRequestError';
-	public const LABEL_PARDOT_ERROR_SETTINGS_MISSING = 'pardotErrorSettingsMissing';
-	public const LABEL_PARDOT_SERVER_ERROR = 'pardotServerError';
-	public const LABEL_PARDOT_SUCCESS = 'pardotSuccess';
+	public const LABEL_GOODBITS_MISSING_CONFIG = 'goodbitsMissingConfig';
+	public const LABEL_GOODBITS_BAD_REQUEST_ERROR = 'goodbitsBadRequestError';
+	public const LABEL_GOODBITS_SUCCESS = 'goodbitsSuccess';
 
-	public const LABEL_MOMENTS_EVENTS_ERROR = 'momentsEventsError';
-
-	public const LABEL_MOMENTS_BAD_REQUEST_ERROR = 'momentsBadRequestError';
-	public const LABEL_MOMENTS_MISSING_CONFIG = 'momentsMissingConfig';
-
-	public const LABEL_MAILERLITE_MISSING_CONFIG = 'mailerliteMissingConfig';
-	public const LABEL_MAILERLITE_BAD_REQUEST_ERROR = 'mailerliteBadRequestError';
-
-	public const LABEL_MAILER_MISSING_CONFIG = 'mailerMissingConfig';
-	public const LABEL_MAILER_ERROR_EMAIL_SEND = 'mailerErrorEmailSend';
-	public const LABEL_MAILER_SUCCESS = 'mailerSuccess';
-
-	public const LABEL_MAILCHIMP_MISSING_CONFIG = 'mailchimpMissingConfig';
-	public const LABEL_MAILCHIMP_BAD_REQUEST_ERROR = 'mailchimpBadRequestError';
-
-	public const LABEL_JIRA_MISSING_CONFIG = 'jiraMissingConfig';
-	public const LABEL_JIRA_MISSING_PROJECT = 'jiraMissingProject';
-	public const LABEL_JIRA_MISSING_ISSUE_TYPE = 'jiraMissingIssueType';
-	public const LABEL_JIRA_MISSING_SUMMARY = 'jiraMissingSummary';
-	public const LABEL_JIRA_MISSING_EPIC_NAME = 'jiraMissingEpicName';
-	public const LABEL_JIRA_AUTH_REQUIRED_ERROR = 'jiraAuthRequiredError';
-	public const LABEL_JIRA_INVALID_EMAIL_ERROR = 'jiraInvalidEmailError';
+	public const LABEL_GREENHOUSE_MISSING_CONFIG = 'greenhouseMissingConfig';
+	public const LABEL_GREENHOUSE_BAD_REQUEST_ERROR = 'greenhouseBadRequestError';
+	public const LABEL_GREENHOUSE_SUCCESS = 'greenhouseSuccess';
 
 	public const LABEL_HUBSPOT_MISSING_CONFIG = 'hubspotMissingConfig';
 	public const LABEL_HUBSPOT_BAD_REQUEST_ERROR = 'hubspotBadRequestError';
@@ -164,65 +176,70 @@ class Labels implements LabelsInterface
 	public const LABEL_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR = 'hubspotDuplicateSubscriptionTypeIdError';
 	public const LABEL_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR = 'hubspotHasRecaptchaEnabledError';
 	public const LABEL_HUBSPOT_ERROR_429_ERROR = 'hubspotError429Error';
+	public const LABEL_HUBSPOT_SUCCESS = 'hubspotSuccess';
 
-	public const LABEL_GREENHOUSE_MISSING_CONFIG = 'greenhouseMissingConfig';
-	public const LABEL_GREENHOUSE_BAD_REQUEST_ERROR = 'greenhouseBadRequestError';
+	public const LABEL_JIRA_MISSING_CONFIG = 'jiraMissingConfig';
+	public const LABEL_JIRA_MISSING_PROJECT = 'jiraMissingProject';
+	public const LABEL_JIRA_MISSING_ISSUE_TYPE = 'jiraMissingIssueType';
+	public const LABEL_JIRA_MISSING_SUMMARY = 'jiraMissingSummary';
+	public const LABEL_JIRA_MISSING_EPIC_NAME = 'jiraMissingEpicName';
+	public const LABEL_JIRA_AUTH_REQUIRED_ERROR = 'jiraAuthRequiredError';
+	public const LABEL_JIRA_INVALID_EMAIL_ERROR = 'jiraInvalidEmailError';
+	public const LABEL_JIRA_BAD_REQUEST_ERROR = 'jiraBadRequestError';
+	public const LABEL_JIRA_SUCCESS = 'jiraSuccess';
 
-	public const LABEL_GOODBITS_MISSING_CONFIG = 'goodbitsMissingConfig';
-	public const LABEL_GOODBITS_BAD_REQUEST_ERROR = 'goodbitsBadRequestError';
+	public const LABEL_MAILCHIMP_MISSING_CONFIG = 'mailchimpMissingConfig';
+	public const LABEL_MAILCHIMP_BAD_REQUEST_ERROR = 'mailchimpBadRequestError';
+	public const LABEL_MAILCHIMP_SUCCESS = 'mailchimpSuccess';
 
-	public const LABEL_CORVUS_MISSING_CONFIG = 'corvusMissingConfig';
-	public const LABEL_CORVUS_MISSING_REQ_PARAMS = 'corvusMissingReqParams';
-	public const LABEL_CORVUS_MISSING_STORE_ID = 'corvusMissingStoreId';
-	public const LABEL_CORVUS_SUCCESS = 'corvusSuccess';
+	public const LABEL_MAILER_MISSING_CONFIG = 'mailerMissingConfig';
+	public const LABEL_MAILER_ERROR_EMAIL_SEND = 'mailerErrorEmailSend';
+	public const LABEL_MAILER_SUCCESS = 'mailerSuccess';
+	public const LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND = 'mailerErrorEmailConfirmationSend';
 
-	public const LABEL_CALCULATOR_MISSING_CONFIG = 'calculatorMissingConfig';
-	public const LABEL_CALCULATOR_SUCCESS = 'calculatorSuccess';
+	public const LABEL_MAILERLITE_MISSING_CONFIG = 'mailerliteMissingConfig';
+	public const LABEL_MAILERLITE_BAD_REQUEST_ERROR = 'mailerliteBadRequestError';
+	public const LABEL_MAILERLITE_SUCCESS = 'mailerliteSuccess';
 
-	public const LABEL_AIRTABLE_MISSING_CONFIG = 'airtableMissingConfig';
-	public const LABEL_AIRTABLE_NOT_FOUND_ERROR = 'airtableNotFoundError';
-	public const LABEL_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR = 'airtableInvalidPermissionsOrModelNotFoundError';
-	public const LABEL_AIRTABLE_INVALID_PERMISSIONS_ERROR = 'airtableInvalidPermissionsError';
-	public const LABEL_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR = 'airtableInvalidRequestUnknownError';
-	public const LABEL_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR = 'airtableInvalidValueForColumnError';
+	public const LABEL_MIGRATION_TYPE_NOT_FOUND = 'migrationTypeNotFound';
+	public const LABEL_MIGRATION_SUCCESS = 'migrationSuccess';
 
-	public const LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG = 'activeCampaignMissingConfig';
+	public const LABEL_MOMENTS_BAD_REQUEST_ERROR = 'momentsBadRequestError';
+	public const LABEL_MOMENTS_MISSING_CONFIG = 'momentsMissingConfig';
+	public const LABEL_MOMENTS_EVENTS_ERROR = 'momentsEventsError';
+	public const LABEL_MOMENTS_SUCCESS = 'momentsSuccess';
 
-	public const LABEL_CUSTOM_NO_ACTION = 'customNoAction';
-	public const LABEL_CUSTOM_SUCCESS_REDIRECT = 'customSuccessRedirect';
-	public const LABEL_CUSTOM_ERROR = 'customError';
-	public const LABEL_CUSTOM_WP_ERROR = 'customWpError';
-	public const LABEL_CUSTOM_SUCCESS = 'customSuccess';
+	public const LABEL_NATIONBUILDER_MISSING_CONFIG = 'nationbuilderMissingConfig';
+	public const LABEL_NATIONBUILDER_LIST_ERROR = 'nationbuilderListError';
+	public const LABEL_NATIONBUILDER_TAGS_ERROR = 'nationbuilderTagsError';
+	public const LABEL_NATIONBUILDER_BAD_REQUEST_ERROR = 'nationbuilderBadRequestError';
+	public const LABEL_NATIONBUILDER_ERROR_SETTINGS_MISSING = 'nationbuilderErrorSettingsMissing';
+	public const LABEL_NATIONBUILDER_SERVER_ERROR = 'nationbuilderServerError';
+	public const LABEL_NATIONBUILDER_SUCCESS = 'nationbuilderSuccess';
 
-	public const LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM = 'validationStepsCurrentStepProblem';
-	public const LABEL_VALIDATION_STEPS_FIELDS_PROBLEM = 'validationStepsFieldsProblem';
-	public const LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM = 'validationStepsNextStepProblem';
-	public const LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM = 'validationStepsParametersProblem';
-	public const LABEL_VALIDATION_STEPS_SUCCESS = 'validationStepsSuccess';
+	public const LABEL_PARDOT_MISSING_CONFIG = 'pardotMissingConfig';
+	public const LABEL_PARDOT_BAD_REQUEST_ERROR = 'pardotBadRequestError';
+	public const LABEL_PARDOT_ERROR_SETTINGS_MISSING = 'pardotErrorSettingsMissing';
+	public const LABEL_PARDOT_SERVER_ERROR = 'pardotServerError';
+	public const LABEL_PARDOT_SUCCESS = 'pardotSuccess';
 
-	// Migrated labels (no flag yet).
-	public const LABEL_SUBMIT_FALLBACK_ERROR = 'submitFallbackError';
-	public const LABEL_TEST_API_SUCCESS = 'testApiSuccess';
-	public const LABEL_TEST_API_ERROR = 'testApiError';
-	public const LABEL_GLOBAL_NOT_CONFIGURED = 'globalNotConfigured';
-	public const LABEL_INTEGRATION_ITEMS_MISSING = 'integrationItemsMissing';
-	public const LABEL_INTEGRATION_ITEMS_SUCCESS = 'integrationItemsSuccess';
-	public const LABEL_GEOLOCATION_COUNTRIES_MISSING = 'geolocationCountriesMissing';
-	public const LABEL_GEOLOCATION_COUNTRIES_SUCCESS = 'geolocationCountriesSuccess';
-	public const LABEL_FORM_FIELDS_MISSING = 'formFieldsMissing';
-	public const LABEL_FORM_FIELDS_SUCCESS = 'formFieldsSuccess';
-	public const LABEL_CACHE_TYPE_NOT_FOUND = 'cacheTypeNotFound';
-	public const LABEL_CACHE_DELETED_SUCCESS = 'cacheDeletedSuccess';
-	public const LABEL_CRON_RUN_SUCCESS = 'cronRunSuccess';
-	public const LABEL_CRON_RUN_NOT_FOUND = 'cronRunNotFound';
-	public const LABEL_ENCRYPT_FAILED = 'encryptFailed';
-	public const LABEL_DECRYPT_FAILED = 'decryptFailed';
-	public const LABEL_ENCRYPT_SUCCESS = 'encryptSuccess';
-	public const LABEL_DECRYPT_SUCCESS = 'decryptSuccess';
-	public const LABEL_INCREMENT_RESET_SUCCESS = 'incrementResetSuccess';
-	public const LABEL_LOCATIONS_RESULT_OUTPUT_ERROR = 'locationsResultOutputError';
-	public const LABEL_LOCATIONS_FORM_ERROR = 'locationsFormError';
-	public const LABEL_LOCATIONS_SUCCESS = 'locationsSuccess';
+	public const LABEL_PAYCEK_MISSING_CONFIG = 'paycekMissingConfig';
+	public const LABEL_PAYCEK_MISSING_REQ_PARAMS = 'paycekMissingReqParams';
+	public const LABEL_PAYCEK_SUCCESS = 'paycekSuccess';
+
+	public const LABEL_PIPEDRIVE_MISSING_CONFIG = 'pipedriveMissingConfig';
+	public const LABEL_PIPEDRIVE_MISSING_NAME = 'pipedriveMissingName';
+	public const LABEL_PIPEDRIVE_MISSING_ORGANIZATION = 'pipedriveMissingOrganization';
+	public const LABEL_PIPEDRIVE_WRONG_ORGANIZATION_ID = 'pipedriveWrongOrganizationId';
+	public const LABEL_PIPEDRIVE_WRONG_DATASET = 'pipedriveWrongDataset';
+	public const LABEL_PIPEDRIVE_BAD_REQUEST_ERROR = 'pipedriveBadRequestError';
+	public const LABEL_PIPEDRIVE_SUCCESS = 'pipedriveSuccess';
+
+	public const LABEL_TALENTLYFT_MISSING_CONFIG = 'talentlyftMissingConfig';
+	public const LABEL_TALENTLYFT_BAD_REQUEST_ERROR = 'talentlyftBadRequestError';
+	public const LABEL_TALENTLYFT_VALIDATION_ERROR = 'talentlyftValidationError';
+	public const LABEL_TALENTLYFT_SUCCESS = 'talentlyftSuccess';
+
 	public const LABEL_TRANSFER_EXPORT_MISSING_FORMS = 'transferExportMissingForms';
 	public const LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS = 'transferExportMissingResultOutputs';
 	public const LABEL_TRANSFER_UPLOAD_MISSING_FILE = 'transferUploadMissingFile';
@@ -232,13 +249,21 @@ class Labels implements LabelsInterface
 	public const LABEL_EXPORT_MISSING_ITEMS = 'exportMissingItems';
 	public const LABEL_EXPORT_DATA_EMPTY = 'exportDataEmpty';
 	public const LABEL_EXPORT_SUCCESS = 'exportSuccess';
-	public const LABEL_BULK_MISSING_ITEMS = 'bulkMissingItems';
-	public const LABEL_GENERIC_SUCCESS = 'genericSuccess';
-	public const LABEL_GENERIC_WARNING = 'genericWarning';
-	public const LABEL_GENERIC_ERROR = 'genericError';
-	public const LABEL_MIGRATION_TYPE_NOT_FOUND = 'migrationTypeNotFound';
-	public const LABEL_MIGRATION_SUCCESS = 'migrationSuccess';
-	public const LABEL_SETTINGS_SUCCESS = 'settingsSuccess';
+
+	public const LABEL_PERMISSION_DENIED = 'permissionDenied';
+	public const LABEL_VALIDATION_MISSING_MANDATORY_PARAMS = 'validationMissingMandatoryParams';
+	public const LABEL_VALIDATION_SUBMIT_LOGGED_IN = 'validationSubmitLoggedIn';
+	public const LABEL_VALIDATION_SUBMIT_ONCE = 'validationSubmitOnce';
+	public const LABEL_VALIDATION_SECURITY = 'validationSecurity';
+	public const LABEL_VALIDATION_PARAMS = 'validationParams';
+	public const LABEL_VALIDATION_FILES = 'validationFiles';
+	public const LABEL_FILES_UPLOAD_SUCCESS = 'filesUploadSuccess';
+	public const LABEL_FILES_UPLOAD_ERROR = 'filesUploadError';
+	public const LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM = 'validationStepsCurrentStepProblem';
+	public const LABEL_VALIDATION_STEPS_FIELDS_PROBLEM = 'validationStepsFieldsProblem';
+	public const LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM = 'validationStepsNextStepProblem';
+	public const LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM = 'validationStepsParametersProblem';
+	public const LABEL_VALIDATION_STEPS_SUCCESS = 'validationStepsSuccess';
 	public const LABEL_VALIDATION_REQUIRED = 'validationRequired';
 	public const LABEL_VALIDATION_REQUIRED_COUNT = 'validationRequiredCount';
 	public const LABEL_VALIDATION_INVALID = 'validationInvalid';
@@ -285,38 +310,12 @@ class Labels implements LabelsInterface
 	public const LABEL_VALIDATION_FILE_TEXT_UNSAFE = 'validationFileTextUnsafe';
 	public const LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS = 'validationGlobalMissingRequiredParams';
 	public const LABEL_VALIDATION_FILE_UPLOAD_SUCCESS = 'validationFileUploadSuccess';
-	public const LABEL_GEOLOCATION_SKIP_CHECK = 'geolocationSkipCheck';
-	public const LABEL_GEOLOCATION_MALFORMED_OR_NOT_VALID = 'geolocationMalformedOrNotValid';
-	public const LABEL_CUSTOM_MISSING_CONFIG = 'customMissingConfig';
-	public const LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND = 'mailerErrorEmailConfirmationSend';
-	public const LABEL_GREENHOUSE_SUCCESS = 'greenhouseSuccess';
-	public const LABEL_MAILCHIMP_SUCCESS = 'mailchimpSuccess';
-	public const LABEL_HUBSPOT_SUCCESS = 'hubspotSuccess';
-	public const LABEL_MAILERLITE_SUCCESS = 'mailerliteSuccess';
-	public const LABEL_GOODBITS_SUCCESS = 'goodbitsSuccess';
-	public const LABEL_ACTIVE_CAMPAIGN_INVALID_EMAIL_ERROR = 'activeCampaignInvalidEmailError';
-	public const LABEL_ACTIVE_CAMPAIGN_DUPLICATE_ERROR = 'activeCampaignDuplicateError';
-	public const LABEL_ACTIVE_CAMPAIGN500_ERROR = 'activeCampaign500Error';
-	public const LABEL_ACTIVE_CAMPAIGN_FORBIDDEN_ERROR = 'activeCampaignForbiddenError';
-	public const LABEL_ACTIVE_CAMPAIGN_SUCCESS = 'activeCampaignSuccess';
-	public const LABEL_CAPTCHA_MISSING_CONFIG = 'captchaMissingConfig';
-	public const LABEL_CAPTCHA_SKIP_CHECK = 'captchaSkipCheck';
-	public const LABEL_CAPTCHA_BAD_REQUEST = 'captchaBadRequest';
-	public const LABEL_CAPTCHA_ERROR = 'captchaError';
-	public const LABEL_CAPTCHA_FRIENDLY_ERROR = 'friendlyCaptchaError';
-	public const LABEL_CAPTCHA_FRIENDLY_SUCCESS = 'friendlyCaptchaSuccess';
-	public const LABEL_AIRTABLE_SUCCESS = 'airtableSuccess';
-	public const LABEL_MOMENTS_SUCCESS = 'momentsSuccess';
-	public const LABEL_WORKABLE_SUCCESS = 'workableSuccess';
-	public const LABEL_TALENTLYFT_SUCCESS = 'talentlyftSuccess';
-	public const LABEL_JIRA_BAD_REQUEST_ERROR = 'jiraBadRequestError';
-	public const LABEL_JIRA_SUCCESS = 'jiraSuccess';
-	public const LABEL_PIPEDRIVE_BAD_REQUEST_ERROR = 'pipedriveBadRequestError';
-	public const LABEL_PIPEDRIVE_SUCCESS = 'pipedriveSuccess';
-	public const LABEL_CALCULATOR_ERROR_SETTINGS_MISSING = 'calculatorErrorSettingsMissing';
-	public const LABEL_CALCULATOR_BAD_REQUEST_ERROR = 'calculatorBadRequestError';
-	public const LABEL_NATIONBUILDER_SUCCESS = 'nationbuilderSuccess';
 
+	public const LABEL_WORKABLE_MISSING_CONFIG = 'workableMissingConfig';
+	public const LABEL_WORKABLE_BAD_REQUEST_ERROR = 'workableBadRequestError';
+	public const LABEL_WORKABLE_ARCHIVED_JOB_ERROR = 'workableArchivedJobError';
+	public const LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR = 'workableTooLongFileNameError';
+	public const LABEL_WORKABLE_SUCCESS = 'workableSuccess';
 	/**
 	 * List all label keys that are stored in local form everything else is global settings.
 	 */
@@ -394,6 +393,118 @@ class Labels implements LabelsInterface
 	public static function getFlagsList(): array
 	{
 		return [
+			// ActiveCampaign.
+			self::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG => [
+				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				'label' => \__('When ActiveCampaign integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_ACTIVE_CAMPAIGN_INVALID_EMAIL_ERROR => [
+				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Enter a valid email address.', 'eightshift-forms'),
+			],
+			self::LABEL_ACTIVE_CAMPAIGN_DUPLICATE_ERROR => [
+				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Email address already exists in the system.', 'eightshift-forms'),
+			],
+			self::LABEL_ACTIVE_CAMPAIGN500_ERROR => [
+				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
+			],
+			self::LABEL_ACTIVE_CAMPAIGN_FORBIDDEN_ERROR => [
+				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
+			],
+			self::LABEL_ACTIVE_CAMPAIGN_SUCCESS => [
+				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+			],
+
+			// Airtable.
+			self::LABEL_AIRTABLE_MISSING_CONFIG => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_AIRTABLE_NOT_FOUND_ERROR => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Airtable integrations returns a not found error.', 'eightshift-forms'),
+				'output' => \__('Airtable integration is not configured correctly. Please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Airtable integrations returns a invalid permissions or model not found error.', 'eightshift-forms'),
+				'output' => \__('Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_AIRTABLE_INVALID_PERMISSIONS_ERROR => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Airtable integrations returns a invalid permissions error.', 'eightshift-forms'),
+				'output' => \__('You are not permitted to perform this operation.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Airtable integrations returns a invalid request unknown error.', 'eightshift-forms'),
+				'output' => \__('Invalid request: parameter validation failed. Check your request data.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Airtable integrations returns a invalid value for column error.', 'eightshift-forms'),
+				'output' => \__('One or more fields are invalid. Please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_AIRTABLE_SUCCESS => [
+				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+			],
+
+			// Cache.
+			self::LABEL_CACHE_TYPE_NOT_FOUND => [
+				'type' => SettingsCache::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('cache doesn\'t exist.', 'eightshift-forms'),
+			],
+			self::LABEL_CACHE_DELETED_SUCCESS => [
+				'type' => SettingsCache::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('cache deleted successfully!', 'eightshift-forms'),
+			],
+
+			// Calculator.
+			self::LABEL_CALCULATOR_MISSING_CONFIG => [
+				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
+				'label' => \__('When Calculator integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CALCULATOR_SUCCESS => [
+				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
+				'label' => \__('When Calculator integrations is able to calculate the form.', 'eightshift-forms'),
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_CALCULATOR_BAD_REQUEST_ERROR => [
+				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			],
+			self::LABEL_CALCULATOR_ERROR_SETTINGS_MISSING => [
+				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			],
+
 			// Captcha.
 			self::LABEL_CAPTCHA_FEATURE_DISABLED => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
@@ -509,6 +620,216 @@ class Labels implements LabelsInterface
 				'output' => \__('Success', 'eightshift-forms'),
 			],
 
+			// Clearbit.
+			self::LABEL_CLEARBIT_CRON_ERROR => [
+				'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
+				'label' => \__('When Clearbit cron job is running, it can return an error for unknown entry.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CLEARBIT_AUTH_REQUIRED_ERROR => [
+				'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
+				'label' => \__('When Clearbit integrations returns a auth required error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CLEARBIT_INVALID_EMAIL_ERROR => [
+				'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
+				'label' => \__('When Clearbit integrations returns a invalid email error.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+
+			// Corvus.
+			self::LABEL_CORVUS_MISSING_CONFIG => [
+				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
+				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CORVUS_MISSING_REQ_PARAMS => [
+				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
+				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CORVUS_MISSING_STORE_ID => [
+				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
+				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CORVUS_SUCCESS => [
+				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
+				'label' => \__('When Corvus integrations is able to send a request.', 'eightshift-forms'),
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+
+			// Cron.
+			self::LABEL_CRON_RUN_SUCCESS => [
+				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Cron job run successfully!', 'eightshift-forms'),
+			],
+			self::LABEL_CRON_RUN_NOT_FOUND => [
+				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Cron job not found.', 'eightshift-forms'),
+			],
+
+			// Custom.
+			self::LABEL_CUSTOM_NO_ACTION => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
+				'label' => \__('When custom action is not set.', 'eightshift-forms'),
+				'output' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CUSTOM_SUCCESS_REDIRECT => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
+				'label' => \__('When custom action is successful and redirect is set.', 'eightshift-forms'),
+				'output' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_CUSTOM_ERROR => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
+				'label' => \__('When custom action returns an error.', 'eightshift-forms'),
+				'output' => \__('There was an error with your form submission.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CUSTOM_WP_ERROR => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
+				'label' => \__('When custom action returns a WP error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_CUSTOM_SUCCESS => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
+				'label' => \__('When custom action is successful.', 'eightshift-forms'),
+				'output' => \__('Form was successfully submitted.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_CUSTOM_MISSING_CONFIG => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
+				'label' => '',
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			],
+
+			// Debug.
+			self::LABEL_ENCRYPT_FAILED => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Encrypt failed!', 'eightshift-forms'),
+			],
+			self::LABEL_DECRYPT_FAILED => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Decrypt failed!', 'eightshift-forms'),
+			],
+			self::LABEL_ENCRYPT_SUCCESS => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Encrypt finished successfully!', 'eightshift-forms'),
+			],
+			self::LABEL_DECRYPT_SUCCESS => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Decrypt finished successfully!', 'eightshift-forms'),
+			],
+
+			// Generic.
+			self::LABEL_SUBMIT_INTEGRATION_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => \__('Someone tried to submit a form to an integration that returned a success.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_SUBMIT_INTEGRATION_ERROR_WP => [
+				'type' => self::TYPE_GENERIC,
+				'label' => \__('Someone tried to submit a form to an integration that returned an error that is not handled by the integration.', 'eightshift-forms'),
+				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_SUBMIT_FALLBACK_ERROR => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+			],
+			self::LABEL_TEST_API_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('The API test was successful.', 'eightshift-forms'),
+			],
+			self::LABEL_TEST_API_ERROR => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
+			],
+			self::LABEL_GLOBAL_NOT_CONFIGURED => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+			],
+			self::LABEL_INTEGRATION_ITEMS_MISSING => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Integration items are missing.', 'eightshift-forms'),
+			],
+			self::LABEL_INTEGRATION_ITEMS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Integration items were successfully fetched.', 'eightshift-forms'),
+			],
+			self::LABEL_FORM_FIELDS_MISSING => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
+			],
+			self::LABEL_FORM_FIELDS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
+			],
+			self::LABEL_INCREMENT_RESET_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Increment reset successful.', 'eightshift-forms'),
+			],
+			self::LABEL_LOCATIONS_RESULT_OUTPUT_ERROR => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Your result output is not used in any location!', 'eightshift-forms'),
+			],
+			self::LABEL_LOCATIONS_FORM_ERROR => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Your form is not used in any location!', 'eightshift-forms'),
+			],
+			self::LABEL_LOCATIONS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Locations were successfully fetched.', 'eightshift-forms'),
+			],
+			self::LABEL_BULK_MISSING_ITEMS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Please select the items you want to bulk action.', 'eightshift-forms'),
+			],
+			self::LABEL_GENERIC_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Success', 'eightshift-forms'),
+			],
+			self::LABEL_GENERIC_WARNING => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Warning', 'eightshift-forms'),
+			],
+			self::LABEL_GENERIC_ERROR => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Error', 'eightshift-forms'),
+			],
+			self::LABEL_SETTINGS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
+				'label' => '',
+				'output' => \__('Changes saved!', 'eightshift-forms'),
+			],
+
 			// Geolocation.
 			self::LABEL_GEOLOCATION_FEATURE_DISABLED => [
 				'type' => SettingsGeolocation::SETTINGS_TYPE_KEY,
@@ -552,409 +873,40 @@ class Labels implements LabelsInterface
 				'output' => \__('Geolocation countries were successfully fetched.', 'eightshift-forms'),
 			],
 
-			// Validation.
-			self::LABEL_PERMISSION_DENIED => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to access the forms API without the proper permissions.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form without the proper mandatory params.', 'eightshift-forms'),
-				'output' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_VALIDATION_SUBMIT_LOGGED_IN => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form while not logged in.', 'eightshift-forms'),
-				'output' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_VALIDATION_SUBMIT_ONCE => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form more than once.', 'eightshift-forms'),
-				'output' => \__('This form can be submitted only once.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_VALIDATION_SECURITY => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form with too many requests and was blocked.', 'eightshift-forms'),
-				'output' => \__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_VALIDATION_PARAMS => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form with missing required params.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_VALIDATION_FILES => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form with missing required files.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_FILES_UPLOAD_SUCCESS => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form with files upload success.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_FILES_UPLOAD_ERROR => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('Someone tried to submit a form with files upload error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_SUBMIT_INTEGRATION_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => \__('Someone tried to submit a form to an integration that returned a success.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_SUBMIT_INTEGRATION_ERROR_WP => [
-				'type' => self::TYPE_GENERIC,
-				'label' => \__('Someone tried to submit a form to an integration that returned an error that is not handled by the integration.', 'eightshift-forms'),
-				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-
-			// Clearbit.
-			self::LABEL_CLEARBIT_CRON_ERROR => [
-				'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
-				'label' => \__('When Clearbit cron job is running, it can return an error for unknown entry.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_CLEARBIT_AUTH_REQUIRED_ERROR => [
-				'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
-				'label' => \__('When Clearbit integrations returns a auth required error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_CLEARBIT_INVALID_EMAIL_ERROR => [
-				'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
-				'label' => \__('When Clearbit integrations returns a invalid email error.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-
-			// Moments.
-			self::LABEL_MOMENTS_BAD_REQUEST_ERROR => [
-				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
-				'label' => \__('When Moments integrations returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MOMENTS_MISSING_CONFIG => [
-				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
-				'label' => \__('When Moments integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Goodbits.
+			self::LABEL_GOODBITS_MISSING_CONFIG => [
+				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+				'label' => \__('When Goodbits integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_MOMENTS_EVENTS_ERROR => [
-				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
-				'label' => \__('When Moments events are being sent, it can return an error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MOMENTS_SUCCESS => [
-				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
-			],
-
-			// Nationbuilder.
-			self::LABEL_NATIONBUILDER_MISSING_CONFIG => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => \__('When Nationbuilder integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_NATIONBUILDER_LIST_ERROR => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_NATIONBUILDER_TAGS_ERROR => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_NATIONBUILDER_BAD_REQUEST_ERROR => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => \__('When Nationbuilder integrations returns a bad request error.', 'eightshift-forms'),
+			self::LABEL_GOODBITS_BAD_REQUEST_ERROR => [
+				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+				'label' => \__('When Goodbits integrations returns a bad request error.', 'eightshift-forms'),
 				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_NATIONBUILDER_ERROR_SETTINGS_MISSING => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => \__('When Nationbuilder integrations returns a error settings missing error.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_NATIONBUILDER_SERVER_ERROR => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => \__('When Nationbuilder integrations returns a server error.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_NATIONBUILDER_SUCCESS => [
-				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
-			],
-
-			// Pardot.
-			self::LABEL_PARDOT_MISSING_CONFIG => [
-				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pardot integration is not configured correctly, either globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PARDOT_BAD_REQUEST_ERROR => [
-				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pardot integration returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PARDOT_ERROR_SETTINGS_MISSING => [
-				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pardot integration returns a settings missing error.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PARDOT_SERVER_ERROR => [
-				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pardot integration returns a server error.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PARDOT_SUCCESS => [
-				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
-			],
-
-			// Workable.
-			self::LABEL_WORKABLE_MISSING_CONFIG => [
-				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Workable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_WORKABLE_BAD_REQUEST_ERROR => [
-				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Workable integrations returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_WORKABLE_ARCHIVED_JOB_ERROR => [
-				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Workable integrations returns a archived job error.', 'eightshift-forms'),
-				'output' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR => [
-				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Workable integrations returns a too long file name error.', 'eightshift-forms'),
-				'output' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_WORKABLE_SUCCESS => [
-				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
-			],
-
-			// Talentlyft.
-			self::LABEL_TALENTLYFT_MISSING_CONFIG => [
-				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
-				'label' => \__('When Talentlyft integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_TALENTLYFT_BAD_REQUEST_ERROR => [
-				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
-				'label' => \__('When Talentlyft integrations returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_TALENTLYFT_VALIDATION_ERROR => [
-				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
-				'label' => \__('When Talentlyft integrations returns a validation error.', 'eightshift-forms'),
-				'output' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_TALENTLYFT_SUCCESS => [
-				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
-			],
-
-			// Pipedrive.
-			self::LABEL_PIPEDRIVE_MISSING_CONFIG => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pipedrive integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PIPEDRIVE_MISSING_NAME => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pipedrive integrations returns a missing name error.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PIPEDRIVE_MISSING_ORGANIZATION => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pipedrive integrations returns a missing organization error.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PIPEDRIVE_WRONG_ORGANIZATION_ID => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pipedrive integrations returns a wrong organization id error.', 'eightshift-forms'),
-				'output' => \__('Organization ID is invalid.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PIPEDRIVE_WRONG_DATASET => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => \__('When Pipedrive integrations returns a wrong dataset error.', 'eightshift-forms'),
-				'output' => \__('Integration dataset is invalid.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PIPEDRIVE_BAD_REQUEST_ERROR => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			],
-			self::LABEL_PIPEDRIVE_SUCCESS => [
-				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
-			],
-
-			// Paycek.
-			self::LABEL_PAYCEK_MISSING_CONFIG => [
-				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
-				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PAYCEK_MISSING_REQ_PARAMS => [
-				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
-				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_PAYCEK_SUCCESS => [
-				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
-				'label' => \__('When Paycek integrations is able to send a request.', 'eightshift-forms'),
-				'output' => \__('Payment submitted successfully. Thank you!', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-
-			// Mailerlite.
-			self::LABEL_MAILERLITE_MISSING_CONFIG => [
-				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailerlite integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MAILERLITE_BAD_REQUEST_ERROR => [
-				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailerlite integrations returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MAILERLITE_SUCCESS => [
-				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
+			self::LABEL_GOODBITS_SUCCESS => [
+				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 			],
 
-			// Mailer.
-			self::LABEL_MAILER_MISSING_CONFIG => [
-				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailer integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Greenhouse.
+			self::LABEL_GREENHOUSE_MISSING_CONFIG => [
+				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+				'label' => \__('When Greenhouse integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_MAILER_ERROR_EMAIL_SEND => [
-				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailer integrations is not able to send an email.', 'eightshift-forms'),
-				'output' => \__('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MAILER_SUCCESS => [
-				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailer integrations is able to send an email.', 'eightshift-forms'),
-				'output' => \__('E-mail was sent successfully.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND => [
-				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
-			],
-
-			// Mailchimp.
-			self::LABEL_MAILCHIMP_MISSING_CONFIG => [
-				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MAILCHIMP_BAD_REQUEST_ERROR => [
-				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
-				'label' => \__('When Mailchimp integrations returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_MAILCHIMP_SUCCESS => [
-				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
-			],
-
-			// Jira.
-			self::LABEL_JIRA_MISSING_CONFIG => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_JIRA_MISSING_PROJECT => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations returns a missing project error.', 'eightshift-forms'),
-				'output' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_JIRA_MISSING_ISSUE_TYPE => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations returns a missing issue type error.', 'eightshift-forms'),
-				'output' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_JIRA_MISSING_SUMMARY => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations returns a missing summary error.', 'eightshift-forms'),
-				'output' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_JIRA_MISSING_EPIC_NAME => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations returns a missing epic name error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_JIRA_AUTH_REQUIRED_ERROR => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations returns a auth required error.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_JIRA_INVALID_EMAIL_ERROR => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => \__('When Jira integrations returns a invalid email error.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_JIRA_BAD_REQUEST_ERROR => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
-				'label' => '',
+			self::LABEL_GREENHOUSE_BAD_REQUEST_ERROR => [
+				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+				'label' => \__('When Greenhouse integrations returns a bad request error.', 'eightshift-forms'),
 				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_JIRA_SUCCESS => [
-				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+			self::LABEL_GREENHOUSE_SUCCESS => [
+				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
@@ -1110,334 +1062,316 @@ class Labels implements LabelsInterface
 				'output' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 
-			// Greenhouse.
-			self::LABEL_GREENHOUSE_MISSING_CONFIG => [
-				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
-				'label' => \__('When Greenhouse integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Jira.
+			self::LABEL_JIRA_MISSING_CONFIG => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_GREENHOUSE_BAD_REQUEST_ERROR => [
-				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
-				'label' => \__('When Greenhouse integrations returns a bad request error.', 'eightshift-forms'),
-				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			self::LABEL_JIRA_MISSING_PROJECT => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations returns a missing project error.', 'eightshift-forms'),
+				'output' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_GREENHOUSE_SUCCESS => [
-				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+			self::LABEL_JIRA_MISSING_ISSUE_TYPE => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations returns a missing issue type error.', 'eightshift-forms'),
+				'output' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_JIRA_MISSING_SUMMARY => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations returns a missing summary error.', 'eightshift-forms'),
+				'output' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_JIRA_MISSING_EPIC_NAME => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations returns a missing epic name error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_JIRA_AUTH_REQUIRED_ERROR => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations returns a auth required error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_JIRA_INVALID_EMAIL_ERROR => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => \__('When Jira integrations returns a invalid email error.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_JIRA_BAD_REQUEST_ERROR => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			],
+			self::LABEL_JIRA_SUCCESS => [
+				'type' => SettingsJira::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 
-			// Goodbits.
-			self::LABEL_GOODBITS_MISSING_CONFIG => [
-				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
-				'label' => \__('When Goodbits integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Mailchimp.
+			self::LABEL_MAILCHIMP_MISSING_CONFIG => [
+				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_GOODBITS_BAD_REQUEST_ERROR => [
-				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
-				'label' => \__('When Goodbits integrations returns a bad request error.', 'eightshift-forms'),
+			self::LABEL_MAILCHIMP_BAD_REQUEST_ERROR => [
+				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailchimp integrations returns a bad request error.', 'eightshift-forms'),
 				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_GOODBITS_SUCCESS => [
-				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+			self::LABEL_MAILCHIMP_SUCCESS => [
+				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 			],
 
-			// Corvus.
-			self::LABEL_CORVUS_MISSING_CONFIG => [
-				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
-				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Mailer.
+			self::LABEL_MAILER_MISSING_CONFIG => [
+				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailer integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_CORVUS_MISSING_REQ_PARAMS => [
-				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
-				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			self::LABEL_MAILER_ERROR_EMAIL_SEND => [
+				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailer integrations is not able to send an email.', 'eightshift-forms'),
+				'output' => \__('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_CORVUS_MISSING_STORE_ID => [
-				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
-				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_CORVUS_SUCCESS => [
-				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
-				'label' => \__('When Corvus integrations is able to send a request.', 'eightshift-forms'),
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+			self::LABEL_MAILER_SUCCESS => [
+				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailer integrations is able to send an email.', 'eightshift-forms'),
+				'output' => \__('E-mail was sent successfully.', 'eightshift-forms'),
 				'isRecommended' => false,
+			],
+			self::LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND => [
+				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
 			],
 
-			// Calculator.
-			self::LABEL_CALCULATOR_MISSING_CONFIG => [
-				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
-				'label' => \__('When Calculator integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Mailerlite.
+			self::LABEL_MAILERLITE_MISSING_CONFIG => [
+				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailerlite integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_CALCULATOR_SUCCESS => [
-				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
-				'label' => \__('When Calculator integrations is able to calculate the form.', 'eightshift-forms'),
-				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_CALCULATOR_BAD_REQUEST_ERROR => [
-				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
-				'label' => '',
+			self::LABEL_MAILERLITE_BAD_REQUEST_ERROR => [
+				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
+				'label' => \__('When Mailerlite integrations returns a bad request error.', 'eightshift-forms'),
 				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_CALCULATOR_ERROR_SETTINGS_MISSING => [
-				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
+			self::LABEL_MAILERLITE_SUCCESS => [
+				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
 				'label' => '',
-				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'output' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 			],
 
-			// Airtable.
-			self::LABEL_AIRTABLE_MISSING_CONFIG => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Migration.
+			self::LABEL_MIGRATION_TYPE_NOT_FOUND => [
+				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
+			],
+			self::LABEL_MIGRATION_SUCCESS => [
+				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Migration finished with success.', 'eightshift-forms'),
+			],
+
+			// Moments.
+			self::LABEL_MOMENTS_BAD_REQUEST_ERROR => [
+				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
+				'label' => \__('When Moments integrations returns a bad request error.', 'eightshift-forms'),
+				'output' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_MOMENTS_MISSING_CONFIG => [
+				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
+				'label' => \__('When Moments integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_AIRTABLE_NOT_FOUND_ERROR => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Airtable integrations returns a not found error.', 'eightshift-forms'),
-				'output' => \__('Airtable integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			self::LABEL_MOMENTS_EVENTS_ERROR => [
+				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
+				'label' => \__('When Moments events are being sent, it can return an error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_AIRTABLE_INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND_ERROR => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Airtable integrations returns a invalid permissions or model not found error.', 'eightshift-forms'),
-				'output' => \__('Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_AIRTABLE_INVALID_PERMISSIONS_ERROR => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Airtable integrations returns a invalid permissions error.', 'eightshift-forms'),
-				'output' => \__('You are not permitted to perform this operation.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_AIRTABLE_INVALID_REQUEST_UNKNOWN_ERROR => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Airtable integrations returns a invalid request unknown error.', 'eightshift-forms'),
-				'output' => \__('Invalid request: parameter validation failed. Check your request data.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_AIRTABLE_INVALID_VALUE_FOR_COLUMN_ERROR => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
-				'label' => \__('When Airtable integrations returns a invalid value for column error.', 'eightshift-forms'),
-				'output' => \__('One or more fields are invalid. Please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_AIRTABLE_SUCCESS => [
-				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+			self::LABEL_MOMENTS_SUCCESS => [
+				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 
-			// ActiveCampaign.
-			self::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG => [
-				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
-				'label' => \__('When ActiveCampaign integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+			// Nationbuilder.
+			self::LABEL_NATIONBUILDER_MISSING_CONFIG => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+				'label' => \__('When Nationbuilder integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_ACTIVE_CAMPAIGN_INVALID_EMAIL_ERROR => [
-				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Enter a valid email address.', 'eightshift-forms'),
+			self::LABEL_NATIONBUILDER_LIST_ERROR => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_ACTIVE_CAMPAIGN_DUPLICATE_ERROR => [
-				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Email address already exists in the system.', 'eightshift-forms'),
+			self::LABEL_NATIONBUILDER_TAGS_ERROR => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+				'label' => \__('When Nationbuilder cron job is running, it can return an error.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_ACTIVE_CAMPAIGN500_ERROR => [
-				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
+			self::LABEL_NATIONBUILDER_BAD_REQUEST_ERROR => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+				'label' => \__('When Nationbuilder integrations returns a bad request error.', 'eightshift-forms'),
+				'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_ACTIVE_CAMPAIGN_FORBIDDEN_ERROR => [
-				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
+			self::LABEL_NATIONBUILDER_ERROR_SETTINGS_MISSING => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+				'label' => \__('When Nationbuilder integrations returns a error settings missing error.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_ACTIVE_CAMPAIGN_SUCCESS => [
-				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
+			self::LABEL_NATIONBUILDER_SERVER_ERROR => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+				'label' => \__('When Nationbuilder integrations returns a server error.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_NATIONBUILDER_SUCCESS => [
+				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
 				'label' => '',
-				'output' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 
-			// Custom.
-			self::LABEL_CUSTOM_NO_ACTION => [
-				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-				'label' => \__('When custom action is not set.', 'eightshift-forms'),
-				'output' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
+			// Pardot.
+			self::LABEL_PARDOT_MISSING_CONFIG => [
+				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pardot integration is not configured correctly, either globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_CUSTOM_SUCCESS_REDIRECT => [
-				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-				'label' => \__('When custom action is successful and redirect is set.', 'eightshift-forms'),
-				'output' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
-				'isRecommended' => false,
-			],
-			self::LABEL_CUSTOM_ERROR => [
-				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-				'label' => \__('When custom action returns an error.', 'eightshift-forms'),
-				'output' => \__('There was an error with your form submission.', 'eightshift-forms'),
+			self::LABEL_PARDOT_BAD_REQUEST_ERROR => [
+				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pardot integration returns a bad request error.', 'eightshift-forms'),
+				'output' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_CUSTOM_WP_ERROR => [
-				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-				'label' => \__('When custom action returns a WP error.', 'eightshift-forms'),
+			self::LABEL_PARDOT_ERROR_SETTINGS_MISSING => [
+				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pardot integration returns a settings missing error.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_CUSTOM_SUCCESS => [
-				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-				'label' => \__('When custom action is successful.', 'eightshift-forms'),
-				'output' => \__('Form was successfully submitted.', 'eightshift-forms'),
-				'isRecommended' => false,
+			self::LABEL_PARDOT_SERVER_ERROR => [
+				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pardot integration returns a server error.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_PARDOT_SUCCESS => [
+				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 
-			// Steps.
-			self::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('When validation steps current step is not set.', 'eightshift-forms'),
-				'output' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+			// Paycek.
+			self::LABEL_PAYCEK_MISSING_CONFIG => [
+				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
+				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('When validation steps fields are not set.', 'eightshift-forms'),
-				'output' => \__('It looks like there is some problem with step fields, please try again.', 'eightshift-forms'),
+			self::LABEL_PAYCEK_MISSING_REQ_PARAMS => [
+				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
+				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
-			self::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('When validation steps next step is not set.', 'eightshift-forms'),
-				'output' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('When validation steps parameters are not set.', 'eightshift-forms'),
-				'output' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
-				'isRecommended' => true,
-			],
-			self::LABEL_VALIDATION_STEPS_SUCCESS => [
-				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
-				'label' => \__('When validation steps is successful.', 'eightshift-forms'),
-				'output' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),
+			self::LABEL_PAYCEK_SUCCESS => [
+				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
+				'label' => \__('When Paycek integrations is able to send a request.', 'eightshift-forms'),
+				'output' => \__('Payment submitted successfully. Thank you!', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 
-			// Migrated labels (no flag yet).
-			self::LABEL_SUBMIT_FALLBACK_ERROR => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+			// Pipedrive.
+			self::LABEL_PIPEDRIVE_MISSING_CONFIG => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pipedrive integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_TEST_API_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('The API test was successful.', 'eightshift-forms'),
+			self::LABEL_PIPEDRIVE_MISSING_NAME => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pipedrive integrations returns a missing name error.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_TEST_API_ERROR => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
+			self::LABEL_PIPEDRIVE_MISSING_ORGANIZATION => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pipedrive integrations returns a missing organization error.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_GLOBAL_NOT_CONFIGURED => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+			self::LABEL_PIPEDRIVE_WRONG_ORGANIZATION_ID => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pipedrive integrations returns a wrong organization id error.', 'eightshift-forms'),
+				'output' => \__('Organization ID is invalid.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_INTEGRATION_ITEMS_MISSING => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Integration items are missing.', 'eightshift-forms'),
+			self::LABEL_PIPEDRIVE_WRONG_DATASET => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+				'label' => \__('When Pipedrive integrations returns a wrong dataset error.', 'eightshift-forms'),
+				'output' => \__('Integration dataset is invalid.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_INTEGRATION_ITEMS_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
+			self::LABEL_PIPEDRIVE_BAD_REQUEST_ERROR => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
 				'label' => '',
-				'output' => \__('Integration items were successfully fetched.', 'eightshift-forms'),
+				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			],
+			self::LABEL_PIPEDRIVE_SUCCESS => [
+				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 
-			self::LABEL_FORM_FIELDS_MISSING => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
+			// Talentlyft.
+			self::LABEL_TALENTLYFT_MISSING_CONFIG => [
+				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
+				'label' => \__('When Talentlyft integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
+				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_FORM_FIELDS_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
+			self::LABEL_TALENTLYFT_BAD_REQUEST_ERROR => [
+				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
+				'label' => \__('When Talentlyft integrations returns a bad request error.', 'eightshift-forms'),
+				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_CACHE_TYPE_NOT_FOUND => [
-				'type' => SettingsCache::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('cache doesn\'t exist.', 'eightshift-forms'),
+			self::LABEL_TALENTLYFT_VALIDATION_ERROR => [
+				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
+				'label' => \__('When Talentlyft integrations returns a validation error.', 'eightshift-forms'),
+				'output' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_CACHE_DELETED_SUCCESS => [
-				'type' => SettingsCache::SETTINGS_TYPE_KEY,
+			self::LABEL_TALENTLYFT_SUCCESS => [
+				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
 				'label' => '',
-				'output' => \__('cache deleted successfully!', 'eightshift-forms'),
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
-			self::LABEL_CRON_RUN_SUCCESS => [
-				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Cron job run successfully!', 'eightshift-forms'),
-			],
-			self::LABEL_CRON_RUN_NOT_FOUND => [
-				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Cron job not found.', 'eightshift-forms'),
-			],
-			self::LABEL_ENCRYPT_FAILED => [
-				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Encrypt failed!', 'eightshift-forms'),
-			],
-			self::LABEL_DECRYPT_FAILED => [
-				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Decrypt failed!', 'eightshift-forms'),
-			],
-			self::LABEL_ENCRYPT_SUCCESS => [
-				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Encrypt finished successfully!', 'eightshift-forms'),
-			],
-			self::LABEL_DECRYPT_SUCCESS => [
-				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Decrypt finished successfully!', 'eightshift-forms'),
-			],
-			self::LABEL_INCREMENT_RESET_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Increment reset successful.', 'eightshift-forms'),
-			],
-			self::LABEL_LOCATIONS_RESULT_OUTPUT_ERROR => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Your result output is not used in any location!', 'eightshift-forms'),
-			],
-			self::LABEL_LOCATIONS_FORM_ERROR => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Your form is not used in any location!', 'eightshift-forms'),
-			],
-			self::LABEL_LOCATIONS_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Locations were successfully fetched.', 'eightshift-forms'),
-			],
+
+			// Transfer.
 			self::LABEL_TRANSFER_EXPORT_MISSING_FORMS => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
@@ -1483,40 +1417,86 @@ class Labels implements LabelsInterface
 				'label' => '',
 				'output' => \__('Data export finished with success.', 'eightshift-forms'),
 			],
-			self::LABEL_BULK_MISSING_ITEMS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Please select the items you want to bulk action.', 'eightshift-forms'),
+
+			// Validation.
+			self::LABEL_PERMISSION_DENIED => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to access the forms API without the proper permissions.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_GENERIC_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Success', 'eightshift-forms'),
+			self::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form without the proper mandatory params.', 'eightshift-forms'),
+				'output' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_GENERIC_WARNING => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Warning', 'eightshift-forms'),
+			self::LABEL_VALIDATION_SUBMIT_LOGGED_IN => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form while not logged in.', 'eightshift-forms'),
+				'output' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
+				'isRecommended' => false,
 			],
-			self::LABEL_GENERIC_ERROR => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Error', 'eightshift-forms'),
+			self::LABEL_VALIDATION_SUBMIT_ONCE => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form more than once.', 'eightshift-forms'),
+				'output' => \__('This form can be submitted only once.', 'eightshift-forms'),
+				'isRecommended' => false,
 			],
-			self::LABEL_MIGRATION_TYPE_NOT_FOUND => [
-				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
+			self::LABEL_VALIDATION_SECURITY => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form with too many requests and was blocked.', 'eightshift-forms'),
+				'output' => \__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
 			],
-			self::LABEL_MIGRATION_SUCCESS => [
-				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
-				'label' => '',
-				'output' => \__('Migration finished with success.', 'eightshift-forms'),
+			self::LABEL_VALIDATION_PARAMS => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form with missing required params.', 'eightshift-forms'),
+				'isRecommended' => false,
 			],
-			self::LABEL_SETTINGS_SUCCESS => [
-				'type' => self::TYPE_GENERIC,
-				'label' => '',
-				'output' => \__('Changes saved!', 'eightshift-forms'),
+			self::LABEL_VALIDATION_FILES => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form with missing required files.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_FILES_UPLOAD_SUCCESS => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form with files upload success.', 'eightshift-forms'),
+				'isRecommended' => false,
+			],
+			self::LABEL_FILES_UPLOAD_ERROR => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('Someone tried to submit a form with files upload error.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('When validation steps current step is not set.', 'eightshift-forms'),
+				'output' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('When validation steps fields are not set.', 'eightshift-forms'),
+				'output' => \__('It looks like there is some problem with step fields, please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('When validation steps next step is not set.', 'eightshift-forms'),
+				'output' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('When validation steps parameters are not set.', 'eightshift-forms'),
+				'output' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_VALIDATION_STEPS_SUCCESS => [
+				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
+				'label' => \__('When validation steps is successful.', 'eightshift-forms'),
+				'output' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),
+				'isRecommended' => false,
 			],
 			self::LABEL_VALIDATION_REQUIRED => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
@@ -1762,10 +1742,35 @@ class Labels implements LabelsInterface
 				'output' => \__('File uploaded successfully.', 'eightshift-forms'),
 			],
 
-			self::LABEL_CUSTOM_MISSING_CONFIG => [
-				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-				'label' => '',
+			// Workable.
+			self::LABEL_WORKABLE_MISSING_CONFIG => [
+				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Workable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_WORKABLE_BAD_REQUEST_ERROR => [
+				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Workable integrations returns a bad request error.', 'eightshift-forms'),
+				'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_WORKABLE_ARCHIVED_JOB_ERROR => [
+				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Workable integrations returns a archived job error.', 'eightshift-forms'),
+				'output' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR => [
+				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
+				'label' => \__('When Workable integrations returns a too long file name error.', 'eightshift-forms'),
+				'output' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
+				'isRecommended' => true,
+			],
+			self::LABEL_WORKABLE_SUCCESS => [
+				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
+				'label' => '',
+				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 			],
 		];
 	}
