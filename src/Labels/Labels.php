@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
+use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\CronJobs\SettingsCronJobs;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
@@ -32,6 +34,9 @@ use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
+use EightshiftForms\Migration\SettingsMigration;
+use EightshiftForms\Transfer\SettingsTransfer;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\SettingsValidation;
 
 /**
@@ -39,6 +44,8 @@ use EightshiftForms\Validation\SettingsValidation;
  */
 class Labels implements LabelsInterface
 {
+	public const TYPE_GENERIC = 'generic';
+
 	public const LABEL_CAPTCHA_FEATURE_DISABLED = 'captchaFeatureDisabled';
 	public const LABEL_CAPTCHA_REQUEST_MISSING_TOKEN = 'captchaRequestMissingToken';
 	public const LABEL_CAPTCHA_REQUEST_WP_ERROR = 'captchaRequestWpError';
@@ -596,10 +603,12 @@ class Labels implements LabelsInterface
 				'isRecommended' => true,
 			],
 			self::LABEL_SUBMIT_INTEGRATION_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => \__('Someone tried to submit a form to an integration that returned a success.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::LABEL_SUBMIT_INTEGRATION_ERROR_WP => [
+				'type' => self::TYPE_GENERIC,
 				'label' => \__('Someone tried to submit a form to an integration that returned an error that is not handled by the integration.', 'eightshift-forms'),
 				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
@@ -1266,25 +1275,30 @@ class Labels implements LabelsInterface
 
 			// Custom.
 			self::LABEL_CUSTOM_NO_ACTION => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action is not set.', 'eightshift-forms'),
 				'output' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::LABEL_CUSTOM_SUCCESS_REDIRECT => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action is successful and redirect is set.', 'eightshift-forms'),
 				'output' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
 				'isRecommended' => false,
 			],
 			self::LABEL_CUSTOM_ERROR => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action returns an error.', 'eightshift-forms'),
 				'output' => \__('There was an error with your form submission.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::LABEL_CUSTOM_WP_ERROR => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action returns a WP error.', 'eightshift-forms'),
 				'isRecommended' => true,
 			],
 			self::LABEL_CUSTOM_SUCCESS => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action is successful.', 'eightshift-forms'),
 				'output' => \__('Form was successfully submitted.', 'eightshift-forms'),
 				'isRecommended' => false,
@@ -1324,147 +1338,183 @@ class Labels implements LabelsInterface
 
 			// Migrated labels (no flag yet).
 			self::LABEL_SUBMIT_FALLBACK_ERROR => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 			],
 			self::LABEL_TEST_API_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('The API test was successful.', 'eightshift-forms'),
 			],
 			self::LABEL_TEST_API_ERROR => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 			],
 			self::LABEL_GLOBAL_NOT_CONFIGURED => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
 			],
 			self::LABEL_INTEGRATION_ITEMS_MISSING => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Integration items are missing.', 'eightshift-forms'),
 			],
 			self::LABEL_INTEGRATION_ITEMS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Integration items were successfully fetched.', 'eightshift-forms'),
 			],
 
 			self::LABEL_FORM_FIELDS_MISSING => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
 			],
 			self::LABEL_FORM_FIELDS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
 			],
 			self::LABEL_CACHE_TYPE_NOT_FOUND => [
+				'type' => SettingsCache::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('cache doesn\'t exist.', 'eightshift-forms'),
 			],
 			self::LABEL_CACHE_DELETED_SUCCESS => [
+				'type' => SettingsCache::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('cache deleted successfully!', 'eightshift-forms'),
 			],
 			self::LABEL_CRON_RUN_SUCCESS => [
+				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Cron job run successfully!', 'eightshift-forms'),
 			],
 			self::LABEL_CRON_RUN_NOT_FOUND => [
+				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Cron job not found.', 'eightshift-forms'),
 			],
 			self::LABEL_ENCRYPT_FAILED => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Encrypt failed!', 'eightshift-forms'),
 			],
 			self::LABEL_DECRYPT_FAILED => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Decrypt failed!', 'eightshift-forms'),
 			],
 			self::LABEL_ENCRYPT_SUCCESS => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Encrypt finished successfully!', 'eightshift-forms'),
 			],
 			self::LABEL_DECRYPT_SUCCESS => [
+				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Decrypt finished successfully!', 'eightshift-forms'),
 			],
 			self::LABEL_INCREMENT_RESET_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Increment reset successful.', 'eightshift-forms'),
 			],
 			self::LABEL_LOCATIONS_RESULT_OUTPUT_ERROR => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Your result output is not used in any location!', 'eightshift-forms'),
 			],
 			self::LABEL_LOCATIONS_FORM_ERROR => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Your form is not used in any location!', 'eightshift-forms'),
 			],
 			self::LABEL_LOCATIONS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Locations were successfully fetched.', 'eightshift-forms'),
 			],
 			self::LABEL_TRANSFER_EXPORT_MISSING_FORMS => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please click on the forms you want to export.', 'eightshift-forms'),
 			],
 			self::LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please click on the result outputs you want to export.', 'eightshift-forms'),
 			],
 			self::LABEL_TRANSFER_UPLOAD_MISSING_FILE => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
 			],
 			self::LABEL_TRANSFER_UPLOAD_ERROR => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
 			],
 			self::LABEL_TRANSFER_UPLOAD_MISSING_TYPE => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Transfer version type key was not provided.', 'eightshift-forms'),
 			],
 			self::LABEL_TRANSFER_SUCCESS => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('successfully done!', 'eightshift-forms'),
 			],
 			self::LABEL_EXPORT_MISSING_ITEMS => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please select the items you want to export.', 'eightshift-forms'),
 			],
 			self::LABEL_EXPORT_DATA_EMPTY => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Data for export is empty.', 'eightshift-forms'),
 			],
 			self::LABEL_EXPORT_SUCCESS => [
+				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Data export finished with success.', 'eightshift-forms'),
 			],
 			self::LABEL_BULK_MISSING_ITEMS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Please select the items you want to bulk action.', 'eightshift-forms'),
 			],
 			self::LABEL_GENERIC_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Success', 'eightshift-forms'),
 			],
 			self::LABEL_GENERIC_WARNING => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Warning', 'eightshift-forms'),
 			],
 			self::LABEL_GENERIC_ERROR => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Error', 'eightshift-forms'),
 			],
 			self::LABEL_MIGRATION_TYPE_NOT_FOUND => [
+				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
 			],
 			self::LABEL_MIGRATION_SUCCESS => [
+				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Migration finished with success.', 'eightshift-forms'),
 			],
 			self::LABEL_SETTINGS_SUCCESS => [
+				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Changes saved!', 'eightshift-forms'),
 			],
@@ -1713,25 +1763,10 @@ class Labels implements LabelsInterface
 			],
 
 			self::LABEL_CUSTOM_MISSING_CONFIG => [
+				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => '',
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			],
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		];
 	}
 }
