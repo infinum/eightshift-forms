@@ -125,7 +125,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$currentStep) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
+				$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
@@ -138,7 +138,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$submittedNames) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('validationStepsFieldsProblem'),
+				$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM,
@@ -151,7 +151,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$steps) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('validationStepsNextStepProblem'),
+				$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
@@ -174,7 +174,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			if (!$params) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$this->getLabels()->getLabel('validationStepsParametersProblem'),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM,
@@ -226,7 +226,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationStepsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_VALIDATION_STEPS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_SUCCESS,

@@ -130,7 +130,7 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('hubspotMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_HUBSPOT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_HUBSPOT_MISSING_CONFIG,

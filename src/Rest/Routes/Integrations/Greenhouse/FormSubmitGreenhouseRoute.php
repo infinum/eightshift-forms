@@ -126,7 +126,7 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('greenhouseMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_GREENHOUSE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GREENHOUSE_MISSING_CONFIG,

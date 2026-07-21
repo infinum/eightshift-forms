@@ -132,7 +132,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('momentsMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_MOMENTS_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MOMENTS_MISSING_CONFIG,

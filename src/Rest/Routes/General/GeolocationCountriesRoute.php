@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\General;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
@@ -109,7 +110,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		if ($countries === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('geolocationCountriesMissing'),
+				$this->getLabels()->getLabel(Labels::LABEL_GEOLOCATION_COUNTRIES_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesMissing',
 				]
@@ -118,7 +119,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationCountriesSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_GEOLOCATION_COUNTRIES_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesSuccess',
 			],

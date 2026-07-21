@@ -54,7 +54,6 @@ use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Labels\Labels;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
@@ -707,7 +706,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 		// Populate additional items from filters, used for add-ons.
 		$filterName = HooksHelpers::getFilterName(['admin', 'settings', 'data']);
 		if (\has_filter($filterName)) {
-									return \apply_filters($filterName, $data);
+			return \apply_filters($filterName, $data);
 		}
 
 		return $data;

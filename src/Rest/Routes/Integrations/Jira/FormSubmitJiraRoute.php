@@ -129,7 +129,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsJira::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('jiraMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_JIRA_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_JIRA_MISSING_CONFIG,

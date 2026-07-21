@@ -87,7 +87,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			// Validate mandatory params.
 			if (!$this->getValidator()->validateMandatoryParams($params, $this->getMandatoryParams($params))) {
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
@@ -98,7 +98,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			$output = $this->submitAction($params);
 
 			$return = [
-				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $output[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -118,7 +118,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('submitFallbackError'),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel(Labels::LABEL_SUBMIT_FALLBACK_ERROR),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(

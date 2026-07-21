@@ -126,7 +126,7 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsMailchimp::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('mailchimpMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_MAILCHIMP_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILCHIMP_MISSING_CONFIG,

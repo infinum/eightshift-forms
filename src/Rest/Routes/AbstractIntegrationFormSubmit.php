@@ -127,7 +127,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
-					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN, $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN,
@@ -140,7 +140,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->getValidator()->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
-					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_SUBMIT_ONCE, $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_ONCE,
@@ -153,7 +153,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if (!$this->getValidator()->validateMandatoryParams($formDetails, $this->getMandatoryParams($formDetails))) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
@@ -166,7 +166,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->shouldCheckSecurity() && !$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE], $formDetails[Config::FD_FORM_ID])) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new RequestLimitException(
-					$this->getLabels()->getLabel('validationSecurity'),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_SECURITY),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SECURITY,
@@ -179,7 +179,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->shouldCheckParamsValidation() && $validate = $this->getValidator()->validateParams($formDetails)) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
+					$this->getLabels()->getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
 						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_PARAMS,
@@ -223,7 +223,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			$output = $this->submitAction($formDetails);
 
 			$return = [
-				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $output[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -250,7 +250,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			);
 		} catch (DisabledIntegrationException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -277,7 +277,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('submitFallbackError'),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel(Labels::LABEL_SUBMIT_FALLBACK_ERROR),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(

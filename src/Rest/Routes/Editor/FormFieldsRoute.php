@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
@@ -111,7 +112,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		if (!$fieldsOnly) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('formFieldsMissing'),
+				$this->getLabels()->getLabel(Labels::LABEL_FORM_FIELDS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsMissing',
@@ -125,7 +126,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		$steps = $formDetails[Config::FD_STEPS_SETUP] ?? [];
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('formFieldsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_FORM_FIELDS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $fieldsOutput,
 				AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsSuccess',

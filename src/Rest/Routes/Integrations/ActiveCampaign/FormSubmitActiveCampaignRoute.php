@@ -130,7 +130,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('activeCampaignMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG,

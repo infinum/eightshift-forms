@@ -29,7 +29,6 @@ use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Labels\Labels;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\SettingsFriendlyCaptcha;
 use EightshiftForms\Captcha\SettingsRecaptcha;

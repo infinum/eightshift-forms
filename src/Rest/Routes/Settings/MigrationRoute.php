@@ -129,7 +129,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			default => throw new BadRequestException(
-				$this->getLabels()->getLabel('migrationTypeNotFound'),
+				$this->getLabels()->getLabel(Labels::LABEL_MIGRATION_TYPE_NOT_FOUND),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
 				]
@@ -200,7 +200,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
 			],
@@ -394,7 +394,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
 			],
@@ -508,7 +508,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
 			],
@@ -599,7 +599,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
 			],

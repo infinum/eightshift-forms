@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\EncryptionHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
@@ -83,7 +84,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 		if (!$output) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$type === 'encrypt' ? $this->getLabels()->getLabel('encryptFailed') : $this->getLabels()->getLabel('decryptFailed'),
+				$type === 'encrypt' ? $this->getLabels()->getLabel(Labels::LABEL_ENCRYPT_FAILED) : $this->getLabels()->getLabel(Labels::LABEL_DECRYPT_FAILED),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
 					AbstractBaseRoute::R_DEBUG_KEY => 'encryptFailed',
@@ -94,7 +95,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 
 		// Finish.
 		return [
-			AbstractBaseRoute::R_MSG => $type === 'encrypt' ? $this->getLabels()->getLabel('encryptSuccess') : $this->getLabels()->getLabel('decryptSuccess'),
+			AbstractBaseRoute::R_MSG => $type === 'encrypt' ? $this->getLabels()->getLabel(Labels::LABEL_ENCRYPT_SUCCESS) : $this->getLabels()->getLabel(Labels::LABEL_DECRYPT_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
 				AbstractBaseRoute::R_DEBUG_KEY => $type === 'encrypt' ? 'encryptSuccess' : 'decryptSuccess',

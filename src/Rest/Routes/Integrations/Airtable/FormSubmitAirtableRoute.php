@@ -115,7 +115,7 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('airtableMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_AIRTABLE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_AIRTABLE_MISSING_CONFIG,

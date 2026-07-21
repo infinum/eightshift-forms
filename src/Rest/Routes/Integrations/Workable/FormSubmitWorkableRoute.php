@@ -126,7 +126,7 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsWorkable::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('workableMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_WORKABLE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_WORKABLE_MISSING_CONFIG,

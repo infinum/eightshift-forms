@@ -62,7 +62,7 @@ class Recaptcha implements CaptchaInterface
 	{
 		if (!\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CAPTCHA_SUCCESS),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FEATURE_DISABLED,
 				],
@@ -81,7 +81,7 @@ class Recaptcha implements CaptchaInterface
 		if ($token === '' || $token === '0') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('captchaBadRequest'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_BAD_REQUEST),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_MISSING_TOKEN,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -211,7 +211,7 @@ class Recaptcha implements CaptchaInterface
 
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -229,7 +229,7 @@ class Recaptcha implements CaptchaInterface
 		if (!isset($responseBody['riskAnalysis']['score'])) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -274,7 +274,7 @@ class Recaptcha implements CaptchaInterface
 
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('captchaError'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FREE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -324,7 +324,7 @@ class Recaptcha implements CaptchaInterface
 		if ($actionResponse !== $action) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('captchaWrongAction'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_WRONG_ACTION),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_WRONG_ACTION,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -339,7 +339,7 @@ class Recaptcha implements CaptchaInterface
 		if (\floatval($score) < \floatval($setScore)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('captchaScoreSpam'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_SCORE_SPAM),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SCORE_SPAM,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -352,7 +352,7 @@ class Recaptcha implements CaptchaInterface
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CAPTCHA_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SUCCESS,
 				AbstractBaseRoute::R_DEBUG => $formDetails,

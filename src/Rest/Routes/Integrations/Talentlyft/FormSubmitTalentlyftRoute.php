@@ -126,7 +126,7 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsTalentlyft::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('talentlyftMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_TALENTLYFT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TALENTLYFT_MISSING_CONFIG,

@@ -85,7 +85,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('corvusMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_CORVUS_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_MISSING_CONFIG,
@@ -113,7 +113,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
+				$this->getLabels()->getLabel(Labels::LABEL_CORVUS_MISSING_REQ_PARAMS, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_MISSING_REQ_PARAMS,
@@ -126,7 +126,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		if (isset($params['store_id']) && \in_array(Variables::getApiKeyCorvus($params['store_id']), ['', '0'], true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('corvusMissingReqParams', $formId),
+				$this->getLabels()->getLabel(Labels::LABEL_CORVUS_MISSING_REQ_PARAMS, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_MISSING_STORE_ID,
@@ -158,7 +158,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('corvusSuccess', $formId),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CORVUS_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CORVUS_SUCCESS,

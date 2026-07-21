@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
@@ -107,7 +108,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		if (!\apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('globalNotConfigured'),
+				$this->getLabels()->getLabel(Labels::LABEL_GLOBAL_NOT_CONFIGURED),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
@@ -120,7 +121,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('integrationItemsMissing'),
+				$this->getLabels()->getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
@@ -144,7 +145,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		)));
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
 				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',

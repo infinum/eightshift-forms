@@ -15,6 +15,7 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
@@ -77,7 +78,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportMissingItems'),
+				$this->getLabels()->getLabel(Labels::LABEL_EXPORT_MISSING_ITEMS),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportMissingItems',
 				]
@@ -94,7 +95,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		if ($output === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportDataEmpty'),
+				$this->getLabels()->getLabel(Labels::LABEL_EXPORT_DATA_EMPTY),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
 				]
@@ -103,7 +104,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('exportSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_EXPORT_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
 			],

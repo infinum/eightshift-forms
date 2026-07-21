@@ -85,7 +85,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('paycekMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_PAYCEK_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_CONFIG,
@@ -109,7 +109,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('paycekMissingReqParams', $formId),
+				$this->getLabels()->getLabel(Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS,
@@ -143,7 +143,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_PAYCEK_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_SUCCESS,

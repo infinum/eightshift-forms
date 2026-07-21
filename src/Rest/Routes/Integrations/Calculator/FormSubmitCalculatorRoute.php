@@ -78,7 +78,7 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsCalculator::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('calculatorMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_CALCULATOR_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CALCULATOR_MISSING_CONFIG,
@@ -112,7 +112,7 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('calculatorSuccess', $formId),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CALCULATOR_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CALCULATOR_SUCCESS,

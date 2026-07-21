@@ -94,7 +94,7 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		// Bailout if troubleshooting skip captcha is on.
 		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('captchaSkipCheck'),
+				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel(Labels::LABEL_CAPTCHA_SKIP_CHECK),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_DEBUG_SKIP_CHECK,
 				],

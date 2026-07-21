@@ -71,7 +71,7 @@ class FriendlyCaptcha implements CaptchaInterface
 	{
 		if (!\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_SUCCESS),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FEATURE_DISABLED,
 				],
@@ -85,7 +85,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if ($token === '' || $token === '0') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaBadRequest'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_MISSING_TOKEN,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -137,7 +137,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		// Must check the `success` field in the body — a 200 with success=false means the solution was rejected.
 		if (ApiHelpers::isSuccessResponse($responseCode) && ($responseBody['success'] ?? false)) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_SUCCESS),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SUCCESS,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -149,7 +149,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\in_array($errorCode, self::ERROR_CODES_AUTH, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaAuthError'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -162,7 +162,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\in_array($errorCode, self::ERROR_CODES_BAD_REQUEST, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaBadRequest'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -175,7 +175,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\in_array($errorCode, self::ERROR_CODES_TIMEOUT_OR_DUPLICATE, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaTimeoutOrDuplicate'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -188,7 +188,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if ($errorCode === 'solution_invalid') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaInvalidSolution'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -201,7 +201,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (ApiHelpers::isErrorResponse($responseCode)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaHttpError'),
+				$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_HTTP_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_HTTP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
@@ -213,7 +213,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		// Generic catch-all for any other unsuccessful response.
 		// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 		throw new BadRequestException(
-			$this->labels->getLabel('friendlyCaptchaError'),
+			$this->labels->getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_ERROR),
 			[
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_OUTPUT_ERROR,
 				AbstractBaseRoute::R_DEBUG => $formDetails,

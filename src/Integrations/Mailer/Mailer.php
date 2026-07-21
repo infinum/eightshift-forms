@@ -63,7 +63,7 @@ class Mailer implements MailerInterface
 		if (!\apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('mailerMissingConfig'),
+				$this->labels->getLabel(Labels::LABEL_MAILER_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_MISSING_CONFIG,
@@ -95,7 +95,7 @@ class Mailer implements MailerInterface
 		if (!$response) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('mailerErrorEmailSend'),
+				$this->labels->getLabel(Labels::LABEL_MAILER_ERROR_EMAIL_SEND),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_ERROR_EMAIL_SEND,
@@ -107,7 +107,7 @@ class Mailer implements MailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('mailerSuccess', $formId),
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel(Labels::LABEL_MAILER_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
 				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILER_SUCCESS,

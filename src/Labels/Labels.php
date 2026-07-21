@@ -399,6 +399,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When ActiveCampaign integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_ACTIVE_CAMPAIGN_INVALID_EMAIL_ERROR => [
 				'type' => SettingsActiveCampaign::SETTINGS_TYPE_KEY,
@@ -432,6 +433,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Airtable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_AIRTABLE_NOT_FOUND_ERROR => [
 				'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
@@ -474,11 +476,13 @@ class Labels implements LabelsInterface
 				'type' => SettingsCache::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('cache doesn\'t exist.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_CACHE_DELETED_SUCCESS => [
 				'type' => SettingsCache::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('cache deleted successfully!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Calculator.
@@ -487,12 +491,14 @@ class Labels implements LabelsInterface
 				'label' => \__('When Calculator integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CALCULATOR_SUCCESS => [
 				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
 				'label' => \__('When Calculator integrations is able to calculate the form.', 'eightshift-forms'),
 				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CALCULATOR_BAD_REQUEST_ERROR => [
 				'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
@@ -536,18 +542,21 @@ class Labels implements LabelsInterface
 				'label' => \__('Captcha action provided and action returned from the response don\'t match.', 'eightshift-forms'),
 				'output' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_SCORE_SPAM => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => \__('Captcha score has been detected as spam.', 'eightshift-forms'),
 				'output' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_SUCCESS => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => \__('Captcha request has been successful.', 'eightshift-forms'),
 				'output' => \__('Success', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_DEBUG_SKIP_CHECK => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
@@ -563,16 +572,19 @@ class Labels implements LabelsInterface
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_BAD_REQUEST => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Spam prevention system encountered an error. Captcha "request" is invalid or malformed.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_ERROR => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_OUTPUT_ERROR => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
@@ -584,40 +596,47 @@ class Labels implements LabelsInterface
 				'label' => \__('Friendly Captcha siteverify request returned a non-success HTTP status.', 'eightshift-forms'),
 				'output' => \__('Spam prevention service is currently unavailable. Please try again in a moment.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => \__('Friendly Captcha API key is missing or invalid.', 'eightshift-forms'),
 				'output' => \__('Spam prevention system is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => \__('Friendly Captcha rejected the request as malformed.', 'eightshift-forms'),
 				'output' => \__('Spam prevention system encountered an error. Friendly Captcha request is invalid or malformed.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => \__('Friendly Captcha solution failed validation.', 'eightshift-forms'),
 				'output' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => \__('Friendly Captcha solution expired or was already used.', 'eightshift-forms'),
 				'output' => \__('Spam prevention check timed out or was reused. Please try again.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_ERROR => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_CAPTCHA_FRIENDLY_SUCCESS => [
 				'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Success', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Clearbit.
@@ -643,12 +662,14 @@ class Labels implements LabelsInterface
 				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CORVUS_MISSING_REQ_PARAMS => [
 				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
 				'label' => \__('When Corvus integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CORVUS_MISSING_STORE_ID => [
 				'type' => SettingsCorvus::SETTINGS_TYPE_KEY,
@@ -660,6 +681,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Corvus integrations is able to send a request.', 'eightshift-forms'),
 				'output' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 
 			// Cron.
@@ -667,11 +689,13 @@ class Labels implements LabelsInterface
 				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Cron job run successfully!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_CRON_RUN_NOT_FOUND => [
 				'type' => SettingsCronJobs::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Cron job not found.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Custom.
@@ -680,18 +704,21 @@ class Labels implements LabelsInterface
 				'label' => \__('When custom action is not set.', 'eightshift-forms'),
 				'output' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CUSTOM_SUCCESS_REDIRECT => [
 				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action is successful and redirect is set.', 'eightshift-forms'),
 				'output' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CUSTOM_ERROR => [
 				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 				'label' => \__('When custom action returns an error.', 'eightshift-forms'),
 				'output' => \__('There was an error with your form submission.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_CUSTOM_WP_ERROR => [
 				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
@@ -703,6 +730,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When custom action is successful.', 'eightshift-forms'),
 				'output' => \__('Form was successfully submitted.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_CUSTOM_MISSING_CONFIG => [
 				'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
@@ -715,21 +743,25 @@ class Labels implements LabelsInterface
 				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Encrypt failed!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_DECRYPT_FAILED => [
 				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Decrypt failed!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_ENCRYPT_SUCCESS => [
 				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Encrypt finished successfully!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_DECRYPT_SUCCESS => [
 				'type' => SettingsDebug::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Decrypt finished successfully!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Generic.
@@ -743,61 +775,73 @@ class Labels implements LabelsInterface
 				'label' => \__('Someone tried to submit a form to an integration that returned an error that is not handled by the integration.', 'eightshift-forms'),
 				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_SUBMIT_FALLBACK_ERROR => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TEST_API_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('The API test was successful.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TEST_API_ERROR => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GLOBAL_NOT_CONFIGURED => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_INTEGRATION_ITEMS_MISSING => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Integration items are missing.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_INTEGRATION_ITEMS_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Integration items were successfully fetched.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_FORM_FIELDS_MISSING => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_FORM_FIELDS_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_INCREMENT_RESET_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Increment reset successful.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_LOCATIONS_RESULT_OUTPUT_ERROR => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Your result output is not used in any location!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_LOCATIONS_FORM_ERROR => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Your form is not used in any location!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_LOCATIONS_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
@@ -808,26 +852,31 @@ class Labels implements LabelsInterface
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Please select the items you want to bulk action.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GENERIC_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Success', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GENERIC_WARNING => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Warning', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GENERIC_ERROR => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Error', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_SETTINGS_SUCCESS => [
 				'type' => self::TYPE_GENERIC,
 				'label' => '',
 				'output' => \__('Changes saved!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Geolocation.
@@ -851,26 +900,31 @@ class Labels implements LabelsInterface
 				'label' => \__('Geolocation request has been successful.', 'eightshift-forms'),
 				'output' => \__('Success geolocation', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_GEOLOCATION_SKIP_CHECK => [
 				'type' => SettingsGeolocation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Form geolocation skipped. Feature inactive.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GEOLOCATION_MALFORMED_OR_NOT_VALID => [
 				'type' => SettingsGeolocation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GEOLOCATION_COUNTRIES_MISSING => [
 				'type' => SettingsGeolocation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Geolocation countries are missing.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_GEOLOCATION_COUNTRIES_SUCCESS => [
 				'type' => SettingsGeolocation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Geolocation countries were successfully fetched.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Goodbits.
@@ -879,6 +933,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Goodbits integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_GOODBITS_BAD_REQUEST_ERROR => [
 				'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
@@ -898,6 +953,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Greenhouse integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_GREENHOUSE_BAD_REQUEST_ERROR => [
 				'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
@@ -917,6 +973,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Hubspot integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_HUBSPOT_BAD_REQUEST_ERROR => [
 				'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
@@ -1068,6 +1125,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Jira integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_JIRA_MISSING_PROJECT => [
 				'type' => SettingsJira::SETTINGS_TYPE_KEY,
@@ -1119,6 +1177,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Mailchimp integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_MAILCHIMP_BAD_REQUEST_ERROR => [
 				'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
@@ -1138,18 +1197,21 @@ class Labels implements LabelsInterface
 				'label' => \__('When Mailer integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_MAILER_ERROR_EMAIL_SEND => [
 				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
 				'label' => \__('When Mailer integrations is not able to send an email.', 'eightshift-forms'),
 				'output' => \__('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_MAILER_SUCCESS => [
 				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
 				'label' => \__('When Mailer integrations is able to send an email.', 'eightshift-forms'),
 				'output' => \__('E-mail was sent successfully.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND => [
 				'type' => SettingsMailer::SETTINGS_TYPE_KEY,
@@ -1163,6 +1225,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Mailerlite integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_MAILERLITE_BAD_REQUEST_ERROR => [
 				'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
@@ -1181,11 +1244,13 @@ class Labels implements LabelsInterface
 				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_MIGRATION_SUCCESS => [
 				'type' => SettingsMigration::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Migration finished with success.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Moments.
@@ -1200,6 +1265,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Moments integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_MOMENTS_EVENTS_ERROR => [
 				'type' => SettingsMoments::SETTINGS_TYPE_KEY,
@@ -1218,6 +1284,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Nationbuilder integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_NATIONBUILDER_LIST_ERROR => [
 				'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
@@ -1259,6 +1326,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Pardot integration is not configured correctly, either globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_PARDOT_BAD_REQUEST_ERROR => [
 				'type' => SettingsPardot::SETTINGS_TYPE_KEY,
@@ -1290,18 +1358,21 @@ class Labels implements LabelsInterface
 				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_PAYCEK_MISSING_REQ_PARAMS => [
 				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
 				'label' => \__('When Paycek integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_PAYCEK_SUCCESS => [
 				'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
 				'label' => \__('When Paycek integrations is able to send a request.', 'eightshift-forms'),
 				'output' => \__('Payment submitted successfully. Thank you!', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 
 			// Pipedrive.
@@ -1310,6 +1381,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Pipedrive integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_PIPEDRIVE_MISSING_NAME => [
 				'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
@@ -1352,6 +1424,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Talentlyft integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_TALENTLYFT_BAD_REQUEST_ERROR => [
 				'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
@@ -1376,46 +1449,55 @@ class Labels implements LabelsInterface
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please click on the forms you want to export.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please click on the result outputs you want to export.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TRANSFER_UPLOAD_MISSING_FILE => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TRANSFER_UPLOAD_ERROR => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TRANSFER_UPLOAD_MISSING_TYPE => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Transfer version type key was not provided.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_TRANSFER_SUCCESS => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('successfully done!', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_EXPORT_MISSING_ITEMS => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Please select the items you want to export.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_EXPORT_DATA_EMPTY => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Data for export is empty.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_EXPORT_SUCCESS => [
 				'type' => SettingsTransfer::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Data export finished with success.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Validation.
@@ -1429,24 +1511,28 @@ class Labels implements LabelsInterface
 				'label' => \__('Someone tried to submit a form without the proper mandatory params.', 'eightshift-forms'),
 				'output' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_SUBMIT_LOGGED_IN => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('Someone tried to submit a form while not logged in.', 'eightshift-forms'),
 				'output' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_SUBMIT_ONCE => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('Someone tried to submit a form more than once.', 'eightshift-forms'),
 				'output' => \__('This form can be submitted only once.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_SECURITY => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('Someone tried to submit a form with too many requests and was blocked.', 'eightshift-forms'),
 				'output' => \__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_PARAMS => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
@@ -1473,41 +1559,48 @@ class Labels implements LabelsInterface
 				'label' => \__('When validation steps current step is not set.', 'eightshift-forms'),
 				'output' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('When validation steps fields are not set.', 'eightshift-forms'),
 				'output' => \__('It looks like there is some problem with step fields, please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('When validation steps next step is not set.', 'eightshift-forms'),
 				'output' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('When validation steps parameters are not set.', 'eightshift-forms'),
 				'output' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_STEPS_SUCCESS => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => \__('When validation steps is successful.', 'eightshift-forms'),
 				'output' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),
 				'isRecommended' => false,
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_REQUIRED => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field is required.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying required number.
 			self::LABEL_VALIDATION_REQUIRED_COUNT => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_INVALID => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
@@ -1518,6 +1611,7 @@ class Labels implements LabelsInterface
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This e-mail is not valid.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_EMAIL_EXISTS => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
@@ -1528,108 +1622,127 @@ class Labels implements LabelsInterface
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This e-mails top level domain is not valid.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_URL => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This URL is not valid.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying min number to the user.
 			self::LABEL_VALIDATION_MIN => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value is less than expected. Minimal number should be %s.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying max number to the user.
 			self::LABEL_VALIDATION_MAX => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value is more than expected. Maximal number should be %s.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying length min number to the user.
 			self::LABEL_VALIDATION_MIN_LENGTH => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying length max number to the user.
 			self::LABEL_VALIDATION_MAX_LENGTH => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value has more characters than expected. We expect maximum %s characters.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying length min number to the user.
 			self::LABEL_VALIDATION_MIN_COUNT => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value has less items than expected. We expect minimum %s items.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying length max number to the user.
 			self::LABEL_VALIDATION_MAX_COUNT => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value has more items than expected. We expect maximum %s items.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_NUMBER => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field should only contain numbers.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying validation pattern to the user.
 			self::LABEL_VALIDATION_PATTERN => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('This field value should be in this format: %s.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying file type value.
 			self::LABEL_VALIDATION_ACCEPT => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying file type value.
 			self::LABEL_VALIDATION_ACCEPT_MIME => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The file seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying file type value.
 			self::LABEL_VALIDATION_ACCEPT_MIME_MULTIPLE => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('One or more files seem to be corrupt or have invalid format. Only %s are allowed.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_FILE_WRONG_UPLOAD_PATH => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('One or more files seem to be uploaded using an unauthorized method.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_FILE_NOT_LOCATED => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('It seems that one or more files were not uploaded to the server. Please remove the files and try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_FILE_UPLOAD => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('There seems to be an error with the file upload. Please try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_FILE_MAX_AMOUNT => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('You can only upload a single file in this field. If you have multiple files, please remove them and try again.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying number value.
 			self::LABEL_VALIDATION_MIN_SIZE => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			// translators: %s used for displaying number value.
 			self::LABEL_VALIDATION_MAX_SIZE => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_PHONE => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
@@ -1735,11 +1848,13 @@ class Labels implements LabelsInterface
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 			self::LABEL_VALIDATION_FILE_UPLOAD_SUCCESS => [
 				'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 				'label' => '',
 				'output' => \__('File uploaded successfully.', 'eightshift-forms'),
+				'outputLabel' => true,
 			],
 
 			// Workable.
@@ -1748,6 +1863,7 @@ class Labels implements LabelsInterface
 				'label' => \__('When Workable integrations is not configured correctly, ether globally or per form.', 'eightshift-forms'),
 				'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 				'isRecommended' => true,
+				'outputLabel' => true,
 			],
 			self::LABEL_WORKABLE_BAD_REQUEST_ERROR => [
 				'type' => SettingsWorkable::SETTINGS_TYPE_KEY,

@@ -15,6 +15,7 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
@@ -105,7 +106,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('bulkMissingItems'),
+				$this->getLabels()->getLabel(Labels::LABEL_BULK_MISSING_ITEMS),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
 				]
@@ -154,7 +155,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		switch ($output['status']) {
 			case 'success':
 				return [
-					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel('genericSuccess'),
+					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel(Labels::LABEL_GENERIC_SUCCESS),
 					AbstractBaseRoute::R_DEBUG => [
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst((string) $type),
 					],
@@ -165,7 +166,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 			case 'warning':
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$output['msg'] ?? $this->getLabels()->getLabel('genericWarning'),
+					$output['msg'] ?? $this->getLabels()->getLabel(Labels::LABEL_GENERIC_WARNING),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst((string) $type),
 					]
@@ -174,7 +175,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 			default:
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$output['msg'] ?? $this->getLabels()->getLabel('genericError'),
+					$output['msg'] ?? $this->getLabels()->getLabel(Labels::LABEL_GENERIC_ERROR),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst((string) $type),
 					]
@@ -578,8 +579,8 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		];
 
 		$errorMsg = match ($type) {
-			Result::POST_TYPE_SLUG => $this->getLabels()->getLabel('locationsResultOutputError'),
-			default => $this->getLabels()->getLabel('locationsFormError'),
+			Result::POST_TYPE_SLUG => $this->getLabels()->getLabel(Labels::LABEL_LOCATIONS_RESULT_OUTPUT_ERROR),
+			default => $this->getLabels()->getLabel(Labels::LABEL_LOCATIONS_FORM_ERROR),
 		};
 
 		foreach ($ids as $id) {

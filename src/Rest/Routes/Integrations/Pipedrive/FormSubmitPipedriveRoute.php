@@ -128,7 +128,7 @@ class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPipedrive::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('pipedriveMissingConfig'),
+				$this->getLabels()->getLabel(Labels::LABEL_PIPEDRIVE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PIPEDRIVE_MISSING_CONFIG,
