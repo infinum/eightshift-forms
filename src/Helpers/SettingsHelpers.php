@@ -322,6 +322,19 @@ final class SettingsHelpers
 		return Config::SETTINGS_NAME_PREFIX . "-{$key}{$suffix}";
 	}
 
+	/**
+	 * Is Option section active by type.
+	 *
+	 * @param string $type Settings type
+	 * @return boolean
+	 */
+	public static function isOptionTypeActive(string $type): bool
+	{
+		$key = "{$type}-use";
+
+		return SettingsHelpers::isOptionCheckboxChecked($key, $key);
+	}
+
 	// --------------------------------------------------
 	// General helper methods
 	// --------------------------------------------------
