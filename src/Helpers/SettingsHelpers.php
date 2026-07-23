@@ -325,8 +325,7 @@ final class SettingsHelpers
 	/**
 	 * Is Option section active by type.
 	 *
-	 * @param string $type Settings type
-	 * @return boolean
+	 * @param string $type Settings type.
 	 */
 	public static function isOptionTypeActive(string $type): bool
 	{

@@ -40,7 +40,9 @@ class Recaptcha implements CaptchaInterface
 	 *
 	 * @param SecurityInterface $security Inject security methods (for user IP resolution).
 	 */
-	public function __construct(protected SecurityInterface $security) {}
+	public function __construct(protected SecurityInterface $security)
+	{
+	}
 
 	/**
 	 * Check captcha request.

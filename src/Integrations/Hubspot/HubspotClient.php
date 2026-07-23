@@ -59,7 +59,9 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 */
-	public function __construct(protected SecurityInterface $security) {}
+	public function __construct(protected SecurityInterface $security)
+	{
+	}
 
 	/**
 	 * Return items.

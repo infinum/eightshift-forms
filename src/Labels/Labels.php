@@ -381,8 +381,10 @@ class Labels
 		foreach (self::getFlagsList() as $key => $flag) {
 			$outputKey = $flag['output'] ?? '';
 			$type = $flag['type'] ?? '';
-
-			if (!$outputKey || !$type) {
+			if (!$outputKey) {
+				continue;
+			}
+			if (!$type) {
 				continue;
 			}
 
@@ -1895,10 +1897,10 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying required number.
 				self::LABEL_VALIDATION_REQUIRED_COUNT => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a field requires a minimum number of selected items.', 'eightshift-forms'),
+					// translators: %s used for displaying required number.
 					'output' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
@@ -1938,50 +1940,50 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying min number to the user.
 				self::LABEL_VALIDATION_MIN => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a number field value is less than the allowed minimum.', 'eightshift-forms'),
+					// translators: %s used for displaying min number to the user.
 					'output' => \__('This field value is less than expected. Minimal number should be %s.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying max number to the user.
 				self::LABEL_VALIDATION_MAX => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a number field value is more than the allowed maximum.', 'eightshift-forms'),
+					// translators: %s used for displaying max number to the user.
 					'output' => \__('This field value is more than expected. Maximal number should be %s.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying length min number to the user.
 				self::LABEL_VALIDATION_MIN_LENGTH => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a field value has fewer characters than allowed.', 'eightshift-forms'),
+					// translators: %s used for displaying length min number to the user.
 					'output' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying length max number to the user.
 				self::LABEL_VALIDATION_MAX_LENGTH => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a field value has more characters than allowed.', 'eightshift-forms'),
+					// translators: %s used for displaying length max number to the user.
 					'output' => \__('This field value has more characters than expected. We expect maximum %s characters.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying length min number to the user.
 				self::LABEL_VALIDATION_MIN_COUNT => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a field has fewer selected items than allowed.', 'eightshift-forms'),
+					// translators: %s used for displaying length min number to the user.
 					'output' => \__('This field value has less items than expected. We expect minimum %s items.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying length max number to the user.
 				self::LABEL_VALIDATION_MAX_COUNT => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a field has more selected items than allowed.', 'eightshift-forms'),
+					// translators: %s used for displaying length max number to the user.
 					'output' => \__('This field value has more items than expected. We expect maximum %s items.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
@@ -1993,34 +1995,34 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying validation pattern to the user.
 				self::LABEL_VALIDATION_PATTERN => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When a field value does not match the required format.', 'eightshift-forms'),
+					// translators: %s used for displaying validation pattern to the user.
 					'output' => \__('This field value should be in this format: %s.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying file type value.
 				self::LABEL_VALIDATION_ACCEPT => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When an uploaded file type is not supported.', 'eightshift-forms'),
+					// translators: %s used for displaying file type value.
 					'output' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying file type value.
 				self::LABEL_VALIDATION_ACCEPT_MIME => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When an uploaded file has a corrupted or invalid format.', 'eightshift-forms'),
+					// translators: %s used for displaying file type value.
 					'output' => \__('The file seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying file type value.
 				self::LABEL_VALIDATION_ACCEPT_MIME_MULTIPLE => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When one or more uploaded files have a corrupted or invalid format.', 'eightshift-forms'),
+					// translators: %s used for displaying file type value.
 					'output' => \__('One or more files seem to be corrupt or have invalid format. Only %s are allowed.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
@@ -2053,18 +2055,18 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying number value.
 				self::LABEL_VALIDATION_MIN_SIZE => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When an uploaded file is smaller than the allowed minimum size.', 'eightshift-forms'),
+					// translators: %s used for displaying number value.
 					'output' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				// translators: %s used for displaying number value.
 				self::LABEL_VALIDATION_MAX_SIZE => [
 					'type' => SettingsValidation::SETTINGS_TYPE_KEY,
 					'description' => \__('When an uploaded file is larger than the allowed maximum size.', 'eightshift-forms'),
+					// translators: %s used for displaying number value.
 					'output' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
