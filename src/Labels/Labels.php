@@ -63,8 +63,6 @@ class Labels
 
 	public const LABEL_CALCULATOR_MISSING_CONFIG = 'calculatorMissingConfig';
 	public const LABEL_CALCULATOR_SUCCESS = 'calculatorSuccess';
-	public const LABEL_CALCULATOR_BAD_REQUEST_ERROR = 'calculatorBadRequestError';
-	public const LABEL_CALCULATOR_ERROR_SETTINGS_MISSING = 'calculatorErrorSettingsMissing';
 
 	public const LABEL_CAPTCHA_FEATURE_DISABLED = 'captchaFeatureDisabled';
 	public const LABEL_CAPTCHA_REQUEST_MISSING_TOKEN = 'captchaRequestMissingToken';
@@ -75,7 +73,6 @@ class Labels
 	public const LABEL_CAPTCHA_SCORE_SPAM = 'captchaScoreSpam';
 	public const LABEL_CAPTCHA_SUCCESS = 'captchaSuccess';
 	public const LABEL_CAPTCHA_DEBUG_SKIP_CHECK = 'captchaDebugSkipCheck';
-	public const LABEL_CAPTCHA_MISSING_CONFIG = 'captchaMissingConfig';
 	public const LABEL_CAPTCHA_SKIP_CHECK = 'captchaSkipCheck';
 	public const LABEL_CAPTCHA_BAD_REQUEST = 'captchaBadRequest';
 	public const LABEL_CAPTCHA_ERROR = 'captchaError';
@@ -106,7 +103,6 @@ class Labels
 	public const LABEL_CUSTOM_ERROR = 'customError';
 	public const LABEL_CUSTOM_WP_ERROR = 'customWpError';
 	public const LABEL_CUSTOM_SUCCESS = 'customSuccess';
-	public const LABEL_CUSTOM_MISSING_CONFIG = 'customMissingConfig';
 
 	public const LABEL_ENCRYPT_FAILED = 'encryptFailed';
 	public const LABEL_DECRYPT_FAILED = 'decryptFailed';
@@ -201,7 +197,6 @@ class Labels
 	public const LABEL_JIRA_MISSING_EPIC_NAME = 'jiraMissingEpicName';
 	public const LABEL_JIRA_AUTH_REQUIRED_ERROR = 'jiraAuthRequiredError';
 	public const LABEL_JIRA_INVALID_EMAIL_ERROR = 'jiraInvalidEmailError';
-	public const LABEL_JIRA_BAD_REQUEST_ERROR = 'jiraBadRequestError';
 	public const LABEL_JIRA_INTEGRATION_ERROR = 'jiraIntegrationError';
 	public const LABEL_JIRA_SUCCESS = 'jiraSuccess';
 
@@ -213,7 +208,6 @@ class Labels
 	public const LABEL_MAILER_MISSING_CONFIG = 'mailerMissingConfig';
 	public const LABEL_MAILER_ERROR_EMAIL_SEND = 'mailerErrorEmailSend';
 	public const LABEL_MAILER_SUCCESS = 'mailerSuccess';
-	public const LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND = 'mailerErrorEmailConfirmationSend';
 
 	public const LABEL_MAILERLITE_MISSING_CONFIG = 'mailerliteMissingConfig';
 	public const LABEL_MAILERLITE_BAD_REQUEST_ERROR = 'mailerliteBadRequestError';
@@ -247,7 +241,6 @@ class Labels
 
 	public const LABEL_PAYCEK_MISSING_CONFIG = 'paycekMissingConfig';
 	public const LABEL_PAYCEK_MISSING_REQ_PARAMS = 'paycekMissingReqParams';
-	public const LABEL_PAYCEK_INTEGRATION_ERROR = 'paycekIntegrationError';
 	public const LABEL_PAYCEK_SUCCESS = 'paycekSuccess';
 
 	public const LABEL_PIPEDRIVE_MISSING_CONFIG = 'pipedriveMissingConfig';
@@ -255,7 +248,6 @@ class Labels
 	public const LABEL_PIPEDRIVE_MISSING_ORGANIZATION = 'pipedriveMissingOrganization';
 	public const LABEL_PIPEDRIVE_WRONG_ORGANIZATION_ID = 'pipedriveWrongOrganizationId';
 	public const LABEL_PIPEDRIVE_WRONG_DATASET = 'pipedriveWrongDataset';
-	public const LABEL_PIPEDRIVE_BAD_REQUEST_ERROR = 'pipedriveBadRequestError';
 	public const LABEL_PIPEDRIVE_INTEGRATION_ERROR = 'pipedriveIntegrationError';
 	public const LABEL_PIPEDRIVE_SUCCESS = 'pipedriveSuccess';
 
@@ -553,20 +545,6 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				self::LABEL_CALCULATOR_BAD_REQUEST_ERROR => [
-					'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
-					'description' => \__('When Calculator integration returns a bad request error.', 'eightshift-forms'),
-					'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
-				],
-				self::LABEL_CALCULATOR_ERROR_SETTINGS_MISSING => [
-					'type' => SettingsCalculator::SETTINGS_TYPE_KEY,
-					'description' => \__('When Calculator integration settings are missing.', 'eightshift-forms'),
-					'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
-				],
 
 				// Captcha.
 				self::LABEL_CAPTCHA_FEATURE_DISABLED => [
@@ -631,13 +609,6 @@ class Labels
 					'output' => \__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
-				],
-				self::LABEL_CAPTCHA_MISSING_CONFIG => [
-					'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
-					'description' => \__('When the captcha is not configured correctly.', 'eightshift-forms'),
-					'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
 				],
 				self::LABEL_CAPTCHA_SKIP_CHECK => [
 					'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
@@ -826,13 +797,6 @@ class Labels
 					'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
 					'description' => \__('When custom action is successful.', 'eightshift-forms'),
 					'output' => \__('Form was successfully submitted.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
-				],
-				self::LABEL_CUSTOM_MISSING_CONFIG => [
-					'type' => SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY,
-					'description' => \__('When the custom action is not configured correctly.', 'eightshift-forms'),
-					'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
@@ -1396,13 +1360,6 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => false,
 				],
-				self::LABEL_JIRA_BAD_REQUEST_ERROR => [
-					'type' => SettingsJira::SETTINGS_TYPE_KEY,
-					'description' => \__('When Jira integration returns a bad request error.', 'eightshift-forms'),
-					'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
-				],
 				self::LABEL_JIRA_INTEGRATION_ERROR => [
 					'type' => SettingsJira::SETTINGS_TYPE_KEY,
 					'description' => \__('When Jira integration returns an unhandled integration error.', 'eightshift-forms'),
@@ -1467,13 +1424,6 @@ class Labels
 					'type' => SettingsMailer::SETTINGS_TYPE_KEY,
 					'description' => \__('When Mailer integrations is able to send an email.', 'eightshift-forms'),
 					'output' => \__('E-mail was sent successfully.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
-				],
-				self::LABEL_MAILER_ERROR_EMAIL_CONFIRMATION_SEND => [
-					'type' => SettingsMailer::SETTINGS_TYPE_KEY,
-					'description' => \__('When the confirmation email fails to send.', 'eightshift-forms'),
-					'output' => \__('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
@@ -1678,13 +1628,6 @@ class Labels
 					'isActivityLogRecommended' => true,
 					'outputLabel' => true,
 				],
-				self::LABEL_PAYCEK_INTEGRATION_ERROR => [
-					'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
-					'description' => \__('When Paycek integration returns an unhandled integration error.', 'eightshift-forms'),
-					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
-					'isActivityLogRecommended' => true,
-					'outputLabel' => false,
-				],
 				self::LABEL_PAYCEK_SUCCESS => [
 					'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
 					'description' => \__('When Paycek integrations is able to send a request.', 'eightshift-forms'),
@@ -1728,13 +1671,6 @@ class Labels
 					'output' => \__('Integration dataset is invalid.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
-				],
-				self::LABEL_PIPEDRIVE_BAD_REQUEST_ERROR => [
-					'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
-					'description' => \__('When Pipedrive integration returns a bad request error.', 'eightshift-forms'),
-					'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-					'isActivityLogRecommended' => false,
-					'outputLabel' => true,
 				],
 				self::LABEL_PIPEDRIVE_INTEGRATION_ERROR => [
 					'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
