@@ -15,6 +15,7 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
@@ -77,9 +78,9 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportMissingItems'),
+				Labels::getLabel(Labels::LABEL_EXPORT_MISSING_ITEMS),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'exportMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_EXPORT_MISSING_ITEMS,
 				]
 			);
 			// phpcs:enable
@@ -94,18 +95,18 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		if ($output === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportDataEmpty'),
+				Labels::getLabel(Labels::LABEL_EXPORT_DATA_EMPTY),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_EXPORT_DATA_EMPTY,
 				]
 			);
 			// phpcs:enable
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('exportSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_EXPORT_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_EXPORT_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminExportContent') => \wp_json_encode($output),

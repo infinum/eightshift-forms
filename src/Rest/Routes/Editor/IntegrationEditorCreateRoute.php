@@ -14,7 +14,7 @@ use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -37,18 +37,15 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -124,7 +121,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 				$message,
 				[
 					AbstractBaseRoute::R_DEBUG => $syncForm,
-					AbstractBaseRoute::R_DEBUG_KEY => 'createFormError',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_CREATE_FORM_ERROR,
 				]
 			);
 			// phpcs:enable
@@ -134,7 +131,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => $message,
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $syncForm,
-				AbstractBaseRoute::R_DEBUG_KEY => 'createFormSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_CREATE_FORM_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorSyncForm') => $syncForm,

@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * MomentsClient integration class.
@@ -170,9 +170,9 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		$msg = $body['requestError']['serviceException']['messageId'] ?? '';
 
 		return match ($msg) {
-			'BAD_REQUEST' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR,
-			'UNAUTHORIZED' => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'BAD_REQUEST' => Labels::LABEL_MOMENTS_BAD_REQUEST_ERROR,
+			'UNAUTHORIZED' => Labels::LABEL_MOMENTS_MISSING_CONFIG,
+			default => Labels::LABEL_MOMENTS_INTEGRATION_ERROR,
 		};
 	}
 
@@ -198,7 +198,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesReq !== []) {
 			$key = $matchesReq[0][2] ?: '';
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationRequired';
+				$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 			}
 		}
 
@@ -209,7 +209,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesEmail[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationEmail';
+				$output[$key] = Labels::LABEL_VALIDATION_EMAIL;
 			}
 		}
 
@@ -220,7 +220,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesPhone[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationPhone';
+				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
 
@@ -231,7 +231,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesPhonePrefix[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationPhone';
+				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
 
@@ -242,7 +242,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesPhoneIsNumeric[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationPhone';
+				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
 
@@ -253,7 +253,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesPhoneLength[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationMomentsInvalidPhoneLength';
+				$output[$key] = Labels::LABEL_VALIDATION_MOMENTS_INVALID_PHONE_LENGTH;
 			}
 		}
 
@@ -264,7 +264,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesDate[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationDateTime';
+				$output[$key] = Labels::LABEL_VALIDATION_DATE_TIME;
 			}
 		}
 
@@ -275,7 +275,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesDate[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationDate';
+				$output[$key] = Labels::LABEL_VALIDATION_DATE;
 			}
 		}
 
@@ -286,7 +286,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesDateNoFuture[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationDateNoFuture';
+				$output[$key] = Labels::LABEL_VALIDATION_DATE_NO_FUTURE;
 			}
 		}
 
@@ -297,7 +297,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesCountry[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationInvalid';
+				$output[$key] = Labels::LABEL_VALIDATION_INVALID;
 			}
 		}
 
@@ -308,7 +308,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesForbiddenCharacters[0][1] ?: '';
 
 			if ($key !== '' && $key !== '0') {
-				$output[$key] = 'validationMomentsInvalidSpecialCharacters';
+				$output[$key] = Labels::LABEL_VALIDATION_MOMENTS_INVALID_SPECIAL_CHARACTERS;
 			}
 		}
 

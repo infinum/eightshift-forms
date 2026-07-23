@@ -16,6 +16,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -96,14 +97,14 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 						if (ApiHelpers::isErrorResponse($listResponse[Config::IARD_CODE])) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $listResponse;
 
-							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_LIST_ERROR)) {
+							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_NATIONBUILDER_LIST_ERROR)) {
 								$this->mailer->sendTroubleshootingEmail(
 									$formDetails,
 									[
 										'response' => $listResponse[Config::IARD_RESPONSE] ?? [],
 										'body' => $listResponse[Config::IARD_BODY] ?? [],
 									],
-									SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_LIST_ERROR
+									Labels::LABEL_NATIONBUILDER_LIST_ERROR
 								);
 							}
 						}
@@ -121,14 +122,14 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 						if (ApiHelpers::isErrorResponse($tagResponse[Config::IARD_CODE])) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $tagResponse;
 
-							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_TAGS_ERROR)) {
+							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_NATIONBUILDER_TAGS_ERROR)) {
 								$this->mailer->sendTroubleshootingEmail(
 									$formDetails,
 									[
 										'response' => $tagResponse[Config::IARD_RESPONSE] ?? [],
 										'body' => $tagResponse[Config::IARD_BODY] ?? [],
 									],
-									SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_TAGS_ERROR
+									Labels::LABEL_NATIONBUILDER_TAGS_ERROR
 								);
 							}
 						}

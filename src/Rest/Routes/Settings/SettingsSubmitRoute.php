@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
@@ -160,8 +161,10 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('settingsSuccess'),
-
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_SETTINGS_SUCCESS),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_SUCCESS,
+			],
 		];
 	}
 }

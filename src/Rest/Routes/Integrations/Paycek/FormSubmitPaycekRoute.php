@@ -22,7 +22,7 @@ use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitPaycekRoute
@@ -85,10 +85,10 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('paycekMissingConfig'),
+				Labels::getLabel(Labels::LABEL_PAYCEK_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -109,10 +109,10 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('paycekMissingReqParams', $formId),
+				Labels::getLabel(Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS,
 				],
 			);
 			// phpcs:enable
@@ -143,10 +143,10 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_PAYCEK_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],

@@ -13,7 +13,6 @@ namespace EightshiftForms\Validation;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Labels\Labels;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Settings\SettingInterface;
@@ -65,13 +64,6 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 	 * Validation use only logged in key.
 	 */
 	public const SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY = 'validation-use-only-logged-in';
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
-	 */
-	public function __construct(protected LabelsInterface $labels) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
@@ -170,7 +162,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 								'component' => 'input',
 								'inputName' => SettingsHelpers::getSettingName($key),
 								'inputFieldLabel' => \ucfirst($key),
-								'inputPlaceholder' => $this->labels->getLabels()[$formType][$key] ?? '',
+								'inputPlaceholder' => Labels::getLabels()[$formType][$key] ?? '',
 								'inputValue' => SettingsHelpers::getSettingValue($key, $formId),
 							],
 						],
@@ -202,7 +194,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 		}
 
 		// List all labels for settings override.
-		foreach ($this->labels->getLabels() as $type => $labels) {
+		foreach (Labels::getLabels() as $type => $labels) {
 			$output = [
 				'component' => 'layout',
 				'layoutContent' => [

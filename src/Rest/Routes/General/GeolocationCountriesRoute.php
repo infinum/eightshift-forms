@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes\General;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -37,13 +37,11 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param GeolocationInterface $geolocation Inject GeolocationInterface which holds Geolocation data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		/**
 		 * Instance variable of ClientInterface data.
 		 */
@@ -51,7 +49,6 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -109,18 +106,18 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		if ($countries === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('geolocationCountriesMissing'),
+				Labels::getLabel(Labels::LABEL_GEOLOCATION_COUNTRIES_MISSING),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesMissing',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_COUNTRIES_MISSING,
 				]
 			);
 			// phpcs:enable
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationCountriesSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_GEOLOCATION_COUNTRIES_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_COUNTRIES_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('geolocationCountries') => $countries,

@@ -18,7 +18,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitCustomRoute
@@ -85,10 +85,10 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (!$action) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('customNoAction'),
+				Labels::getLabel(Labels::LABEL_CUSTOM_NO_ACTION),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_NO_ACTION,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_NO_ACTION,
 				],
 			);
 			// phpcs:enable
@@ -106,10 +106,10 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 			\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccessRedirect'),
+				AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CUSTOM_SUCCESS_REDIRECT),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS_REDIRECT,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_SUCCESS_REDIRECT,
 				],
 				AbstractBaseRoute::R_DATA => \array_merge(
 					$successAdditionalData['public'],
@@ -142,10 +142,10 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (\is_wp_error($customResponse)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('customError', $formId),
+				Labels::getLabel(Labels::LABEL_CUSTOM_ERROR, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_WP_ERROR,
 				],
 			);
 			// phpcs:enable
@@ -157,10 +157,10 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (ApiHelpers::isErrorResponse($customResponseCode)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('customError', $formId),
+				Labels::getLabel(Labels::LABEL_CUSTOM_ERROR, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_ERROR,
 				],
 				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 			);
@@ -174,10 +174,10 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('customSuccess', $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CUSTOM_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CUSTOM_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CUSTOM_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],

@@ -14,6 +14,7 @@ namespace EightshiftForms\Validation\FileSecurity;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Labels\Labels;
 use finfo;
 
 /**
@@ -55,17 +56,17 @@ final class FileSecurityScanner
 	public function scan(string $filepath, string $declaredName, array $extraAllowedMimes = []): string
 	{
 		if ($filepath === '' || !\is_readable($filepath)) {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		$extension = $this->getExtension($declaredName);
 		if ($this->isDenyListed($extension)) {
-			return 'validationFileExtensionDenied';
+			return Labels::LABEL_VALIDATION_FILE_EXTENSION_DENIED;
 		}
 
 		$detectedMime = $this->detectMime($filepath);
 		if ($detectedMime === '') {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		if (!$this->isMimeRegisteredOnSite($detectedMime, $extraAllowedMimes)) {
@@ -73,11 +74,11 @@ final class FileSecurityScanner
 			// at all (e.g. `text/xml` on a default install). Saying "contents
 			// do not match extension" would be misleading — the contents are
 			// fine, the site just does not accept this type.
-			return 'validationFileMimeNotAllowed';
+			return Labels::LABEL_VALIDATION_FILE_MIME_NOT_ALLOWED;
 		}
 
 		if (!$this->extensionMatchesMime($extension, $detectedMime, $extraAllowedMimes)) {
-			return 'validationFileMimeMismatch';
+			return Labels::LABEL_VALIDATION_FILE_MIME_MISMATCH;
 		}
 
 		$scannerError = $this->runTypeScanner($filepath, $declaredName, $detectedMime);

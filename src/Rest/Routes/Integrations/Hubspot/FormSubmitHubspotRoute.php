@@ -15,7 +15,6 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -25,7 +24,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use Override;
 
 /**
@@ -43,7 +42,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -53,7 +51,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
@@ -62,7 +59,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
@@ -130,10 +126,10 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('hubspotMissingConfig'),
+				Labels::getLabel(Labels::LABEL_HUBSPOT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_HUBSPOT_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

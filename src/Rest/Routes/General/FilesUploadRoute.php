@@ -17,7 +17,7 @@ use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use Override;
 
 /**
@@ -134,10 +134,10 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		if (!DeveloperHelpers::isDeveloperSkipFormValidationActive() && $validate = $this->getValidator()->validateFiles($formDetails, $manualValidationReference)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
+				Labels::getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_FILES,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_FILES,
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('validation') => $validate,
@@ -160,14 +160,14 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		if (UploadHelpers::isUploadError((string) $uploadError)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
+				Labels::getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FILES_UPLOAD_ERROR,
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('validation') => [
-						$uploadFileId => $this->getLabels()->getLabel('validationFileUpload'),
+						$uploadFileId => Labels::getLabel(Labels::LABEL_VALIDATION_FILE_UPLOAD),
 					],
 				]
 			);
@@ -175,10 +175,10 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationFileUploadSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_VALIDATION_FILE_UPLOAD_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FILES_UPLOAD_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('fileName') => $uploadFile['outputName'] ?? '',

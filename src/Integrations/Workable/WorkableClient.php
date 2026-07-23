@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * WorkableClient integration class.
@@ -203,10 +203,10 @@ class WorkableClient implements ClientInterface
 		$msg = $body['error'] ?? '';
 
 		return match ($msg) {
-			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR,
-			'position is draft or archived' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR,
-			'Filename should contain less characters' => SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => Labels::LABEL_WORKABLE_BAD_REQUEST_ERROR,
+			'position is draft or archived' => Labels::LABEL_WORKABLE_ARCHIVED_JOB_ERROR,
+			'Filename should contain less characters' => Labels::LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
+			default => Labels::LABEL_WORKABLE_INTEGRATION_ERROR,
 		};
 	}
 
@@ -232,23 +232,23 @@ class WorkableClient implements ClientInterface
 
 			switch ($message) {
 				case 'can\'t be blank':
-					$output[$key] = 'validationRequired';
+					$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 					break;
 				case 'is too long (maximum is 127 characters)':
-					$output[$key] = 'validationWorkableMaxLength127';
+					$output[$key] = Labels::LABEL_VALIDATION_WORKABLE_MAX_LENGTH127;
 					break;
 				case 'is too long (maximum is 255 characters)':
-					$output[$key] = 'validationWorkableMaxLength255';
+					$output[$key] = Labels::LABEL_VALIDATION_WORKABLE_MAX_LENGTH255;
 					break;
 				case 'is invalid':
-					$output[$key] = $key === 'email' ? 'validationEmail' : 'validationInvalid';
+					$output[$key] = $key === 'email' ? Labels::LABEL_VALIDATION_EMAIL : Labels::LABEL_VALIDATION_INVALID;
 					break;
 			}
 		}
 
 		if ($msg === 'either name or firstname and lastname should be part of the candidate\'s payload') {
-			$output['firstname'] = 'validationRequired';
-			$output['lastname'] = 'validationRequired';
+			$output['firstname'] = Labels::LABEL_VALIDATION_REQUIRED;
+			$output['lastname'] = Labels::LABEL_VALIDATION_REQUIRED;
 		}
 
 		return $output;

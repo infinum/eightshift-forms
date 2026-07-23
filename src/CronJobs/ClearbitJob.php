@@ -18,6 +18,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
@@ -122,7 +123,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 					} elseif ($clearbitResponse[Config::IARD_CODE] !== AbstractRoute::API_RESPONSE_CODE_NOT_FOUND) {
 						// Send fallback email if error but ignore for unknown entry.
 						$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
-						if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR)) {
+						if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_CLEARBIT_CRON_ERROR)) {
 							$this->mailer->sendTroubleshootingEmail(
 								[
 									Config::FD_FORM_ID => (string) $formId,
@@ -132,7 +133,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 									'response' => $clearbitResponse[Config::IARD_RESPONSE] ?? [],
 									'body' => $clearbitResponse[Config::IARD_BODY] ?? [],
 								],
-								SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR
+								Labels::LABEL_CLEARBIT_CRON_ERROR
 							);
 						}
 					}

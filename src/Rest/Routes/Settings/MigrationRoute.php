@@ -30,16 +30,16 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use WP_Query;
 
 /**
@@ -57,18 +57,15 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -128,9 +125,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			default => throw new BadRequestException(
-				$this->getLabels()->getLabel('migrationTypeNotFound'),
+				Labels::getLabel(Labels::LABEL_MIGRATION_TYPE_NOT_FOUND),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_TYPE_NOT_FOUND,
 				]
 			),
 		};
@@ -199,9 +196,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 		];
 	}
@@ -393,9 +390,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $outputFinal,
@@ -507,9 +504,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
@@ -598,9 +595,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,

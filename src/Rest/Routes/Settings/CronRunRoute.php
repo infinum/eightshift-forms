@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\CronJobs\SettingsCronJobs;
 use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
@@ -73,7 +74,7 @@ class CronRunRoute extends AbstractSimpleFormSubmit
 		if (!\in_array($type, SettingsCronJobs::JOBS, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('cronRunNotFound')
+				Labels::getLabel(Labels::LABEL_CRON_RUN_NOT_FOUND)
 			);
 		}
 
@@ -82,9 +83,9 @@ class CronRunRoute extends AbstractSimpleFormSubmit
 		// Finish.
 		return [
 			// translators: %1$s will be replaced with the cache type. %2$s will be replaced with the cache deleted success text.
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('cronRunSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CRON_RUN_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'cronRunSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CRON_RUN_SUCCESS,
 			],
 		];
 	}

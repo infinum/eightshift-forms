@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use Exception;
 
 /**
@@ -183,9 +183,9 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		return match ($msg) {
-			'Bad Request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_BAD_REQUEST_ERROR,
-			'Invalid API Key has been submitted, please refer to your API key under your settings' => SettingsFallback::SETTINGS_FALLBACK_FLAG_GOODBITS_MISSING_CONFIG,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => Labels::LABEL_GOODBITS_BAD_REQUEST_ERROR,
+			'Invalid API Key has been submitted, please refer to your API key under your settings' => Labels::LABEL_GOODBITS_MISSING_CONFIG,
+			default => Labels::LABEL_GOODBITS_INTEGRATION_ERROR,
 		};
 	}
 
@@ -208,7 +208,7 @@ class GoodbitsClient implements ClientInterface
 
 		foreach ($errors as $value) {
 			if ($value === 'Email is invalid') {
-				$output['email'] = 'validationEmail';
+				$output['email'] = Labels::LABEL_VALIDATION_EMAIL;
 			}
 		}
 

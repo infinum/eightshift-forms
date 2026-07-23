@@ -19,7 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * NationbuilderClient integration class.
@@ -415,10 +415,10 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$msg = $body['code'] ?? '';
 
 		return match ($msg) {
-			'bad_request' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_BAD_REQUEST_ERROR,
-			'unauthorized' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_ERROR_SETTINGS_MISSING,
-			'server_error' => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_SERVER_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'bad_request' => Labels::LABEL_NATIONBUILDER_BAD_REQUEST_ERROR,
+			'unauthorized' => Labels::LABEL_NATIONBUILDER_ERROR_SETTINGS_MISSING,
+			'server_error' => Labels::LABEL_NATIONBUILDER_SERVER_ERROR,
+			default => Labels::LABEL_NATIONBUILDER_INTEGRATION_ERROR,
 		};
 	}
 
@@ -451,7 +451,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			}
 
 			if (\str_contains((string) $message, 'E-mail email is already taken on signup')) {
-				$output[$mapParams[$key]] = 'validationEmailExists';
+				$output[$mapParams[$key]] = Labels::LABEL_VALIDATION_EMAIL_EXISTS;
 				continue;
 			}
 		}

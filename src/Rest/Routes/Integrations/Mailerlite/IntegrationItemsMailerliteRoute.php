@@ -15,7 +15,7 @@ use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -47,18 +47,15 @@ class IntegrationItemsMailerliteRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected ClientInterface $mailerliteClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -105,9 +102,9 @@ class IntegrationItemsMailerliteRoute extends AbstractSimpleFormSubmit
 		if (!\apply_filters(SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('globalNotConfigured'),
+				Labels::getLabel(Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED,
 				]
 			);
 			// phpcs:enable
@@ -118,10 +115,10 @@ class IntegrationItemsMailerliteRoute extends AbstractSimpleFormSubmit
 		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('integrationItemsMissing'),
+				Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
-					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_ITEMS_MISSING,
 				]
 			);
 			// phpcs:enable
@@ -142,10 +139,10 @@ class IntegrationItemsMailerliteRoute extends AbstractSimpleFormSubmit
 		)));
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
-				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_ITEMS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorIntegrationItems') => $items,

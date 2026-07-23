@@ -16,7 +16,7 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use Override;
 
 /**
@@ -125,10 +125,10 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$currentStep) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
+				Labels::getLabel(Labels::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_CURRENT_STEP_PROBLEM,
 				],
 			);
 			// phpcs:enable
@@ -138,10 +138,10 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$submittedNames) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('validationStepsFieldsProblem'),
+				Labels::getLabel(Labels::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_FIELDS_PROBLEM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_FIELDS_PROBLEM,
 				],
 			);
 			// phpcs:enable
@@ -151,10 +151,10 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$steps) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('validationStepsNextStepProblem'),
+				Labels::getLabel(Labels::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_NEXT_STEP_PROBLEM,
 				],
 			);
 			// phpcs:enable
@@ -174,10 +174,10 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			if (!$params) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$this->getLabels()->getLabel('validationStepsParametersProblem'),
+					Labels::getLabel(Labels::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_PARAMETERS_PROBLEM,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_PARAMETERS_PROBLEM,
 					],
 				);
 				// phpcs:enable
@@ -226,10 +226,10 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationStepsSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_VALIDATION_STEPS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_STEPS_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_STEPS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('stepType') => $type,

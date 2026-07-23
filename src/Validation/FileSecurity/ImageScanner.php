@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation\FileSecurity;
 
+use EightshiftForms\Labels\Labels;
+
 /**
  * Scans raster and vector image files.
  */
@@ -95,7 +97,7 @@ final class ImageScanner implements FileSecurityScannerInterface
 	{
 		$info = @\getimagesize($filepath); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		if (!\is_array($info) || empty($info[0]) || empty($info[1])) {
-			return 'validationFileImageUnsafe';
+			return Labels::LABEL_VALIDATION_FILE_IMAGE_UNSAFE;
 		}
 
 		return '';
@@ -112,19 +114,19 @@ final class ImageScanner implements FileSecurityScannerInterface
 	{
 		$contents = @\file_get_contents($filepath); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if (!\is_string($contents) || $contents === '') {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		$haystack = \strtolower($contents);
 		foreach (self::SVG_DANGER_PATTERNS as $pattern) {
 			if (\str_contains($haystack, $pattern)) {
-				return 'validationFileImageUnsafe';
+				return Labels::LABEL_VALIDATION_FILE_IMAGE_UNSAFE;
 			}
 		}
 
 		// On/event handlers (onload=, onclick=, etc.) — only flag inside tags.
 		if (\preg_match('/<[^>]+\son[a-z]+\s*=/i', $contents) === 1) {
-			return 'validationFileImageUnsafe';
+			return Labels::LABEL_VALIDATION_FILE_IMAGE_UNSAFE;
 		}
 
 		return '';

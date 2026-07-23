@@ -15,7 +15,6 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\MomentsEventsInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -26,6 +25,7 @@ use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use Override;
 
@@ -44,7 +44,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -54,7 +53,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
@@ -63,7 +61,6 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
@@ -131,10 +128,10 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('momentsMissingConfig'),
+				Labels::getLabel(Labels::LABEL_MOMENTS_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MOMENTS_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -198,7 +195,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 			return;
 		}
 
-		if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR)) {
+		if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_MOMENTS_EVENTS_ERROR)) {
 			$this->getMailer()->sendTroubleshootingEmail(
 				[
 					Config::FD_FORM_ID => (string) $formId,
@@ -208,7 +205,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 					'response' => $response[Config::IARD_RESPONSE] ?? [],
 					'body' => $response[Config::IARD_BODY] ?? [],
 				],
-				SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR
+				Labels::LABEL_MOMENTS_EVENTS_ERROR
 			);
 		}
 	}

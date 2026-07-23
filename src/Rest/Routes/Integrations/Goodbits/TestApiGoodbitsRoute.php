@@ -14,7 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -36,18 +36,15 @@ class TestApiGoodbitsRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param ClientInterface $goodbitsClient Inject Goodbits which holds Goodbits connect data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		protected ClientInterface $goodbitsClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 	}
 
 	/**
@@ -98,20 +95,20 @@ class TestApiGoodbitsRoute extends AbstractSimpleFormSubmit
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('testApiError'),
+				Labels::getLabel(Labels::LABEL_TEST_API_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
-					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR,
 				]
 			);
 			// phpcs:enable
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('testApiSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_TEST_API_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
-				AbstractBaseRoute::R_DEBUG_KEY => 'testApiSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_SUCCESS,
 			],
 		];
 	}

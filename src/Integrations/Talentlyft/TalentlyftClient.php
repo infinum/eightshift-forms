@@ -20,7 +20,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * TalentlyftClient integration class.
@@ -194,9 +194,9 @@ class TalentlyftClient implements ClientInterface
 		$msg = $body['Message'] ?? '';
 
 		return match ($msg) {
-			'An error has occurred' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_BAD_REQUEST_ERROR,
-			'Validation Failed' => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_VALIDATION_ERROR,
-			default => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP,
+			'An error has occurred' => Labels::LABEL_TALENTLYFT_BAD_REQUEST_ERROR,
+			'Validation Failed' => Labels::LABEL_TALENTLYFT_VALIDATION_ERROR,
+			default => Labels::LABEL_TALENTLYFT_INTEGRATION_ERROR,
 		};
 	}
 
@@ -228,7 +228,7 @@ class TalentlyftClient implements ClientInterface
 			if ($matchesReq !== []) {
 				$key = $matchesReq[0][2] ?: '';
 				if ($key !== '' && $key !== '0') {
-					$output["q_{$key}"] = 'validationRequired';
+					$output["q_{$key}"] = Labels::LABEL_VALIDATION_REQUIRED;
 				}
 			}
 		}

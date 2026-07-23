@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
@@ -68,9 +69,9 @@ class IncrementRoute extends AbstractSimpleFormSubmit
 		FormsHelper::resetIncrement($params['formId'] ?? '');
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('incrementResetSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INCREMENT_RESET_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'incrementResetSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INCREMENT_RESET_SUCCESS,
 			],
 		];
 	}

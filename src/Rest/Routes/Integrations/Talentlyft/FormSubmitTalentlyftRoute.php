@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitTalentlyftRoute
@@ -41,7 +40,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -50,7 +48,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
@@ -58,7 +55,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
@@ -126,10 +122,10 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsTalentlyft::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('talentlyftMissingConfig'),
+				Labels::getLabel(Labels::LABEL_TALENTLYFT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TALENTLYFT_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

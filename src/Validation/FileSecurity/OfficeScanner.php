@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation\FileSecurity;
 
+use EightshiftForms\Labels\Labels;
 use ZipArchive;
 
 /**
@@ -77,7 +78,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 	{
 		$header = $this->readHeader($filepath, 8);
 		if ($header === '') {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		if (\strncmp($header, self::CFBF_MAGIC, 8) === 0) {
@@ -118,13 +119,13 @@ final class OfficeScanner implements FileSecurityScannerInterface
 	private function scanOoxml(string $filepath): string
 	{
 		if (!\class_exists(ZipArchive::class)) {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		$zip = new ZipArchive();
 		$opened = $zip->open($filepath, ZipArchive::RDONLY);
 		if ($opened !== true) {
-			return 'validationFileOfficeUnsafe';
+			return Labels::LABEL_VALIDATION_FILE_OFFICE_UNSAFE;
 		}
 
 		try {
@@ -134,7 +135,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 
 				foreach (self::FORBIDDEN_ENTRY_SUFFIXES as $needle) {
 					if (\str_contains($lower, $needle)) {
-						return 'validationFileOfficeUnsafe';
+						return Labels::LABEL_VALIDATION_FILE_OFFICE_UNSAFE;
 					}
 				}
 
@@ -144,7 +145,7 @@ final class OfficeScanner implements FileSecurityScannerInterface
 				if (\str_ends_with($lower, '.rels')) {
 					$body = (string) $zip->getFromIndex($i);
 					if ($body !== '' && \stripos($body, 'targetmode="external"') !== false) {
-						return 'validationFileOfficeUnsafe';
+						return Labels::LABEL_VALIDATION_FILE_OFFICE_UNSAFE;
 					}
 				}
 			}
@@ -169,13 +170,13 @@ final class OfficeScanner implements FileSecurityScannerInterface
 	{
 		$contents = @\file_get_contents($filepath); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if (!\is_string($contents) || $contents === '') {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		foreach (self::CFBF_DANGEROUS_STREAMS as $name) {
 			$needle = $this->toUtf16Le($name);
 			if ($needle !== '' && \str_contains($contents, $needle)) {
-				return 'validationFileOfficeUnsafe';
+				return Labels::LABEL_VALIDATION_FILE_OFFICE_UNSAFE;
 			}
 		}
 
