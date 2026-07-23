@@ -120,7 +120,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 				$message,
 				[
 					AbstractBaseRoute::R_DEBUG => $syncForm,
-					AbstractBaseRoute::R_DEBUG_KEY => 'createFormError',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'createFormError',
 				]
 			);
 			// phpcs:enable
@@ -130,7 +130,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => $message,
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $syncForm,
-				AbstractBaseRoute::R_DEBUG_KEY => 'createFormSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'createFormSuccess',
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorSyncForm') => $syncForm,

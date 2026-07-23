@@ -98,7 +98,7 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 				Labels::getLabel(Labels::LABEL_TEST_API_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
-					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR,
 				]
 			);
 			// phpcs:enable
@@ -108,7 +108,7 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_TEST_API_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
-				AbstractBaseRoute::R_DEBUG_KEY => 'testApiSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_SUCCESS,
 			],
 		];
 	}

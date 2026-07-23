@@ -112,7 +112,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 					throw new BadRequestException(
 						Labels::getLabel(Labels::LABEL_TRANSFER_EXPORT_MISSING_FORMS),
 						[
-							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingForms',
+							AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TRANSFER_EXPORT_MISSING_FORMS,
 						]
 					);
 					// phpcs:enable
@@ -131,7 +131,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 					throw new BadRequestException(
 						Labels::getLabel(Labels::LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS),
 						[
-							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingResultOutputs',
+							AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TRANSFER_EXPORT_MISSING_RESULT_OUTPUTS,
 						]
 					);
 					// phpcs:enable
@@ -156,7 +156,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 					throw new BadRequestException(
 						Labels::getLabel(Labels::LABEL_TRANSFER_UPLOAD_MISSING_FILE),
 						[
-							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingFile',
+							AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TRANSFER_UPLOAD_MISSING_FILE,
 						]
 					);
 					// phpcs:enable
@@ -172,7 +172,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 					throw new BadRequestException(
 						Labels::getLabel(Labels::LABEL_TRANSFER_UPLOAD_ERROR),
 						[
-							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadError',
+							AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TRANSFER_UPLOAD_ERROR,
 						]
 					);
 					// phpcs:enable
@@ -185,7 +185,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				throw new BadRequestException(
 					Labels::getLabel(Labels::LABEL_TRANSFER_UPLOAD_MISSING_TYPE),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingType',
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TRANSFER_UPLOAD_MISSING_TYPE,
 					]
 				);
 				// phpcs:enable
@@ -198,7 +198,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 			// translators: %1$s will be replaced with the transfer type. %2$s will be replaced with the transfer success text.
 			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%1$s %2$s', 'eightshift-forms'), \ucfirst($internalType), Labels::getLabel(Labels::LABEL_TRANSFER_SUCCESS)),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'transferSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TRANSFER_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminTransferName') => "eightshift-forms-{$type}-{$date}",

@@ -127,7 +127,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			default => throw new BadRequestException(
 				Labels::getLabel(Labels::LABEL_MIGRATION_TYPE_NOT_FOUND),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_TYPE_NOT_FOUND,
 				]
 			),
 		};
@@ -198,7 +198,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 		];
 	}
@@ -392,7 +392,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $outputFinal,
@@ -506,7 +506,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
@@ -597,7 +597,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,

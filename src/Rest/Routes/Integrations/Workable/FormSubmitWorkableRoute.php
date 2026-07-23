@@ -125,7 +125,7 @@ class FormSubmitWorkableRoute extends AbstractIntegrationFormSubmit
 				Labels::getLabel(Labels::LABEL_WORKABLE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_WORKABLE_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR Labels::LABEL_WORKABLE_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

@@ -108,7 +108,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 			throw new BadRequestException(
 				Labels::getLabel(Labels::LABEL_GEOLOCATION_COUNTRIES_MISSING),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesMissing',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_COUNTRIES_MISSING,
 				]
 			);
 			// phpcs:enable
@@ -117,7 +117,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_GEOLOCATION_COUNTRIES_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GEOLOCATION_COUNTRIES_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('geolocationCountries') => $countries,

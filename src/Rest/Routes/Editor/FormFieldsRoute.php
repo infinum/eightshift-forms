@@ -111,7 +111,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 				Labels::getLabel(Labels::LABEL_FORM_FIELDS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsMissing',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FORM_FIELDS_MISSING,
 				]
 			);
 			// phpcs:enable
@@ -125,7 +125,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_FORM_FIELDS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $fieldsOutput,
-				AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FORM_FIELDS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorFormFields') => \array_values($fieldsOutput),

@@ -103,7 +103,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 			throw new BadRequestException(
 				Labels::getLabel(Labels::LABEL_GLOBAL_NOT_CONFIGURED),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsGlobalNotConfigured',
 				]
 			);
 			// phpcs:enable
@@ -117,7 +117,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 				Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
-					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsMissingItems',
 				]
 			);
 			// phpcs:enable
@@ -141,7 +141,7 @@ class IntegrationItemsPardotRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
-				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsSuccess',
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorIntegrationItems') => $items,

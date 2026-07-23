@@ -85,7 +85,7 @@ class CronRunRoute extends AbstractSimpleFormSubmit
 			// translators: %1$s will be replaced with the cache type. %2$s will be replaced with the cache deleted success text.
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CRON_RUN_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'cronRunSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CRON_RUN_SUCCESS,
 			],
 		];
 	}

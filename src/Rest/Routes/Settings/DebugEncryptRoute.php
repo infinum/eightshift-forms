@@ -87,7 +87,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 				$type === 'encrypt' ? Labels::getLabel(Labels::LABEL_ENCRYPT_FAILED) : Labels::getLabel(Labels::LABEL_DECRYPT_FAILED),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
-					AbstractBaseRoute::R_DEBUG_KEY => 'encryptFailed',
+					AbstractBaseRoute::R_DEBUG_KEY => $type === 'encrypt' ? Labels::LABEL_ENCRYPT_FAILED : Labels::LABEL_DECRYPT_FAILED,
 				]
 			);
 			// phpcs:enable
@@ -98,7 +98,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => $type === 'encrypt' ? Labels::getLabel(Labels::LABEL_ENCRYPT_SUCCESS) : Labels::getLabel(Labels::LABEL_DECRYPT_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
-				AbstractBaseRoute::R_DEBUG_KEY => $type === 'encrypt' ? 'encryptSuccess' : 'decryptSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => $type === 'encrypt' ? Labels::LABEL_ENCRYPT_SUCCESS : Labels::LABEL_DECRYPT_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminEncrypt') => $output,

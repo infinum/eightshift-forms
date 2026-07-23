@@ -416,9 +416,9 @@ class Labels
 
 	/**
 	 * Get flags list.
-	 * 
+	 *
 	 * No all keys are used in public and in activity log.
-	 * 
+	 *
 	 * description - is used for admin description only.
 	 * output - is used for public facing output.
 	 * outputLabel - is not used anywhere in the code but it is used to show what key is used for public facing output.
@@ -489,6 +489,13 @@ class Labels
 					'output' => \__('One or more fields are invalid. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => true,
+				],
+				self::LABEL_AIRTABLE_INTEGRATION_ERROR => [
+					'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
+					'description' => \__('When Airtable integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
 				],
 				self::LABEL_AIRTABLE_SUCCESS => [
 					'type' => SettingsAirtable::SETTINGS_TYPE_KEY,
@@ -713,6 +720,13 @@ class Labels
 					'description' => \__('When Clearbit integrations returns a invalid email error.', 'eightshift-forms'),
 					'output' => \__('Enter a valid email address.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
+					'outputLabel' => false,
+				],
+				self::LABEL_CLEARBIT_INTEGRATION_ERROR => [
+					'type' => SettingsClearbit::SETTINGS_TYPE_KEY,
+					'description' => \__('When Clearbit integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
 
@@ -1037,6 +1051,13 @@ class Labels
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
+				self::LABEL_GOODBITS_INTEGRATION_ERROR => [
+					'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
+					'description' => \__('When Goodbits integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_GOODBITS_SUCCESS => [
 					'type' => SettingsGoodbits::SETTINGS_TYPE_KEY,
 					'description' => \__('When Goodbits integration submits the form successfully.', 'eightshift-forms'),
@@ -1057,6 +1078,13 @@ class Labels
 					'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
 					'description' => \__('When Greenhouse integrations returns a bad request error.', 'eightshift-forms'),
 					'output' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
+				self::LABEL_GREENHOUSE_INTEGRATION_ERROR => [
+					'type' => SettingsGreenhouse::SETTINGS_TYPE_KEY,
+					'description' => \__('When Greenhouse integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
@@ -1237,6 +1265,13 @@ class Labels
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
+				self::LABEL_HUBSPOT_INTEGRATION_ERROR => [
+					'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
+					'description' => \__('When Hubspot integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_HUBSPOT_SUCCESS => [
 					'type' => SettingsHubspot::SETTINGS_TYPE_KEY,
 					'description' => \__('When Hubspot integration submits the form successfully.', 'eightshift-forms'),
@@ -1302,6 +1337,13 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
+				self::LABEL_JIRA_INTEGRATION_ERROR => [
+					'type' => SettingsJira::SETTINGS_TYPE_KEY,
+					'description' => \__('When Jira integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_JIRA_SUCCESS => [
 					'type' => SettingsJira::SETTINGS_TYPE_KEY,
 					'description' => \__('When Jira integration submits the form successfully.', 'eightshift-forms'),
@@ -1322,6 +1364,13 @@ class Labels
 					'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
 					'description' => \__('When Mailchimp integrations returns a bad request error.', 'eightshift-forms'),
 					'output' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
+				self::LABEL_MAILCHIMP_INTEGRATION_ERROR => [
+					'type' => SettingsMailchimp::SETTINGS_TYPE_KEY,
+					'description' => \__('When Mailchimp integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
@@ -1378,6 +1427,13 @@ class Labels
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
+				self::LABEL_MAILERLITE_INTEGRATION_ERROR => [
+					'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
+					'description' => \__('When Mailerlite integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_MAILERLITE_SUCCESS => [
 					'type' => SettingsMailerlite::SETTINGS_TYPE_KEY,
 					'description' => \__('When Mailerlite integration submits the form successfully.', 'eightshift-forms'),
@@ -1421,6 +1477,13 @@ class Labels
 					'type' => SettingsMoments::SETTINGS_TYPE_KEY,
 					'description' => \__('When Moments events are being sent, it can return an error.', 'eightshift-forms'),
 					'output' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
+				self::LABEL_MOMENTS_INTEGRATION_ERROR => [
+					'type' => SettingsMoments::SETTINGS_TYPE_KEY,
+					'description' => \__('When Moments integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
@@ -1475,6 +1538,13 @@ class Labels
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
+				self::LABEL_NATIONBUILDER_INTEGRATION_ERROR => [
+					'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
+					'description' => \__('When Nationbuilder integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_NATIONBUILDER_SUCCESS => [
 					'type' => SettingsNationbuilder::SETTINGS_TYPE_KEY,
 					'description' => \__('When Nationbuilder integration submits the form successfully.', 'eightshift-forms'),
@@ -1512,6 +1582,13 @@ class Labels
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
+				self::LABEL_PARDOT_INTEGRATION_ERROR => [
+					'type' => SettingsPardot::SETTINGS_TYPE_KEY,
+					'description' => \__('When Pardot integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_PARDOT_SUCCESS => [
 					'type' => SettingsPardot::SETTINGS_TYPE_KEY,
 					'description' => \__('When Pardot integration submits the form successfully.', 'eightshift-forms'),
@@ -1534,6 +1611,13 @@ class Labels
 					'output' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => true,
+				],
+				self::LABEL_PAYCEK_INTEGRATION_ERROR => [
+					'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
+					'description' => \__('When Paycek integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
 				],
 				self::LABEL_PAYCEK_SUCCESS => [
 					'type' => SettingsPaycek::SETTINGS_TYPE_KEY,
@@ -1586,6 +1670,13 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
+				self::LABEL_PIPEDRIVE_INTEGRATION_ERROR => [
+					'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
+					'description' => \__('When Pipedrive integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
 				self::LABEL_PIPEDRIVE_SUCCESS => [
 					'type' => SettingsPipedrive::SETTINGS_TYPE_KEY,
 					'description' => \__('When Pipedrive integration submits the form successfully.', 'eightshift-forms'),
@@ -1613,6 +1704,13 @@ class Labels
 					'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
 					'description' => \__('When Talentlyft integrations returns a validation error.', 'eightshift-forms'),
 					'output' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
+				self::LABEL_TALENTLYFT_INTEGRATION_ERROR => [
+					'type' => SettingsTalentlyft::SETTINGS_TYPE_KEY,
+					'description' => \__('When Talentlyft integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],
@@ -2150,6 +2248,13 @@ class Labels
 					'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
 					'description' => \__('When Workable integrations returns a too long file name error.', 'eightshift-forms'),
 					'output' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => false,
+				],
+				self::LABEL_WORKABLE_INTEGRATION_ERROR => [
+					'type' => SettingsWorkable::SETTINGS_TYPE_KEY,
+					'description' => \__('When Workable integration returns an unhandled integration error.', 'eightshift-forms'),
+					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 					'outputLabel' => false,
 				],

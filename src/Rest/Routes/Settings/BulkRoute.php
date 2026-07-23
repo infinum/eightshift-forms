@@ -104,7 +104,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 			throw new BadRequestException(
 				Labels::getLabel(Labels::LABEL_BULK_MISSING_ITEMS),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'bulkMissingItems',
 				]
 			);
 			// phpcs:enable
@@ -153,7 +153,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				return [
 					AbstractBaseRoute::R_MSG => $output['msg'] ?? Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 					AbstractBaseRoute::R_DEBUG => [
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst((string) $type),
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'bulkSuccess' . \ucfirst((string) $type),
 					],
 					AbstractBaseRoute::R_DATA => [
 						UtilsHelper::getStateResponseOutputKey('adminLocations') => $output['data'] ?? [],
@@ -164,7 +164,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				throw new BadRequestException(
 					$output['msg'] ?? Labels::getLabel(Labels::LABEL_GENERIC_WARNING),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst((string) $type),
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'bulkWarning' . \ucfirst((string) $type),
 					]
 				);
 				// phpcs:enable
@@ -173,7 +173,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				throw new BadRequestException(
 					$output['msg'] ?? Labels::getLabel(Labels::LABEL_GENERIC_ERROR),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst((string) $type),
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'bulkError' . \ucfirst((string) $type),
 					]
 				);
 				// phpcs:enable

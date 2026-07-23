@@ -71,7 +71,7 @@ class IncrementRoute extends AbstractSimpleFormSubmit
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INCREMENT_RESET_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'incrementResetSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INCREMENT_RESET_SUCCESS,
 			],
 		];
 	}
