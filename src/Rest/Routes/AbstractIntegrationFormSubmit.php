@@ -453,7 +453,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			AbstractBaseRoute::R_MSG => Labels::getLabel("{$type}Success", $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SUBMIT_INTEGRATION_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => "{$type}Success",
 				AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA => $successAdditionalData,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(

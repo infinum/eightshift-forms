@@ -589,7 +589,7 @@ class PipedriveClient implements PipedriveClientInterface
 			'Organization name must be given.' => Labels::LABEL_PIPEDRIVE_MISSING_ORGANIZATION,
 			'Invalid organization ID provided' => Labels::LABEL_PIPEDRIVE_WRONG_ORGANIZATION_ID,
 			'provided dataset is not valid' => Labels::LABEL_PIPEDRIVE_WRONG_DATASET,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_PIPEDRIVE_INTEGRATION_ERROR,
 		};
 	}
 

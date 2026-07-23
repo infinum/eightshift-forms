@@ -221,7 +221,7 @@ class GreenhouseClient implements ClientInterface
 
 		return match ($msg) {
 			'Bad Request' => Labels::LABEL_GREENHOUSE_BAD_REQUEST_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_GREENHOUSE_INTEGRATION_ERROR,
 		};
 	}
 

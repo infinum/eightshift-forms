@@ -198,7 +198,7 @@ class MailerliteClient implements ClientInterface
 		return match ($msg) {
 			'Bad Request' => Labels::LABEL_MAILERLITE_BAD_REQUEST_ERROR,
 			'Unauthorized' => Labels::LABEL_MAILERLITE_MISSING_CONFIG,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_MAILERLITE_INTEGRATION_ERROR,
 		};
 	}
 

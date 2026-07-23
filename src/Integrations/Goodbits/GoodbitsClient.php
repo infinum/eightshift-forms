@@ -185,7 +185,7 @@ class GoodbitsClient implements ClientInterface
 		return match ($msg) {
 			'Bad Request' => Labels::LABEL_GOODBITS_BAD_REQUEST_ERROR,
 			'Invalid API Key has been submitted, please refer to your API key under your settings' => Labels::LABEL_GOODBITS_MISSING_CONFIG,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_GOODBITS_INTEGRATION_ERROR,
 		};
 	}
 

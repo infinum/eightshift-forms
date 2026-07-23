@@ -196,7 +196,7 @@ class TalentlyftClient implements ClientInterface
 		return match ($msg) {
 			'An error has occurred' => Labels::LABEL_TALENTLYFT_BAD_REQUEST_ERROR,
 			'Validation Failed' => Labels::LABEL_TALENTLYFT_VALIDATION_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_TALENTLYFT_INTEGRATION_ERROR,
 		};
 	}
 

@@ -285,7 +285,7 @@ class ClearbitClient implements ClearbitClientInterface
 		return match ($msg) {
 			'auth_required' => Labels::LABEL_CLEARBIT_AUTH_REQUIRED_ERROR,
 			'email_invalid' => Labels::LABEL_CLEARBIT_INVALID_EMAIL_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_CLEARBIT_INTEGRATION_ERROR,
 		};
 	}
 

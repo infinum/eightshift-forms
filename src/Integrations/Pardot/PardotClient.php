@@ -282,7 +282,7 @@ class PardotClient implements PardotClientInterface
 			'INVALID_SESSION_ID' => Labels::LABEL_PARDOT_ERROR_SETTINGS_MISSING,
 			'SERVER_ERROR' => Labels::LABEL_PARDOT_SERVER_ERROR,
 			'BAD_REQUEST' => Labels::LABEL_PARDOT_BAD_REQUEST_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_PARDOT_INTEGRATION_ERROR,
 		};
 	}
 

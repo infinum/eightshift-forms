@@ -732,7 +732,7 @@ class JiraClient implements JiraClientInterface
 		return match ($msg) {
 			'auth_required' => Labels::LABEL_JIRA_AUTH_REQUIRED_ERROR,
 			'email_invalid' => Labels::LABEL_JIRA_INVALID_EMAIL_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_JIRA_INTEGRATION_ERROR,
 		};
 	}
 

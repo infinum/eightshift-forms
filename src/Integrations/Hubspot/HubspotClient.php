@@ -59,9 +59,7 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 */
-	public function __construct(protected SecurityInterface $security)
-	{
-	}
+	public function __construct(protected SecurityInterface $security) {}
 
 	/**
 	 * Return items.
@@ -311,12 +309,12 @@ class HubspotClient implements HubspotClientInterface
 		$customFields = \array_flip(Helpers::flattenArray(UtilsHelper::getStateParams()));
 
 		foreach ($params as $key => $value) {
-				// Remove unnecessary fields.
+			// Remove unnecessary fields.
 			if (isset($customFields[$key])) {
 				continue;
 			}
 
-				$properties[$key] = $value;
+			$properties[$key] = $value;
 		}
 
 		$body = [
@@ -374,12 +372,12 @@ class HubspotClient implements HubspotClientInterface
 		$fileExtension = \pathinfo($file, \PATHINFO_EXTENSION);
 
 		$options = [
-		'folderPath' => '/' . $folder,
-		'fileName' => "{$fileName}.{$fileExtension}",
-		'options' => \wp_json_encode([
-		"access" => "PUBLIC_NOT_INDEXABLE",
-		"overwrite" => false,
-					]),
+			'folderPath' => '/' . $folder,
+			'fileName' => "{$fileName}.{$fileExtension}",
+			'options' => \wp_json_encode([
+				"access" => "PUBLIC_NOT_INDEXABLE",
+				"overwrite" => false,
+			]),
 		];
 
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
@@ -389,8 +387,8 @@ class HubspotClient implements HubspotClientInterface
 
 		$postData = \array_merge(
 			[
-			'file' => new CURLFile($file, 'application/octet-stream'),
-					],
+				'file' => new CURLFile($file, 'application/octet-stream'),
+			],
 			$options
 		);
 
@@ -398,13 +396,13 @@ class HubspotClient implements HubspotClientInterface
 		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
 			$curl,
 			[
-			\CURLOPT_URL => $this->getBaseUrl("files/v3/files"),
-			\CURLOPT_FAILONERROR => true,
-			\CURLOPT_POST => true,
-			\CURLOPT_RETURNTRANSFER => true,
-			\CURLOPT_POSTFIELDS => $postData,
-			\CURLOPT_HTTPHEADER => $this->getHeaders(true),
-					]
+				\CURLOPT_URL => $this->getBaseUrl("files/v3/files"),
+				\CURLOPT_FAILONERROR => true,
+				\CURLOPT_POST => true,
+				\CURLOPT_RETURNTRANSFER => true,
+				\CURLOPT_POSTFIELDS => $postData,
+				\CURLOPT_HTTPHEADER => $this->getHeaders(true),
+			]
 		);
 
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
@@ -436,30 +434,30 @@ class HubspotClient implements HubspotClientInterface
 		}
 
 		return match ($msg) {
-									'Bad Request' => Labels::LABEL_HUBSPOT_BAD_REQUEST_ERROR,
-									'The request is not valid' => Labels::LABEL_HUBSPOT_INVALID_REQUEST_ERROR,
-									'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED' => Labels::LABEL_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR,
-									'INVALID_EMAIL' => Labels::LABEL_HUBSPOT_INVALID_EMAIL_ERROR,
-									'BLOCKED_EMAIL' => Labels::LABEL_HUBSPOT_BLOCKED_EMAIL_ERROR,
-									'INVALID_NUMBER' => Labels::LABEL_HUBSPOT_INVALID_NUMBER_ERROR,
-									'INPUT_TOO_LARGE' => Labels::LABEL_HUBSPOT_INPUT_TOO_LARGE_ERROR,
-									'FIELD_NOT_IN_FORM_DEFINITION' => Labels::LABEL_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR,
-									'NUMBER_OUT_OF_RANGE' => Labels::LABEL_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR,
-									'VALUE_NOT_IN_FIELD_DEFINITION' => Labels::LABEL_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR,
-									'INVALID_METADATA' => Labels::LABEL_HUBSPOT_INVALID_METADATA_ERROR,
-									'INVALID_GOTOWEBINAR_WEBINAR_KEY' => Labels::LABEL_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR,
-									'INVALID_HUTK' => Labels::LABEL_HUBSPOT_INVALID_HUTK_ERROR,
-									'INVALID_IP_ADDRESS' => Labels::LABEL_HUBSPOT_INVALID_IP_ADDRESS_ERROR,
-									'INVALID_PAGE_URI' => Labels::LABEL_HUBSPOT_INVALID_PAGE_URI_ERROR,
-									'INVALID_LEGAL_OPTION_FORMAT' => Labels::LABEL_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR,
-									'MISSING_PROCESSING_CONSENT' => Labels::LABEL_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR,
-									'MISSING_PROCESSING_CONSENT_TEXT' => Labels::LABEL_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR,
-									'MISSING_COMMUNICATION_CONSENT_TEXT' => Labels::LABEL_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR,
-									'MISSING_LEGITIMATE_INTEREST_TEXT' => Labels::LABEL_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR,
-									'DUPLICATE_SUBSCRIPTION_TYPE_ID' => Labels::LABEL_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR,
-									'FORM_HAS_RECAPTCHA_ENABLED' => Labels::LABEL_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR,
-									'ERROR 429' => Labels::LABEL_HUBSPOT_ERROR_429_ERROR,
-									default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			'Bad Request' => Labels::LABEL_HUBSPOT_BAD_REQUEST_ERROR,
+			'The request is not valid' => Labels::LABEL_HUBSPOT_INVALID_REQUEST_ERROR,
+			'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED' => Labels::LABEL_HUBSPOT_MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED_ERROR,
+			'INVALID_EMAIL' => Labels::LABEL_HUBSPOT_INVALID_EMAIL_ERROR,
+			'BLOCKED_EMAIL' => Labels::LABEL_HUBSPOT_BLOCKED_EMAIL_ERROR,
+			'INVALID_NUMBER' => Labels::LABEL_HUBSPOT_INVALID_NUMBER_ERROR,
+			'INPUT_TOO_LARGE' => Labels::LABEL_HUBSPOT_INPUT_TOO_LARGE_ERROR,
+			'FIELD_NOT_IN_FORM_DEFINITION' => Labels::LABEL_HUBSPOT_FIELD_NOT_IN_FORM_DEFINITION_ERROR,
+			'NUMBER_OUT_OF_RANGE' => Labels::LABEL_HUBSPOT_NUMBER_OUT_OF_RANGE_ERROR,
+			'VALUE_NOT_IN_FIELD_DEFINITION' => Labels::LABEL_HUBSPOT_VALUE_NOT_IN_FIELD_DEFINITION_ERROR,
+			'INVALID_METADATA' => Labels::LABEL_HUBSPOT_INVALID_METADATA_ERROR,
+			'INVALID_GOTOWEBINAR_WEBINAR_KEY' => Labels::LABEL_HUBSPOT_INVALID_GOTOWEBINAR_WEBINAR_KEY_ERROR,
+			'INVALID_HUTK' => Labels::LABEL_HUBSPOT_INVALID_HUTK_ERROR,
+			'INVALID_IP_ADDRESS' => Labels::LABEL_HUBSPOT_INVALID_IP_ADDRESS_ERROR,
+			'INVALID_PAGE_URI' => Labels::LABEL_HUBSPOT_INVALID_PAGE_URI_ERROR,
+			'INVALID_LEGAL_OPTION_FORMAT' => Labels::LABEL_HUBSPOT_INVALID_LEGAL_OPTION_FORMAT_ERROR,
+			'MISSING_PROCESSING_CONSENT' => Labels::LABEL_HUBSPOT_MISSING_PROCESSING_CONSENT_ERROR,
+			'MISSING_PROCESSING_CONSENT_TEXT' => Labels::LABEL_HUBSPOT_MISSING_PROCESSING_CONSENT_TEXT_ERROR,
+			'MISSING_COMMUNICATION_CONSENT_TEXT' => Labels::LABEL_HUBSPOT_MISSING_COMMUNICATION_CONSENT_TEXT_ERROR,
+			'MISSING_LEGITIMATE_INTEREST_TEXT' => Labels::LABEL_HUBSPOT_MISSING_LEGITIMATE_INTEREST_TEXT_ERROR,
+			'DUPLICATE_SUBSCRIPTION_TYPE_ID' => Labels::LABEL_HUBSPOT_DUPLICATE_SUBSCRIPTION_TYPE_ID_ERROR,
+			'FORM_HAS_RECAPTCHA_ENABLED' => Labels::LABEL_HUBSPOT_FORM_HAS_RECAPTCHA_ENABLED_ERROR,
+			'ERROR 429' => Labels::LABEL_HUBSPOT_ERROR_429_ERROR,
+			default => Labels::LABEL_HUBSPOT_INTEGRATION_ERROR,
 		};
 	}
 
@@ -642,10 +640,10 @@ class HubspotClient implements HubspotClientInterface
 		$output[self::HUBSPOT_CONSENT_COMMUNICATION] = [
 			'items' => \array_map(
 				static fn(array $item): array => [
-						'id' => isset($item['communicationTypeId']) ? \strval($item['communicationTypeId']) : '',
-						'label' => $item['label'] ?? '',
-						'isRequired' => $item['required'] ?? false,
-					],
+					'id' => isset($item['communicationTypeId']) ? \strval($item['communicationTypeId']) : '',
+					'label' => $item['label'] ?? '',
+					'isRequired' => $item['required'] ?? false,
+				],
 				$consentData['communicationConsentCheckboxes'] ?? []
 			),
 			'text' => $consentData['communicationConsentText'] ?? '',
@@ -746,7 +744,7 @@ class HubspotClient implements HubspotClientInterface
 
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
-												// Remove consent data.
+			// Remove consent data.
 			if ($typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION) {
 				continue;
 			}

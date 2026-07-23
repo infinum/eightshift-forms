@@ -418,7 +418,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			'bad_request' => Labels::LABEL_NATIONBUILDER_BAD_REQUEST_ERROR,
 			'unauthorized' => Labels::LABEL_NATIONBUILDER_ERROR_SETTINGS_MISSING,
 			'server_error' => Labels::LABEL_NATIONBUILDER_SERVER_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_NATIONBUILDER_INTEGRATION_ERROR,
 		};
 	}
 

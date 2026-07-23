@@ -239,7 +239,7 @@ class MailchimpClient implements MailchimpClientInterface
 		return match ($msg) {
 			'Bad Request' => Labels::LABEL_MAILCHIMP_BAD_REQUEST_ERROR,
 			'Your request did not include an API key.' => Labels::LABEL_MAILCHIMP_MISSING_CONFIG,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_MAILCHIMP_INTEGRATION_ERROR,
 		};
 	}
 

@@ -206,7 +206,7 @@ class WorkableClient implements ClientInterface
 			'Bad Request' => Labels::LABEL_WORKABLE_BAD_REQUEST_ERROR,
 			'position is draft or archived' => Labels::LABEL_WORKABLE_ARCHIVED_JOB_ERROR,
 			'Filename should contain less characters' => Labels::LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_WORKABLE_INTEGRATION_ERROR,
 		};
 	}
 

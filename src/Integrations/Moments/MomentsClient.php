@@ -172,7 +172,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		return match ($msg) {
 			'BAD_REQUEST' => Labels::LABEL_MOMENTS_BAD_REQUEST_ERROR,
 			'UNAUTHORIZED' => Labels::LABEL_MOMENTS_MISSING_CONFIG,
-			default => Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP,
+			default => Labels::LABEL_MOMENTS_INTEGRATION_ERROR,
 		};
 	}
 
