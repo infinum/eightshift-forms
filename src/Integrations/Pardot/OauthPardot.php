@@ -152,7 +152,7 @@ class OauthPardot extends AbstractOauth
 	 */
 	public function hasTokenExpired(array $body): bool
 	{
-		return ($body['errorCode'] ?? '') === 'INVALID_SESSION_ID';
+		return (int) ($body['code'] ?? 0) === 184;
 	}
 
 	/**
