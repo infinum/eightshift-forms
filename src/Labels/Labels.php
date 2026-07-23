@@ -335,6 +335,7 @@ class Labels
 	public const LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR = 'workableTooLongFileNameError';
 	public const LABEL_WORKABLE_INTEGRATION_ERROR = 'workableIntegrationError';
 	public const LABEL_WORKABLE_SUCCESS = 'workableSuccess';
+
 	/**
 	 * List all label keys that are stored in local form everything else is global settings.
 	 *
@@ -363,6 +364,16 @@ class Labels
 	];
 
 	/**
+	 * Excluded list of type check items.
+	 */
+	public const EXCLUDE_TYPE_CHECK = [
+		self::TYPE_GENERIC => 0,
+		SettingsValidation::SETTINGS_TYPE_KEY => 0,
+		SettingsCronJobs::SETTINGS_TYPE_KEY => 0,
+		SettingsCache::SETTINGS_TYPE_KEY => 0,
+	];
+
+	/**
 	 * Get all labels
 	 *
 	 * @return array<string, array<string, string>>
@@ -370,13 +381,6 @@ class Labels
 	public static function getLabels(): array
 	{
 		$output = [];
-
-		$excludeCheck = [
-			self::TYPE_GENERIC => 0,
-			SettingsValidation::SETTINGS_TYPE_KEY => 0,
-			SettingsCronJobs::SETTINGS_TYPE_KEY => 0,
-			SettingsCache::SETTINGS_TYPE_KEY => 0,
-		];
 
 		foreach (self::getFlagsList() as $key => $flag) {
 			$outputKey = $flag['output'] ?? '';
@@ -388,7 +392,7 @@ class Labels
 				continue;
 			}
 
-			if (!SettingsHelpers::isOptionTypeActive($type) && !isset($excludeCheck[$type])) {
+			if (!SettingsHelpers::isOptionTypeActive($type) && !isset(self::EXCLUDE_TYPE_CHECK[$type])) {
 				continue;
 			}
 

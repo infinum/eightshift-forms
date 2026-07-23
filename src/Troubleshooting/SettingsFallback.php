@@ -363,10 +363,38 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	private function getFlagsOutput(): array
 	{
 		$output = [];
+		$outputTypes = [];
 
 		foreach (Labels::getFlagsList() as $key => $value) {
 			$desc = $value['description'] ?? '';
+			$type = $value['type'] ?? '';
 			$isRecommended = $value['isActivityLogRecommended'] ?? false;
+
+			if (!$desc) {
+				continue;
+			}
+
+			if (!$type) {
+				continue;
+			}
+
+			if (!SettingsHelpers::isOptionTypeActive($type) && !isset(Labels::EXCLUDE_TYPE_CHECK[$type])) {
+				continue;
+			}
+
+			if (!\in_array($type, $outputTypes, true)) {
+				$output[] = [
+					'component' => 'divider',
+					'dividerSeparator' => true,
+				];
+
+				$output[] = [
+					'component' => 'intro',
+					'introTitle' => \ucfirst((string) $type),
+				];
+
+				$outputTypes[] = $type;
+			}
 
 			$output[] = [
 				'component' => 'checkbox',
