@@ -451,7 +451,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			}
 
 			if (\str_contains((string) $message, 'E-mail email is already taken on signup')) {
-				$output[$mapParams[$key]] = 'validationEmailExists';
+				$output[$mapParams[$key]] = Labels::LABEL_VALIDATION_EMAIL_EXISTS;
 				continue;
 			}
 		}

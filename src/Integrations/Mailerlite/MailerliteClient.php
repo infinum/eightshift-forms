@@ -218,7 +218,7 @@ class MailerliteClient implements ClientInterface
 		switch ($msg) {
 			case 'Invalid email address':
 			case 'Email temporarily blocked':
-				$output['email'] = 'validationEmail';
+				$output['email'] = Labels::LABEL_VALIDATION_EMAIL;
 				break;
 		}
 

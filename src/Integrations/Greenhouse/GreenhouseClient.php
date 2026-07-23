@@ -247,17 +247,17 @@ class GreenhouseClient implements ClientInterface
 				$keys = \explode(',', $key);
 
 				foreach ($keys as $inner) {
-					$output[$inner] = 'validationRequired';
+					$output[$inner] = Labels::LABEL_VALIDATION_REQUIRED;
 				}
 			}
 		}
 
 		if (\str_contains((string) $msg, 'Uploaded resume has an unsupported file type.')) {
-			$output['resume'] = 'validationGreenhouseAcceptMime';
+			$output['resume'] = Labels::LABEL_VALIDATION_GREENHOUSE_ACCEPT_MIME;
 		}
 
 		if (\str_contains((string) $msg, 'Uploaded cover letter has an unsupported file type')) {
-			$output['cover_letter'] = 'validationGreenhouseAcceptMime';
+			$output['cover_letter'] = Labels::LABEL_VALIDATION_GREENHOUSE_ACCEPT_MIME;
 		}
 
 		return $output;

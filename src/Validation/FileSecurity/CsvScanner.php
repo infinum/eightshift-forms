@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation\FileSecurity;
 
+use EightshiftForms\Labels\Labels;
+
 /**
  * Scans CSV / TSV / text-table uploads for formula injection.
  *
@@ -50,7 +52,7 @@ final class CsvScanner implements FileSecurityScannerInterface
 	{
 		$handle = @\fopen($filepath, 'rb'); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 		if (!\is_resource($handle)) {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		try {
@@ -58,7 +60,7 @@ final class CsvScanner implements FileSecurityScannerInterface
 				$lower = \strtolower($line);
 				foreach (self::DANGER_PATTERNS as $pattern) {
 					if (\str_contains($lower, $pattern)) {
-						return 'validationFileCsvUnsafe';
+						return Labels::LABEL_VALIDATION_FILE_CSV_UNSAFE;
 					}
 				}
 			}

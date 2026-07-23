@@ -208,7 +208,7 @@ class GoodbitsClient implements ClientInterface
 
 		foreach ($errors as $value) {
 			if ($value === 'Email is invalid') {
-				$output['email'] = 'validationEmail';
+				$output['email'] = Labels::LABEL_VALIDATION_EMAIL;
 			}
 		}
 

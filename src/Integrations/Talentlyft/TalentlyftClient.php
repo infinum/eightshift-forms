@@ -228,7 +228,7 @@ class TalentlyftClient implements ClientInterface
 			if ($matchesReq !== []) {
 				$key = $matchesReq[0][2] ?: '';
 				if ($key !== '' && $key !== '0') {
-					$output["q_{$key}"] = 'validationRequired';
+					$output["q_{$key}"] = Labels::LABEL_VALIDATION_REQUIRED;
 				}
 			}
 		}

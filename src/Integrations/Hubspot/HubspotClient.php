@@ -490,7 +490,7 @@ class HubspotClient implements HubspotClientInterface
 				if ($matchesReq !== []) {
 					$match = $matchesReq[0][2] ?: '';
 					if ($match !== '' && $match !== '0') {
-						$output[$match] = 'validationRequired';
+						$output[$match] = Labels::LABEL_VALIDATION_REQUIRED;
 					}
 				}
 			}

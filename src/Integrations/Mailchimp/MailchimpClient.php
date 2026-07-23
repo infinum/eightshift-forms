@@ -269,23 +269,23 @@ class MailchimpClient implements MailchimpClientInterface
 
 			switch ($message) {
 				case 'This value should not be blank.':
-					$output[$key] = 'validationRequired';
+					$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 					break;
 				case 'That is not a valid URL':
-					$output[$key] = 'validationUrl';
+					$output[$key] = Labels::LABEL_VALIDATION_URL;
 					break;
 				case 'Please enter a zip code (5 digits)':
-					$output[$key] = 'validationMailchimpInvalidZip';
+					$output[$key] = Labels::LABEL_VALIDATION_MAILCHIMP_INVALID_ZIP;
 					break;
 				case 'Please enter a month (01-12) and a day (01-31)':
 				case 'Please enter the date':
-					$output[$key] = 'validationDate';
+					$output[$key] = Labels::LABEL_VALIDATION_DATE;
 					break;
 			}
 		}
 
 		if ($msg === 'Please provide a valid email address.') {
-			$output['email_address'] = 'validationEmail';
+			$output['email_address'] = Labels::LABEL_VALIDATION_EMAIL;
 		}
 
 		return $output;
