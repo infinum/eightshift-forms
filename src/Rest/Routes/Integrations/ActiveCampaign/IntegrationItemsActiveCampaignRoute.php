@@ -102,9 +102,9 @@ class IntegrationItemsActiveCampaignRoute extends AbstractSimpleFormSubmit
 		if (!\apply_filters(SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				Labels::getLabel(Labels::LABEL_GLOBAL_NOT_CONFIGURED),
+				Labels::getLabel(Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsGlobalNotConfigured',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED,
 				]
 			);
 			// phpcs:enable

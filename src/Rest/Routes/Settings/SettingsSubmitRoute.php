@@ -162,7 +162,9 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 		return [
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_SETTINGS_SUCCESS),
-
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_SUCCESS,
+			],
 		];
 	}
 }

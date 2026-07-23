@@ -108,7 +108,7 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\is_wp_error($response)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				Labels::getLabel(Labels::LABEL_SUBMIT_INTEGRATION_ERROR_WP),
+				Labels::getLabel(Labels::LABEL_SUBMIT_WP_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_WP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,

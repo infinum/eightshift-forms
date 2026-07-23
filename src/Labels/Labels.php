@@ -113,24 +113,40 @@ class Labels
 	public const LABEL_ENCRYPT_SUCCESS = 'encryptSuccess';
 	public const LABEL_DECRYPT_SUCCESS = 'decryptSuccess';
 
-	public const LABEL_SUBMIT_INTEGRATION_ERROR_WP = 'submitWpError';
-	public const LABEL_SUBMIT_FALLBACK_ERROR = 'submitFallbackError';
 	public const LABEL_TEST_API_SUCCESS = 'testApiSuccess';
 	public const LABEL_TEST_API_ERROR = 'testApiError';
-	public const LABEL_GLOBAL_NOT_CONFIGURED = 'globalNotConfigured';
+
+	public const LABEL_INTEGRATION_CREATE_FORM_ERROR = 'createFormError';
+	public const LABEL_INTEGRATION_CREATE_FORM_SUCCESS = 'createFormSuccess';
 	public const LABEL_INTEGRATION_ITEMS_MISSING = 'integrationItemsMissing';
 	public const LABEL_INTEGRATION_ITEMS_SUCCESS = 'integrationItemsSuccess';
+
+	public const LABEL_SUBMIT_WP_ERROR = 'submitWpError';
+	public const LABEL_SUBMIT_FALLBACK_ERROR = 'submitFallbackError';
+
 	public const LABEL_FORM_FIELDS_MISSING = 'formFieldsMissing';
 	public const LABEL_FORM_FIELDS_SUCCESS = 'formFieldsSuccess';
+
 	public const LABEL_INCREMENT_RESET_SUCCESS = 'incrementResetSuccess';
+
 	public const LABEL_LOCATIONS_RESULT_OUTPUT_ERROR = 'locationsResultOutputError';
 	public const LABEL_LOCATIONS_FORM_ERROR = 'locationsFormError';
 	public const LABEL_LOCATIONS_SUCCESS = 'locationsSuccess';
+
 	public const LABEL_BULK_MISSING_ITEMS = 'bulkMissingItems';
+	public const LABEL_BULK_SUCCESS = 'bulkSuccess';
+	public const LABEL_BULK_ERROR = 'bulkError';
+	public const LABEL_BULK_WARNING = 'bulkWarning';
+
 	public const LABEL_GENERIC_SUCCESS = 'genericSuccess';
 	public const LABEL_GENERIC_WARNING = 'genericWarning';
 	public const LABEL_GENERIC_ERROR = 'genericError';
+
 	public const LABEL_SETTINGS_SUCCESS = 'settingsSuccess';
+	public const LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED = 'globalNotConfigured';
+
+	public const LABEL_SYNC_ERROR = 'syncFormError';
+	public const LABEL_SYNC_SUCCESS = 'syncFormSuccess';
 
 	public const LABEL_GEOLOCATION_FEATURE_DISABLED = 'geolocationFeatureDisabled';
 	public const LABEL_GEOLOCATION_MALFORMED_DECRYPT_DATA = 'geolocationMalformedDecryptData';
@@ -255,6 +271,7 @@ class Labels
 	public const LABEL_TRANSFER_UPLOAD_ERROR = 'transferUploadError';
 	public const LABEL_TRANSFER_UPLOAD_MISSING_TYPE = 'transferUploadMissingType';
 	public const LABEL_TRANSFER_SUCCESS = 'transferSuccess';
+
 	public const LABEL_EXPORT_MISSING_ITEMS = 'exportMissingItems';
 	public const LABEL_EXPORT_DATA_EMPTY = 'exportDataEmpty';
 	public const LABEL_EXPORT_SUCCESS = 'exportSuccess';
@@ -851,7 +868,7 @@ class Labels
 				],
 
 				// Generic.
-				self::LABEL_SUBMIT_INTEGRATION_ERROR_WP => [
+				self::LABEL_SUBMIT_WP_ERROR => [
 					'type' => self::TYPE_GENERIC,
 					'description' => \__('Someone tried to submit a form to an integration that returned an error that is not handled by the integration.', 'eightshift-forms'),
 					'output' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
@@ -879,10 +896,17 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
-				self::LABEL_GLOBAL_NOT_CONFIGURED => [
+				self::LABEL_INTEGRATION_CREATE_FORM_ERROR => [
 					'type' => self::TYPE_GENERIC,
-					'description' => \__('When the global settings for a feature are not configured correctly.', 'eightshift-forms'),
-					'output' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+					'description' => \__('When the integration form creating completed with error.', 'eightshift-forms'),
+					'output' => \__('Form creating failed. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => false,
+					'outputLabel' => true,
+				],
+				self::LABEL_INTEGRATION_CREATE_FORM_SUCCESS => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When the integration form creating completed with success.', 'eightshift-forms'),
+					'output' => \__('Form creating success.', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
@@ -949,6 +973,27 @@ class Labels
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
 				],
+				self::LABEL_BULK_SUCCESS => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When bulk action finished with success', 'eightshift-forms'),
+					'output' => \__('Bulk finished with success.', 'eightshift-forms'),
+					'isActivityLogRecommended' => false,
+					'outputLabel' => true,
+				],
+				self::LABEL_BULK_ERROR => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When bulk action finished with error', 'eightshift-forms'),
+					'output' => \__('Bulk finished with error. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => true,
+				],
+				self::LABEL_BULK_WARNING => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When bulk action finished with warning', 'eightshift-forms'),
+					'output' => \__('Bulk finished with warning.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => true,
+				],
 				self::LABEL_GENERIC_SUCCESS => [
 					'type' => self::TYPE_GENERIC,
 					'description' => \__('Generic success message shown to the user.', 'eightshift-forms'),
@@ -976,6 +1021,27 @@ class Labels
 					'output' => \__('Changes saved!', 'eightshift-forms'),
 					'isActivityLogRecommended' => false,
 					'outputLabel' => true,
+				],
+				self::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When the global settings for a feature are not configured correctly.', 'eightshift-forms'),
+					'output' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+					'isActivityLogRecommended' => false,
+					'outputLabel' => true,
+				],
+				self::LABEL_SYNC_ERROR => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When the external sync integration fails.', 'eightshift-forms'),
+					'output' => \__('There was and error with external sync. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+					'outputLabel' => true,
+				],
+				self::LABEL_SYNC_SUCCESS => [
+					'type' => self::TYPE_GENERIC,
+					'description' => \__('When the external sync integration completes with success.', 'eightshift-forms'),
+					'output' => \__('Sync successfully finished.', 'eightshift-forms'),
+					'isActivityLogRecommended' => false,
+					'outputLabel' => false,
 				],
 
 				// Geolocation.

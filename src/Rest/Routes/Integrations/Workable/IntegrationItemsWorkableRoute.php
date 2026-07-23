@@ -103,9 +103,9 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 		if (!\apply_filters(SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				Labels::getLabel(Labels::LABEL_GLOBAL_NOT_CONFIGURED),
+				Labels::getLabel(Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsGlobalNotConfigured',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED,
 				]
 			);
 			// phpcs:enable
@@ -119,7 +119,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 				Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
-					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_ITEMS_MISSING,
 				]
 			);
 			// phpcs:enable
@@ -143,7 +143,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
-				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR 'integrationItemsSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_ITEMS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorIntegrationItems') => $items,
