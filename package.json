@@ -38,21 +38,21 @@
 		"husky": "^9.1.7",
 		"webpack": "^5.108.4",
 		"webpack-cli": "^7.2.1",
-		"lint-staged": "^17.0.8"
+		"lint-staged": "^17.1.0"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs-tailwind": "^3.3.0",
-		"@eightshift/ui-components": "^8.0.0",
-		"@tailwindcss/postcss": "^4.3.2",
+		"@eightshift/frontend-libs-tailwind": "^3.4.0",
+		"@eightshift/ui-components": "^8.1.0",
+		"@tailwindcss/postcss": "^4.3.3",
 		"@tailwindcss/typography": "^0.5.20",
 		"autosize": "^6.0.1",
 		"baseline-browser-mapping": "^2.10.43",
-		"caniuse-lite": "^1.0.30001805",
+		"caniuse-lite": "^1.0.30001806",
 		"choices.js": "^11.2.3",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
 		"reactflow": "^11.11.4",
-		"tailwindcss": "^4.3.2",
+		"tailwindcss": "^4.3.3",
 		"tailwindcss-motion": "^1.1.1",
 		"tailwindcss-react-aria-components": "^2.2.0"
 	},
