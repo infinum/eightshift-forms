@@ -812,6 +812,12 @@ export class Utils {
 	setOnFocus(target) {
 		const formId = this.state.getFormIdByElement(target);
 		const field = this.state.getFormFieldElementByChild(target);
+
+		// Target may be detached from its field (e.g. a portaled select dropdown search input).
+		if (!field) {
+			return;
+		}
+
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		this.setActiveState(formId, name);
@@ -828,6 +834,12 @@ export class Utils {
 	setOnBlur(target) {
 		const formId = this.state.getFormIdByElement(target);
 		const field = this.state.getFormFieldElementByChild(target);
+
+		// Target may be detached from its field (e.g. a portaled select dropdown search input).
+		if (!field) {
+			return;
+		}
+
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		this.unsetActiveState(formId, name);

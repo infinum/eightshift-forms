@@ -50,6 +50,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_GENERAL_A11Y_KEY = 'general-a11y';
 	public const SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY = 'disable-scroll-to-field-key';
+	public const SETTINGS_GENERAL_A11Y_DROPDOWN_BEFORE_BODY_END_KEY = 'dropdown-before-body-end-key';
 
 	/**
 	 * Hide global message timeout key.
@@ -73,6 +74,8 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$dropdownPosition = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_A11Y_DROPDOWN_BEFORE_BODY_END_KEY, self::SETTINGS_GENERAL_A11Y_KEY);
+
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -167,6 +170,16 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxHelp' => \__('Affected fields are: select, country, phone, date, dateTime.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY, self::SETTINGS_GENERAL_A11Y_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Select dropdown location before body end', 'eightshift-forms'),
+										// translators: %s is the current dropdown render location (either "under field" or "before body end").
+										'checkboxHelp' => \sprintf(\__('Select dropdown will be displayed %s. Affected fields are: select, country, phone.', 'eightshift-forms'), !$dropdownPosition ? 'under field' : 'before body end'),
+										'checkboxIsChecked' => $dropdownPosition,
+										'checkboxValue' => self::SETTINGS_GENERAL_A11Y_DROPDOWN_BEFORE_BODY_END_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 									],

@@ -240,6 +240,9 @@ export class State {
 	getStateSettingsDisableScrollToFieldOnFocus = () => {
 		return getState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_FOCUS], StateEnum.SETTINGS);
 	};
+	getStateSettingsDropdownBeforeBodyEnd = () => {
+		return getState([StateEnum.SETTINGS_DROPDOWN_BEFORE_BODY_END_KEY], StateEnum.SETTINGS);
+	};
 	getStateSettingsResetOnSuccess = () => {
 		return getState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], StateEnum.SETTINGS);
 	};
