@@ -303,6 +303,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			SettingsSettings::SETTINGS_GENERAL_A11Y_DISABLE_SCROLL_TO_FIELD_KEY,
 			SettingsSettings::SETTINGS_GENERAL_A11Y_KEY
 		);
+		$output['formDropdownBeforeBodyEnd'] = SettingsHelpers::isOptionCheckboxChecked(
+			SettingsSettings::SETTINGS_GENERAL_A11Y_DROPDOWN_BEFORE_BODY_END_KEY,
+			SettingsSettings::SETTINGS_GENERAL_A11Y_KEY
+		);
 		$output['formResetOnSuccess'] = !DeveloperHelpers::isDeveloperSkipFormResetActive();
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 		$output['formCaptchaErrorMsg'] = \esc_html__('A ReCaptcha error has occurred. Please try again.', 'eightshift-forms');

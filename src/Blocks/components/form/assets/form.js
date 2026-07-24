@@ -1472,7 +1472,155 @@ export class Form {
 			choices?.input?.element.addEventListener('focus', this.onSelectFocusEvent);
 			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
 			choices?.input?.element.addEventListener('blur', this.onBlurEvent);
+
+			if (this.state.getStateSettingsDropdownBeforeBodyEnd()) {
+				this.setupSelectDropdownPortal(choices);
+			}
 		});
+	}
+
+	/**
+	 * Render the Choices.js dropdown at the end of `<body>` while it is open.
+	 *
+	 * Choices.js has no native "append to body" option (only `position: auto|top|bottom`), so
+	 * the dropdown stays inside `.choices` and gets clipped by ancestors with `overflow: hidden`
+	 * or a `transform`/`contain` containing block. This moves only the dropdown into a floating
+	 * wrapper on `<body>` while open (mirroring the outer classes so scoped styles still apply),
+	 * then moves it back on close.
+	 *
+	 * Choices.js delegates option selection (`mousedown`) and keyboard navigation (`keydown`)
+	 * from `containerOuter`, and gates its "inside the component" checks on
+	 * `containerOuter.contains()`. Because the dropdown leaves that container, this re-binds
+	 * those handlers onto the dropdown, extends `contains()` to include it, and suppresses the
+	 * spurious close the browser's focus loss on re-parenting would otherwise trigger.
+	 *
+	 * @param {object} choices Choices.js instance.
+	 *
+	 * @returns {void}
+	 */
+	setupSelectDropdownPortal(choices) {
+		const outer = choices?.containerOuter?.element;
+		const inner = choices?.containerInner?.element;
+		const dropdown = choices?.dropdown?.element;
+		const passed = choices?.passedElement?.element;
+
+		if (!outer || !inner || !dropdown || !passed) {
+			return;
+		}
+
+		// Treat the portaled dropdown as part of the component for outside-click/focus checks.
+		const nativeContains = outer.contains.bind(outer);
+		outer.contains = (node) => nativeContains(node) || dropdown.contains(node);
+
+		// Swallow the close that focus loss on re-parenting would otherwise trigger.
+		let isMoving = false;
+		const nativeHideDropdown = choices.hideDropdown.bind(choices);
+		choices.hideDropdown = (...args) => (isMoving ? choices : nativeHideDropdown(...args));
+
+		// Choices.js internal, instance-bound delegated handlers, re-bound onto the dropdown.
+		const onMouseDown = choices['_onMouseDown'];
+		const onKeyDown = choices['_onKeyDown'];
+
+		const wrapper = document.createElement('div');
+
+		const position = () => {
+			const rect = inner.getBoundingClientRect();
+			const spaceBelow = window.innerHeight - rect.bottom;
+			const flip = spaceBelow < dropdown.scrollHeight && rect.top > spaceBelow;
+
+			wrapper.style.width = `${rect.width}px`;
+			wrapper.style.left = `${rect.left}px`;
+			wrapper.classList.toggle('is-flipped', flip);
+
+			if (flip) {
+				wrapper.style.top = 'auto';
+				wrapper.style.bottom = `${window.innerHeight - rect.top}px`;
+			} else {
+				wrapper.style.bottom = 'auto';
+				wrapper.style.top = `${rect.bottom}px`;
+			}
+		};
+
+		// The portaled dropdown lives at the end of the DOM, so a native Tab would send focus to
+		// the page end and Choices re-opens on the resulting focus churn. Take over: close and
+		// return focus to the control, where tab order continues correctly.
+		const onTabKeyDown = (event) => {
+			if (event.key !== 'Tab') {
+				return;
+			}
+
+			event.preventDefault();
+			nativeHideDropdown(true);
+			outer.focus({ preventScroll: true });
+		};
+
+		const onShow = () => {
+			// Mirror the outer classes so the project's scoped dropdown styles still match.
+			wrapper.className = outer.className;
+			wrapper.style.position = 'fixed';
+			wrapper.style.margin = '0';
+			wrapper.style.zIndex = '999999';
+
+			// The wrapper owns positioning; the dropdown flows normally inside it.
+			isMoving = true;
+			dropdown.style.position = 'static';
+			wrapper.appendChild(dropdown);
+			document.body.appendChild(wrapper);
+			isMoving = false;
+
+			// Re-bind the handlers Choices.js attached to the now out-of-tree container.
+			dropdown.addEventListener('mousedown', onMouseDown, true);
+			dropdown.addEventListener('keydown', onKeyDown, true);
+			dropdown.addEventListener('keydown', onTabKeyDown, true);
+
+			// Keep the search input usable after the move.
+			if (choices.config?.searchEnabled) {
+				choices.input?.element?.focus({ preventScroll: true });
+			}
+
+			position();
+			window.addEventListener('scroll', position, true);
+			window.addEventListener('resize', position);
+		};
+
+		const onHide = () => {
+			window.removeEventListener('scroll', position, true);
+			window.removeEventListener('resize', position);
+
+			dropdown.removeEventListener('mousedown', onMouseDown, true);
+			dropdown.removeEventListener('keydown', onKeyDown, true);
+			dropdown.removeEventListener('keydown', onTabKeyDown, true);
+
+			dropdown.style.position = '';
+
+			// Restore the dropdown into its container so Choices.js internals and destroy work.
+			if (dropdown.parentElement === wrapper) {
+				outer.appendChild(dropdown);
+			}
+
+			wrapper.remove();
+
+			// Return focus to the control so keyboard/tab order does not jump to the end of the
+			// DOM after the portaled dropdown (and its focused search input) is removed. Skip when
+			// the user has already moved focus elsewhere (e.g. clicked another field).
+			const active = document.activeElement;
+
+			if (!active || active === document.body || dropdown.contains(active)) {
+				outer.focus({ preventScroll: true });
+			}
+		};
+
+		passed.addEventListener('showDropdown', onShow);
+		passed.addEventListener('hideDropdown', onHide);
+
+		// Store cleanup so it runs before Choices.js `destroy()`.
+		choices.esFormsDropdownPortalCleanup = () => {
+			onHide();
+			outer.contains = nativeContains;
+			choices.hideDropdown = nativeHideDropdown;
+			passed.removeEventListener('showDropdown', onShow);
+			passed.removeEventListener('hideDropdown', onHide);
+		};
 	}
 
 	/**
@@ -1690,6 +1838,7 @@ export class Form {
 				choices?.input?.element.removeEventListener('focus', this.onSelectFocusEvent);
 				choices?.containerOuter?.element.removeEventListener('blur', this.onBlurEvent);
 				choices?.input?.element.removeEventListener('blur', this.onBlurEvent);
+				choices?.esFormsDropdownPortalCleanup?.();
 				choices?.destroy();
 			});
 
@@ -2010,6 +2159,13 @@ export class Form {
 	onSelectFocusEvent = (event) => {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
+
+		// The dropdown (and its search input) is portaled to `<body>` while open, so it no
+		// longer resolves to a field. The container-level handler manages the focus state.
+		if (!field) {
+			return;
+		}
+
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const value = this.state.getStateElementValue(name, formId);
 		const custom = this.state.getStateElementCustom(name, formId);

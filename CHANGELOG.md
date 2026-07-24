@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.11.0]
+
+### Added
+
+- Added a "Select dropdown location before body end" accessibility setting that renders select, country, and phone dropdowns before the `</body>` tag instead of under the field.
+
 ## [9.10.1]
 
 ### Fixed
@@ -1974,6 +1980,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[9.11.0]: https://github.com/infinum/eightshift-forms/compare/9.10.1...9.11.0
 [9.10.1]: https://github.com/infinum/eightshift-forms/compare/9.10.0...9.10.1
 [9.10.0]: https://github.com/infinum/eightshift-forms/compare/9.9.1...9.10.0
 [9.9.1]: https://github.com/infinum/eightshift-forms/compare/9.9.0...9.9.1
