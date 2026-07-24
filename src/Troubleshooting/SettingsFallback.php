@@ -346,16 +346,6 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	}
 
 	/**
-	 * Get flag label.
-	 *
-	 * @param string $key Key to get label for.
-	 */
-	public function getFlagLabel(string $key): string
-	{
-		return Labels::getFlagsList()[$key]['label'] ?? '';
-	}
-
-	/**
 	 * Get flags output.
 	 *
 	 * @return array<string, mixed>

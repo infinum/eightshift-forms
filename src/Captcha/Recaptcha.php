@@ -40,9 +40,7 @@ class Recaptcha implements CaptchaInterface
 	 *
 	 * @param SecurityInterface $security Inject security methods (for user IP resolution).
 	 */
-	public function __construct(protected SecurityInterface $security)
-	{
-	}
+	public function __construct(protected SecurityInterface $security) {} // phpcs:ignore
 
 	/**
 	 * Check captcha request.
@@ -211,9 +209,8 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				Labels::getLabel(Labels::LABEL_CAPTCHA_ERROR),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_INVALID_TOKEN_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('captchaRetry') => $retry,
@@ -229,7 +226,7 @@ class Recaptcha implements CaptchaInterface
 			throw new BadRequestException(
 				Labels::getLabel(Labels::LABEL_CAPTCHA_ERROR),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_ENTERPRISE_MISSING_SCORE_ERROR,
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);

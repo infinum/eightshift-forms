@@ -68,7 +68,8 @@ class Labels
 	public const LABEL_CAPTCHA_REQUEST_MISSING_TOKEN = 'captchaRequestMissingToken';
 	public const LABEL_CAPTCHA_REQUEST_WP_ERROR = 'captchaRequestWpError';
 	public const LABEL_CAPTCHA_FREE_OUTPUT_ERROR = 'captchaFreeOutputError';
-	public const LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR = 'captchaEnterpriseOutputError';
+	public const LABEL_CAPTCHA_ENTERPRISE_INVALID_TOKEN_ERROR = 'captchaEnterpriseInvalidTokenError';
+	public const LABEL_CAPTCHA_ENTERPRISE_MISSING_SCORE_ERROR = 'captchaEnterpriseMissingScoreError';
 	public const LABEL_CAPTCHA_WRONG_ACTION = 'captchaWrongAction';
 	public const LABEL_CAPTCHA_SCORE_SPAM = 'captchaScoreSpam';
 	public const LABEL_CAPTCHA_SUCCESS = 'captchaSuccess';
@@ -562,9 +563,15 @@ class Labels
 					'output' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 				],
-				self::LABEL_CAPTCHA_ENTERPRISE_OUTPUT_ERROR => [
+				self::LABEL_CAPTCHA_ENTERPRISE_INVALID_TOKEN_ERROR => [
 					'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
-					'description' => \__('Captcha type enterprise returned an error response.', 'eightshift-forms'),
+					'description' => \__('Captcha type enterprise returned an error response because of the missing/invalid token from the provider.', 'eightshift-forms'),
+					'output' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
+					'isActivityLogRecommended' => true,
+				],
+				self::LABEL_CAPTCHA_ENTERPRISE_MISSING_SCORE_ERROR => [
+					'type' => SettingsCaptcha::SETTINGS_TYPE_KEY,
+					'description' => \__('Captcha type enterprise returned an error response because of the missing score from the provider.', 'eightshift-forms'),
 					'output' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
 					'isActivityLogRecommended' => true,
 				],

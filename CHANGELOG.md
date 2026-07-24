@@ -4,12 +4,6 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [9.10.2]
-
-### Fixed
-
-- Fixed Pardot OAuth session-expiry detection to check the API response `code` (`184`) instead of the removed `errorCode` (`INVALID_SESSION_ID`) field.
-
 ## [9.10.1]
 
 ### Fixed
@@ -2001,7 +1995,6 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[9.10.2]: https://github.com/infinum/eightshift-forms/compare/9.10.1...9.10.2
 [9.10.1]: https://github.com/infinum/eightshift-forms/compare/9.10.0...9.10.1
 [9.10.0]: https://github.com/infinum/eightshift-forms/compare/9.9.1...9.10.0
 [9.9.1]: https://github.com/infinum/eightshift-forms/compare/9.9.0...9.9.1

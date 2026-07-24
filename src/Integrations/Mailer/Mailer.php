@@ -21,7 +21,6 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftForms_Parsedown as Parsedown;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Exception;
@@ -35,11 +34,9 @@ class Mailer implements MailerInterface
 	 * Create a new instance that injects classes.
 	 *
 	 * @param SecurityInterface $security Security interface.
-	 * @param SettingsFallbackDataInterface $settingsFallback Settings fallback data interface.
 	 */
 	public function __construct(
-		protected SecurityInterface $security,
-		protected SettingsFallbackDataInterface $settingsFallback
+		protected SecurityInterface $security
 	) {} // phpcs:ignore
 
 	/**
@@ -181,7 +178,7 @@ class Mailer implements MailerInterface
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
 
 			// translators: %s replaces the debug key description.
-			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), \esc_html($this->settingsFallback->getFlagLabel($debugKeyValue))) . '</p>';
+			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), \esc_html(Labels::getLabel($debugKeyValue))) . '</p>';
 		}
 
 		// translators: %s replaces the website url.
