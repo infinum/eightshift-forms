@@ -75,10 +75,10 @@ export const SelectOptions = (attributes) => {
 						<OptionSelect
 							icon={optionListAlt}
 							label={__('Show as', 'eightshift-forms')}
-							value={selectShowAs}
-							options={globalManifest.showAsMap.options.map((item) => (item.value === 'select' ? { ...item, value: '' } : item))}
+							value={selectShowAs || 'select'}
+							options={globalManifest.showAsMap.options}
 							disabled={isOptionDisabled(getAttrKey('selectShowAs', attributes, manifest), selectDisabledOptions)}
-							onChange={(value) => setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value })}
+							onChange={(value) => setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value === 'select' ? '' : value })}
 							type='menu'
 							inline
 						/>

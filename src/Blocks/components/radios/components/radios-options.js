@@ -68,10 +68,10 @@ export const RadiosOptions = (attributes) => {
 						<OptionSelect
 							icon={optionListAlt}
 							label={__('Show as', 'eightshift-forms')}
-							value={radiosShowAs}
-							options={globalManifest.showAsMap.options.map((item) => (item.value === 'radios' ? { ...item, value: '' } : item))}
+							value={radiosShowAs || 'radios'}
+							options={globalManifest.showAsMap.options}
 							disabled={isOptionDisabled(getAttrKey('radiosShowAs', attributes, manifest), radiosDisabledOptions)}
-							onChange={(value) => setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value })}
+							onChange={(value) => setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value === 'radios' ? '' : value })}
 							type='menu'
 							inline
 						/>

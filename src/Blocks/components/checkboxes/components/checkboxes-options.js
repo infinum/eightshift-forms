@@ -87,10 +87,10 @@ export const CheckboxesOptions = (attributes) => {
 						<OptionSelect
 							icon={optionListAlt}
 							label={__('Show as', 'eightshift-forms')}
-							value={checkboxesShowAs}
-							options={globalManifest.showAsMap.options.map((item) => (item.value === 'checkboxes' ? { ...item, value: '' } : item))}
+							value={checkboxesShowAs || 'checkboxes'}
+							options={globalManifest.showAsMap.options}
 							disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
-							onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
+							onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value === 'checkboxes' ? '' : value })}
 							type='menu'
 							inline
 						/>
