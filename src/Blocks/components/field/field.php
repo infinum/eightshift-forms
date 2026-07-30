@@ -94,6 +94,7 @@ $fieldClass = Helpers::clsx([
 	Helpers::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
 	Helpers::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
 	...$fieldStyleOutput,
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field'),
 ]);
 
 $labelClass = Helpers::clsx([
@@ -101,46 +102,55 @@ $labelClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 	Helpers::selector($fieldHideLabelVisually && $componentClass, $componentClass, 'label', 'is-visually-hidden'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-label'),
 ]);
 
 $labelInnerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-label-inner'),
 ]);
 
 $innerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-inner'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-inner'),
 ]);
 
 $contentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-content'),
 ]);
 
 $beforeContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-before-content'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-before-content'),
 ]);
 
 $suffixContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'suffix-content', "{$componentClass}__suffix-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-suffix-content'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-suffix-content'),
 ]);
 
 $afterContentClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-after-content'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-after-content'),
 ]);
 
 $helpClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-help'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-help'),
 ]);
 
 $contentWrapClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
+	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-content-wrap'),
 ]);
 
 if ($fieldType === 'fieldset') {
@@ -224,31 +234,31 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 		<div class="<?php echo esc_attr($contentClass); ?>">
 			<?php if ($fieldBeforeContent) { ?>
 				<div class="<?php echo esc_attr($beforeContentClass); ?>">
-					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 					?>
 				</div>
 			<?php } ?>
 			<div class="<?php echo esc_attr($contentWrapClass); ?>">
 				<?php
-				echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 				?>
 				<?php if ($fieldSuffixContent) { ?>
 					<div class="<?php echo esc_attr($suffixContentClass); ?>">
-						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 						?>
 					</div>
 				<?php } ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
 				<div class="<?php echo esc_attr($afterContentClass); ?>">
-					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 					?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
 			<div class="<?php echo esc_attr($helpClass); ?>">
-				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 				?>
 			</div>
 		<?php } ?>
@@ -268,6 +278,6 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 		}
 		?>
 	</div>
-	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>
 </<?php echo esc_attr($fieldTag); ?>>
