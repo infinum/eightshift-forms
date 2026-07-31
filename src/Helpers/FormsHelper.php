@@ -300,6 +300,24 @@ final class FormsHelper
 	}
 
 	/**
+	 * Return Tailwind form style override output.
+	 *
+	 * @param array<string, string> $data Data to get part from.
+	 * @param array<string> $styles Styles to get data for.
+	 * @param string $parentSelector Parent selector to get data for.
+	 */
+	public static function getTwFormStyleOutput(array $data, array $styles, string $parentSelector): string
+	{
+		$fieldClasses = [];
+
+		foreach ($styles as $styleName) {
+			$fieldClasses[] = $data[$parentSelector]['formStyleOverrides'][$styleName] ?? [];
+		}
+
+		return \implode(' ', \array_filter(\array_merge(...$fieldClasses)));
+	}
+
+	/**
 	 * Get unique form hash.
 	 */
 	public static function getFormUniqueHash(): string
