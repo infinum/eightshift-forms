@@ -13,6 +13,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $fieldUse = Helpers::checkAttr('fieldUse', $attributes, $manifest);
+
 if (!$fieldUse) {
 	return;
 }
@@ -92,9 +93,10 @@ $fieldClass = Helpers::clsx([
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, '', 'is-required'),
 	UtilsHelper::getStateSelector('field'),
 	Helpers::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
+	Helpers::selector($fieldIsNoneFormBlock, FormsHelper::getTwPart(FormsHelper::getTwSelectorsData($attributes), 'field', 'baseNonFormsBlock')),
 	Helpers::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
-	...$fieldStyleOutput,
 	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field'),
+	...$fieldStyleOutput,
 ]);
 
 $labelClass = Helpers::clsx([

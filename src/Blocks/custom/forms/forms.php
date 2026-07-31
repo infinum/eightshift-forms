@@ -90,6 +90,7 @@ $formsClass = Helpers::clsx([
 	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',
 	...$formsStyleOutput,
+	FormsHelper::getTwFormStyleOutput($twClasses, $formsStyle, $manifest['blockName']),
 ]);
 
 ?>
