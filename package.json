@@ -34,11 +34,11 @@
 		"test:e2e:report:pdf": "node tests/e2e/helpers/generate-pdf-report.js"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.61.1",
+		"@playwright/test": "^1.62.1",
 		"husky": "^9.1.7",
-		"webpack": "^5.108.4",
-		"webpack-cli": "^7.2.1",
-		"lint-staged": "^17.1.0"
+		"webpack": "^5.109.2",
+		"webpack-cli": "^7.2.2",
+		"lint-staged": "^17.3.0"
 	},
 	"dependencies": {
 		"@eightshift/frontend-libs-tailwind": "^3.4.0",
@@ -46,7 +46,7 @@
 		"@tailwindcss/postcss": "^4.3.3",
 		"@tailwindcss/typography": "^0.5.20",
 		"autosize": "^6.0.1",
-		"baseline-browser-mapping": "^2.10.43",
+		"baseline-browser-mapping": "^2.11.8",
 		"caniuse-lite": "^1.0.30001806",
 		"choices.js": "^11.2.3",
 		"dropzone": "^6.0.0-beta.2",
