@@ -40,7 +40,10 @@ $progressBarClass = Helpers::clsx([
 ]);
 
 ?>
-<div class="<?php echo esc_attr($progressBarClass); ?>">
+<div
+	class="<?php echo esc_attr($progressBarClass); ?>"
+	data-item-class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'progress-bar', 'step')); ?>"
+>
 	<?php
 	if (!$progressBarMultiflowUse) {
 		echo Helpers::render(

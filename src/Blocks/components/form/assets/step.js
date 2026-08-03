@@ -263,17 +263,28 @@ export class Steps {
 				this.state.setStateFormStepsProgressBarCount(progressBarItems, formId);
 			}
 
+			const itemClassName = this.state.getStateFormStepsProgressBar(formId)?.getAttribute('data-item-class') ?? '';
+
 			// Clear current progress bar.
 			this.state.getStateFormStepsProgressBar(formId).innerHTML = '';
+
+			const activeStep = flow.length - 1;
 
 			// Loop items count from state and output empty divs.
 			for (let index = 0; index < this.state.getStateFormStepsProgressBarCount(formId); index++) {
 				// Create div element.
 				const node = document.createElement('div');
+				node.className = itemClassName;
 
 				// Output active elements.
 				if ((flow?.length === 0 && index === 0) || (flow?.length > 0 && index <= flow?.length)) {
 					node.classList.add(this.state.getStateSelector('isFilled'));
+				}
+
+				if (index === activeStep) {
+					node.setAttribute('aria-current', 'step');
+				} else {
+					node.removeAttribute('aria-current');
 				}
 
 				// Append div element to progress bar.
