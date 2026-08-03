@@ -21,6 +21,27 @@ $checkboxesTypeCustom = Helpers::checkAttr('checkboxesTypeCustom', $attributes, 
 $checkboxesFieldAttrs = Helpers::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
 $checkboxesUseLabelAsPlaceholder = Helpers::checkAttr('checkboxesUseLabelAsPlaceholder', $attributes, $manifest);
 $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
+$checkboxesShowAs = $attributes[Helpers::getAttrKey('checkboxesShowAs', $attributes, $manifest)] ?? '';
+
+$twSelectorsData = FormsHelper::getTwSelectorsData($attributes);
+$checkboxesFieldStyle = Helpers::checkAttr('checkboxesFieldStyle', $attributes, $manifest);
+
+$fieldStyleOverrides = [
+	'content' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'content'),
+	'label' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'label'),
+	'label-icon' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'label-icon'),
+	'label-inner' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'label-inner'),
+	'help' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'help'),
+	'input' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'input'),
+];
+
+// Replace field style overrides.
+$checkboxesContent = str_replace('%FSO_CONTENT%', $fieldStyleOverrides['content'], $checkboxesContent);
+$checkboxesContent = str_replace('%FSO_LABEL%', $fieldStyleOverrides['label'], $checkboxesContent);
+$checkboxesContent = str_replace('%FSO_LABEL_ICON%', $fieldStyleOverrides['label-icon'], $checkboxesContent);
+$checkboxesContent = str_replace('%FSO_LABEL_INNER%', $fieldStyleOverrides['label-inner'], $checkboxesContent);
+$checkboxesContent = str_replace('%FSO_HELP%', $fieldStyleOverrides['help'], $checkboxesContent);
+$checkboxesContent = str_replace('%FSO_INPUT%', $fieldStyleOverrides['input'], $checkboxesContent);
 
 $checkboxesId = $checkboxesName . '-' . Helpers::getUnique();
 
@@ -46,7 +67,6 @@ $placeholderLabel = '';
 $placeholder = '';
 $checkboxesHideLabel = false;
 $checkboxesFieldLabel = $attributes[Helpers::getAttrKey('checkboxesFieldLabel', $attributes, $manifest)] ?? '';
-$checkboxesShowAs = $attributes[Helpers::getAttrKey('checkboxesShowAs', $attributes, $manifest)] ?? '';
 
 // Checkboxes don't use placeholder so we are not going to render it.
 if ($checkboxesShowAs !== '') {
@@ -82,7 +102,7 @@ $fieldOutput = [
 	'fieldId' => $checkboxesId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 	'fieldName' => $checkboxesName,
-	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
+	'fieldTwSelectorsData' => $twSelectorsData,
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

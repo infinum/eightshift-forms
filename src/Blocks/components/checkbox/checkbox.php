@@ -52,7 +52,7 @@ $checkboxClass = Helpers::clsx([
 ]);
 
 $checkboxInputClass = Helpers::clsx([
-	FormsHelper::getTwPart($twClasses, 'checkbox', 'input', "{$componentClass}__input"),
+	FormsHelper::getTwPart($twClasses, 'checkbox', 'input', "{$componentClass}__input %FSO_INPUT%"),
 	Helpers::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -81,14 +81,13 @@ if ($componentName) {
 if ($checkboxTracking) {
 	$checkboxFieldAttrs[UtilsHelper::getStateAttribute('tracking')] = esc_attr($checkboxTracking);
 }
-
 ?>
 
 <div
 	class="<?php echo esc_attr($checkboxClass); ?>"
 	<?php echo wp_kses_post(Helpers::getAttrsOutput($checkboxFieldAttrs));
 	?>>
-	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
+	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content %FSO_CONTENT%")); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
@@ -101,19 +100,19 @@ if ($checkboxTracking) {
 		<?php if (!$checkboxHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($checkboxName); ?>"
-				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label', "{$componentClass}__label")); ?>">
+				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label', "{$componentClass}__label %FSO_LABEL%")); ?>">
 				<?php if ($checkboxIcon) { ?>
 					<?php
 					$iconAltText = get_post_meta($checkboxIconId ?? 0, '_wp_attachment_image_alt', true) ?: '';
 					?>
 					<img
-						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-icon', "{$componentClass}__label-icon")); ?>"
+						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-icon', "{$componentClass}__label-icon %FSO_LABEL_ICON%")); ?>"
 						src="<?php echo esc_url($checkboxIcon); ?>"
 						alt="<?php echo esc_attr($iconAltText); ?>" />
 				<?php } ?>
 
 				<?php if (!$checkboxHideLabelText) { ?>
-					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-inner', "{$componentClass}__label-inner")); ?>">
+					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-inner', "{$componentClass}__label-inner %FSO_LABEL_INNER%")); ?>">
 						<?php
 						echo wp_kses_post(apply_filters('the_content', $checkboxLabel));
 						?>
@@ -123,7 +122,7 @@ if ($checkboxTracking) {
 		<?php } ?>
 	</div>
 	<?php if ($checkboxHelp) { ?>
-		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'help', "{$componentClass}__help")); ?>">
+		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'help', "{$componentClass}__help %FSO_HELP%")); ?>">
 			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?>
 		</div>

@@ -22,6 +22,27 @@ $radiosFieldAttrs = Helpers::checkAttr('radiosFieldAttrs', $attributes, $manifes
 $radiosTracking = Helpers::checkAttr('radiosTracking', $attributes, $manifest);
 $radiosUseLabelAsPlaceholder = Helpers::checkAttr('radiosUseLabelAsPlaceholder', $attributes, $manifest);
 $radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manifest);
+$radiosShowAs = $attributes[Helpers::getAttrKey('radiosShowAs', $attributes, $manifest)] ?? '';
+
+$twSelectorsData = FormsHelper::getTwSelectorsData($attributes);
+$radiosFieldStyle = Helpers::checkAttr('radiosFieldStyle', $attributes, $manifest);
+
+$fieldStyleOverrides = [
+	'content' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'content'),
+	'label' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'label'),
+	'label-icon' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'label-icon'),
+	'label-inner' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'label-inner'),
+	'help' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'help'),
+	'input' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'input'),
+];
+
+// Replace field style overrides.
+$radiosContent = str_replace('%FSO_CONTENT%', $fieldStyleOverrides['content'], $radiosContent);
+$radiosContent = str_replace('%FSO_LABEL%', $fieldStyleOverrides['label'], $radiosContent);
+$radiosContent = str_replace('%FSO_LABEL_ICON%', $fieldStyleOverrides['label-icon'], $radiosContent);
+$radiosContent = str_replace('%FSO_LABEL_INNER%', $fieldStyleOverrides['label-inner'], $radiosContent);
+$radiosContent = str_replace('%FSO_HELP%', $fieldStyleOverrides['help'], $radiosContent);
+$radiosContent = str_replace('%FSO_INPUT%', $fieldStyleOverrides['input'], $radiosContent);
 
 $radiosId = $radiosName . '-' . Helpers::getUnique();
 
@@ -43,12 +64,10 @@ $radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$i
 // Additional content filter.
 $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('radios', $attributes);
 
-
 $placeholderLabel = '';
 $placeholder = '';
 $radiosHideLabel = false;
 $radiosFieldLabel = $attributes[Helpers::getAttrKey('radiosFieldLabel', $attributes, $manifest)] ?? '';
-$radiosShowAs = $attributes[Helpers::getAttrKey('radiosShowAs', $attributes, $manifest)] ?? '';
 
 // Radios don't use placeholder so we are not going to render it.
 if ($radiosShowAs !== '') {
@@ -85,7 +104,7 @@ $fieldOutput = [
 	'fieldIsRequired' => $radiosIsRequired,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
 	'fieldId' => $radiosId,
-	'fieldTwSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
+	'fieldTwSelectorsData' => $twSelectorsData,
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

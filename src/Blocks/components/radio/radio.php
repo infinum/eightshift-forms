@@ -43,7 +43,7 @@ $radioClass = Helpers::clsx([
 ]);
 
 $radioInputClass = Helpers::clsx([
-	FormsHelper::getTwPart($twClasses, 'radio', 'input', "{$componentClass}__input"),
+	FormsHelper::getTwPart($twClasses, 'radio', 'input', "{$componentClass}__input %FSO_INPUT%"),
 	Helpers::selector($radioSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -70,7 +70,7 @@ if ($componentName) {
 	class="<?php echo esc_attr($radioClass); ?>"
 	<?php echo Helpers::getAttrsOutput($radioFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>>
-	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content")); ?>">
+	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content %FSO_CONTENT%")); ?>">
 		<input
 			class="<?php echo esc_attr($radioInputClass); ?>"
 			type="radio"
@@ -83,19 +83,19 @@ if ($componentName) {
 		<?php if (!$radioHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($radioName); ?>"
-				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label")); ?>">
+				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label %FSO_LABEL%")); ?>">
 				<?php if ($radioIcon) { ?>
 					<?php
 					$iconAltText = get_post_meta($radioIconId ?? 0, '_wp_attachment_image_alt', true) ?: '';
 					?>
 					<img
-						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-icon', "{$componentClass}__label-icon")); ?>"
+						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-icon', "{$componentClass}__label-icon %FSO_LABEL_ICON%")); ?>"
 						src="<?php echo esc_url($radioIcon); ?>"
 						alt="<?php echo esc_attr($iconAltText); ?>" />
 				<?php } ?>
 
 				<?php if (!$radioHideLabelText) { ?>
-					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-inner', "{$componentClass}__label-inner")); ?>">
+					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-inner', "{$componentClass}__label-inner %FSO_LABEL_INNER%")); ?>">
 						<?php
 						echo wp_kses_post(apply_filters('the_content', $radioLabel));
 						?>

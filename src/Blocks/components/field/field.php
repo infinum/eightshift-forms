@@ -104,6 +104,7 @@ $labelClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 	Helpers::selector($fieldHideLabelVisually && $componentClass, $componentClass, 'label', 'is-visually-hidden'),
+	Helpers::selector($fieldHideLabelVisually && $componentClass, 'is-visually-hidden'),
 	FormsHelper::getTwFieldStyleOutput($twClasses, $fieldStyle, $selectorClass, 'field-label'),
 ]);
 
