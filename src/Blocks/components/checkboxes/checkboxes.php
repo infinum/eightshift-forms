@@ -24,7 +24,7 @@ $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes
 $checkboxesShowAs = $attributes[Helpers::getAttrKey('checkboxesShowAs', $attributes, $manifest)] ?? '';
 
 $twSelectorsData = FormsHelper::getTwSelectorsData($attributes);
-$checkboxesFieldStyle = is_admin() ? [] : Helpers::checkAttr(Helpers::getAttrKey('fieldStyle', $attributes, $manifest), $attributes, $manifest);
+$checkboxesFieldStyle = is_admin() ? [] : Helpers::checkAttr(Helpers::getAttrKey('checkboxesFieldStyle', $attributes, $manifest), $attributes, $manifest);
 
 $fieldStyleOverrides = [
 	'content' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $checkboxesFieldStyle, $checkboxesShowAs ?: $manifest['componentName'], 'content'),
