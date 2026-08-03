@@ -178,8 +178,14 @@ export const DateOptions = (attributes) => {
 										label={__('Show as placeholder', 'eightshift-forms')}
 										checked={dateUseLabelAsPlaceholder}
 										onChange={(value) => {
-											setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: undefined });
-											setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value });
+											if (value) {
+												setAttributes({
+													[getAttrKey('datePlaceholder', attributes, manifest)]: undefined,
+													[getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value,
+												});
+											} else {
+												setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value });
+											}
 										}}
 									/>
 								</Container>

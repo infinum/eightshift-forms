@@ -171,8 +171,14 @@ export const CountryOptions = (attributes) => {
 										label={__('Show as placeholder', 'eightshift-forms')}
 										checked={countryUseLabelAsPlaceholder}
 										onChange={(value) => {
-											setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: undefined });
-											setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value });
+											if (value) {
+												setAttributes({
+													[getAttrKey('countryPlaceholder', attributes, manifest)]: undefined,
+													[getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value,
+												});
+											} else {
+												setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value });
+											}
 										}}
 									/>
 								</Container>

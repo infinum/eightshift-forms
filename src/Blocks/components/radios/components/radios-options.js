@@ -123,8 +123,14 @@ export const RadiosOptions = (attributes) => {
 										label={__('Show as placeholder', 'eightshift-forms')}
 										checked={radiosUseLabelAsPlaceholder}
 										onChange={(value) => {
-											setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: undefined });
-											setAttributes({ [getAttrKey('radiosUseLabelAsPlaceholder', attributes, manifest)]: value });
+											if (value) {
+												setAttributes({
+													[getAttrKey('radiosPlaceholder', attributes, manifest)]: undefined,
+													[getAttrKey('radiosUseLabelAsPlaceholder', attributes, manifest)]: value,
+												});
+											} else {
+												setAttributes({ [getAttrKey('radiosUseLabelAsPlaceholder', attributes, manifest)]: value });
+											}
 										}}
 									/>
 								</Container>

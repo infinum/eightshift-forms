@@ -160,8 +160,14 @@ export const TextareaOptions = (attributes) => {
 										label={__('Show as placeholder', 'eightshift-forms')}
 										checked={textareaUseLabelAsPlaceholder}
 										onChange={(value) => {
-											setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined });
-											setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
+											if (value) {
+												setAttributes({
+													[getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined,
+													[getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value,
+												});
+											} else {
+												setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
+											}
 										}}
 									/>
 								</Container>

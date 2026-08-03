@@ -214,8 +214,14 @@ export const InputOptions = (attributes) => {
 										label={__('Show as placeholder', 'eightshift-forms')}
 										checked={inputUseLabelAsPlaceholder}
 										onChange={(value) => {
-											setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: undefined });
-											setAttributes({ [getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value });
+											if (value) {
+												setAttributes({
+													[getAttrKey('inputPlaceholder', attributes, manifest)]: undefined,
+													[getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value,
+												});
+											} else {
+												setAttributes({ [getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value });
+											}
 										}}
 									/>
 								</Container>
