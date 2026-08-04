@@ -246,11 +246,11 @@ final class FormsHelper
 			'select', 'country' => [
 				'containerOuter' => \array_merge(
 					$data['base'] ?? [],
-					$attributes['isMultiple'] ? $data['parts']['select-choices-multiple-base'] : $data['parts']['select-choices-single-base'] ?? [],
+					isset($attributes['isMultiple']) && $attributes['isMultiple'] ? $data['parts']['select-choices-multiple-base'] ?? [] : $data['parts']['select-choices-single-base'] ?? [],
 				),
 				'containerInner' => \array_merge(
 					$data['parts']['select-choices-inner'] ?? [],
-					$attributes['isMultiple'] ? $data['parts']['select-choices-multiple-inner'] : $data['parts']['select-choices-single-inner'] ?? [],
+					isset($attributes['isMultiple']) && $attributes['isMultiple'] ? $data['parts']['select-choices-multiple-inner'] ?? [] : $data['parts']['select-choices-single-inner'] ?? [],
 				),
 				'input' => $data['parts']['select-input'] ?? [],
 				'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
