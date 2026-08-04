@@ -35,7 +35,7 @@ body :is(#wpwrap) {
 	@apply esf:flex esf:flex-row esf:gap-10 esf:items-center;
 
 	&::before {
-		@apply esf:content-[''] esf:block esf:size-20 esf:border esf:border-gray-500 esf:rounded-md;
+		@apply esf:content-[''] esf:block esf:size-20 esf:border esf:border-gray-500 esf:rounded-md esf:shrink-0;
 	}
 }
 
