@@ -157,6 +157,7 @@ final class FormsHelper
 		$filter = \is_admin() ? 'tailwindSelectorsAdmin' : 'tailwindSelectors';
 
 		$filterName = HooksHelpers::getFilterName(['blocks', $filter]);
+
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, [], $attributes);
 		}
@@ -235,15 +236,22 @@ final class FormsHelper
 	/**
 	 * Return Tailwind selectors output.
 	 *
-	 * @param array<string, string> $data Data to get output from.
+	 * @param array<string, string|array<mixed>> $data Data to get output from.
 	 * @param string $type Type of the selectors.
+	 * @param array<string, string> $attributes The block attributes.
 	 */
-	public static function getTwSelectorsOutput(array $data, string $type): string
+	public static function getTwSelectorsOutput(array $data, string $type, array $attributes = []): string
 	{
 		$output = match ($type) {
 			'select', 'country' => [
-				'containerOuter' => $data['base'] ?? [],
-				'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+				'containerOuter' => \array_merge(
+					$data['base'] ?? [],
+					$attributes['isMultiple'] ? $data['parts']['select-choices-multiple-base'] : $data['parts']['select-choices-single-base'] ?? [],
+				),
+				'containerInner' => \array_merge(
+					$data['parts']['select-choices-inner'] ?? [],
+					$attributes['isMultiple'] ? $data['parts']['select-choices-multiple-inner'] : $data['parts']['select-choices-single-inner'] ?? [],
+				),
 				'input' => $data['parts']['select-input'] ?? [],
 				'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
 				'list' => $data['parts']['select-list'] ?? [],
@@ -258,8 +266,14 @@ final class FormsHelper
 				'button' => $data['parts']['select-button'] ?? [],
 			],
 			'phone' => [
-				'containerOuter' => $data['parts']['select'] ?? [],
-				'containerInner' => $data['parts']['select-choices-inner'] ?? [],
+				'containerOuter' => \array_merge(
+					$data['parts']['select'] ?? [],
+					$data['parts']['select-choices-single-base'] ?? [],
+				),
+				'containerInner' => \array_merge(
+					$data['parts']['select-choices-inner'] ?? [],
+					$data['parts']['select-choices-single-inner'] ?? [],
+				),
 				'input' => $data['parts']['select-input'] ?? [],
 				'inputCloned' => $data['parts']['select-input-cloned'] ?? [],
 				'list' => $data['parts']['select-list'] ?? [],

@@ -55,6 +55,8 @@ $phoneClass = Helpers::clsx([
 $phoneSelectClass = Helpers::clsx([
 	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Helpers::selector($componentClass, $componentClass, 'select'),
+	FormsHelper::getTwPart($phoneTwSelectorsData, 'select', 'nojs'),
+	FormsHelper::getTwPart($phoneTwSelectorsData, 'phone', 'select-nojs'),
 ]);
 
 if ($phoneValue) {
@@ -96,9 +98,9 @@ if (has_filter($filterName)) {
 		$unLocalizedLabel = $option[3] ?? '';
 
 		$optionLabel = match ($phoneViewType) {
-									'number-country-code' => "+{$value} (" . strtoupper((string) $code) . ")",
-									'number-country-label' => "(+{$value}) {$label}",
-									default => "+{$value}",
+			'number-country-code' => "+{$value} (" . strtoupper((string) $code) . ")",
+			'number-country-label' => "(+{$value}) {$label}",
+			default => "+{$value}",
 		};
 
 		$customProperties = [

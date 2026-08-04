@@ -51,6 +51,7 @@ $countryClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'select'),
 	$additionalClass,
 	Helpers::selector($countrySingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+	FormsHelper::getTwPart($countryTwSelectorsData, 'select', 'nojs'),
 ]);
 
 if ($countryUseSearch) {

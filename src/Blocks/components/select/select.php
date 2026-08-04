@@ -45,6 +45,7 @@ $selectClass = Helpers::clsx([
 	Helpers::selector($componentClass, $componentClass, 'select'),
 	$additionalClass,
 	Helpers::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+	FormsHelper::getTwPart($selectTwSelectorsData, 'select', 'nojs'),
 ]);
 
 if ($selectUseSearch) {
@@ -63,7 +64,10 @@ if ($selectIsMultiple) {
 		$selectAttrs[UtilsHelper::getStateAttribute('selectMaxCount')] = esc_attr($selectMaxCount);
 	}
 }
-$selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [], 'select');
+
+$selectOutput = FormsHelper::getTwSelectorsOutput($selectTwSelectorsData['select'] ?? [], 'select', [
+	'isMultiple' => $selectIsMultiple,
+]);
 
 if ($selectOutput !== '' && $selectOutput !== '0') {
 	$selectAttrs[UtilsHelper::getStateAttribute('tailwindSelectorsData')] = $selectOutput;
