@@ -1,4 +1,4 @@
-/* stylelint-disable at-rule-no-unknown, selector-max-specificity, custom-property-empty-line-before, custom-property-pattern, nesting-selector-no-missing-scoping-root, no-invalid-position-declaration */
+/* stylelint-disable at-rule-no-unknown, selector-max-specificity, custom-property-empty-line-before, custom-property-pattern, nesting-selector-no-missing-scoping-root, no-invalid-position-declaration, declaration-block-no-duplicate-properties */
 
 @source '/src/*.{html,js,php,json,css}';
 @source inline('esf:col-end-span-{1..20}');
@@ -45,6 +45,44 @@
 
 @utility font-variation-* {
 	font-variation-settings: --value([*]);
+}
+
+/* 'fill' utilities */
+
+@utility w-fill {
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: stretch;
+}
+
+@utility h-fill {
+	height: -moz-available;
+	height: -webkit-fill-available;
+	height: stretch;
+}
+
+@utility min-w-fill {
+	min-width: -moz-available;
+	min-width: -webkit-fill-available;
+	min-width: stretch;
+}
+
+@utility min-h-fill {
+	min-height: -moz-available;
+	min-height: -webkit-fill-available;
+	min-height: stretch;
+}
+
+@utility max-w-fill {
+	max-width: -moz-available;
+	max-width: -webkit-fill-available;
+	max-width: stretch;
+}
+
+@utility max-h-fill {
+	max-height: -moz-available;
+	max-height: -webkit-fill-available;
+	max-height: stretch;
 }
 
 @utility transition-plus {

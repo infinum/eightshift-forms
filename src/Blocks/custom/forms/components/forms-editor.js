@@ -3,7 +3,7 @@ import { form, globeAnchor } from '@eightshift/ui-components/icons';
 import { __ } from '@wordpress/i18n';
 import { FormEditButton } from '../../../components/utils';
 import { Container, ContainerGroup, RichLabel, BaseControl } from '@eightshift/ui-components';
-import { upperFirst } from '@eightshift/ui-components/utilities';
+import { unescapeHTML, upperFirst } from '@eightshift/ui-components/utilities';
 import { useBlockProps } from '@wordpress/block-editor';
 import manifest from '../manifest.json';
 
@@ -31,9 +31,7 @@ export const FormsEditor = ({ attributes, preview }) => {
 						<span className='esf:text-xs esf:font-stretch-110% esf:font-normal!'>{__('Eightshift Forms', 'eightshift-forms')}</span>
 					</Container>
 
-					<Container centered>
-						<RichLabel label={__('Select a form in the block options', 'eightshift-forms')} />
-					</Container>
+					<Container centered>{__('Select a form in the block options', 'eightshift-forms')}</Container>
 				</ContainerGroup>
 			</div>
 		);
@@ -56,9 +54,10 @@ export const FormsEditor = ({ attributes, preview }) => {
 				<Container centered>
 					<BaseControl
 						icon={form}
-						label={formsFormPostIdRaw?.label}
-						subtitle={upperFirst(formsFormPostIdRaw?.metadata)}
-						className='esf:w-full'
+						label={unescapeHTML(formsFormPostIdRaw?.label)}
+						subtitle={upperFirst(unescapeHTML(formsFormPostIdRaw?.metadata))}
+						className='esf:w-fill'
+						labelClassName='esf:text-black esf:mr-8'
 						inline
 					>
 						<FormEditButton formId={formId} />
