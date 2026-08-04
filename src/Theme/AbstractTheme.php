@@ -327,7 +327,7 @@ abstract class AbstractTheme
 					'esf:gap-10',
 					'esf:border-none',
 					'esf:min-w-0',
-					'esf:col-span-[var(--es-field-width-tw,12)]',
+					'esf:col-end-span-[var(--es-field-width-tw,12)]',
 				],
 				'parts' => [
 					'inner' => [
@@ -755,7 +755,7 @@ abstract class AbstractTheme
 				'base' => [
 					'esf:hidden',
 					'esf:form-active:block',
-					'esf:col-span-12',
+					'esf:col-end-span-12',
 					'esf:step-preview:block',
 					'esf:step-preview:border',
 					'esf:step-preview:border-mauve-200',
@@ -783,7 +783,7 @@ abstract class AbstractTheme
 						'esf:gap-20',
 					],
 					'navigation' => [
-						'esf:col-span-12'
+						'esf:col-end-span-12'
 					],
 					'navigation-inner' => [
 						'esf:flex',

@@ -53,7 +53,7 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 					],
 					'parts' => [
 						'fields' => [
-							'esf:[&>*]:col-span-12',
+							'esf:[&>*]:col-end-span-12',
 						],
 						'picker' => [
 							'esf:text-xs',

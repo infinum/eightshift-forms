@@ -63,7 +63,7 @@ const setEditorBlockListBlock = createHigherOrderComponent((BlockListBlock) => {
 
 			const fieldWidthLarge = attributes?.[key];
 
-			const componentClass = clsx(fieldWidthLarge && `esf:col-span-${fieldWidthLarge}!`, attributes.blockClass, globalManifest.globalVariables.customBlocksName);
+			const componentClass = clsx(fieldWidthLarge && `esf:col-end-span-${fieldWidthLarge}`, attributes.blockClass, globalManifest.globalVariables.customBlocksName);
 
 			const updatedProps = {
 				...innerProps,

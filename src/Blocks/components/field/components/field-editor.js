@@ -5,7 +5,9 @@ import { HStack } from '@eightshift/ui-components';
 import manifest from '../manifest.json';
 
 export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) => {
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps({
+		className: `esf:col-end-span-${attributes?.fieldWidthLarge ?? 12}`,
+	});
 
 	return (
 		<div {...blockProps}>
@@ -17,6 +19,7 @@ export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) =
 		</div>
 	);
 };
+
 export const FieldEditor = (attributes) => {
 	const { statusSlot = [] } = attributes;
 
