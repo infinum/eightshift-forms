@@ -12,7 +12,7 @@ export const StepEditor = (attributes) => {
 	usePreventSaveOnMissingProps(blockClientId, getAttrKey('stepName', attributes, manifest), stepName);
 
 	const blockProps = useBlockProps({
-		className: 'esf:flex esf:items-center es:font-sans esf:py-12',
+		className: 'esf:flex esf:items-center es:font-sans esf:py-12 esf:col-end-span-12',
 	});
 
 	return (
