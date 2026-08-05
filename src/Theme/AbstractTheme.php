@@ -690,7 +690,6 @@ abstract class AbstractTheme
 			'submit' => [
 				'base' => [
 					'esf-button',
-					// 'esf-button-primary',
 					'esf:text-base!',
 				],
 			],
