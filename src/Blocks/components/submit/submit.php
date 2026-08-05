@@ -31,11 +31,20 @@ $submitTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($submitTwSelectorsData, [$submitButtonTwParent]);
 
+$variantClass = match ($submitVariant) {
+	'primaryOutline' => 'esf-button-primary-outline',
+	'primaryGhost' => 'esf-button-primary-ghost',
+	'primaryBasic' => 'esf-button-primary-basic',
+	'secondaryGhost' => 'esf-button-secondary-ghost',
+	default => 'esf-button-primary',
+};
+
 $submitClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, $submitButtonTwParent, $componentClass),
 	$additionalClass,
 	Helpers::selector($submitIcon, $componentClass, '', 'with-icon'),
 	Helpers::selector($submitVariant, $componentClass, '', $submitVariant),
+	$variantClass,
 ]);
 
 // Additional content filter.

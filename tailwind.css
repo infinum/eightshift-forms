@@ -231,19 +231,41 @@
 }
 
 @utility focus-ring-clear {
-	&:is(:where(:focus, :focus-visible)) {
+	&:is(:focus, :focus-visible) {
 		@apply esf:outline-hidden!;
 		@apply esf:shadow-none!;
 	}
 }
 
 @utility focus-ring {
-	&:is(:where(:focus, :focus-visible)) {
+	&:focus-visible {
 		@apply esf:ring-2;
 		@apply esf:ring-mauve-500;
 		@apply esf:outline-hidden!;
 		@apply esf:ring-offset-2;
 	}
+
+	&:focus {
+		@apply esf:outline-hidden;
+	}
+
+}
+
+@utility focus-ring-href {
+	&:focus-visible {
+		@apply esf:ring-2;
+		@apply esf:ring-mauve-500;
+		@apply esf:outline-hidden!;
+		@apply esf:ring-offset-2;
+	}
+
+	&:visited,
+	&:active,
+	&:focus {
+		@apply esf:shadow-none;
+		@apply esf:outline-hidden;
+	}
+
 }
 
 @utility focus-ring-direct {
@@ -275,32 +297,38 @@
 	@apply esf:items-center;
 	@apply esf:justify-center;
 	@apply esf:gap-10;
-	@apply esf:rounded-lg;
-	@apply esf:px-11 esf:py-9;
+	@apply esf:rounded-xl!;
+	@apply esf:px-12 esf:py-11 esf:has-[svg]:py-9;
 	@apply esf:text-xs!;
 	@apply esf:border;
 	@apply esf:duration-300;
 	@apply esf:transition-colors;
-	@apply esf:focus-ring;
+	@apply esf:focus-ring!;
+	@apply esf:focus:shadow-none!;
 	@apply esf:disabled:opacity-60;
 	@apply esf:disabled:cursor-not-allowed;
 	@apply esf:disabled:pointer-events-none;
-	@apply esf:min-h-40;
+	@apply esf:select-none;
 }
 
 .esf-button-primary {
 	@apply esf:text-white;
-	@apply esf:bg-mauve-500;
-	@apply esf:border-mauve-500;
+	@apply esf:bg-teal-600;
+	@apply esf:border-teal-700/30;
 	@apply esf:hover:text-white;
-	@apply esf:hover:bg-mauve-700;
-	@apply esf:hover:border-mauve-600;
+	@apply esf:hover:bg-teal-700;
+	@apply esf:hover:border-teal-800/40;
 	@apply esf:active:text-white;
-	@apply esf:active:bg-mauve-700;
-	@apply esf:active:border-mauve-700;
+	@apply esf:active:bg-teal-700;
+	@apply esf:active:border-teal-800/30;
 	@apply esf:focus:text-white;
-	@apply esf:focus-visible:bg-mauve-900;
-	@apply esf:focus-visible:border-mauve-800;
+	@apply esf:focus-visible:bg-teal-800;
+	@apply esf:focus-visible:border-teal-900/30;
+	@apply esf:inset-shadow-xs;
+	@apply esf:inset-shadow-teal-50/10;
+	@apply esf:bg-linear-to-b;
+	@apply esf:from-teal-800/0;
+	@apply esf:to-teal-800/15;
 }
 
 .esf-button-primary-outline {

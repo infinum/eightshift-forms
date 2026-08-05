@@ -44,7 +44,7 @@ $iconClass = Helpers::clsx([
 				<?php echo wp_kses_post($cardInlineTitle); ?>
 
 				<?php if ($cardInlineSubTitle) { ?>
-					<div class="esf:text-gray-400 esf:text-xs">
+					<div class="esf:text-zinc-400 esf:text-xs">
 						<?php echo wp_kses_post($cardInlineSubTitle); ?>
 					</div>
 				<?php } ?>

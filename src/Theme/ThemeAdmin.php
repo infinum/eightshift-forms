@@ -64,8 +64,8 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 					'base' => [
 						'esf:text-xs',
 						'esf:[.es-field\_\_content-wrap_&]:rounded-none',
-						'esf:[.es-field\_\_content-wrap:first-child_>_&]:rounded-l-md',
-						'esf:[.es-field\_\_content-wrap:last-child_>_&]:rounded-r-md',
+						'esf:[.es-field\_\_content-wrap:first-child_>_&]:rounded-l-lg',
+						'esf:[.es-field\_\_content-wrap:last-child_>_&]:rounded-r-lg',
 					],
 				],
 				'date' => [
@@ -114,12 +114,12 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 							'esf:group-[&.esf-input-with-suffix]/field:items-center',
 							'esf:group-[&.esf-input-with-suffix]/field:justify-center',
 							'esf:group-[&.esf-input-with-suffix]/field:border',
-							'esf:group-[&.esf-input-with-suffix]/field:border-gray-300',
+							'esf:group-[&.esf-input-with-suffix]/field:border-zinc-300',
 							'esf:group-[&.esf-input-with-suffix]/field:border-s-0',
-							'esf:group-[&.esf-input-with-suffix]/field:h-46',
-							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-md',
+							'esf:group-[&.esf-input-with-suffix]/field:h-40',
+							'esf:group-[&.esf-input-with-suffix]/field:rounded-e-lg',
 							'esf:group-[&.esf-input-with-suffix]/field:-ml-5',
-							'esf:group-[&.esf-input-with-suffix]/field:bg-gray-100',
+							'esf:group-[&.esf-input-with-suffix]/field:bg-zinc-100',
 						],
 						'help' => self::THEME_SELECTORS['help-extended'],
 					],
@@ -134,7 +134,7 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 							'esf:is-toggle:checked:after:translate-x-16',
 							'esf:is-toggle:checked:after:bg-white',
 							'esf:is-toggle:checked:after:scale-110',
-							'esf:is-toggle:after:bg-gray-500',
+							'esf:is-toggle:after:bg-zinc-500',
 							'esf:is-toggle:after:rounded-full',
 							'esf:is-toggle:after:content-[""]',
 							'esf:is-toggle:after:top-3',
@@ -183,7 +183,6 @@ class ThemeAdmin extends AbstractTheme implements ServiceInterface
 				],
 				'submit' => [
 					'base' => [
-						'esf-button-primary',
 						'esf:text-xs!',
 					],
 					'parts' => [

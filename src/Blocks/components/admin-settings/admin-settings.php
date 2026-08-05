@@ -52,7 +52,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	</div>
 	<div class="esf:flex esf:flex-col esf:h-full esf:gap-12 esf:flex-1">
 		<div class="esf:flex esf:items-center esf:justify-between esf:min-h-14 esf:px-5">
-			<div class="esf:text-2xl esf:text-gray-700 esf:font-variation-['wdth'_100,'wght'_450,'ROND'_100] esf:m-0!">
+			<div class="esf:text-2xl esf:text-zinc-700 esf:font-variation-['wdth'_100,'wght'_450,'ROND'_100] esf:m-0!">
 				<?php echo esc_html($adminSettingsPageTitle); ?>
 			</div>
 

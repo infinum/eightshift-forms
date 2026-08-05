@@ -20,11 +20,16 @@
 	}
 }
 
+.esf-main-container {
+	@apply esf:selection:bg-pink-950/8 esf:selection:text-pink-950;
+}
+
 .esf-is-filter-applied {
-	@apply esf:bg-mauve-600/10 esf:text-mauve-600;
-	@apply esf:px-8 esf:py-5 esf:rounded-xl esf:text-xs;
+	@apply esf:bg-mist-600/5 esf:text-mist-600;
+	@apply esf:p-16 esf:mt-8 esf:rounded-xl esf:text-sm;
 	@apply esf:w-fit;
 	@apply esf:cursor-pointer;
 	@apply esf:block;
-	@apply esf:[&_ul]:mt-5 esf:[&_ul]:text-gray-400;
+	@apply esf:[&_ul]:mt-8! esf:[&_ul]:text-mist-950/80 esf:[&_ul]:text-xs;
+	@apply esf:selection:bg-lime-800/8 esf:selection:text-lime-800;
 }

@@ -15,7 +15,7 @@ body :is(#wpwrap) {
 /* All editor styles should be here. */
 
 .esf-input {
-	@apply esf:w-full esf:border esf:border-gray-500 esf:bg-white esf:p-10 esf:rounded-lg esf:text-sm esf:h-42 esf:shadow-none esf:text-black esf:placeholder:text-gray-400;
+	@apply esf:w-full esf:border esf:border-zinc-500 esf:bg-white esf:p-10 esf:rounded-lg esf:text-sm esf:h-42 esf:shadow-none esf:text-black esf:placeholder:text-zinc-400;
 }
 
 .esf-field-hidden {
@@ -23,7 +23,7 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset {
-	@apply esf:flex esf:flex-col esf:gap-1 esf:border esf:border-dashed esf:border-gray-300 esf:bg-white esf:p-10 esf:rounded-md esf:text-sm esf:text-black;
+	@apply esf:flex esf:flex-col esf:gap-1 esf:border esf:border-dashed esf:border-zinc-300 esf:bg-white esf:p-10 esf:rounded-md esf:text-sm esf:text-black;
 }
 
 .esf-fieldset-item {
@@ -35,7 +35,7 @@ body :is(#wpwrap) {
 	@apply esf:flex esf:flex-row esf:gap-10 esf:items-center;
 
 	&::before {
-		@apply esf:content-[''] esf:block esf:size-20 esf:border esf:border-gray-500 esf:rounded-md esf:shrink-0;
+		@apply esf:content-[''] esf:block esf:size-20 esf:border esf:border-zinc-500 esf:rounded-md esf:shrink-0;
 	}
 }
 
@@ -46,7 +46,7 @@ body :is(#wpwrap) {
 }
 
 .esf-fieldset-checked {
-	@apply esf:before:bg-gray-500 esf:before:border-gray-600 esf:before:inset-ring-3 esf:before:inset-ring-white;
+	@apply esf:before:bg-zinc-500 esf:before:border-zinc-600 esf:before:inset-ring-3 esf:before:inset-ring-white;
 }
 
 .esf-form > .block-editor-inner-blocks > .block-editor-block-list__layout {

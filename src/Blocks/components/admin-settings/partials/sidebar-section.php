@@ -24,7 +24,7 @@ $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 
 foreach ($items as $key => $innerItems) { ?>
 	<div>
-		<div class="esf:px-8 esf:py-3 esf:mb-4 esf:mt-20 esf:w-fit esf:mx-auto esf:text-sm esf:text-gray-700 esf:bg-gray-100 esf:rounded-full esf:text-center esf:font-uppercase esf:font-variation-['wdth'_67,'wght'_360,'ROND'_100,'slnt'_-8,'GRAD'_0]">
+		<div class="esf:px-8 esf:py-3 esf:mb-4 esf:mt-20 esf:w-fit esf:mx-auto esf:text-sm esf:text-zinc-700 esf:bg-zinc-100 esf:rounded-full esf:text-center esf:font-uppercase esf:font-variation-['wdth'_67,'wght'_360,'ROND'_100,'slnt'_-8,'GRAD'_0]">
 			<?php echo esc_html($data[$key]['labels']['title'] ?? ''); ?>
 		</div>
 		<ul class="esf:list-none esf:flex esf:flex-col esf:gap-1">
@@ -42,7 +42,7 @@ foreach ($items as $key => $innerItems) { ?>
 				<li class="esf:m-0!">
 					<a
 						href="<?php echo esc_url($url); ?>"
-						class="esf:focus-ring esf:w-120 esf:group esf:relative esf:shrink-0 esf:flex esf:items-center esf:gap-6 esf:select-none esf:transition-plus esf:text-center esf:text-xs esf:leading-[1.15] esf:text-box-trim esf:contrast-more:inset-ring esf:contrast-more:inset-ring-mist-0/0 esf:contrast-more:focus-visible:inset-ring---mist-esf:disabled:text-gray-400 esf:font-variation-['wdth'_102,'wght'_325,'ROND'_0,'slnt'_0,'GRAD'_0] esf:hover:font-variation-['wdth'_102,'wght'_325,'ROND'_100,'slnt'_0,'GRAD'_0] esf:data-selected:font-variation-['wdth'_102,'wght'_325,'ROND'_50,'slnt'_0,'GRAD'_50] esf:justify-center-safe esf:flex-col esf:rounded-md esf:not-has-any-icon:rounded-3xl esf:text-gray-500 esf:data-selected:text-m-m-mist-f:not-has-any-icon:selected:bg-mi-mi-mist-f:not-has-any-icon:not-selected:hover:bg-gray-50 esf:p-8"
+						class="esf:focus-ring-href esf:w-120 esf:group esf:relative esf:shrink-0 esf:flex esf:items-center esf:gap-6 esf:select-none esf:transition-plus esf:text-center esf:text-xs esf:leading-[1.15] esf:text-box-trim esf:contrast-more:inset-ring esf:contrast-more:inset-ring-mist-0/0 esf:contrast-more:focus-visible:inset-ring---mist-esf:disabled:text-zinc-400 esf:font-variation-['wdth'_102,'wght'_325,'ROND'_0,'slnt'_0,'GRAD'_0] esf:hover:font-variation-['wdth'_102,'wght'_325,'ROND'_100,'slnt'_0,'GRAD'_0] esf:data-selected:font-variation-['wdth'_102,'wght'_325,'ROND'_50,'slnt'_0,'GRAD'_50] esf:justify-center-safe esf:flex-col esf:rounded-md esf:not-has-any-icon:rounded-3xl esf:text-zinc-500 esf:data-selected:text-m-m-mist-f:not-has-any-icon:selected:bg-mi-mi-mist-f:not-has-any-icon:not-selected:hover:bg-zinc-50 esf:p-8"
 						<?php if ($isActive) { ?>
 						data-selected="true"
 						<?php } ?>>

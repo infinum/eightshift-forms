@@ -21,13 +21,13 @@ if (!$tabLabel || !$tabContent) {
 
 <details
 	class="<?php echo esc_attr(Helpers::clsx([
-						UtilsHelper::getStateSelectorAdmin('tabsItem'),
-						'esf:group',
-						'esf:md:not-open:hidden',
-						$tabWithBg ? 'esf:bg-white esf:border esf:border-gray-200 esf:rounded-md' : '',
-					])); ?>"
+		UtilsHelper::getStateSelectorAdmin('tabsItem'),
+		'esf:group',
+		'esf:md:not-open:hidden',
+		$tabWithBg ? 'esf:bg-white esf:border esf:border-mauve-100 esf:rounded-xl esf:inset-shadow-xs esf:inset-shadow-mauve-950/2' : '',
+	])); ?>"
 	data-hash="<?php echo rawurlencode((string) $tabLabel); ?>"
-	data-btn-class="js-es-tabs-btn esf:cursor-pointer esf:border-b-2 esf:border-transparent esf:inline-flex esf:items-center esf:py-5 esf:text-xs! esf:transition-colors esf:duration-300 esf:hover:border-mauve-200 esf:aria-selected:border-mauve-600 esf:focus-ring">
+	data-btn-class="js-es-tabs-btn esf:select-none esf:inline-flex esf:items-center esf:px-10 esf:py-6 esf:transition esf:hover:bg-mauve-100 esf:aria-selected:border-mauve-600 esf:focus-ring esf:aria-selected:bg-mauve-600 esf:aria-selected:text-white esf:aria-selected:inset-shadow-sm esf:aria-selected:inset-shadow-mauve-100/10 esf:aria-selected:inset-ring esf:aria-selected:inset-ring-mauve-700/40 esf:aria-selected:bg-linear-to-b esf:from-mauve-900/0 esf:to-mauve-900/30 esf:rounded-lg"> <?php // phpcs:ignore Generic.Files.LineLength.TooLong ?>
 
 	<summary class="esf:text-xs! esf:flex esf:items-center esf:justify-between esf:p-20 esf:cursor-pointer esf:select-none esf:md:hidden esf:[&::-webkit-details-marker]:hidden">
 		<?php echo esc_html($tabLabel); ?>
@@ -36,10 +36,11 @@ if (!$tabLabel || !$tabContent) {
 		</svg>
 	</summary>
 	<div class="<?php echo esc_attr(Helpers::clsx([
-								'esf:flex esf:flex-col esf:gap-16',
-								$tabWithBg ? 'esf:p-20 esf:border-t esf:border-gray-300 esf:md:border-t-0' : '',
-							])); ?>">
-		<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+		'esf:flex esf:flex-col esf:gap-16',
+		$tabWithBg ? 'esf:p-16' : '',
+	])); ?>">
+		<?php
+			echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		?>
 	</div>
 </details>

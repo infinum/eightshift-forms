@@ -35,7 +35,7 @@
 		@apply esf:inline-flex;
 		@apply esf:p-10;
 		@apply esf:items-center;
-		@apply esf:rounded-md;
+		@apply esf:rounded-lg;
 		@apply esf:gap-10;
 		@apply esf:transition-colors;
 		@apply esf:duration-300;
