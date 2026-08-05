@@ -1,1 +1,6 @@
-/* stylelint-disable */
+/* stylelint-disable declaration-no-important */
+
+.es-form-is-hidden {
+	display: none;
+	pointer-events: none;
+}
