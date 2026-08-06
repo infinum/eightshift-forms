@@ -32,14 +32,8 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	 *
 	 * @return array<string, array<string, bool>|true> Modified allowed tags array.
 	 */
-	public function setCustomWpksesPostTags(array $tags, string $context)  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
+	public function setCustomWpksesPostTags(array $tags, string $context): array  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
 	{
-		static $result = null;
-
-		if ($result !== null) {
-			return $result;
-		}
-
 		$output = \array_merge($tags, self::FORM, $this->getSvg());
 
 		$items = ['button', 'form', 'select', 'input', 'textarea', 'label', 'span', 'option'];
@@ -53,9 +47,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 		$output['input']['autocomplete'] = true;
 		$output['textarea']['autocomplete'] = true;
 
-		$result = $output;
-
-		return $result;
+		return $output;
 	}
 
 	/**
