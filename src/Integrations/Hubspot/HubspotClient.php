@@ -409,7 +409,7 @@ class HubspotClient implements HubspotClientInterface
 
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
 		$code = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
-		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+		unset($curl);
 
 		if (ApiHelpers::isSuccessResponse($code)) {
 			$response = \json_decode((string) $response, true);

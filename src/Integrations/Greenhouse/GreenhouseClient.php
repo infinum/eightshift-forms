@@ -175,8 +175,7 @@ class GreenhouseClient implements ClientInterface
 		);
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
 		$code = \curl_getinfo($curl, \CURLINFO_RESPONSE_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
-
-		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+		unset($curl);
 
 		$response = $response ? \json_decode($response, true) : [
 			'status' => 408,

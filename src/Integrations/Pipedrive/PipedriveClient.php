@@ -341,7 +341,7 @@ class PipedriveClient implements PipedriveClientInterface
 						\CURLOPT_HTTPHEADER => $this->getHeaders(true),
 					]
 				);
-				\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+				unset($curl);
 			}
 		}
 
