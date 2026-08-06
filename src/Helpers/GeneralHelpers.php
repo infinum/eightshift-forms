@@ -660,7 +660,7 @@ final class GeneralHelpers
 
 		$isDeveloperModeActive = DeveloperHelpers::isDeveloperModeActive();
 
-		return \array_map(
+		$output = \array_map(
 			function ($item) use ($isDeveloperModeActive): array {
 				$id = $item->ID;
 				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
@@ -683,6 +683,10 @@ final class GeneralHelpers
 			},
 			$items
 		);
+
+		\wp_cache_add($cacheKey, $output, $cacheGroup, \HOUR_IN_SECONDS);
+
+		return $output;
 	}
 
 	/**
