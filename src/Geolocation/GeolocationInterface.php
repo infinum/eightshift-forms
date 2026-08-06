@@ -24,8 +24,6 @@ interface GeolocationInterface
 
 	/**
 	 * Detect users geolocation.
-	 *
-	 * @return string
 	 */
 	public function getUsersGeolocation(): string;
 
@@ -35,8 +33,6 @@ interface GeolocationInterface
 	 * @param string $formId Form Id.
 	 * @param array<string, mixed> $defaultLocations Default locations set to form..
 	 * @param array<string, mixed> $additionalLocations Additional location set to form.
-	 *
-	 * @return string
 	 */
 	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string;
 }

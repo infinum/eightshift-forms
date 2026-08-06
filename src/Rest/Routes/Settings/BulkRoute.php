@@ -15,10 +15,10 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -36,40 +36,21 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'bulk';
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
-
-	/**
-	 * Instance variable of TransferInterface data.
-	 *
-	 * @var TransferInterface
-	 */
-	protected $transfer;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff,
-		TransferInterface $transfer
+		protected IntegrationSyncInterface $integrationSyncDiff,
+		protected TransferInterface $transfer
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
-		$this->transfer = $transfer;
 	}
 
 	/**
@@ -84,8 +65,6 @@ class BulkRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -118,14 +97,14 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	 */
 	protected function submitAction(array $params): array
 	{
-		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
+		$ids = isset($params['ids']) ? \json_decode((string) $params['ids'], true) : [];
 
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('bulkMissingItems'),
+				Labels::getLabel(Labels::LABEL_BULK_MISSING_ITEMS),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_BULK_MISSING_ITEMS,
 				]
 			);
 			// phpcs:enable
@@ -172,9 +151,9 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		switch ($output['status']) {
 			case 'success':
 				return [
-					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel('genericSuccess'),
+					AbstractBaseRoute::R_MSG => $output['msg'] ?? Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 					AbstractBaseRoute::R_DEBUG => [
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst($type),
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_BULK_SUCCESS . \ucfirst((string) $type),
 					],
 					AbstractBaseRoute::R_DATA => [
 						UtilsHelper::getStateResponseOutputKey('adminLocations') => $output['data'] ?? [],
@@ -183,18 +162,18 @@ class BulkRoute extends AbstractSimpleFormSubmit
 			case 'warning':
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$output['msg'] ?? $this->getLabels()->getLabel('genericWarning'),
+					$output['msg'] ?? Labels::getLabel(Labels::LABEL_GENERIC_WARNING),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst($type),
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_BULK_WARNING . \ucfirst((string) $type),
 					]
 				);
 				// phpcs:enable
 			default:
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new BadRequestException(
-					$output['msg'] ?? $this->getLabels()->getLabel('genericError'),
+					$output['msg'] ?? Labels::getLabel(Labels::LABEL_GENERIC_ERROR),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst($type),
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_BULK_ERROR . \ucfirst((string) $type),
 					]
 				);
 				// phpcs:enable
@@ -249,7 +228,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 				break;
 		}
 
-		if (!$details) {
+		if ($details === []) {
 			return [
 				'status' => 'error',
 				// translators: %s replaces form msg type.
@@ -595,14 +574,10 @@ class BulkRoute extends AbstractSimpleFormSubmit
 			'status' => 'success',
 		];
 
-		switch ($type) {
-			case Result::POST_TYPE_SLUG:
-				$errorMsg = $this->getLabels()->getLabel('locationsResultOutputError');
-				break;
-			default:
-				$errorMsg = $this->getLabels()->getLabel('locationsFormError');
-				break;
-		}
+		$errorMsg = match ($type) {
+			Result::POST_TYPE_SLUG => Labels::getLabel(Labels::LABEL_LOCATIONS_RESULT_OUTPUT_ERROR),
+			default => Labels::getLabel(Labels::LABEL_LOCATIONS_FORM_ERROR),
+		};
 
 		foreach ($ids as $id) {
 			// translators: %s replaces form id.

@@ -30,16 +30,16 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use WP_Query;
 
 /**
@@ -53,30 +53,19 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	use MigrationHelper;
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff
+		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -96,8 +85,6 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -131,25 +118,19 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	{
 		$type = $params['type'] ?? '';
 
-		switch ($type) {
-			case SettingsMigration::VERSION_2_3_GENERAL:
-				return $this->getMigration2To3General();
-			case SettingsMigration::VERSION_2_3_FORMS:
-				return $this->getMigration2To3Forms();
-			case SettingsMigration::VERSION_2_3_LOCALE:
-				return $this->getMigration2To3Locale();
-			case SettingsMigration::VERSION_CLEARBIT:
-				return $this->getMigrationClearbit();
-			default:
-				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-				throw new BadRequestException(
-					$this->getLabels()->getLabel('migrationTypeNotFound'),
-					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
-					]
-				);
-				// phpcs:enable
-		}
+		return match ($type) {
+			SettingsMigration::VERSION_2_3_GENERAL => $this->getMigration2To3General(),
+			SettingsMigration::VERSION_2_3_FORMS => $this->getMigration2To3Forms(),
+			SettingsMigration::VERSION_2_3_LOCALE => $this->getMigration2To3Locale(),
+			SettingsMigration::VERSION_CLEARBIT => $this->getMigrationClearbit(),
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			default => throw new BadRequestException(
+				Labels::getLabel(Labels::LABEL_MIGRATION_TYPE_NOT_FOUND),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_TYPE_NOT_FOUND,
+				]
+			),
+		};
 	}
 
 	/**
@@ -170,7 +151,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		// Migrate global fallback.
 		$globalFallback = SettingsHelpers::getOptionValue($config['options']['old']);
 
-		if ($globalFallback) {
+		if ($globalFallback !== '' && $globalFallback !== '0') {
 			\update_option(SettingsHelpers::getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
 			\update_option(SettingsHelpers::getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
 			\delete_option(SettingsHelpers::getOptionName($config['options']['old']));
@@ -185,7 +166,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 
 			$globalIntegrationFallback = SettingsHelpers::getOptionValue($config['options']['old'] . '-' . $key);
 
-			if ($globalIntegrationFallback) {
+			if ($globalIntegrationFallback !== '' && $globalIntegrationFallback !== '0') {
 				\update_option(SettingsHelpers::getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
 				\delete_option(SettingsHelpers::getOptionName($config['options']['old'] . '-' . $key));
 			}
@@ -202,7 +183,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 
 		foreach ($configDelimiter as $key) {
 			$option = SettingsHelpers::getOptionValue($key);
-			if ($option) {
+			if ($option !== '' && $option !== '0') {
 				$option = \explode(', ', $option);
 				$option = \implode(Config::DELIMITER, $option);
 				\update_option(SettingsHelpers::getOptionName($key), \maybe_unserialize($option));
@@ -215,9 +196,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 		];
 	}
@@ -262,9 +243,11 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 			}
 
 			$type = GeneralHelpers::getFormTypeById($id);
-
 			// If there is nothing in the content, skip this form.
-			if (!$type) {
+			if ($type === '') {
+				continue;
+			}
+			if ($type === '0') {
 				continue;
 			}
 
@@ -407,9 +390,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $outputFinal,
@@ -447,10 +430,10 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		\wp_reset_postdata();
 
 		if ($forms) {
-			foreach ($forms as $key => $form) {
+			foreach ($forms as $form) {
 				$formId = (int) $form->ID;
 
-				if (!$formId) {
+				if ($formId === 0) {
 					continue;
 				}
 
@@ -521,9 +504,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
@@ -558,10 +541,10 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		\wp_reset_postdata();
 
 		if ($forms) {
-			foreach ($forms as $key => $form) {
+			foreach ($forms as $form) {
 				$formId = (int) $form->ID;
 
-				if (!$formId) {
+				if ($formId === 0) {
 					continue;
 				}
 
@@ -612,9 +595,9 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_MIGRATION_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MIGRATION_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,

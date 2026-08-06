@@ -71,7 +71,7 @@ class Transfer implements TransferInterface
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 		];
 
-		if ($items) {
+		if ($items !== []) {
 			$args['post__in'] = $items;
 		}
 
@@ -160,8 +160,6 @@ class Transfer implements TransferInterface
 	 *
 	 * @param string $upload Upload file.
 	 * @param bool $override Override existing form.
-	 *
-	 * @return boolean
 	 */
 	public function getImport(string $upload, bool $override): bool
 	{
@@ -216,8 +214,10 @@ class Transfer implements TransferInterface
 			foreach ($globalSettings as $globalSetting) {
 				$name = $globalSetting['name'] ?? '';
 				$value = $globalSetting['value'] ?? '';
-
-				if (!$name || !$value) {
+				if (!$name) {
+					continue;
+				}
+				if (!$value) {
 					continue;
 				}
 
@@ -247,8 +247,6 @@ class Transfer implements TransferInterface
 	 *
 	 * @param array<int, array<string, mixed>> $form Forms export details.
 	 * @param bool $override Override existing form.
-	 *
-	 * @return boolean
 	 */
 	public function getImportByFormArray(array $form, bool $override): bool
 	{
@@ -309,7 +307,7 @@ class Transfer implements TransferInterface
 			// If override checkbox is not set create new form.
 
 			// If form name exists add copy to the title.
-			if ($exists) {
+			if ($exists !== '' && $exists !== '0') {
 				$postTitle = "{$postTitle} - copy";
 			}
 
@@ -331,8 +329,10 @@ class Transfer implements TransferInterface
 			foreach ($esSettings as $esSettings) {
 				$name = $esSettings['name'] ?? '';
 				$value = $esSettings['value'] ?? '';
-
-				if (!$name || !$value) {
+				if (!$name) {
+					continue;
+				}
+				if (!$value) {
 					continue;
 				}
 
@@ -347,8 +347,6 @@ class Transfer implements TransferInterface
 	 * Check if form exists
 	 *
 	 * @param array<string, mixed> $args Arguments to pass to WP_Query.
-	 *
-	 * @return string
 	 */
 	private function formExists(array $args): string
 	{
@@ -383,8 +381,10 @@ class Transfer implements TransferInterface
 		foreach ($items as $item) {
 			$name = $item->name ?? '';
 			$value = $item->value ?? '';
-
-			if (!$name || !$value) {
+			if (!$name) {
+				continue;
+			}
+			if (!$value) {
 				continue;
 			}
 

@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitGreenhouseRoute
@@ -37,18 +36,10 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsGreenhouse::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $greenhouseClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,25 +48,20 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $greenhouseClient
+		protected ClientInterface $greenhouseClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->greenhouseClient = $greenhouseClient;
 	}
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +103,9 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -136,10 +122,10 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('greenhouseMissingConfig'),
+				Labels::getLabel(Labels::LABEL_GREENHOUSE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_GREENHOUSE_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

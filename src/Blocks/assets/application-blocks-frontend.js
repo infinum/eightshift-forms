@@ -6,7 +6,7 @@
  */
 
 // Styles.
-import './styles/blocks-frontend.scss';
+import './styles/blocks-frontend.css';
 
 // Scripts.
 import './scripts/blocks-frontend';

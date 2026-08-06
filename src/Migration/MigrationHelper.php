@@ -96,18 +96,16 @@ trait MigrationHelper
 		$blocks = \parse_blocks($content);
 		$integrationFields = $this->prepareIntegrationFields2To3Forms($type, $id);
 
-		if ($innerIdKey) {
+		if ($innerIdKey !== '' && $innerIdKey !== '0') {
 			if (isset($blocks[0]['innerBlocks'][0]['attrs']["{$type}IntegrationId"]) && isset($blocks[0]['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"])) {
 				$output['msg'][] = \__('IntegrationId and IntegrationInnerId exists on block, no need for migration', 'eightshift-forms');
 				$output['fatal'] = true;
 				return $output;
 			}
-		} else {
-			if (isset($blocks[0]['innerBlocks'][0]['attrs']["{$type}IntegrationId"])) {
-				$output['msg'][] = \__('IntegrationId exists on block, no need for migration', 'eightshift-forms');
-				$output['fatal'] = true;
-				return $output;
-			}
+		} elseif (isset($blocks[0]['innerBlocks'][0]['attrs']["{$type}IntegrationId"])) {
+			$output['msg'][] = \__('IntegrationId exists on block, no need for migration', 'eightshift-forms');
+			$output['fatal'] = true;
+			return $output;
 		}
 
 		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
@@ -115,7 +113,7 @@ trait MigrationHelper
 		$syncFormStatus = $syncForm['status'] ?? AbstractRoute::STATUS_ERROR;
 		$syncFormDebugType = $syncForm['debugType'] ?? '';
 
-		if (!$itemId) {
+		if ($itemId === '' || $itemId === '0') {
 			$output['msg'][] = \__('Missing item ID', 'eightshift-forms');
 			$output['fatal'] = true;
 			return $output;
@@ -228,7 +226,7 @@ trait MigrationHelper
 
 		$integrationFields = SettingsHelpers::getSettingValueGroup("{$type}-integration-fields", $id);
 
-		if (!$integrationFields) {
+		if ($integrationFields === []) {
 			return [];
 		}
 
@@ -236,8 +234,22 @@ trait MigrationHelper
 			$key = \explode(Config::DELIMITER, $key);
 			$name = $key[0] ?? '';
 			$innerKey = $key[1] ?? '';
-
-			if (!$name || !$innerKey || !$value || $innerKey === 'order') {
+			if ($name === '') {
+				continue;
+			}
+			if ($name === '0') {
+				continue;
+			}
+			if ($innerKey === '') {
+				continue;
+			}
+			if ($innerKey === '0') {
+				continue;
+			}
+			if (!$value) {
+				continue;
+			}
+			if ($innerKey === 'order') {
 				continue;
 			}
 

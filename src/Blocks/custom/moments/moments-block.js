@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { MomentsEditor } from './components/moments-editor';
 import { MomentsOptions } from './components/moments-options';

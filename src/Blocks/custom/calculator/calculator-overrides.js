@@ -4,8 +4,8 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
-		src: getUtilsIcons('calculate') ?? manifest.icon.src,
+	icon: {
+		src: getUtilsIcons('calculator') ?? manifest.icon.src,
 	},
 	parent: globalManifest.allowedBlocksList.formsCpt,
 };

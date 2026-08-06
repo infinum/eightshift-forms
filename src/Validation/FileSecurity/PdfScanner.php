@@ -14,6 +14,7 @@ namespace EightshiftForms\Validation\FileSecurity;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Scans PDF files for dangerous structures.
@@ -34,22 +35,22 @@ final class PdfScanner implements FileSecurityScannerInterface
 	{
 		$contents = $this->readFile($filepath);
 		if ($contents === '') {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
-		if (\strncmp($contents, '%PDF-', 5) !== 0) {
-			return 'validationFileMimeMismatch';
+		if (!\str_starts_with($contents, '%PDF-')) {
+			return Labels::LABEL_VALIDATION_FILE_MIME_MISMATCH;
 		}
 
 		if ($this->containsDangerousKey($contents)) {
-			return 'validationFilePdfUnsafe';
+			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
 		// Compressed object streams hide content from the raw scan. qpdf
 		// expands them so the raw scan can run again on the expanded form.
 		$expanded = $this->expandWithQpdf($filepath);
 		if ($expanded !== null && $this->containsDangerousKey($expanded)) {
-			return 'validationFilePdfUnsafe';
+			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
 		return '';
@@ -79,8 +80,6 @@ final class PdfScanner implements FileSecurityScannerInterface
 	 * match `/AA`.
 	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
-	 *
-	 * @return bool
 	 */
 	private function containsDangerousKey(string $haystack): bool
 	{
@@ -180,8 +179,10 @@ final class PdfScanner implements FileSecurityScannerInterface
 
 			foreach ($read as $stream) {
 				$chunk = \stream_get_contents($stream);
-
-				if (!\is_string($chunk) || $chunk === '') {
+				if (!\is_string($chunk)) {
+					continue;
+				}
+				if ($chunk === '') {
 					continue;
 				}
 

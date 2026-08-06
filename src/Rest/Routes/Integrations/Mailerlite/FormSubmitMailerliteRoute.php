@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitMailerliteRoute
@@ -37,18 +36,10 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsMailerlite::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Mailerlite data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $mailerliteClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,19 +48,16 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $mailerliteClient
+		protected ClientInterface $mailerliteClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->mailerliteClient = $mailerliteClient;
 	}
 
 	/**
@@ -84,8 +72,6 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +103,9 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -136,10 +122,10 @@ class FormSubmitMailerliteRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsMailerlite::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('mailerliteMissingConfig'),
+				Labels::getLabel(Labels::LABEL_MAILERLITE_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILERLITE_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILERLITE_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

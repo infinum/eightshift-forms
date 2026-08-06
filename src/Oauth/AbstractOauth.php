@@ -21,8 +21,6 @@ abstract class AbstractOauth implements OauthInterface
 	 * Get redirect URI based on the provider Id.
 	 *
 	 * @param string $type Type.
-	 *
-	 * @return string
 	 */
 	public function getRedirectUri(string $type): string
 	{

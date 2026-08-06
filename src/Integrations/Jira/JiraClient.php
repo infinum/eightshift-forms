@@ -19,7 +19,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * JiraClient integration class.
@@ -191,7 +191,7 @@ class JiraClient implements JiraClientInterface
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors();
 		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
@@ -200,14 +200,12 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Return base output url prefix.
-	 *
-	 * @return string
 	 */
 	public function getBaseUrlOutputPrefix(): string
 	{
 		$output = SettingsHelpers::getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_URL_KEY);
 
-		if (!$output) {
+		if ($output === '' || $output === '0') {
 			$output = $this->getApiBoard();
 		}
 
@@ -221,7 +219,7 @@ class JiraClient implements JiraClientInterface
 	 *
 	 * @param string $projectId Project Id to get fields from.
 	 *
-	 * @return array<string, mixed>
+	 * @return list<array>
 	 */
 	public function getProjectsCustomFields(string $projectId): array
 	{
@@ -234,14 +232,14 @@ class JiraClient implements JiraClientInterface
 
 		$projectId = $this->getProjectIdByKey($projectId);
 
-		return \array_map(
-			static function ($item) use ($ignoreKeys) {
+		return \array_values(\array_filter(\array_map(
+			static function (array $item) use ($ignoreKeys) {
 				if (!isset($ignoreKeys[$item['id']])) {
 					return $item;
 				}
 			},
 			$this->getProjects()[$projectId]['customFields'] ?? [],
-		);
+		)));
 	}
 
 	/**
@@ -273,8 +271,6 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Use self-hosted or cloud version.
-	 *
-	 * @return bool
 	 */
 	public function isSelfHosted(): bool
 	{
@@ -283,8 +279,6 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Return base url prefix.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrlPrefix(): string
 	{
@@ -297,8 +291,6 @@ class JiraClient implements JiraClientInterface
 	 * Return base url cleaned from user input.
 	 *
 	 * @param string $output Output to clean.
-	 *
-	 * @return string
 	 */
 	private function cleanBoard(string $output): string
 	{
@@ -306,9 +298,8 @@ class JiraClient implements JiraClientInterface
 		$output = \str_replace('http://', '', $output);
 		$output = \str_replace('www.', '', $output);
 		$output = \rtrim($output, '/');
-		$output = \ltrim($output, '/');
 
-		return $output;
+		return \ltrim($output, '/');
 	}
 
 	/**
@@ -324,15 +315,13 @@ class JiraClient implements JiraClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if (ApiHelpers::isSuccessResponse($code)) {
-			if ($this->isSelfHosted()) {
-				return $body ?? [];
-			} else {
-				return $body['values'] ?? [];
-			}
+		if (!ApiHelpers::isSuccessResponse($code)) {
+			return [];
 		}
-
-		return [];
+		if ($this->isSelfHosted()) {
+			return $body ?? [];
+		}
+		return $body['values'] ?? [];
 	}
 
 	/**
@@ -371,9 +360,8 @@ class JiraClient implements JiraClientInterface
 		if (ApiHelpers::isSuccessResponse($code)) {
 			if ($this->isSelfHosted()) {
 				return $body['issueTypes'] ?? [];
-			} else {
-				return $body ?? [];
 			}
+			return $body ?? [];
 		}
 
 		return [];
@@ -384,7 +372,7 @@ class JiraClient implements JiraClientInterface
 	 *
 	 * @return array<mixed>
 	 */
-	private function getJiraCustomFields()
+	private function getJiraCustomFields(): array
 	{
 
 		$url = $this->getBaseUrl() . "field";
@@ -412,12 +400,10 @@ class JiraClient implements JiraClientInterface
 		// On success return output.
 		if (ApiHelpers::isSuccessResponse($code)) {
 			return \array_map(
-				static function ($item) {
-					return [
-						'id' => $item['id'],
-						'title' => $item['name'],
-					];
-				},
+				static fn(array $item): array => [
+					'id' => $item['id'],
+					'title' => $item['name'],
+				],
 				$body
 			);
 		}
@@ -429,16 +415,12 @@ class JiraClient implements JiraClientInterface
 	 * Output project Id by project key.
 	 *
 	 * @param string $projectId Project Id from API.
-	 *
-	 * @return string
 	 */
 	private function getProjectIdByKey(string $projectId): string
 	{
 		return \array_values(\array_filter(
 			$this->getProjects(),
-			static function ($item) use ($projectId) {
-				return $item['key'] === $projectId;
-			}
+			static fn(array $item): bool => $item['key'] === $projectId
 		))[0]['id'] ?? '';
 	}
 
@@ -457,17 +439,17 @@ class JiraClient implements JiraClientInterface
 
 		$selectedProject = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
-		if (!$selectedProject) {
+		if ($selectedProject === '' || $selectedProject === '0') {
 			return $output;
 		}
 
 		$selectedIssueType = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
-		if (!$selectedIssueType) {
+		if ($selectedIssueType === '' || $selectedIssueType === '0') {
 			return $output;
 		}
 
 		$title = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
-		if (!$title) {
+		if ($title === '' || $title === '0') {
 			return $output;
 		}
 
@@ -498,7 +480,7 @@ class JiraClient implements JiraClientInterface
 			];
 
 			// Standard fields output.
-			if (!SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId) === '' || SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId) === '0') {
 				$contentOutput = [];
 
 				$i = 0;
@@ -506,14 +488,19 @@ class JiraClient implements JiraClientInterface
 					$value = $param['value'] ?? '';
 					$name = $param['name'] ?? '';
 					$type = $param['type'] ?? '';
-
-					if (!$value || !$name || !$type) {
+					if (!$value) {
+						continue;
+					}
+					if (!$name) {
+						continue;
+					}
+					if (!$type) {
 						continue;
 					}
 
 					if ($type === 'file') {
 						$value = \array_map(
-							static function (string $file) {
+							static function (string $file): string {
 								$filename = \pathinfo($file, \PATHINFO_FILENAME);
 								$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 								return "{$filename}.{$extension}";
@@ -629,7 +616,7 @@ class JiraClient implements JiraClientInterface
 			}
 
 			// Additional desc.
-			if ($additionalDescription) {
+			if ($additionalDescription !== '' && $additionalDescription !== '0') {
 				\array_unshift($output['description']['content'], [
 					'type' => 'paragraph',
 					'content' => [
@@ -643,14 +630,12 @@ class JiraClient implements JiraClientInterface
 
 			// Custom fields maps output.
 			$mapParams = SettingsHelpers::getSettingValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
-			if ($mapParams) {
-				foreach ($mapParams as $key => $value) {
-					if (!$value) {
-						continue;
-					}
-
-					$output[$key] = $value;
+			foreach ($mapParams as $key => $value) {
+				if (!$value) {
+					continue;
 				}
+
+				$output[$key] = $value;
 			}
 		} else {
 			// Add header.
@@ -658,20 +643,25 @@ class JiraClient implements JiraClientInterface
 			$descriptionOutput = \sprintf(\__('Data populated from the WordPress "%1$s" form: %2$s %2$s', 'eightshift-forms'), \esc_html($formTitle), \PHP_EOL);
 
 			// Standard fields output.
-			if (!SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId) === '' || SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId) === '0') {
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
 					$name = $param['name'] ?? '';
 					$type = $param['type'] ?? '';
-
-					if (!$value || !$name || !$type) {
+					if (!$value) {
+						continue;
+					}
+					if (!$name) {
+						continue;
+					}
+					if (!$type) {
 						continue;
 					}
 
 					if ($type === 'file') {
 						$value = \array_map(
-							static function (string $file) {
+							static function (string $file): string {
 								$filename = \pathinfo($file, \PATHINFO_FILENAME);
 								$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 								return "{$filename}.{$extension}";
@@ -690,7 +680,7 @@ class JiraClient implements JiraClientInterface
 				}
 
 				// Additional desc.
-				if ($additionalDescription) {
+				if ($additionalDescription !== '' && $additionalDescription !== '0') {
 					$descriptionOutput .= \PHP_EOL . \PHP_EOL . \esc_html($additionalDescription);
 				}
 
@@ -707,11 +697,9 @@ class JiraClient implements JiraClientInterface
 	/**
 	 * Map service messages for fields with our own.
 	 *
-	 * @param array<mixed> $body API response body.
-	 *
 	 * @return array<string, string>
 	 */
-	private function getFieldsErrors(array $body): array
+	private function getFieldsErrors(): array
 	{
 		return [];
 	}
@@ -720,37 +708,32 @@ class JiraClient implements JiraClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['errors'] ?? [];
 
 		if (isset($body['errors']['project'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_PROJECT;
+			return Labels::LABEL_JIRA_MISSING_PROJECT;
 		}
 
 		if (isset($body['errors']['issuetype'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_ISSUE_TYPE;
+			return Labels::LABEL_JIRA_MISSING_ISSUE_TYPE;
 		}
 
 		if (isset($body['errors']['summary'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_SUMMARY;
+			return Labels::LABEL_JIRA_MISSING_SUMMARY;
 		}
 
 		if (isset($body['errors']['customfield_10011'])) {
-			return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_EPIC_NAME;
+			return Labels::LABEL_JIRA_MISSING_EPIC_NAME;
 		}
 
-		switch ($msg) {
-			case 'auth_required':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_AUTH_REQUIRED_ERROR;
-			case 'email_invalid':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_INVALID_EMAIL_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'auth_required' => Labels::LABEL_JIRA_AUTH_REQUIRED_ERROR,
+			'email_invalid' => Labels::LABEL_JIRA_INVALID_EMAIL_ERROR,
+			default => Labels::LABEL_JIRA_INTEGRATION_ERROR,
+		};
 	}
 
 	/**
@@ -777,8 +760,6 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Return base url.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(): string
 	{
@@ -795,8 +776,6 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{
@@ -805,8 +784,6 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Return Api Board from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiBoard(): string
 	{
@@ -815,8 +792,6 @@ class JiraClient implements JiraClientInterface
 
 	/**
 	 * Return Api User from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiUser(): string
 	{

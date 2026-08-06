@@ -30,31 +30,19 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public const FILTER_FORM_FIELDS_NAME = 'es_workable_form_fields_filter';
 
 	/**
-	 * Instance variable for Workable data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $workableClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param ClientInterface $workableClient Inject Workable which holds Workable connect data.
 	 */
-	public function __construct(ClientInterface $workableClient)
-	{
-		$this->workableClient = $workableClient;
-	}
+	public function __construct(protected ClientInterface $workableClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -78,13 +66,13 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Get fields.
 		$item = $this->workableClient->getItem($itemId);
 
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -103,7 +91,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 */
 	private function getFields(array $data, string $formId): array
 	{
-		if (!$data) {
+		if ($data === []) {
 			return [];
 		}
 
@@ -164,8 +152,8 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			$name = $item['key'] ?? '';
 			$label = $item['label'] ?? '';
 			$fields = $item['choices'] ?? [];
-			$required = isset($item['required']) ? (bool) $item['required'] : false;
-			$isMultiple = isset($item['single_answer']) ? (bool) $item['single_answer'] : false;
+			$required = isset($item['required']) && (bool) $item['required'];
+			$isMultiple = isset($item['single_answer']) && (bool) $item['single_answer'];
 
 			if (!$label) {
 				$label = $item['body'] ?? '';
@@ -252,16 +240,14 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectIsMultiple' => !$isMultiple,
 						'selectContent' => \array_values(
 							\array_map(
-								function ($selectOption) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $selectOption['body'],
-										'selectOptionValue' => $selectOption['id'],
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									];
-								},
+								fn(array $selectOption): array => [
+									'component' => 'select-option',
+									'selectOptionLabel' => $selectOption['body'],
+									'selectOptionValue' => $selectOption['id'],
+									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+										'selectOptionValue',
+									], false),
+								],
 								$fields
 							),
 						),
@@ -324,7 +310,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

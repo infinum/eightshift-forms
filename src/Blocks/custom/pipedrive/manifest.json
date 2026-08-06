@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "pipedrive",
 	"title": "Pipedrive form",
 	"description" : "Pipedrive subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-pipedrive"
+		"src": "pipedrive"
 	},
 	"keywords": [
 		"pipedrive"

@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Nationbuilder\NationbuilderClientInterface;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,8 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
+use Override;
 
 /**
  * Class FormSubmitNationbuilderRoute
@@ -37,18 +37,10 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsNationbuilder::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Nationbuilder data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,19 +49,16 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		NationbuilderClientInterface $nationbuilderClient
+		protected NationbuilderClientInterface $nationbuilderClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
@@ -84,8 +73,6 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +104,9 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Nationbuilder is missing config.
 	 * @throws DisabledIntegrationException If Nationbuilder is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -136,10 +123,10 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('nationbuilderMissingConfig'),
+				Labels::getLabel(Labels::LABEL_NATIONBUILDER_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_NATIONBUILDER_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -161,6 +148,7 @@ class FormSubmitNationbuilderRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
+	#[Override]
 	protected function getEmailResponseTags(array $formDetails): array
 	{
 		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];

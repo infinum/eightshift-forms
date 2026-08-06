@@ -29,38 +29,24 @@ use WP_Admin_Bar;
 class FormAdminTopBarMenu implements ServiceInterface
 {
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
-	{
-		$this->formsListing = $formsListing;
-	}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_bar_menu', [$this, 'getTopBarMenu'], 500);
+		\add_action('admin_bar_menu', $this->getTopBarMenu(...), 500);
 	}
 
 	/**
 	 * Add top bar menu form items.
 	 *
 	 * @param WP_Admin_Bar $adminBar Admin bar array.
-	 *
-	 * @return void
 	 */
 	public function getTopBarMenu(WP_Admin_Bar $adminBar): void
 	{
@@ -93,13 +79,16 @@ class FormAdminTopBarMenu implements ServiceInterface
 			);
 		}
 
+		// Inline style as this must be available in all locations where we don't have Tailwind CSS.
+		$titleWarning = "<span style='display: flex; align-items: center; gap: 5px;'>{$mainLabel} " . "<span style='color: red;'>" . UtilsHelper::getUtilsIcons('warning') . "</span></span>";
+
 		// Add main menu item.
 		$adminBar->add_menu(
 			[
 				'id' => $prefix,
 				'parent' => 'eightshift',
 				'group' => '',
-				'title' => $isDevelopMode ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
+				'title' => $isDevelopMode ? $titleWarning : $mainLabel,
 				'href' => GeneralHelpers::getListingPageUrl(),
 				'meta' => [
 					'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,

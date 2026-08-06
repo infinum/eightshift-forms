@@ -53,7 +53,7 @@ export class Captcha {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha?.enterprise?.ready(async () => {
 				try {
-					const token = await grecaptcha?.enterprise?.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
 
 					this.formSubmitCaptchaInvisible(token, true, actionName);
 				} catch (error) {
@@ -63,7 +63,7 @@ export class Captcha {
 		} else {
 			grecaptcha?.ready(async () => {
 				try {
-					const token = await grecaptcha?.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.execute(siteKey, { action: actionName });
 
 					this.formSubmitCaptchaInvisible(token, false, actionName);
 				} catch (error) {
@@ -111,8 +111,11 @@ export class Captcha {
 				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response?.message} Action: ${action}`);
 			}
 
-			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), { responseData: parsedResponse, rawResponse: response });
-		} catch ({name, message}) {
+			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), {
+				responseData: parsedResponse,
+				rawResponse: response,
+			});
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}

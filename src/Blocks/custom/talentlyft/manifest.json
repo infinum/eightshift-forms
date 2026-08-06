@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "talentlyft",
 	"title": "Talentlyft form",
 	"description" : "Talentlyft job application form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-talentlyft"
+		"src": "talentlyft"
 	},
 	"keywords": [
 		"talentlyft"

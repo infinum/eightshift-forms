@@ -58,13 +58,20 @@ class EntriesHelper
 		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$saveEmptyFields = SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
+		$ignoredFields = SettingsHelpers::getSettingCheckboxValues(SettingsEntries::SETTINGS_ENTRIES_IGNORE_FIELDS_KEY, $formId);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 			$type = $param['type'] ?? '';
+			if (!$name) {
+				continue;
+			}
+			if (!$type) {
+				continue;
+			}
 
-			if (!$name || !$type) {
+			if ($ignoredFields && \in_array($name, $ignoredFields, true)) {
 				continue;
 			}
 
@@ -74,7 +81,7 @@ class EntriesHelper
 
 			if ($type === 'file') {
 				$value = \array_map(
-					static function (string $file) {
+					static function (string $file): string {
 						$filename = \pathinfo($file, \PATHINFO_FILENAME);
 						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 						return "{$filename}.{$extension}";
@@ -89,11 +96,15 @@ class EntriesHelper
 		// Output skipped params as empty strings.
 		if ($paramsSkipped && $saveEmptyFields) {
 			foreach ($paramsSkipped as $key => $value) {
+				if ($ignoredFields && \in_array($key, $ignoredFields, true)) {
+					continue;
+				}
+
 				$output[$key] = '';
 			}
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return false;
 		}
 
@@ -105,8 +116,6 @@ class EntriesHelper
 	 *
 	 * @param string $entryId Entry Id.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getEntryAdminUrl(string $entryId, string $formId): string
 	{
@@ -174,8 +183,8 @@ class EntriesHelper
 					"SELECT * FROM {$tableName} WHERE entry_value LIKE %s ORDER BY created_at DESC LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
 						'%' . $search . '%',
-						(int) $perPage,
-						(int) $perPage * ($page - 1),
+						$perPage,
+						$perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -204,7 +213,7 @@ class EntriesHelper
 		);
 
 		return [
-			'currentPage' => (int) $page,
+			'currentPage' => $page,
 			'totalPages' => (int) \ceil($totalPages / $perPage),
 			'count' => \count($results),
 			'items' => $results,
@@ -238,8 +247,8 @@ class EntriesHelper
 					[
 						(int) $formId,
 						'%' . $search . '%',
-						(int) $perPage,
-						(int) $perPage * ($page - 1),
+						$perPage,
+						$perPage * ($page - 1),
 					]
 				),
 				\ARRAY_A
@@ -269,7 +278,7 @@ class EntriesHelper
 		);
 
 		return [
-			'currentPage' => (int) $page,
+			'currentPage' => $page,
 			'totalPages' => (int) \ceil($totalPages / $perPage),
 			'count' => \count($results),
 			'items' => $results,
@@ -318,8 +327,6 @@ class EntriesHelper
 	 *
 	 * @param array<string, mixed> $data Data to update.
 	 * @param string $id Entry Id.
-	 *
-	 * @return boolean
 	 */
 	public static function updateEntry(array $data, string $id): bool
 	{
@@ -342,20 +349,13 @@ class EntriesHelper
 				'%d',
 			]
 		);
-
-		if (\is_wp_error($result)) {
-			return false;
-		}
-
-		return true;
+		return !\is_wp_error($result);
 	}
 
 	/**
 	 * Delete entry.
 	 *
 	 * @param string $id Entry Id.
-	 *
-	 * @return boolean
 	 */
 	public static function deleteEntry(string $id): bool
 	{
@@ -396,15 +396,13 @@ class EntriesHelper
 		return [
 			'id' => $data['id'] ?? '',
 			'formId' => $data['form_id'] ?? '',
-			'entryValue' => isset($data['entry_value']) ? \json_decode($data['entry_value'], true) : [],
+			'entryValue' => isset($data['entry_value']) ? \json_decode((string) $data['entry_value'], true) : [],
 			'createdAt' => $data['created_at'] ?? '',
 		];
 	}
 
 	/**
 	 * Get full table name.
-	 *
-	 * @return string
 	 */
 	private static function getFullTableName(): string
 	{

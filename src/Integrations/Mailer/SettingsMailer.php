@@ -131,15 +131,13 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, [$this, 'isSettingsConfirmationValid'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, $this->isSettingsValid(...), 10, 2);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $this->isSettingsConfirmationValid(...), 10, 2);
 	}
 
 	/**
@@ -147,8 +145,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsValid(bool $output, string $formId): bool
 	{
@@ -162,12 +158,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 		$to = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
-
-		if (!$isUsed || !$name || !$email || !$to || !$subject || !$template) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$name || !$email || !$to || !$subject || !$template);
 	}
 
 	/**
@@ -175,8 +166,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	 *
 	 * @param bool $output Output.
 	 * @param string $formId Form ID.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsConfirmationValid(bool $output, string $formId): bool
 	{
@@ -190,28 +179,15 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 		$email = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
 		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
-
-		if (!$isUsed || !$name || !$email || !$subject || !$template || !$emailField) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$name || !$email || !$subject || !$template || !$emailField);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
 	}
 
 	/**
@@ -268,7 +244,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 							...($isUsed ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -288,7 +264,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									'component' => 'textarea',
 									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_KEY),
 									'textareaFieldLabel' => \__('Recipient e-mail advanced', 'eightshift-forms'),
-									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Specify additional emails based on field values.<br />
@@ -324,7 +299,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -340,7 +315,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'textarea',
@@ -373,7 +348,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -388,7 +363,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -418,7 +393,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								],
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'checkboxes',
@@ -438,7 +413,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 								...($isSenderUsed ? [
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'select',
@@ -448,20 +423,18 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 										'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
 										'selectContent' => \array_map(
-											static function ($option) use ($emailField) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => $option,
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $emailField === $option,
-												];
-											},
+											static fn($option): array => [
+												'component' => 'select-option',
+												'selectOptionLabel' => $option,
+												'selectOptionValue' => $option,
+												'selectOptionIsSelected' => $emailField === $option,
+											],
 											$fieldNames
 										),
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'input',
@@ -477,7 +450,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'textarea',
@@ -492,7 +465,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkboxes',
@@ -534,11 +507,10 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
-						'introSubtitle' => \__('Mailer uses the built-in WordPress mailing system.<br /><br />If using an external mailing service, configure it manually or through a plugin.', 'eightshift-forms'),
+						'introSubtitle' => \__('Mailer uses the built-in WordPress mailing system.<br />If using an external mailing service, configure it manually or through a plugin.', 'eightshift-forms'),
 					],
 				],
 			],
@@ -559,8 +531,6 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 
 	/**
 	 * Provide additional markdown copy to help.
-	 *
-	 * @return string
 	 */
 	private function getContentHelpOutput(): string
 	{

@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * WorkableClient integration class.
@@ -53,7 +53,7 @@ class WorkableClient implements ClientInterface
 		if (!$output) {
 			$items = $this->getWorkableItems();
 
-			if ($items) {
+			if ($items !== []) {
 				foreach ($items as $item) {
 					$id = $item['shortcode'] ?? '';
 
@@ -197,23 +197,17 @@ class WorkableClient implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['error'] ?? '';
 
-		switch ($msg) {
-			case 'Bad Request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_BAD_REQUEST_ERROR;
-			case 'position is draft or archived':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_ARCHIVED_JOB_ERROR;
-			case 'Filename should contain less characters':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_WORKABLE_TOO_LONG_FILE_NAME_ERROR;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'Bad Request' => Labels::LABEL_WORKABLE_BAD_REQUEST_ERROR,
+			'position is draft or archived' => Labels::LABEL_WORKABLE_ARCHIVED_JOB_ERROR,
+			'Filename should contain less characters' => Labels::LABEL_WORKABLE_TOO_LONG_FILE_NAME_ERROR,
+			default => Labels::LABEL_WORKABLE_INTEGRATION_ERROR,
+		};
 	}
 
 	/**
@@ -238,27 +232,23 @@ class WorkableClient implements ClientInterface
 
 			switch ($message) {
 				case 'can\'t be blank':
-					$output[$key] = 'validationRequired';
+					$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 					break;
 				case 'is too long (maximum is 127 characters)':
-					$output[$key] = 'validationWorkableMaxLength127';
+					$output[$key] = Labels::LABEL_VALIDATION_WORKABLE_MAX_LENGTH127;
 					break;
 				case 'is too long (maximum is 255 characters)':
-					$output[$key] = 'validationWorkableMaxLength255';
+					$output[$key] = Labels::LABEL_VALIDATION_WORKABLE_MAX_LENGTH255;
 					break;
 				case 'is invalid':
-					if ($key === 'email') {
-						$output[$key] = 'validationEmail';
-					} else {
-						$output[$key] = 'validationInvalid';
-					}
+					$output[$key] = $key === 'email' ? Labels::LABEL_VALIDATION_EMAIL : Labels::LABEL_VALIDATION_INVALID;
 					break;
 			}
 		}
 
 		if ($msg === 'either name or firstname and lastname should be part of the candidate\'s payload') {
-			$output['firstname'] = 'validationRequired';
-			$output['lastname'] = 'validationRequired';
+			$output['firstname'] = Labels::LABEL_VALIDATION_REQUIRED;
+			$output['lastname'] = Labels::LABEL_VALIDATION_REQUIRED;
 		}
 
 		return $output;
@@ -406,10 +396,8 @@ class WorkableClient implements ClientInterface
 			$typeCustom = $param['typeCustom'] ?? '';
 
 			// Skip empty check if bool.
-			if ($typeCustom !== 'boolean') {
-				if (!$value) {
-					continue;
-				}
+			if ($typeCustom !== 'boolean' && !$value) {
+				continue;
 			}
 
 			if (!$value) {
@@ -449,7 +437,7 @@ class WorkableClient implements ClientInterface
 			$output[$name] = $value;
 		}
 
-		if ($answers) {
+		if ($answers !== []) {
 			$output['answers'] = $answers;
 		}
 
@@ -503,7 +491,7 @@ class WorkableClient implements ClientInterface
 			}
 		}
 
-		if ($answers) {
+		if ($answers !== []) {
 			$output['answers'] = $answers;
 		}
 
@@ -512,8 +500,6 @@ class WorkableClient implements ClientInterface
 
 	/**
 	 * Return Subdomain from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getSubdomain(): string
 	{
@@ -522,8 +508,6 @@ class WorkableClient implements ClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{
@@ -532,8 +516,6 @@ class WorkableClient implements ClientInterface
 
 	/**
 	 * Return base url.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(): string
 	{
@@ -551,7 +533,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function prepareTags(string $country): array
 	{
-		if (!$country) {
+		if ($country === '' || $country === '0') {
 			return [];
 		}
 
@@ -563,7 +545,7 @@ class WorkableClient implements ClientInterface
 
 		$tags = SettingsHelpers::getOptionValueGroup(SettingsWorkable::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY);
 
-		if (!$tags) {
+		if ($tags === []) {
 			return [];
 		}
 
@@ -572,23 +554,25 @@ class WorkableClient implements ClientInterface
 		foreach ($tags as $tag) {
 			$code = $tag[0] ?? '';
 			$value = $tag[1] ?? '';
-
-			if (!$code || !$value) {
+			if (!$code) {
+				continue;
+			}
+			if (!$value) {
 				continue;
 			}
 
-			if (\strtolower($code) !== \strtolower($country)) {
+			if (\strtolower((string) $code) !== \strtolower($country)) {
 				continue;
 			}
 
-			$values = \explode(',', $value);
+			$values = \explode(',', (string) $value);
 
 			foreach ($values as $value) {
 				$output[] = \trim($value);
 			}
 		}
 
-		if (!$output) {
+		if ($output === []) {
 			return [];
 		}
 

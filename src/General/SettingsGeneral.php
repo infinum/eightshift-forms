@@ -137,30 +137,18 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public const string SETTINGS_CONNECTED_FORM_MAP = 'connected-form-map';
 
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
-	{
-		$this->formsListing = $formsListing;
-	}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
 	}
 
 	/**
@@ -173,9 +161,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 	public function getSettingsData(string $formId): array
 	{
 		$specialConstants = \array_map(
-			static function ($item, $key) {
-				return "<li><code>{$key}</code> - {$item}</li>";
-			},
+			static fn(string $item, int|string $key): string => "<li><code>{$key}</code> - {$item}</li>",
 			GeneralHelpers::getSpecialConstants('tracking'),
 			\array_keys(GeneralHelpers::getSpecialConstants('tracking'))
 		);
@@ -207,8 +193,8 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'inputFieldHelp' => \sprintf(\__('
 									After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.<br /><br />
 									If you need to include some of the submitted data, use template tags (e.g. <code>{field-name}</code>).<br />
-									<details class="is-filter-applied">
-										<summary>Available tags</summary>
+									<details class="esf-is-filter-applied">
+										<summary class="esf:focus-ring">Available tags</summary>
 										<ul>
 											%1$s
 										</ul>
@@ -225,7 +211,6 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							[
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_VARIATION_KEY),
 								// translators: %s will be replaced with forms field name and filter output copy.
@@ -270,12 +255,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be list example keys.
@@ -288,12 +272,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on successful submit', 'eightshift-forms'),
 								// translators: %s will be list example keys.
@@ -307,12 +290,11 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on error', 'eightshift-forms'),
 								// translators: %s will be list example keys.
@@ -345,7 +327,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'checkboxes',
@@ -413,7 +395,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'select',
@@ -421,14 +403,12 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'selectId' => SettingsHelpers::getSettingName(self::SETTINGS_FORCE_LOCALE),
 								'selectFieldLabel' => \__('Force locale', 'eightshift-forms'),
 								'selectFieldHelp' => \__('Force the locale for this form.', 'eightshift-forms'),
-								'selectContent' => \array_map(static function ($item, $key) use ($formId) {
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => \ucfirst($item),
-										'selectOptionValue' => $key,
-										'selectOptionIsSelected' => $key === SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
-									];
-								}, I18n::AVAILABLE_LANGUAGES, \array_keys(I18n::AVAILABLE_LANGUAGES)),
+								'selectContent' => \array_map(static fn($item, $key): array => [
+									'component' => 'select-option',
+									'selectOptionLabel' => \ucfirst((string) $item),
+									'selectOptionValue' => $key,
+									'selectOptionIsSelected' => $key === SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
+								], I18n::AVAILABLE_LANGUAGES, \array_keys(I18n::AVAILABLE_LANGUAGES)),
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_FORCE_LOCALE, $formId),
 							],
 						],
@@ -454,18 +434,16 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('This option may create a large number of request to your server.<br /> Use with caution!', 'eightshift-forms'),
-								'introIsHighlighted' => true,
-								'introIsHighlightedImportant' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('This option may create a large number of request to your server.<br /> Use with caution!', 'eightshift-forms'),
 							],
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Once submitted the form will not be reset to the original state.', 'eightshift-forms'),
-								'introIsHighlighted' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('Once submitted the form will not be reset to the original state.', 'eightshift-forms'),
+								'noticeType' => 'info',
 							],
 							[
 								'component' => 'intro',
@@ -517,11 +495,10 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'layout',
-								'layoutType' => 'layout-v-stack',
 								'layoutContent' => [
 									[
 										'component' => 'card-inline',
@@ -529,10 +506,10 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 										'cardInlineTitle' => \sprintf(\__('Current increment: %s', 'eightshift-forms'), FormsHelper::getIncrement($formId)),
 										'cardInlineRightContent' => [
 											[
-												'component' => 'submit',
-												'submitValue' => \__('Reset', 'eightshift-forms'),
-												'submitVariant' => 'ghost',
-												'submitAttrs' => [
+												'component' => 'button',
+												'buttonLabel' => \__('Reset', 'eightshift-forms'),
+												'buttonVariant' => 'primaryGhost',
+												'buttonAttrs' => [
 													UtilsHelper::getStateAttribute('formId') => $formId,
 												],
 												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),
@@ -554,7 +531,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								'selectSingleSubmit' => true,
 								'selectFieldLabel' => \__('Connected form', 'eightshift-forms'),
 								'selectFieldHelp' => \__('Select form you want to connect to this form.', 'eightshift-forms'),
-								'selectContent' => \array_map(static function ($item) use ($connectedFormValue) {
+								'selectContent' => \array_map(static function (array $item) use ($connectedFormValue): array {
 									$id = $item['id'] ?? '';
 									$title = $item['title'] ?? '';
 
@@ -568,7 +545,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 								}, $this->formsListing->getFormsList()['items'] ?? []),
 								'selectValue' => $connectedFormValue,
 							],
-							...($connectedFormValue) ? [
+							...($connectedFormValue !== '' && $connectedFormValue !== '0') ? [
 								[
 									'component' => 'textarea',
 									'textareaFieldLabel' => \__('Connected fields', 'eightshift-forms'),
@@ -577,17 +554,18 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_CONNECTED_FORM_MAP),
 									'textareaFieldHelp' => \sprintf(
 										// translators: %1$s will be replaced by current form fields, %2$s will be replaced by connected form fields.
-										\__('After a successful submission, this form will auto populate the fields in the connected form.<br />
-										<details class="is-filter-applied">
-											<summary>Available field names</summary>
+										\__('After a successful submission, this form will auto populate the fields in the connected form.<br /><br />
+										<details class="esf-is-filter-applied">
+											<summary class="esf:focus-ring">Available field names</summary>
 											<ul>
 												%1$s
 											</ul>
 											<br />
 											Tag missing? Make sure its field has a <b>Name</b> set!
 										</details>
-										<details class="is-filter-applied">
-											<summary>Available connected field names</summary>
+										<br />
+										<details class="esf-is-filter-applied">
+											<summary class="esf:focus-ring">Available connected field names</summary>
 											<ul>
 												%2$s
 											</ul>

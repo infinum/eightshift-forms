@@ -1,68 +1,35 @@
-import React  from 'react';
-import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
-import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { StatusFieldOutput, usePreventSaveOnMissingProps } from './../../utils';
+import { clsx } from '@eightshift/ui-components/utilities';
+import { useBlockProps } from '@wordpress/block-editor';
+import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('checkbox');
-
-	const {
-		componentClass,
-	} = manifest;
-
-	const {
-		selectorClass = componentClass,
-		blockClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId, prefix } = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
+	const checkboxIsDisabled = checkAttr('checkboxIsDisabled', attributes, manifest);
 
-	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
-
-	const checkboxClass = classnames([
-		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
-		selector(checkboxIsHidden, 'es-form-is-hidden'),
-	]);
-
-	const checkboxLabelClass = classnames([
-		selector(componentClass, componentClass, 'label'),
-		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
-		selector(checkboxIsChecked, componentClass, 'label', 'checked'),
-	]);
+	usePreventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
+	const blockProps = useBlockProps({
+		className: 'esf:flex esf:items-center esf:gap-12',
+	});
 
 	return (
-		<div className={checkboxClass}>
-			<VisibilityHidden value={checkboxIsHidden} label={__('Checkbox', 'eightshift-forms')} />
-
-			<div className={`${componentClass}__content`}>
-				<div className={checkboxLabelClass}>
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
-				</div>
-
-				<MissingName value={checkboxValue} />
-
-				{checkboxValue &&
-					<ConditionalTagsEditor
-						{...props('conditionalTags', attributes)}
-					/>
-				}
+		<div {...blockProps}>
+			<div className={clsx('esf-fieldset-checkbox', 'esf-fieldset-item', 'esf:relative!', checkboxIsHidden && 'esf-field-hidden', checkboxIsChecked && 'esf-fieldset-checked')}>
+				<span
+					dangerouslySetInnerHTML={{
+						__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms'),
+					}}
+				/>
 			</div>
+
+			<StatusFieldOutput components={[checkboxIsHidden && 'hidden', !checkboxValue && 'missingName', checkboxIsDisabled && 'disabled', attributes?.[`${prefix}ConditionalTagsUse`] && 'conditionals'].filter(Boolean)} />
 		</div>
 	);
 };

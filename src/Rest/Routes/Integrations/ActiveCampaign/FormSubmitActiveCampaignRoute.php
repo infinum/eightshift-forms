@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
@@ -38,18 +37,10 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for ActiveCampaign data.
-	 *
-	 * @var ActiveCampaignClientInterface
-	 */
-	private $activeCampaignClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -58,19 +49,19 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ActiveCampaignClientInterface $activeCampaignClient
+		/**
+		 * Instance variable for ActiveCampaign data.
+		 */
+		private readonly ActiveCampaignClientInterface $activeCampaignClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->activeCampaignClient = $activeCampaignClient;
 	}
 
 	/**
@@ -85,8 +76,6 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -118,9 +107,9 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 * @throws BadRequestException If integration is missing config.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -137,10 +126,10 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('activeCampaignMissingConfig'),
+				Labels::getLabel(Labels::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_ACTIVE_CAMPAIGN_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_ACTIVE_CAMPAIGN_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

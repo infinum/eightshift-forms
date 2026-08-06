@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Hubspot
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Hubspot;
 
 use EightshiftForms\Integrations\ClientInterface;

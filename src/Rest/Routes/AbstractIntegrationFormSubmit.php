@@ -23,7 +23,6 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
@@ -37,6 +36,7 @@ use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\I18n\I18n;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
@@ -48,13 +48,6 @@ use WP_REST_Request;
 abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 {
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Instance variable of MailerInterface data.
 	 *
 	 * @var MailerInterface
@@ -62,50 +55,26 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	public $mailer;
 
 	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
-		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		CaptchaInterface $captcha,
+		protected ValidatorInterface $validator,
+		protected CaptchaInterface $captcha,
 		MailerInterface $mailer,
-		EnrichmentInterface $enrichment
+		/**
+		 * Instance variable of enrichment data.
+		 */
+		protected EnrichmentInterface $enrichment
 	) {
 		$this->security = $security;
-		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
 		$this->mailer = $mailer;
-		$this->enrichment = $enrichment;
 	}
 
 	/**
@@ -145,7 +114,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new PermissionDeniedException(
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PERMISSION_DENIED,
 					]
 				);
 				// phpcs:enable
@@ -155,10 +124,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
-					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
+					Labels::getLabel(Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN, $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_LOGGED_IN,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_LOGGED_IN,
 					]
 				);
 				// phpcs:enable
@@ -168,10 +137,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->getValidator()->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ForbiddenException(
-					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
+					Labels::getLabel(Labels::LABEL_VALIDATION_SUBMIT_ONCE, $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SUBMIT_ONCE,
 					]
 				);
 				// phpcs:enable
@@ -181,46 +150,42 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if (!$this->getValidator()->validateMandatoryParams($formDetails, $this->getMandatoryParams($formDetails))) {
 				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
+					Labels::getLabel(Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS),
 					[
 						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
 				// phpcs:enable
 			}
 
 			// Validate allowed number of requests.
-			if ($this->shouldCheckSecurity()) {
-				if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE], $formDetails[Config::FD_FORM_ID])) {
-					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-					throw new RequestLimitException(
-						$this->getLabels()->getLabel('validationSecurity'),
-						[
-							AbstractBaseRoute::R_DEBUG => $formDetails,
-							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY,
-						]
-					);
-					// phpcs:enable
-				}
+			if ($this->shouldCheckSecurity() && !$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE], $formDetails[Config::FD_FORM_ID])) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+				throw new RequestLimitException(
+					Labels::getLabel(Labels::LABEL_VALIDATION_SECURITY),
+					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_SECURITY,
+					]
+				);
+				// phpcs:enable
 			}
 
 			// Validate params.
-			if ($this->shouldCheckParamsValidation()) {
-				if ($validate = $this->getValidator()->validateParams($formDetails)) {
-					// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-					throw new ValidationFailedException(
-						$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
-						[
-							AbstractBaseRoute::R_DEBUG => $formDetails,
-							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_PARAMS,
-						],
-						[
-							UtilsHelper::getStateResponseOutputKey('validation') => $validate,
-						]
-					);
-					// phpcs:enable
-				}
+			if ($this->shouldCheckParamsValidation() && $validate = $this->getValidator()->validateParams($formDetails)) {
+				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+				throw new ValidationFailedException(
+					Labels::getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
+					[
+						AbstractBaseRoute::R_DEBUG => $formDetails,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_PARAMS,
+					],
+					[
+						UtilsHelper::getStateResponseOutputKey('validation') => $validate,
+					]
+				);
+				// phpcs:enable
 			}
 
 			// Validate captcha.
@@ -255,7 +220,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			$output = $this->submitAction($formDetails);
 
 			$return = [
-				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $output[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -282,7 +247,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			);
 		} catch (DisabledIntegrationException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -309,7 +274,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('submitFallbackError'),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: Labels::getLabel(Labels::LABEL_SUBMIT_FALLBACK_ERROR),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -340,22 +305,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 	/**
 	 * Check if params validation should be checked.
-	 *
-	 * @return bool
 	 */
 	protected function shouldCheckParamsValidation(): bool
 	{
-		if (DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-			return false;
-		}
-
-		return true;
+		return !DeveloperHelpers::isDeveloperSkipFormValidationActive();
 	}
 
 	/**
 	 * Check if security should be checked.
-	 *
-	 * @return bool
 	 */
 	protected function shouldCheckSecurity(): bool
 	{
@@ -364,22 +321,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 	/**
 	 * Check if captcha should be checked.
-	 *
-	 * @return bool
 	 */
 	protected function shouldCheckCaptcha(): bool
 	{
-		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
-			return false;
-		}
-
-		return true;
+		return !DeveloperHelpers::isDeveloperSkipCaptchaActive();
 	}
 
 	/**
 	 * Check if enrichment should be checked.
-	 *
-	 * @return bool
 	 */
 	protected function shouldCheckEnrichment(): bool
 	{
@@ -388,8 +337,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 	/**
 	 * Check if country should be checked.
-	 *
-	 * @return bool
 	 */
 	protected function shouldCheckCountry(): bool
 	{
@@ -398,8 +345,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 	/**
 	 * Check if filter params should be checked.
-	 *
-	 * @return bool
 	 */
 	protected function shouldCheckFilterParams(): bool
 	{
@@ -410,8 +355,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 * Check if activity should be logged.
 	 *
 	 * @param array<string, mixed> $return Return data.
-	 *
-	 * @return bool
 	 */
 	protected function shouldLogActivity(array $return): bool
 	{
@@ -451,7 +394,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		if ($status === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),
+				Labels::getLabel($response[Config::IARD_MSG], $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => $response[Config::IARD_MSG],
@@ -507,10 +450,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		\do_action(HooksHelpers::getActionName(['integrations', $type, 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success", $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel("{$type}Success", $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => "{$type}Success",
 				AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA => $successAdditionalData,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
@@ -624,12 +567,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
-	 *
-	 * @return void
 	 */
 	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
 	{
-		return;
+		// Callback functions.
 	}
 
 	/**
@@ -722,8 +663,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 	/**
 	 * Detect what type of route it is.
-	 *
-	 * @return string
 	 */
 	protected function routeGetType(): string
 	{
@@ -738,16 +677,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected function getValidator()
 	{
 		return $this->validator;
-	}
-
-	/**
-	 * Returns validator labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getLabels()
-	{
-		return $this->labels;
 	}
 
 	/**
@@ -897,7 +826,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		$entryData = EntriesHelper::getEntry($output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
 
-		if (!$entryData) {
+		if ($entryData === []) {
 			return $output;
 		}
 
@@ -999,7 +928,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		$connectedFormId = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_CONNECTED_FORM, $formId);
 
-		if (!$connectedFormId) {
+		if ($connectedFormId === '' || $connectedFormId === '0') {
 			return $output;
 		}
 
@@ -1007,7 +936,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		$connectedFormMap = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_CONNECTED_FORM_MAP, $formId);
 
-		if (!$connectedFormMap) {
+		if ($connectedFormMap === []) {
 			return $output;
 		}
 
@@ -1016,8 +945,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		foreach ($connectedFormMap as $item) {
 			$form1 = $item[0] ?? '';
 			$form2 = $item[1] ?? '';
-
-			if (!$form1 || !$form2) {
+			if (!$form1) {
+				continue;
+			}
+			if (!$form2) {
 				continue;
 			}
 
@@ -1061,7 +992,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			if ($fieldType === 'file') {
 				$fieldValue = \array_map(
-					static function (string $file) {
+					static function (string $file): string {
 						$filename = \pathinfo($file, \PATHINFO_FILENAME);
 						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
 						return "{$filename}.{$extension}";
@@ -1103,7 +1034,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		// Redirect full url.
 		$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
-			$redirectDataOutput ? [
+			$redirectDataOutput !== [] ? [
 				UtilsHelper::getStateSuccessRedirectUrlKey('data') => EncryptionHelpers::encryptor(\wp_json_encode($redirectDataOutput)),
 			] : [],
 			$successRedirectUrl
@@ -1116,8 +1047,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 * Get country from request.
 	 *
 	 * @param WP_REST_Request $request Request object.
-	 *
-	 * @return string
 	 */
 	protected function getRequestCountryCookie(WP_REST_Request $request): string
 	{
@@ -1128,9 +1057,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		$countries = \explode('; ', $country);
 
-		$country = \array_values(\array_filter($countries, static function (string $country) {
-			return \str_contains($country, 'esForms-country');
-		}))[0] ?? '';
+		$country = \array_values(\array_filter($countries, static fn(string $country): bool => \str_contains($country, 'esForms-country')))[0] ?? '';
 
 		if (!$country) {
 			return '';
@@ -1138,7 +1065,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		$country = \explode('=', $country)[1] ?? '';
 
-		if (!$country) {
+		if ($country === '' || $country === '0') {
 			return '';
 		}
 
@@ -1172,11 +1099,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	/**
 	 * Prepare form details api data.
 	 *
-	 * @param mixed $request Data got from endpoint url.
+	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getFormDetailsApi($request): array
+	protected function getFormDetailsApi(WP_REST_Request $request): array
 	{
 		$output = [];
 
@@ -1194,9 +1121,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		// Manual populate output it admin settings our build it from form Id.
 		if (
-			$type === Config::SETTINGS_TYPE_NAME ||
-			$type === Config::SETTINGS_GLOBAL_TYPE_NAME ||
-			$type === Config::FILE_UPLOAD_ADMIN_TYPE_NAME
+			\in_array($type, [Config::SETTINGS_TYPE_NAME, Config::SETTINGS_GLOBAL_TYPE_NAME, Config::FILE_UPLOAD_ADMIN_TYPE_NAME], true)
 		) {
 			// This provides filter name for setting.
 			$settingsName = \apply_filters(Config::FILTER_SETTINGS_DATA, [])[$formSettingsType][$type] ?? '';
@@ -1205,7 +1130,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			$output[Config::FD_TYPE] = $type;
 			$output[Config::FD_ITEM_ID] = '';
 			$output[Config::FD_INNER_ID] = '';
-			$output[Config::FD_FIELDS_ONLY] = !empty($settingsName) ? \apply_filters($settingsName, $formId) : [];
+			$output[Config::FD_FIELDS_ONLY] = empty($settingsName) ? [] : \apply_filters($settingsName, $formId);
 		} else {
 			$formDetails = GeneralHelpers::getFormDetails($formId);
 
@@ -1273,7 +1198,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$params = $this->getRequestParams($request, $type);
 
 		// Bailout if there are no params.
-		if (!$params) {
+		if ($params === []) {
 			return [];
 		}
 
@@ -1335,7 +1260,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					break;
 				case UtilsHelper::getStateParam('storage'):
 					$output[Config::FD_STORAGE] = $value['value'];
-					$value['value'] = \is_array($value['value']) ? $value['value'] : \json_decode($value['value'], true);
+					$value['value'] = \is_array($value['value']) ? $value['value'] : \json_decode((string) $value['value'], true);
 					$output[Config::FD_PARAMS][$key] = $value;
 					break;
 				case UtilsHelper::getStateParam('steps'):
@@ -1366,9 +1291,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 							}
 
 							$output[Config::FD_FILES][$key]['value'] = \array_map(
-								static function (string $file) {
-									return UploadHelpers::getFilePath($file);
-								},
+								UploadHelpers::getFilePath(...),
 								$fieldValue
 							);
 						}
@@ -1418,9 +1341,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 		if (!empty($alternativeParamsSecurityCheck)) {
 			$alternativeParamsSecurityCheck = \array_map(
-				static function ($item) {
-					return SettingsHelpers::getSettingName($item);
-				},
+				SettingsHelpers::getSettingName(...),
 				$alternativeParamsSecurityCheck
 			);
 		}
@@ -1431,9 +1352,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				if (\is_array($item)) {
 					// Loop all items and decode.
 					$inner = \array_map(
-						static function ($item) {
-							return \json_decode(\sanitize_text_field($item), true);
-						},
+						static fn($item): mixed => \json_decode(\sanitize_text_field($item), true),
 						$item
 					);
 
@@ -1441,14 +1360,12 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					$innerNotEmpty = \array_values(
 						\array_filter(
 							$inner,
-							static function ($innerItem) {
-								return !empty($innerItem['value']);
-							}
+							static fn(array $innerItem): bool => !empty($innerItem['value'])
 						)
 					);
 
 					// Fallback if everything is empty.
-					if (!$innerNotEmpty) {
+					if ($innerNotEmpty === []) {
 						return $inner[0];
 					}
 
@@ -1456,9 +1373,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					if (\count($innerNotEmpty) > 1) {
 						$multiple = \array_values(
 							\array_map(
-								static function ($item) {
-									return $item['value'];
-								},
+								static fn(array $item) => $item['value'],
 								$innerNotEmpty
 							)
 						);
@@ -1504,7 +1419,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 				if ($found) {
 					// Strip out the whitespace that may now exist after removing percent-encoded characters.
-					$filtered = \trim(\preg_replace('/ +/', ' ', $filtered));
+					$filtered = \trim((string) \preg_replace('/ +/', ' ', $filtered));
 				}
 
 				// Decode value.
@@ -1518,14 +1433,12 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 * Force set locale.
 	 *
 	 * @param string $formId Form ID.
-	 *
-	 * @return void
 	 */
 	private function forceSetLocale(string $formId): void
 	{
 		$forceLocale = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_FORCE_LOCALE, $formId);
 
-		if (!$forceLocale) {
+		if ($forceLocale === '' || $forceLocale === '0') {
 			return;
 		}
 

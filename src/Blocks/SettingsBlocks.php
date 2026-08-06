@@ -60,32 +60,26 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY . '-global';
 
 	/**
-	 * Instance variable of countries data.
-	 *
-	 * @var CountriesInterface
-	 */
-	private CountriesInterface $countries;
-
-	/**
 	 * Create a new admin instance.
 	 *
 	 * @param CountriesInterface $countries Inject countries which holds data about for storing to countries.
 	 */
-	public function __construct(CountriesInterface $countries)
-	{
-		$this->countries = $countries;
+	public function __construct(
+		/**
+		 * Instance variable of countries data.
+		 */
+		private readonly CountriesInterface $countries
+	) {
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME, [$this, 'getCountryDatasetValue'], 9999);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME, $this->getCountryDatasetValue(...), 9999);
 	}
 
 	/**
@@ -121,18 +115,19 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'checkboxValue' => self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...($overrideGlobalSettingsCountry ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => 'true',
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
 										SettingsHelpers::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId),
@@ -158,13 +153,14 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
 									],
 								],
 							],
 							...($overrideGlobalSettingsPhone ? [
 								[
 									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
@@ -200,6 +196,8 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 						'tabContent' => [
 							[
 								'component' => 'select',
+								'selectIsRequired' => true,
+								'selectSingleSubmit' => true,
 								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 								'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY),
 								'selectContent' => $this->getCountrySettingsList(
@@ -209,18 +207,17 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Countries in dataset', 'eightshift-forms'),
-								'selectFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
-								'textareaIsReadOnly' => true,
+								'textareaFieldHelp' => \__('This is the list of our default countries name, iso code and call number prefix.', 'eightshift-forms'),
+								'textareaIsDisabled' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'country',
 								'textareaValue' => \wp_json_encode($this->countries->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
-								'textareaSize' => 'huge',
-								'textareaLimitHeight' => true,
+								'additionalClass' => 'esf:min-h-800',
 							],
 						],
 					],
@@ -243,13 +240,15 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 									],
 								],
 							],
-							...(!$disablePhoneCountryPicker ? [
+							...($disablePhoneCountryPicker ? [] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectSingleSubmit' => true,
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
 									'selectName' => SettingsHelpers::getOptionName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
 									'selectContent' => $this->getCountrySettingsList(
@@ -257,7 +256,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 										'items'
 									),
 								],
-							] : []),
+							]),
 						],
 					],
 				],
@@ -308,7 +307,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	private function getCountrySettingsList(string $selectedValue, string $list): array
 	{
 		return \array_map(
-			function ($option) use ($selectedValue) {
+			function (array $option) use ($selectedValue) {
 				$label = $option['label'] ?? '';
 				$value = $option['value'] ?? '';
 

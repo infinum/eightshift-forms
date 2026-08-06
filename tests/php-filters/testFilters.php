@@ -108,7 +108,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_migration_two_to_three_general' => ['runMigration2To3General'],
 			'es_forms_migration_two_to_three_forms' => ['runMigration2To3Forms'],
 			'es_forms_migration_two_to_three_locale' => ['runMigration2To3Locale'],
-			// ---------------------------------------------------------------------------------------------------------
 		];
 
 		// Turn off if constant is not set.

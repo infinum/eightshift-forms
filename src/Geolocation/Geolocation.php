@@ -18,6 +18,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Exception;
+use Override;
 
 /**
  * Geolocation class.
@@ -30,13 +31,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function register(): void
 	{
 		// Use normal geolocation detection from db.
-		\add_action('init', [$this, 'setNormalLocationCookie']);
+		\add_action('init', $this->setNormalLocationCookie(...));
 	}
 
 	/**
 	 * Set geolocation cookie.
-	 *
-	 * @return void
 	 */
 	public function setNormalLocationCookie(): void
 	{
@@ -107,9 +106,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 	/**
 	 * Toggle geolocation usage based on this flag.
-	 *
-	 * @return boolean
 	 */
+	#[Override]
 	public function useGeolocation(): bool
 	{
 		return \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
@@ -117,8 +115,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 	/**
 	 * Get geolocation cookie name.
-	 *
-	 * @return string
 	 */
 	public function getGeolocationCookieName(): string
 	{
@@ -129,8 +125,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 * Get geolocation executable phar location.
 	 *
 	 * @throws Exception If file is missing in provided path.
-	 *
-	 * @return string
 	 */
 	public function getGeolocationPharLocation(): string
 	{
@@ -153,8 +147,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 * Get geolocation database location.
 	 *
 	 * @throws Exception If file is missing in provided path.
-	 *
-	 * @return string
 	 */
 	public function getGeolocationDbLocation(): string
 	{
@@ -191,9 +183,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 	/**
 	 * Gets an IP address manually. Generally used for development and testing.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	public function getIpAddress(): string
 	{
 		return Variables::getGeolocationIp();
@@ -201,9 +192,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 	/**
 	 * Get geolocation expiration time.
-	 *
-	 * @return int
 	 */
+	#[Override]
 	public function getGeolocationExpiration(): int
 	{
 		return \time() + 1296000; // 15 days.
@@ -215,8 +205,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 * @param string $formId Form Id.
 	 * @param array<string, mixed> $defaultLocations Default locations set to form..
 	 * @param array<string, mixed> $additionalLocations Additional location set to form.
-	 *
-	 * @return string
 	 */
 	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string
 	{
@@ -229,7 +217,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		$userLocation = $this->getUsersGeolocation();
 
 		// Check if additional location exists on the form.
-		if ($additionalLocations) {
+		if ($additionalLocations !== []) {
 			$matchAdditionalLocations = [];
 
 			// Iterate all additional locations to find the first that matches.
@@ -241,14 +229,14 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 				// Find geolocation from array of options.
 				$geoLocation = \array_filter(
 					$additionalLocation['geoLocation'] ?? [],
-					function ($geo) use ($userLocation) {
+					function ($geo) use ($userLocation): bool {
 						$country = $this->getCountryGroup($geo ?? '');
 						return isset($country[$userLocation]);
 					}
 				);
 
 				// Exit after first successful result.
-				if ($geoLocation) {
+				if ($geoLocation !== []) {
 					$matchAdditionalLocations = $additionalLocation;
 					break;
 				}
@@ -261,10 +249,10 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// If there is no location but we have the default locations set match that array with the user location.
-		if ($defaultLocations) {
+		if ($defaultLocations !== []) {
 			$matchDefaultLocations = \array_filter(
 				$defaultLocations,
-				function ($location) use ($userLocation) {
+				function (string $location) use ($userLocation): bool {
 					$country = $this->getCountryGroup($location);
 
 					return isset($country[$userLocation]);
@@ -289,8 +277,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 	/**
 	 * Detect users geolocation.
-	 *
-	 * @return string
 	 */
 	public function getUsersGeolocation(): string
 	{
@@ -303,7 +289,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
 
-			if ($outputCloudflare) {
+			if ($outputCloudflare !== '' && $outputCloudflare !== '0') {
 				return $outputCloudflare;
 			}
 		}
@@ -312,7 +298,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
 			$outputCloudFront = isset($_SERVER['HTTP_CLOUDFRONT_VIEWER_COUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CLOUDFRONT_VIEWER_COUNTRY']) : ''; // phpcs:ignore
 
-			if ($outputCloudFront) {
+			if ($outputCloudFront !== '' && $outputCloudFront !== '0') {
 				return $outputCloudFront;
 			}
 		}
@@ -321,14 +307,14 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		if (!SettingsHelpers::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY) && isset($_COOKIE[$this->getGeolocationCookieName()])) {
 			$outputCookie = $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]); // phpcs:ignore
 
-			if ($outputCookie) {
+			if ($outputCookie !== '' && $outputCookie !== '0') {
 				return $outputCookie;
 			}
 		}
 
 		try {
 			return $this->cleanCookieValue($this->getGeolocation());
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return '';
 		}
 	}
@@ -337,8 +323,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 * Clean cookie value.
 	 *
 	 * @param string $value Cookie value to clean.
-	 *
-	 * @return string
 	 */
 	private function cleanCookieValue(string $value): string
 	{
@@ -356,13 +340,13 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$country = \array_filter(
 			$this->getCountriesList(),
-			static function ($item) use ($value) {
+			static function (array $item) use ($value): bool {
 				$itemValue = $item['value'] ?? '';
 				return $itemValue === $value;
 			}
 		);
 
-		if (!$country) {
+		if ($country === []) {
 			return [];
 		}
 

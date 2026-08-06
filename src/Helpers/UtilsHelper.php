@@ -21,8 +21,6 @@ class UtilsHelper
 	 * Return utils icons from manifest.json.
 	 *
 	 * @param string $type Type to return.
-	 *
-	 * @return string
 	 */
 	public static function getUtilsIcons(string $type): string
 	{
@@ -33,8 +31,6 @@ class UtilsHelper
 	 * Return selector admin enum value by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateSelectorAdmin(string $name): string
 	{
@@ -45,8 +41,6 @@ class UtilsHelper
 	 * Return selector enum value by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateSelector(string $name): string
 	{
@@ -57,8 +51,6 @@ class UtilsHelper
 	 * Return attribute enum value by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateAttribute(string $name): string
 	{
@@ -79,8 +71,6 @@ class UtilsHelper
 	 * Return param enum value by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateParam(string $name): string
 	{
@@ -101,8 +91,6 @@ class UtilsHelper
 	 * Return responseOutputKeys enum value by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateResponseOutputKey(string $name): string
 	{
@@ -123,8 +111,6 @@ class UtilsHelper
 	 * Return successRedirectUrlKeys enum value by name.
 	 *
 	 * @param string $name Name of the enum.
-	 *
-	 * @return string
 	 */
 	public static function getStateSuccessRedirectUrlKey(string $name): string
 	{

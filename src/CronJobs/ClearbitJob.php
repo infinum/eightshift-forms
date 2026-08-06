@@ -18,6 +18,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
@@ -36,20 +37,6 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	public const JOB_NAME = 'es_forms_clearbit_queue';
 
 	/**
-	 * Instance variable for Clearbit data.
-	 *
-	 * @var ClearbitClientInterface
-	 */
-	protected $clearbitClient;
-
-	/**
-	 * Instance variable for HubSpot data.
-	 *
-	 * @var HubspotClientInterface
-	 */
-	protected $hubspotClient;
-
-	/**
 	 * Instance variable of MailerInterface data.
 	 *
 	 * @var MailerInterface
@@ -65,29 +52,23 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function __construct(
 		MailerInterface $mailer,
-		ClearbitClientInterface $clearbitClient,
-		HubspotClientInterface $hubspotClient
+		protected ClearbitClientInterface $clearbitClient,
+		protected HubspotClientInterface $hubspotClient
 	) {
 		$this->mailer = $mailer;
-		$this->clearbitClient = $clearbitClient;
-		$this->hubspotClient = $hubspotClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**
 	 * Check if job is set and add it if not.
-	 *
-	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -102,10 +83,8 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
-	 *
-	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
 		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		$jobs = SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
@@ -141,24 +120,21 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 								$clearbitResponse['data'] ?? []
 							);
 						}
-					} else {
+					} elseif ($clearbitResponse[Config::IARD_CODE] !== AbstractRoute::API_RESPONSE_CODE_NOT_FOUND) {
 						// Send fallback email if error but ignore for unknown entry.
-						if ($clearbitResponse[Config::IARD_CODE] !== AbstractRoute::API_RESPONSE_CODE_NOT_FOUND) {
-							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
-
-							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR)) {
-								$this->mailer->sendTroubleshootingEmail(
-									[
-										Config::FD_FORM_ID => (string) $formId,
-										Config::FD_TYPE => $type,
-									],
-									[
-										'response' => $clearbitResponse[Config::IARD_RESPONSE] ?? [],
-										'body' => $clearbitResponse[Config::IARD_BODY] ?? [],
-									],
-									SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR
-								);
-							}
+						$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
+						if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_CLEARBIT_CRON_ERROR)) {
+							$this->mailer->sendTroubleshootingEmail(
+								[
+									Config::FD_FORM_ID => (string) $formId,
+									Config::FD_TYPE => $type,
+								],
+								[
+									'response' => $clearbitResponse[Config::IARD_RESPONSE] ?? [],
+									'body' => $clearbitResponse[Config::IARD_BODY] ?? [],
+								],
+								Labels::LABEL_CLEARBIT_CRON_ERROR
+							);
 						}
 					}
 

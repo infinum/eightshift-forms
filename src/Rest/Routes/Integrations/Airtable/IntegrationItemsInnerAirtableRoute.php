@@ -15,24 +15,18 @@ use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use Override;
 
 /**
  * Class IntegrationItemsInnerAirtableRoute
  */
 class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable for Airtable data.
-	 *
-	 * @var AirtableClientInterface
-	 */
-	protected $airtableClient;
-
 	/**
 	 * Route slug.
 	 */
@@ -53,26 +47,21 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		AirtableClientInterface $airtableClient
+		protected AirtableClientInterface $airtableClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->airtableClient = $airtableClient;
 	}
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +69,6 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +104,9 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		if (!\apply_filters(SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('globalNotConfigured'),
+				Labels::getLabel(Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_GLOBAL_NOT_CONFIGURED,
 				]
 			);
 			// phpcs:enable
@@ -127,20 +114,20 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 
 		$items = $this->airtableClient->getItem($params['id'] ?? '');
 
-		if (!$items) {
+		if ($items === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('integrationItemsMissing'),
+				Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
-					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_ITEMS_MISSING,
 				]
 			);
 			// phpcs:enable
 		}
 
 		$items = \array_filter(\array_values(\array_map(
-			static function ($item) {
+			static function (array $item) {
 				$id = $item['id'] ?? '';
 
 				if ($id) {
@@ -154,10 +141,10 @@ class IntegrationItemsInnerAirtableRoute extends AbstractSimpleFormSubmit
 		)));
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_INTEGRATION_ITEMS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
-				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_ITEMS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorIntegrationItems') => $items,

@@ -20,7 +20,7 @@ class PluginFactory
 	 */
 	public static function activate(): void
 	{
-		(new Activate())->activate();
+		new Activate()->activate();
 	}
 
 	/**
@@ -28,6 +28,6 @@ class PluginFactory
 	 */
 	public static function deactivate(): void
 	{
-		(new Deactivate())->deactivate();
+		new Deactivate()->deactivate();
 	}
 }

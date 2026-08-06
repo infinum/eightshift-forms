@@ -20,13 +20,12 @@ final class SettingsHelpers
 	// --------------------------------------------------
 	// Settings helper methods
 	// --------------------------------------------------
+
 	/**
 	 * Get settings value.
 	 *
 	 * @param string $key Key to find in db settings.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getSettingValue(string $key, string $formId): string
 	{
@@ -38,8 +37,6 @@ final class SettingsHelpers
 	 *
 	 * @param string $key Key to find in db settings.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getSettingValueUnescaped(string $key, string $formId): string
 	{
@@ -52,13 +49,11 @@ final class SettingsHelpers
 	 * @param string $key Providing string to append to.
 	 * @param string $formId Form Id.
 	 * @param int $useNumber Number of items to use.
-	 *
-	 * @return string
 	 */
 	public static function getSettingValueAsJson(string $key, string $formId, int $useNumber = 2): string
 	{
 		$values = self::getSettingValueGroup($key, $formId);
-		if (!$values) {
+		if ($values === []) {
 			return '';
 		}
 
@@ -72,18 +67,16 @@ final class SettingsHelpers
 	 * @param string $optionKey Key to find in db options.
 	 * @param string $fallback Fallback value.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getSettingValueWithFallback(string $key, string $optionKey, string $fallback, string $formId): string
 	{
 		$value = self::getSettingValue($key, $formId);
 
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			$value = self::getOptionValue($optionKey);
 		}
 
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			return $fallback;
 		}
 
@@ -96,14 +89,12 @@ final class SettingsHelpers
 	 * @param string $key Key to find in db settings.
 	 * @param string $fallback Fallback value.
 	 * @param string $formId Form Id.
-	 *
-	 * @return string
 	 */
 	public static function getSettingValueWithFallbackOnly(string $key, string $fallback, string $formId): string
 	{
 		$value = self::getSettingValue($key, $formId);
 
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			return $fallback;
 		}
 
@@ -139,12 +130,29 @@ final class SettingsHelpers
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
 	 * @param string $formId Form Id.
-	 *
-	 * @return bool
 	 */
 	public static function isSettingChecked(string $key, string $id, string $formId): bool
 	{
 		return self::getSettingValue($id, $formId) === $key;
+	}
+
+	/**
+	 * Get option checkbox multiple value.
+	 *
+	 * @param string $key Providing string to append to.
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function getSettingCheckboxValues(string $key, string $formId): array
+	{
+		$value = self::getSettingValue($key, $formId);
+
+		if ($value === '' || $value === '0') {
+			return [];
+		};
+
+		return \explode(Config::DELIMITER, $value);
 	}
 
 	/**
@@ -153,8 +161,6 @@ final class SettingsHelpers
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
 	 * @param string $formId Form Id.
-	 *
-	 * @return bool
 	 */
 	public static function isSettingCheckboxChecked(string $key, string $id, string $formId): bool
 	{
@@ -165,8 +171,6 @@ final class SettingsHelpers
 	 * Get string setting name.
 	 *
 	 * @param string $key Providing string to append to.
-	 *
-	 * @return string
 	 */
 	public static function getSettingName(string $key): string
 	{
@@ -176,13 +180,10 @@ final class SettingsHelpers
 	// --------------------------------------------------
 	// Options helper methods
 	// --------------------------------------------------
-
 	/**
 	 * Get option value.
 	 *
 	 * @param string $key Providing string to append to.
-	 *
-	 * @return string
 	 */
 	public static function getOptionValue(string $key): string
 	{
@@ -194,14 +195,12 @@ final class SettingsHelpers
 	 *
 	 * @param string $constantValue Constant value.
 	 * @param string $key Option name.
-	 *
-	 * @return string
 	 */
 	public static function getOptionWithConstant(
 		string $constantValue,
 		string $key,
 	): string {
-		return empty($constantValue) ? self::getOptionValue($key) : $constantValue;
+		return $constantValue === '' || $constantValue === '0' ? self::getOptionValue($key) : $constantValue;
 	}
 
 	/**
@@ -209,15 +208,13 @@ final class SettingsHelpers
 	 *
 	 * @param string $key Key to find in db settings.
 	 * @param string $fallback Fallback value.
-	 *
-	 * @return string
 	 */
 	public static function getOptionValueWithFallback(string $key, string $fallback): string
 	{
 		$value = self::getOptionValue($key);
 
-		if (!$value) {
-			$value = $fallback;
+		if ($value === '' || $value === '0') {
+			return $fallback;
 		}
 
 		return $value;
@@ -251,13 +248,11 @@ final class SettingsHelpers
 	 *
 	 * @param string $key Providing string to append to.
 	 * @param int $useNumber Number of items to use.
-	 *
-	 * @return string
 	 */
 	public static function getOptionValueAsJson(string $key, int $useNumber = 2): string
 	{
 		$values = self::getOptionValueGroup($key);
-		if (!$values) {
+		if ($values === []) {
 			return '';
 		}
 
@@ -275,7 +270,7 @@ final class SettingsHelpers
 	{
 		$value = self::getOptionValue($key);
 
-		if (!$value) {
+		if ($value === '' || $value === '0') {
 			return [];
 		};
 
@@ -287,8 +282,6 @@ final class SettingsHelpers
 	 *
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
-	 *
-	 * @return bool
 	 */
 	public static function isOptionChecked(string $key, string $id): bool
 	{
@@ -300,8 +293,6 @@ final class SettingsHelpers
 	 *
 	 * @param string $key Key to find.
 	 * @param string $id Checkboxes ID.
-	 *
-	 * @return bool
 	 */
 	public static function isOptionCheckboxChecked(string $key, string $id): bool
 	{
@@ -312,8 +303,6 @@ final class SettingsHelpers
 	 * Get string option name with locale.
 	 *
 	 * @param string $key Providing string to append to.
-	 *
-	 * @return string
 	 */
 	public static function getOptionName(string $key): string
 	{
@@ -324,13 +313,25 @@ final class SettingsHelpers
 		if (!isset(\array_flip($data)[$key])) {
 			$locale = I18nHelpers::getLocale();
 
-			if ($locale) {
+			if ($locale !== '' && $locale !== '0') {
 				$delimiter = Config::DELIMITER;
 				$suffix = "{$delimiter}{$locale}";
 			}
 		}
 
 		return Config::SETTINGS_NAME_PREFIX . "-{$key}{$suffix}";
+	}
+
+	/**
+	 * Is Option section active by type.
+	 *
+	 * @param string $type Settings type.
+	 */
+	public static function isOptionTypeActive(string $type): bool
+	{
+		$key = "{$type}-use";
+
+		return SettingsHelpers::isOptionCheckboxChecked($key, $key);
 	}
 
 	// --------------------------------------------------
@@ -382,14 +383,11 @@ final class SettingsHelpers
 	// --------------------------------------------------
 	// Private helper methods
 	// --------------------------------------------------
-
 	/**
 	 * Get saved value string saved as json array - used for textarea with : delimiter.
 	 *
 	 * @param array<string, mixed> $values Values provided from settings.
 	 * @param int $useNumber Number of items to use.
-	 *
-	 * @return string
 	 */
 	private static function getSavedValueAsJson(array $values, int $useNumber = 2): string
 	{
@@ -402,7 +400,7 @@ final class SettingsHelpers
 
 			$value = \array_filter(
 				$value,
-				fn($item) => $item <= $useNumber - 1,
+				fn($item): bool => $item <= $useNumber - 1,
 				\ARRAY_FILTER_USE_KEY
 			);
 

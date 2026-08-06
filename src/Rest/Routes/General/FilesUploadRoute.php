@@ -17,7 +17,8 @@ use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
+use Override;
 
 /**
  * Class FilesUploadRoute
@@ -41,9 +42,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Detect what type of route it is.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function routeGetType(): string
 	{
 		return self::ROUTE_TYPE_FILE;
@@ -51,8 +51,6 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -61,9 +59,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if enrichment should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckEnrichment(): bool
 	{
 		return false;
@@ -71,9 +68,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if country should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckCountry(): bool
 	{
 		return false;
@@ -81,9 +77,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route should check captcha.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckCaptcha(): bool
 	{
 		return false;
@@ -91,9 +86,8 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if params validation should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckParamsValidation(): bool
 	{
 		return false;
@@ -129,26 +123,27 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @throws ValidationFailedException If files are not valid.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
+		// Manual reference for validation is only used in admin as there are no editor form builder to get the correct reference.
+		$manualValidationReference = $this->getManualValidationReferenceByFormType($formDetails);
+
 		// Validate files.
-		if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-			if ($validate = $this->getValidator()->validateFiles($formDetails)) {
-				// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
-				throw new ValidationFailedException(
-					$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
-					[
-						AbstractBaseRoute::R_DEBUG => $formDetails,
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_FILES,
-					],
-					[
-						UtilsHelper::getStateResponseOutputKey('validation') => $validate,
-					]
-				);
-				// phpcs:enable
-			}
+		if (!DeveloperHelpers::isDeveloperSkipFormValidationActive() && $validate = $this->getValidator()->validateFiles($formDetails, $manualValidationReference)) {
+			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
+			throw new ValidationFailedException(
+				Labels::getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_FILES,
+				],
+				[
+					UtilsHelper::getStateResponseOutputKey('validation') => $validate,
+				]
+			);
+			// phpcs:enable
 		}
 
 		$extraMimes = ($formDetails[Config::FD_TYPE] ?? '') === Config::FILE_UPLOAD_ADMIN_TYPE_NAME
@@ -162,17 +157,17 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		// Upload files to temp folder.
 		$formDetails[Config::FD_FILES_UPLOAD] = $uploadFile;
 
-		if (UploadHelpers::isUploadError($uploadError)) {
+		if (UploadHelpers::isUploadError((string) $uploadError)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
+				Labels::getLabel(Labels::LABEL_VALIDATION_GLOBAL_MISSING_REQUIRED_PARAMS),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_ERROR,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FILES_UPLOAD_ERROR,
 				],
 				[
 					UtilsHelper::getStateResponseOutputKey('validation') => [
-						$uploadFileId => $this->getLabels()->getLabel('validationFileUpload'),
+						$uploadFileId => Labels::getLabel(Labels::LABEL_VALIDATION_FILE_UPLOAD),
 					],
 				]
 			);
@@ -180,14 +175,32 @@ class FilesUploadRoute extends AbstractIntegrationFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('validationFileUploadSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_VALIDATION_FILE_UPLOAD_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FILES_UPLOAD_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FILES_UPLOAD_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('fileName') => $uploadFile['outputName'] ?? '',
 			],
 		];
+	}
+
+	/**
+	 * Get manual validation reference.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getManualValidationReferenceByFormType(array $formDetails): array
+	{
+		if ($formDetails[Config::FD_TYPE] === Config::FILE_UPLOAD_ADMIN_TYPE_NAME) {
+			return [
+				'accept' => 'json',
+			];
+		}
+
+		return [];
 	}
 }

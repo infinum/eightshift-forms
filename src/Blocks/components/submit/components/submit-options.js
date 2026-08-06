@@ -1,17 +1,13 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { googleTagManager, none, sliders, tag, design, moreH } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
+import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup } from '@eightshift/ui-components';
+import manifest from '../manifest.json';
 
 export const SubmitOptions = (attributes) => {
-	const manifest = select(STORE_NAME).getComponent('submit');
-
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
@@ -19,54 +15,99 @@ export const SubmitOptions = (attributes) => {
 	const submitDisabledOptions = checkAttr('submitDisabledOptions', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Submit', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-				<TextControl
-					label={<IconLabel icon={icons.titleGeneric} label={__('Button label', 'eightshift-forms')} />}
-					value={submitValue}
-					onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
-				/>
-			</Section>
+		<>
+			<Tabs>
+				<TabList>
+					<Tab
+						icon={sliders}
+						label={__('General', 'eightshift-forms')}
+					/>
 
-			<FieldOptionsLayout
-				{...props('field', attributes, {
-					fieldDisabledOptions: submitDisabledOptions,
-				})}
-			/>
+					<Tab
+						icon={tag}
+						label={__('Labels', 'eightshift-forms')}
+					/>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<FieldOptionsVisibility
-					{...props('field', attributes, {
-						fieldDisabledOptions: submitDisabledOptions,
-					})}
-				/>
+					<Tab
+						icon={design}
+						label={__('Design', 'eightshift-forms')}
+					/>
 
-				<IconToggle
-					icon={icons.cursorDisabled}
-					label={__('Disabled', 'eightshift-forms')}
-					checked={submitIsDisabled}
-					onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('submitIsDisabled', attributes, manifest), submitDisabledOptions)}
-					noBottomSpacing
-				/>
-			</Section>
+					<Tab
+						icon={moreH}
+						label={__('Advanced', 'eightshift-forms')}
+					/>
+				</TabList>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
-					value={submitTracking}
-					onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('submitTracking', attributes, manifest), submitDisabledOptions)}
-					className='es-no-field-spacing'
-				/>
-			</Section>
+				<TabPanel>
+					<ContainerPanel>
+						<ContainerGroup>
+							<FieldOptionsVisibility
+								{...props('field', attributes, {
+									fieldDisabledOptions: submitDisabledOptions,
+								})}
+							/>
 
-			<FieldOptionsMore
-				{...props('field', attributes, {
-					fieldDisabledOptions: submitDisabledOptions,
-				})}
-			/>
-		</PanelBody>
+							<Container>
+								<Toggle
+									icon={none}
+									label={__('Disabled', 'eightshift-forms')}
+									checked={submitIsDisabled}
+									onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('submitIsDisabled', attributes, manifest), submitDisabledOptions)}
+								/>
+							</Container>
+						</ContainerGroup>
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<Container standalone>
+							<InputField
+								icon={tag}
+								label={__('Label', 'eightshift-forms')}
+								value={submitValue}
+								onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
+								disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
+							/>
+						</Container>
+
+						<FieldOptionsMore
+							{...props('field', attributes, {
+								fieldDisabledOptions: submitDisabledOptions,
+							})}
+						/>
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<FieldOptionsLayout
+							{...props('field', attributes, {
+								fieldDisabledOptions: submitDisabledOptions,
+							})}
+						/>
+					</ContainerPanel>
+				</TabPanel>
+
+				<TabPanel>
+					<ContainerPanel>
+						<ContainerGroup label={__('Tracking', 'eightshift-forms')}>
+							<Container>
+								<InputField
+									icon={googleTagManager}
+									label={__('GTM tracking code', 'eightshift-forms')}
+									value={submitTracking}
+									onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('submitTracking', attributes, manifest), submitDisabledOptions)}
+									monospaceFont
+								/>
+							</Container>
+						</ContainerGroup>
+					</ContainerPanel>
+				</TabPanel>
+			</Tabs>
+		</>
 	);
 };

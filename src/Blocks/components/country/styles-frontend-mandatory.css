@@ -1,0 +1,1048 @@
+@import 'tailwindcss' prefix(esf);
+
+.choices__item::before {
+	@apply esf:content-[''];
+	@apply esf:bg-[url('../../assets/images/items/flags.webp')];
+	@apply esf:bg-no-repeat;
+	@apply esf:inline-20;
+	@apply esf:block-15;
+	@apply esf:align-middle;
+	@apply esf:mr-10;
+	@apply esf:inline-block;
+}
+
+.choices__item:not([data-country-code])::before {
+	@apply esf:hidden!;
+}
+
+.choices__item[data-country-code='ac']::before {
+	background-position: 0 0;
+}
+
+.choices__item[data-country-code='ad']::before {
+	background-position: -20px 0;
+}
+
+.choices__item[data-country-code='ae']::before {
+	background-position: -40px 0;
+}
+
+.choices__item[data-country-code='af']::before {
+	background-position: -60px 0;
+}
+
+.choices__item[data-country-code='ag']::before {
+	background-position: -80px 0;
+}
+
+.choices__item[data-country-code='ai']::before {
+	background-position: -100px 0;
+}
+
+.choices__item[data-country-code='al']::before {
+	background-position: -120px 0;
+}
+
+.choices__item[data-country-code='am']::before {
+	background-position: -140px 0;
+}
+
+.choices__item[data-country-code='ao']::before {
+	background-position: -160px 0;
+}
+
+.choices__item[data-country-code='aq']::before {
+	background-position: -180px 0;
+}
+
+.choices__item[data-country-code='ar']::before {
+	background-position: -200px 0;
+}
+
+.choices__item[data-country-code='as']::before {
+	background-position: -220px 0;
+}
+
+.choices__item[data-country-code='at']::before {
+	background-position: -240px 0;
+}
+
+.choices__item[data-country-code='au']::before {
+	background-position: -260px 0;
+}
+
+.choices__item[data-country-code='aw']::before {
+	background-position: -280px 0;
+}
+
+.choices__item[data-country-code='ax']::before {
+	background-position: -300px 0;
+}
+
+.choices__item[data-country-code='az']::before {
+	background-position: -320px 0;
+}
+
+.choices__item[data-country-code='ba']::before {
+	background-position: -340px 0;
+}
+
+.choices__item[data-country-code='bb']::before {
+	background-position: -360px 0;
+}
+
+.choices__item[data-country-code='bd']::before {
+	background-position: -380px 0;
+}
+
+.choices__item[data-country-code='be']::before {
+	background-position: -400px 0;
+}
+
+.choices__item[data-country-code='bf']::before {
+	background-position: -420px 0;
+}
+
+.choices__item[data-country-code='bg']::before {
+	background-position: -440px 0;
+}
+
+.choices__item[data-country-code='bh']::before {
+	background-position: -460px 0;
+}
+
+.choices__item[data-country-code='bi']::before {
+	background-position: -480px 0;
+}
+
+.choices__item[data-country-code='bj']::before {
+	background-position: -500px 0;
+}
+
+.choices__item[data-country-code='bl']::before {
+	background-position: -520px 0;
+}
+
+.choices__item[data-country-code='bm']::before {
+	background-position: -540px 0;
+}
+
+.choices__item[data-country-code='bn']::before {
+	background-position: -560px 0;
+}
+
+.choices__item[data-country-code='bo']::before {
+	background-position: -580px 0;
+}
+
+.choices__item[data-country-code='bq']::before {
+	background-position: -600px 0;
+}
+
+.choices__item[data-country-code='br']::before {
+	background-position: -620px 0;
+}
+
+.choices__item[data-country-code='bs']::before {
+	background-position: -640px 0;
+}
+
+.choices__item[data-country-code='bt']::before {
+	background-position: -660px 0;
+}
+
+.choices__item[data-country-code='bv']::before {
+	background-position: -680px 0;
+}
+
+.choices__item[data-country-code='bw']::before {
+	background-position: -700px 0;
+}
+
+.choices__item[data-country-code='by']::before {
+	background-position: -720px 0;
+}
+
+.choices__item[data-country-code='bz']::before {
+	background-position: -740px 0;
+}
+
+.choices__item[data-country-code='ca']::before {
+	background-position: -760px 0;
+}
+
+.choices__item[data-country-code='cc']::before {
+	background-position: -780px 0;
+}
+
+.choices__item[data-country-code='cd']::before {
+	background-position: -800px 0;
+}
+
+.choices__item[data-country-code='cf']::before {
+	background-position: -820px 0;
+}
+
+.choices__item[data-country-code='cg']::before {
+	background-position: -840px 0;
+}
+
+.choices__item[data-country-code='ch']::before {
+	background-position: -860px 0;
+}
+
+.choices__item[data-country-code='ci']::before {
+	background-position: -880px 0;
+}
+
+.choices__item[data-country-code='ck']::before {
+	background-position: -900px 0;
+}
+
+.choices__item[data-country-code='cl']::before {
+	background-position: -920px 0;
+}
+
+.choices__item[data-country-code='cm']::before {
+	background-position: -940px 0;
+}
+
+.choices__item[data-country-code='cn']::before {
+	background-position: -960px 0;
+}
+
+.choices__item[data-country-code='co']::before {
+	background-position: -980px 0;
+}
+
+.choices__item[data-country-code='cp']::before {
+	background-position: -1000px 0;
+}
+
+.choices__item[data-country-code='cr']::before {
+	background-position: -1020px 0;
+}
+
+.choices__item[data-country-code='cu']::before {
+	background-position: -1040px 0;
+}
+
+.choices__item[data-country-code='cv']::before {
+	background-position: -1060px 0;
+}
+
+.choices__item[data-country-code='cw']::before {
+	background-position: -1080px 0;
+}
+
+.choices__item[data-country-code='cx']::before {
+	background-position: -1100px 0;
+}
+
+.choices__item[data-country-code='cy']::before {
+	background-position: -1120px 0;
+}
+
+.choices__item[data-country-code='cz']::before {
+	background-position: -1140px 0;
+}
+
+.choices__item[data-country-code='de']::before {
+	background-position: -1160px 0;
+}
+
+.choices__item[data-country-code='dg']::before {
+	background-position: -1180px 0;
+}
+
+.choices__item[data-country-code='dj']::before {
+	background-position: -1200px 0;
+}
+
+.choices__item[data-country-code='dk']::before {
+	background-position: -1220px 0;
+}
+
+.choices__item[data-country-code='dm']::before {
+	background-position: -1240px 0;
+}
+
+.choices__item[data-country-code='do']::before {
+	background-position: -1260px 0;
+}
+
+.choices__item[data-country-code='dz']::before {
+	background-position: -1280px 0;
+}
+
+.choices__item[data-country-code='ea']::before {
+	background-position: -1300px 0;
+}
+
+.choices__item[data-country-code='ec']::before {
+	background-position: -1320px 0;
+}
+
+.choices__item[data-country-code='ee']::before {
+	background-position: -1340px 0;
+}
+
+.choices__item[data-country-code='eg']::before {
+	background-position: -1360px 0;
+}
+
+.choices__item[data-country-code='eh']::before {
+	background-position: -1380px 0;
+}
+
+.choices__item[data-country-code='er']::before {
+	background-position: -1400px 0;
+}
+
+.choices__item[data-country-code='es']::before {
+	background-position: -1420px 0;
+}
+
+.choices__item[data-country-code='et']::before {
+	background-position: -1440px 0;
+}
+
+.choices__item[data-country-code='eu']::before {
+	background-position: -1460px 0;
+}
+
+.choices__item[data-country-code='fi']::before {
+	background-position: -1480px 0;
+}
+
+.choices__item[data-country-code='fj']::before {
+	background-position: -1500px 0;
+}
+
+.choices__item[data-country-code='fk']::before {
+	background-position: -1520px 0;
+}
+
+.choices__item[data-country-code='fm']::before {
+	background-position: -1540px 0;
+}
+
+.choices__item[data-country-code='fo']::before {
+	background-position: -1560px 0;
+}
+
+.choices__item[data-country-code='fr']::before {
+	background-position: -1580px 0;
+}
+
+.choices__item[data-country-code='ga']::before {
+	background-position: -1600px 0;
+}
+
+.choices__item[data-country-code='gb']::before {
+	background-position: -1620px 0;
+}
+
+.choices__item[data-country-code='gd']::before {
+	background-position: -1640px 0;
+}
+
+.choices__item[data-country-code='ge']::before {
+	background-position: -1660px 0;
+}
+
+.choices__item[data-country-code='gf']::before {
+	background-position: -1680px 0;
+}
+
+.choices__item[data-country-code='gg']::before {
+	background-position: -1700px 0;
+}
+
+.choices__item[data-country-code='gh']::before {
+	background-position: -1720px 0;
+}
+
+.choices__item[data-country-code='gi']::before {
+	background-position: -1740px 0;
+}
+
+.choices__item[data-country-code='gl']::before {
+	background-position: -1760px 0;
+}
+
+.choices__item[data-country-code='gm']::before {
+	background-position: -1780px 0;
+}
+
+.choices__item[data-country-code='gn']::before {
+	background-position: -1800px 0;
+}
+
+.choices__item[data-country-code='gp']::before {
+	background-position: -1820px 0;
+}
+
+.choices__item[data-country-code='gq']::before {
+	background-position: -1840px 0;
+}
+
+.choices__item[data-country-code='gr']::before {
+	background-position: -1860px 0;
+}
+
+.choices__item[data-country-code='gs']::before {
+	background-position: -1880px 0;
+}
+
+.choices__item[data-country-code='gt']::before {
+	background-position: -1900px 0;
+}
+
+.choices__item[data-country-code='gu']::before {
+	background-position: -1920px 0;
+}
+
+.choices__item[data-country-code='gw']::before {
+	background-position: -1940px 0;
+}
+
+.choices__item[data-country-code='gy']::before {
+	background-position: -1960px 0;
+}
+
+.choices__item[data-country-code='hk']::before {
+	background-position: -1980px 0;
+}
+
+.choices__item[data-country-code='hm']::before {
+	background-position: -2000px 0;
+}
+
+.choices__item[data-country-code='hn']::before {
+	background-position: -2020px 0;
+}
+
+.choices__item[data-country-code='hr']::before {
+	background-position: -2040px 0;
+}
+
+.choices__item[data-country-code='ht']::before {
+	background-position: -2060px 0;
+}
+
+.choices__item[data-country-code='hu']::before {
+	background-position: -2080px 0;
+}
+
+.choices__item[data-country-code='ic']::before {
+	background-position: -2100px 0;
+}
+
+.choices__item[data-country-code='id']::before {
+	background-position: -2120px 0;
+}
+
+.choices__item[data-country-code='ie']::before {
+	background-position: -2140px 0;
+}
+
+.choices__item[data-country-code='il']::before {
+	background-position: -2160px 0;
+}
+
+.choices__item[data-country-code='im']::before {
+	background-position: -2180px 0;
+}
+
+.choices__item[data-country-code='in']::before {
+	background-position: -2200px 0;
+}
+
+.choices__item[data-country-code='io']::before {
+	background-position: -2220px 0;
+}
+
+.choices__item[data-country-code='iq']::before {
+	background-position: -2240px 0;
+}
+
+.choices__item[data-country-code='ir']::before {
+	background-position: -2260px 0;
+}
+
+.choices__item[data-country-code='is']::before {
+	background-position: -2280px 0;
+}
+
+.choices__item[data-country-code='it']::before {
+	background-position: -2300px 0;
+}
+
+.choices__item[data-country-code='je']::before {
+	background-position: -2320px 0;
+}
+
+.choices__item[data-country-code='jm']::before {
+	background-position: -2340px 0;
+}
+
+.choices__item[data-country-code='jo']::before {
+	background-position: -2360px 0;
+}
+
+.choices__item[data-country-code='jp']::before {
+	background-position: -2380px 0;
+}
+
+.choices__item[data-country-code='ke']::before {
+	background-position: -2400px 0;
+}
+
+.choices__item[data-country-code='kg']::before {
+	background-position: -2420px 0;
+}
+
+.choices__item[data-country-code='kh']::before {
+	background-position: -2440px 0;
+}
+
+.choices__item[data-country-code='ki']::before {
+	background-position: -2460px 0;
+}
+
+.choices__item[data-country-code='km']::before {
+	background-position: -2480px 0;
+}
+
+.choices__item[data-country-code='kn']::before {
+	background-position: -2500px 0;
+}
+
+.choices__item[data-country-code='kp']::before {
+	background-position: -2520px 0;
+}
+
+.choices__item[data-country-code='kr']::before {
+	background-position: -2540px 0;
+}
+
+.choices__item[data-country-code='kw']::before {
+	background-position: -2560px 0;
+}
+
+.choices__item[data-country-code='ky']::before {
+	background-position: -2580px 0;
+}
+
+.choices__item[data-country-code='kz']::before {
+	background-position: -2600px 0;
+}
+
+.choices__item[data-country-code='la']::before {
+	background-position: -2620px 0;
+}
+
+.choices__item[data-country-code='lb']::before {
+	background-position: -2640px 0;
+}
+
+.choices__item[data-country-code='lc']::before {
+	background-position: -2660px 0;
+}
+
+.choices__item[data-country-code='li']::before {
+	background-position: -2680px 0;
+}
+
+.choices__item[data-country-code='lk']::before {
+	background-position: -2700px 0;
+}
+
+.choices__item[data-country-code='lr']::before {
+	background-position: -2720px 0;
+}
+
+.choices__item[data-country-code='ls']::before {
+	background-position: -2740px 0;
+}
+
+.choices__item[data-country-code='lt']::before {
+	background-position: -2760px 0;
+}
+
+.choices__item[data-country-code='lu']::before {
+	background-position: -2780px 0;
+}
+
+.choices__item[data-country-code='lv']::before {
+	background-position: -2800px 0;
+}
+
+.choices__item[data-country-code='ly']::before {
+	background-position: -2820px 0;
+}
+
+.choices__item[data-country-code='ma']::before {
+	background-position: -2840px 0;
+}
+
+.choices__item[data-country-code='mc']::before {
+	background-position: -2860px 0;
+}
+
+.choices__item[data-country-code='md']::before {
+	background-position: -2880px 0;
+}
+
+.choices__item[data-country-code='me']::before {
+	background-position: -2900px 0;
+}
+
+.choices__item[data-country-code='mf']::before {
+	background-position: -2920px 0;
+}
+
+.choices__item[data-country-code='mg']::before {
+	background-position: -2940px 0;
+}
+
+.choices__item[data-country-code='mh']::before {
+	background-position: -2960px 0;
+}
+
+.choices__item[data-country-code='mk']::before {
+	background-position: -2980px 0;
+}
+
+.choices__item[data-country-code='ml']::before {
+	background-position: -3000px 0;
+}
+
+.choices__item[data-country-code='mm']::before {
+	background-position: -3020px 0;
+}
+
+.choices__item[data-country-code='mn']::before {
+	background-position: -3040px 0;
+}
+
+.choices__item[data-country-code='mo']::before {
+	background-position: -3060px 0;
+}
+
+.choices__item[data-country-code='mp']::before {
+	background-position: -3080px 0;
+}
+
+.choices__item[data-country-code='mq']::before {
+	background-position: -3100px 0;
+}
+
+.choices__item[data-country-code='mr']::before {
+	background-position: -3120px 0;
+}
+
+.choices__item[data-country-code='ms']::before {
+	background-position: -3140px 0;
+}
+
+.choices__item[data-country-code='mt']::before {
+	background-position: -3160px 0;
+}
+
+.choices__item[data-country-code='mu']::before {
+	background-position: -3180px 0;
+}
+
+.choices__item[data-country-code='mv']::before {
+	background-position: -3200px 0;
+}
+
+.choices__item[data-country-code='mw']::before {
+	background-position: -3220px 0;
+}
+
+.choices__item[data-country-code='mx']::before {
+	background-position: -3240px 0;
+}
+
+.choices__item[data-country-code='my']::before {
+	background-position: -3260px 0;
+}
+
+.choices__item[data-country-code='mz']::before {
+	background-position: -3280px 0;
+}
+
+.choices__item[data-country-code='na']::before {
+	background-position: -3300px 0;
+}
+
+.choices__item[data-country-code='nc']::before {
+	background-position: -3320px 0;
+}
+
+.choices__item[data-country-code='ne']::before {
+	background-position: -3340px 0;
+}
+
+.choices__item[data-country-code='nf']::before {
+	background-position: -3360px 0;
+}
+
+.choices__item[data-country-code='ng']::before {
+	background-position: -3380px 0;
+}
+
+.choices__item[data-country-code='ni']::before {
+	background-position: -3400px 0;
+}
+
+.choices__item[data-country-code='nl']::before {
+	background-position: -3420px 0;
+}
+
+.choices__item[data-country-code='no']::before {
+	background-position: -3440px 0;
+}
+
+.choices__item[data-country-code='np']::before {
+	background-position: -3460px 0;
+}
+
+.choices__item[data-country-code='nr']::before {
+	background-position: -3480px 0;
+}
+
+.choices__item[data-country-code='nu']::before {
+	background-position: -3500px 0;
+}
+
+.choices__item[data-country-code='nz']::before {
+	background-position: -3520px 0;
+}
+
+.choices__item[data-country-code='om']::before {
+	background-position: -3540px 0;
+}
+
+.choices__item[data-country-code='pa']::before {
+	background-position: -3560px 0;
+}
+
+.choices__item[data-country-code='pe']::before {
+	background-position: -3580px 0;
+}
+
+.choices__item[data-country-code='pf']::before {
+	background-position: -3600px 0;
+}
+
+.choices__item[data-country-code='pg']::before {
+	background-position: -3620px 0;
+}
+
+.choices__item[data-country-code='ph']::before {
+	background-position: -3640px 0;
+}
+
+.choices__item[data-country-code='pk']::before {
+	background-position: -3660px 0;
+}
+
+.choices__item[data-country-code='pl']::before {
+	background-position: -3680px 0;
+}
+
+.choices__item[data-country-code='pm']::before {
+	background-position: -3700px 0;
+}
+
+.choices__item[data-country-code='pn']::before {
+	background-position: -3720px 0;
+}
+
+.choices__item[data-country-code='pr']::before {
+	background-position: -3740px 0;
+}
+
+.choices__item[data-country-code='ps']::before {
+	background-position: -3760px 0;
+}
+
+.choices__item[data-country-code='pt']::before {
+	background-position: -3780px 0;
+}
+
+.choices__item[data-country-code='pw']::before {
+	background-position: -3800px 0;
+}
+
+.choices__item[data-country-code='py']::before {
+	background-position: -3820px 0;
+}
+
+.choices__item[data-country-code='qa']::before {
+	background-position: -3840px 0;
+}
+
+.choices__item[data-country-code='re']::before {
+	background-position: -3860px 0;
+}
+
+.choices__item[data-country-code='ro']::before {
+	background-position: -3880px 0;
+}
+
+.choices__item[data-country-code='rs']::before {
+	background-position: -3900px 0;
+}
+
+.choices__item[data-country-code='ru']::before {
+	background-position: -3920px 0;
+}
+
+.choices__item[data-country-code='rw']::before {
+	background-position: -3940px 0;
+}
+
+.choices__item[data-country-code='sa']::before {
+	background-position: -3960px 0;
+}
+
+.choices__item[data-country-code='sb']::before {
+	background-position: -3980px 0;
+}
+
+.choices__item[data-country-code='sc']::before {
+	background-position: -4000px 0;
+}
+
+.choices__item[data-country-code='sd']::before {
+	background-position: -4020px 0;
+}
+
+.choices__item[data-country-code='se']::before {
+	background-position: -4040px 0;
+}
+
+.choices__item[data-country-code='sg']::before {
+	background-position: -4060px 0;
+}
+
+.choices__item[data-country-code='sh']::before {
+	background-position: -4080px 0;
+}
+
+.choices__item[data-country-code='si']::before {
+	background-position: -4100px 0;
+}
+
+.choices__item[data-country-code='sj']::before {
+	background-position: -4120px 0;
+}
+
+.choices__item[data-country-code='sk']::before {
+	background-position: -4140px 0;
+}
+
+.choices__item[data-country-code='sl']::before {
+	background-position: -4160px 0;
+}
+
+.choices__item[data-country-code='sm']::before {
+	background-position: -4180px 0;
+}
+
+.choices__item[data-country-code='sn']::before {
+	background-position: -4200px 0;
+}
+
+.choices__item[data-country-code='so']::before {
+	background-position: -4220px 0;
+}
+
+.choices__item[data-country-code='sr']::before {
+	background-position: -4240px 0;
+}
+
+.choices__item[data-country-code='ss']::before {
+	background-position: -4260px 0;
+}
+
+.choices__item[data-country-code='st']::before {
+	background-position: -4280px 0;
+}
+
+.choices__item[data-country-code='sv']::before {
+	background-position: -4300px 0;
+}
+
+.choices__item[data-country-code='sx']::before {
+	background-position: -4320px 0;
+}
+
+.choices__item[data-country-code='sy']::before {
+	background-position: -4340px 0;
+}
+
+.choices__item[data-country-code='sz']::before {
+	background-position: -4360px 0;
+}
+
+.choices__item[data-country-code='ta']::before {
+	background-position: -4380px 0;
+}
+
+.choices__item[data-country-code='tc']::before {
+	background-position: -4400px 0;
+}
+
+.choices__item[data-country-code='td']::before {
+	background-position: -4420px 0;
+}
+
+.choices__item[data-country-code='tf']::before {
+	background-position: -4440px 0;
+}
+
+.choices__item[data-country-code='tg']::before {
+	background-position: -4460px 0;
+}
+
+.choices__item[data-country-code='th']::before {
+	background-position: -4480px 0;
+}
+
+.choices__item[data-country-code='tj']::before {
+	background-position: -4500px 0;
+}
+
+.choices__item[data-country-code='tk']::before {
+	background-position: -4520px 0;
+}
+
+.choices__item[data-country-code='tl']::before {
+	background-position: -4540px 0;
+}
+
+.choices__item[data-country-code='tm']::before {
+	background-position: -4560px 0;
+}
+
+.choices__item[data-country-code='tn']::before {
+	background-position: -4580px 0;
+}
+
+.choices__item[data-country-code='to']::before {
+	background-position: -4600px 0;
+}
+
+.choices__item[data-country-code='tr']::before {
+	background-position: -4620px 0;
+}
+
+.choices__item[data-country-code='tt']::before {
+	background-position: -4640px 0;
+}
+
+.choices__item[data-country-code='tv']::before {
+	background-position: -4660px 0;
+}
+
+.choices__item[data-country-code='tw']::before {
+	background-position: -4680px 0;
+}
+
+.choices__item[data-country-code='tz']::before {
+	background-position: -4700px 0;
+}
+
+.choices__item[data-country-code='ua']::before {
+	background-position: -4720px 0;
+}
+
+.choices__item[data-country-code='ug']::before {
+	background-position: -4740px 0;
+}
+
+.choices__item[data-country-code='um']::before {
+	background-position: -4760px 0;
+}
+
+.choices__item[data-country-code='un']::before {
+	background-position: -4780px 0;
+}
+
+.choices__item[data-country-code='us']::before {
+	background-position: -4800px 0;
+}
+
+.choices__item[data-country-code='uy']::before {
+	background-position: -4820px 0;
+}
+
+.choices__item[data-country-code='uz']::before {
+	background-position: -4840px 0;
+}
+
+.choices__item[data-country-code='va']::before {
+	background-position: -4860px 0;
+}
+
+.choices__item[data-country-code='vc']::before {
+	background-position: -4880px 0;
+}
+
+.choices__item[data-country-code='ve']::before {
+	background-position: -4900px 0;
+}
+
+.choices__item[data-country-code='vg']::before {
+	background-position: -4920px 0;
+}
+
+.choices__item[data-country-code='vi']::before {
+	background-position: -4940px 0;
+}
+
+.choices__item[data-country-code='vn']::before {
+	background-position: -4960px 0;
+}
+
+.choices__item[data-country-code='vu']::before {
+	background-position: -4980px 0;
+}
+
+.choices__item[data-country-code='wf']::before {
+	background-position: -5000px 0;
+}
+
+.choices__item[data-country-code='ws']::before {
+	background-position: -5020px 0;
+}
+
+.choices__item[data-country-code='xk']::before {
+	background-position: -5040px 0;
+}
+
+.choices__item[data-country-code='ye']::before {
+	background-position: -5060px 0;
+}
+
+.choices__item[data-country-code='yt']::before {
+	background-position: -5080px 0;
+}
+
+.choices__item[data-country-code='za']::before {
+	background-position: -5100px 0;
+}
+
+.choices__item[data-country-code='zm']::before {
+	background-position: -5120px 0;
+}
+
+.choices__item[data-country-code='zw']::before {
+	background-position: -5140px 0;
+}

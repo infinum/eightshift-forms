@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\ActiveCampaign
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Integrations\ClientInterface;

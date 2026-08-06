@@ -29,18 +29,14 @@ class DbSync implements ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'syncDb']);
+		\add_action('admin_init', $this->syncDb(...));
 	}
 
 	/**
 	 * Sync DB.
-	 *
-	 * @return void
 	 */
 	public function syncDb(): void
 	{
@@ -59,8 +55,6 @@ class DbSync implements ServiceInterface
 
 	/**
 	 * Install database tables. Only installs tables that don't already exist.
-	 *
-	 * @return void
 	 */
 	private function installTables(): void
 	{
@@ -87,7 +81,6 @@ class DbSync implements ServiceInterface
 	 * Check if a database table exists.
 	 *
 	 * @param string $tableName Full table name with prefix.
-	 * @return bool
 	 */
 	private function tableExists(string $tableName): bool
 	{

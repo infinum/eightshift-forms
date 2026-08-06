@@ -15,6 +15,7 @@ use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
+use Override;
 
 /**
  * FormListingAdminSubMenu class.
@@ -22,45 +23,34 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormListingAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable for listing.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
-	{
-		$this->formsListing = $formsListing;
-	}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function register(): void
 	{
 		\add_action(
 			'admin_menu',
-			function () {
+			function (): void {
 				\add_submenu_page(
 					$this->getParentMenu(),
 					$this->getTitle(),
 					$this->getMenuTitle(),
 					$this->getCapability(),
 					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
+					$this->processAdminSubmenu(...)
 				);
 			},
 			20
 		);
 
-		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearanceMenu'], 32);
+		\add_action('admin_menu', $this->addCustomLinkIntoAppearanceMenu(...), 32);
 	}
 
 	/**
@@ -166,8 +156,6 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 
 	/**
 	 * Add additional links to sidebar menu.
-	 *
-	 * @return void
 	 */
 	public function addCustomLinkIntoAppearanceMenu(): void
 	{

@@ -29,20 +29,21 @@ $radioSingleSubmit = Helpers::checkAttr('radioSingleSubmit', $attributes, $manif
 $radioAttrs = Helpers::checkAttr('radioAttrs', $attributes, $manifest);
 $radioFieldAttrs = Helpers::checkAttr('radioFieldAttrs', $attributes, $manifest);
 $radioIcon = Helpers::checkAttr('radioIcon', $attributes, $manifest);
+$radioIconId = Helpers::checkAttr('radioIconId', $attributes, $manifest);
 $radioIsHidden = Helpers::checkAttr('radioIsHidden', $attributes, $manifest);
-$radioTwSelectorsData = Helpers::checkAttr('radioTwSelectorsData', $attributes, $manifest);
+$radioTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($radioTwSelectorsData, ['radio']);
 
-$radioClass = Helpers::classnames([
+$radioClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'radio', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($radioIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($radioIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
-$radioInputClass = Helpers::classnames([
-	FormsHelper::getTwPart($twClasses, 'radio', 'input', "{$componentClass}__input"),
+$radioInputClass = Helpers::clsx([
+	FormsHelper::getTwPart($twClasses, 'radio', 'input', "{$componentClass}__input %FSO_INPUT%"),
 	Helpers::selector($radioSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -53,7 +54,7 @@ $conditionalTags = Helpers::render(
 	Helpers::props('conditionalTags', $attributes)
 );
 
-if ($conditionalTags) {
+if ($conditionalTags !== '' && $conditionalTags !== '0') {
 	$radioFieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
@@ -67,9 +68,9 @@ if ($componentName) {
 
 <div
 	class="<?php echo esc_attr($radioClass); ?>"
-	<?php echo Helpers::getAttrsOutput($radioFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($radioFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>>
-	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content")); ?>">
+	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content %FSO_CONTENT%")); ?>">
 		<input
 			class="<?php echo esc_attr($radioInputClass); ?>"
 			type="radio"
@@ -77,19 +78,27 @@ if ($componentName) {
 			id="<?php echo esc_attr($radioName); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
-			<?php echo Helpers::getAttrsOutput($radioAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			<?php echo Helpers::getAttrsOutput($radioAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			?> />
 		<?php if (!$radioHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($radioName); ?>"
-				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label")); ?>">
+				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label %FSO_LABEL%")); ?>">
 				<?php if ($radioIcon) { ?>
-					<img class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-icon', "{$componentClass}__label-icon")); ?>" src="<?php echo esc_url($radioIcon); ?>" alt="<?php echo esc_attr($radioLabel); ?>" />
+					<?php
+					$iconAltText = get_post_meta($radioIconId ?? 0, '_wp_attachment_image_alt', true) ?: '';
+					?>
+					<img
+						class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-icon', "{$componentClass}__label-icon %FSO_LABEL_ICON%")); ?>"
+						src="<?php echo esc_url($radioIcon); ?>"
+						alt="<?php echo esc_attr($iconAltText); ?>" />
 				<?php } ?>
 
 				<?php if (!$radioHideLabelText) { ?>
-					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-inner', "{$componentClass}__label-inner")); ?>">
-						<?php echo wp_kses_post(apply_filters('the_content', $radioLabel)); ?>
+					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-inner', "{$componentClass}__label-inner %FSO_LABEL_INNER%")); ?>">
+						<?php
+						echo wp_kses_post(apply_filters('the_content', $radioLabel));
+						?>
 					</span>
 				<?php } ?>
 			</label>

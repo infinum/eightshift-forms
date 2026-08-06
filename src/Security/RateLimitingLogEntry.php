@@ -57,11 +57,11 @@ class RateLimitingLogEntry
 			throw new RuntimeException("Form ID is required to write a rate limiting log entry.");
 		}
 
-		if (!$this->userToken) {
+		if ($this->userToken === '' || $this->userToken === '0') {
 			throw new RuntimeException("User token is required to write a rate limiting log entry.");
 		}
 
-		if (!$this->activityType) {
+		if ($this->activityType === '' || $this->activityType === '0') {
 			throw new RuntimeException("Activity type is required to write a rate limiting log entry.");
 		}
 
@@ -104,16 +104,17 @@ class RateLimitingLogEntry
 
 		$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE user_token = %s AND activity_type = %s AND created_at >= %d", $table, $userToken, $activityType, $windowStart));
 
-		return \array_map(static function ($result) {
+		return \array_map(
 			// We use snake-case in the database column names.
-			return new RateLimitingLogEntry(
+			static fn($result): RateLimitingLogEntry => new RateLimitingLogEntry(
 				userToken: $result->user_token,
 				activityType: $result->activity_type,
 				logId: $result->log_id,
 				formId: $result->form_id,
 				createdAt: $result->created_at,
-			);
-		}, $results);
+			),
+			$results
+		);
 	}
 
 	/**
@@ -157,20 +158,16 @@ class RateLimitingLogEntry
 
 		$results = $wpdb->get_results($wpdb->prepare("SELECT activity_type, COUNT(*) as count FROM %i WHERE user_token = %s AND created_at >= %d GROUP BY activity_type", $table, $userToken, $windowStart));
 
-		return \array_map(static function ($result) {
-			return [
-				'activityType' => $result->activity_type,
-				'count' => $result->count,
-			];
-		}, $results);
+		return \array_map(static fn($result): array => [
+			'activityType' => $result->activity_type,
+			'count' => $result->count,
+		], $results);
 	}
 
 	/**
 	 * Cleanup old log entries from the database.
 	 *
 	 * @param integer $windowDuration The time window (from current time) in seconds to keep log entries.
-	 *
-	 * @return void
 	 */
 	public static function cleanup(int $windowDuration): void
 	{

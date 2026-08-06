@@ -4,7 +4,7 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('jira') ?? manifest.icon.src,
 	},
 	parent: globalManifest.allowedBlocksList.formsCpt,

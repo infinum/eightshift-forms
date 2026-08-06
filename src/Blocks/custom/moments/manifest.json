@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "moments",
 	"title": "Moments form",
 	"description" : "Moments subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-infobip"
+		"src": "moments"
 	},
 	"keywords": [
 		"moments"

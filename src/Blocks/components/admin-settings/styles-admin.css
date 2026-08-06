@@ -1,0 +1,35 @@
+/* stylelint-disable selector-max-specificity */
+
+@import '../../../../tailwind.css';
+@import 'tailwindcss' prefix(esf);
+
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cache'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='location'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='dashboard'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='debug'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='documentation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='migration'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='transfer'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wp'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='wpml'],
+.es-form[data-form-type='settingsGlobal'][data-settings-type='calculator'] {
+	.es-submit--global {
+		@apply esf:hidden;
+	}
+}
+
+.esf-main-container {
+	@apply esf:selection:bg-pink-950/8 esf:selection:text-pink-950;
+}
+
+.esf-is-filter-applied {
+	@apply esf:bg-mist-600/5 esf:text-mist-600;
+	@apply esf:p-16 esf:mt-8 esf:rounded-xl esf:text-sm;
+	@apply esf:w-fit;
+	@apply esf:cursor-pointer;
+	@apply esf:block;
+	@apply esf:[&_ul]:mt-8! esf:[&_ul]:text-mist-950/80 esf:[&_ul]:text-xs;
+	@apply esf:selection:bg-lime-800/8 esf:selection:text-lime-800;
+}

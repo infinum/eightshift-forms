@@ -20,7 +20,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * MailchimpClient integration class.
@@ -124,14 +124,12 @@ class MailchimpClient implements MailchimpClientInterface
 		if (!$output || !$item) {
 			$items = $this->getMailchimpTags($itemId);
 
-			if ($items) {
+			if ($items !== []) {
 				$output[$itemId]['tags'] = \array_map(
-					static function ($item) {
-						return [
-							'id' => (string) $item['id'],
-							'name' => (string) $item['name'],
-						];
-					},
+					static fn(array $item): array => [
+						'id' => (string) $item['id'],
+						'name' => (string) $item['name'],
+					],
 					$items
 				);
 
@@ -178,12 +176,12 @@ class MailchimpClient implements MailchimpClientInterface
 		];
 
 		// If there are any merge_fields, add them to the body as empty will throw an error.
-		if ($preparedParams) {
+		if ($preparedParams !== []) {
 			$body['merge_fields'] = $preparedParams;
 		}
 
 		// If there are any tags, add them to the body as empty will throw an error.
-		if ($tags) {
+		if ($tags !== []) {
 			$body['tags'] = $tags;
 		}
 
@@ -233,21 +231,16 @@ class MailchimpClient implements MailchimpClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['detail'] ?? '';
 
-		switch ($msg) {
-			case 'Bad Request':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_BAD_REQUEST_ERROR;
-			case 'Your request did not include an API key.':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'Bad Request' => Labels::LABEL_MAILCHIMP_BAD_REQUEST_ERROR,
+			'Your request did not include an API key.' => Labels::LABEL_MAILCHIMP_MISSING_CONFIG,
+			default => Labels::LABEL_MAILCHIMP_INTEGRATION_ERROR,
+		};
 	}
 
 	/**
@@ -267,30 +260,32 @@ class MailchimpClient implements MailchimpClientInterface
 		foreach ($errors as $value) {
 			$key = $value['field'] ?? '';
 			$message = $value['message'] ?? '';
-
-			if (!$key || !$message) {
+			if (!$key) {
+				continue;
+			}
+			if (!$message) {
 				continue;
 			}
 
 			switch ($message) {
 				case 'This value should not be blank.':
-					$output[$key] = 'validationRequired';
+					$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 					break;
 				case 'That is not a valid URL':
-					$output[$key] = 'validationUrl';
+					$output[$key] = Labels::LABEL_VALIDATION_URL;
 					break;
 				case 'Please enter a zip code (5 digits)':
-					$output[$key] = 'validationMailchimpInvalidZip';
+					$output[$key] = Labels::LABEL_VALIDATION_MAILCHIMP_INVALID_ZIP;
 					break;
 				case 'Please enter a month (01-12) and a day (01-31)':
 				case 'Please enter the date':
-					$output[$key] = 'validationDate';
+					$output[$key] = Labels::LABEL_VALIDATION_DATE;
 					break;
 			}
 		}
 
 		if ($msg === 'Please provide a valid email address.') {
-			$output['email_address'] = 'validationEmail';
+			$output['email_address'] = Labels::LABEL_VALIDATION_EMAIL;
 		}
 
 		return $output;
@@ -339,12 +334,10 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getHeaders(): array
 	{
-		$headers = [
+		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 			'Authorization' => "Bearer {$this->getApiKey()}"
 		];
-
-		return $headers;
 	}
 
 	/**
@@ -516,8 +509,6 @@ class MailchimpClient implements MailchimpClientInterface
 
 	/**
 	 * Return Mailchimp base url.
-	 *
-	 * @return string
 	 */
 	private function getBaseUrl(): string
 	{
@@ -529,8 +520,6 @@ class MailchimpClient implements MailchimpClientInterface
 
 	/**
 	 * Return Api Key from settings or global variable.
-	 *
-	 * @return string
 	 */
 	private function getApiKey(): string
 	{

@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "nationbuilder",
 	"title": "NationBuilder form",
 	"description" : "NationBuilder form block",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-nationbuilder"
+		"src": "nationbuilder"
 	},
 	"keywords": [
 		"nationbuilder"

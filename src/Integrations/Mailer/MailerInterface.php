@@ -31,8 +31,6 @@ interface MailerInterface
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $data Data to send in the email.
 	 * @param string $debugKey Debug key.
-	 *
-	 * @return boolean
 	 */
 	public function sendTroubleshootingEmail(
 		array $formDetails,
@@ -44,8 +42,6 @@ interface MailerInterface
 	 * Get debug key.
 	 *
 	 * @param array<string, mixed> $data Data to use.
-	 *
-	 * @return string
 	 */
 	public function getDebugKey(array $data): string;
 }

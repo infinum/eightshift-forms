@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { WorkableEditor } from './components/workable-editor';
 import { WorkableOptions } from './components/workable-options';

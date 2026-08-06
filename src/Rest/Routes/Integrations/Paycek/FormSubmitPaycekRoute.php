@@ -22,7 +22,7 @@ use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitPaycekRoute
@@ -46,8 +46,6 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -78,19 +76,19 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If integration is missing config.
 	 * @throws ValidationFailedException If required params are missing.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
 		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('paycekMissingConfig'),
+				Labels::getLabel(Labels::LABEL_PAYCEK_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -106,23 +104,15 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 			'paymentId',
 			'amount',
 		];
-
-		$missingOrEmpty = false;
-
-		foreach ($reqParams as $param) {
-			if (!isset($params[$param]) || empty($params[$param])) {
-				$missingOrEmpty = true;
-				break;
-			}
-		}
+		$missingOrEmpty = \array_any($reqParams, fn(string $param): bool => !isset($params[$param]) || empty($params[$param]));
 
 		if ($missingOrEmpty) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new ValidationFailedException(
-				$this->getLabels()->getLabel('paycekMissingReqParams', $formId),
+				Labels::getLabel(Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS, $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_REQ_PARAMS,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_MISSING_REQ_PARAMS,
 				],
 			);
 			// phpcs:enable
@@ -153,10 +143,10 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		\do_action(HooksHelpers::getActionName(['integrations', $formDetails[Config::FD_TYPE], 'submitSuccess']), $formDetails, $formId);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('paycekSuccess', $formId),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_PAYCEK_SUCCESS, $formId),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_SUCCESS,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PAYCEK_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(
 				$successAdditionalData['public'],
@@ -234,7 +224,9 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
-		if (SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '') {
+		$entryIdUse = SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId);
+
+		if ($entryIdUse !== '' && $entryIdUse !== '0') {
 			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 
 			if ($entryId) {
@@ -258,8 +250,6 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 * Generate payment URL for Paycek.
 	 *
 	 * @param string $data Data to encode.
-	 *
-	 * @return string
 	 */
 	private function base64urlEncode(string $data): string
 	{
@@ -324,12 +314,10 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	 * @param string $formId Form ID.
 	 * @param string $orderId Order ID.
 	 * @param string $url URL.
-	 *
-	 * @return string
 	 */
 	private function getCallbackUrl(string $formId, string $orderId, string $url = ''): string
 	{
-		if (!$url) {
+		if ($url === '' || $url === '0') {
 			return '';
 		}
 

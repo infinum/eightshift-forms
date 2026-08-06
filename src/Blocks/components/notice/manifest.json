@@ -3,12 +3,14 @@
 	"componentName": "notice",
 	"title": "Notice",
 	"componentClass": "es-notice",
-	"example": {
-		"attributes": {
-			"noticeContent": "Value"
-		}
-	},
 	"attributes": {
+		"noticeTitle": {
+			"type": "string"
+		},
+		"noticeType": {
+			"type": "string",
+			"default": "warning"
+		},
 		"noticeContent": {
 			"type": "string"
 		}

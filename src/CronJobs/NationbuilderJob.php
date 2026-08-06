@@ -16,6 +16,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -33,13 +34,6 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 	public const JOB_NAME = 'es_forms_nationbuilder_queue';
 
 	/**
-	 * Instance variable for NationbuilderClientInterface data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
-
-	/**
 	 * Instance variable of MailerInterface data.
 	 *
 	 * @var MailerInterface
@@ -54,27 +48,22 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function __construct(
 		MailerInterface $mailer,
-		NationbuilderClientInterface $nationbuilderClient
+		protected NationbuilderClientInterface $nationbuilderClient
 	) {
 		$this->mailer = $mailer;
-		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**
 	 * Check if job is set and add it if not.
-	 *
-	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -89,10 +78,8 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
-	 *
-	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
 		$use = \apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		$jobs = SettingsHelpers::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
@@ -110,14 +97,14 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 						if (ApiHelpers::isErrorResponse($listResponse[Config::IARD_CODE])) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $listResponse;
 
-							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_LIST_ERROR)) {
+							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_NATIONBUILDER_LIST_ERROR)) {
 								$this->mailer->sendTroubleshootingEmail(
 									$formDetails,
 									[
 										'response' => $listResponse[Config::IARD_RESPONSE] ?? [],
 										'body' => $listResponse[Config::IARD_BODY] ?? [],
 									],
-									SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_LIST_ERROR
+									Labels::LABEL_NATIONBUILDER_LIST_ERROR
 								);
 							}
 						}
@@ -135,14 +122,14 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 						if (ApiHelpers::isErrorResponse($tagResponse[Config::IARD_CODE])) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $tagResponse;
 
-							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_TAGS_ERROR)) {
+							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, Labels::LABEL_NATIONBUILDER_TAGS_ERROR)) {
 								$this->mailer->sendTroubleshootingEmail(
 									$formDetails,
 									[
 										'response' => $tagResponse[Config::IARD_RESPONSE] ?? [],
 										'body' => $tagResponse[Config::IARD_BODY] ?? [],
 									],
-									SettingsFallback::SETTINGS_FALLBACK_FLAG_NATIONBUILDER_TAGS_ERROR
+									Labels::LABEL_NATIONBUILDER_TAGS_ERROR
 								);
 							}
 						}

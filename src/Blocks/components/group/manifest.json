@@ -4,26 +4,10 @@
 	"title": "Group",
 	"componentClass": "es-group",
 	"attributes": {
-		"groupSaveOneField": {
-			"type": "boolean",
-			"default": false
-		},
-		"groupStyle": {
-			"type": "string"
-		},
 		"groupLabel": {
 			"type": "string"
 		},
-		"groupSublabel": {
-			"type": "string"
-		},
-		"groupHelp": {
-			"type": "string"
-		},
 		"groupContent": {
-			"type": "string"
-		},
-		"groupBeforeContent": {
 			"type": "string"
 		},
 		"groupName": {

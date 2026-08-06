@@ -24,7 +24,7 @@ $stepSubmit = Helpers::checkAttr('stepSubmit', $attributes, $manifest);
 $stepPrevLabel = Helpers::checkAttr('stepPrevLabel', $attributes, $manifest);
 $stepNextLabel = Helpers::checkAttr('stepNextLabel', $attributes, $manifest);
 $stepIsActive = Helpers::checkAttr('stepIsActive', $attributes, $manifest);
-$stepTwSelectorsData = Helpers::checkAttr('stepTwSelectorsData', $attributes, $manifest);
+$stepTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($stepTwSelectorsData, ['step']);
 
@@ -57,7 +57,7 @@ $nextButtonComponent = '';
 
 <div
 	class="<?php echo esc_attr($stepClass); ?>"
-	<?php echo Helpers::getAttrsOutput($stepAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($stepAttrs));
 	?>>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">

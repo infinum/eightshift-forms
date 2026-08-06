@@ -10,7 +10,9 @@ use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -42,7 +44,6 @@ $formSecureData = Helpers::checkAttr('formSecureData', $attributes, $manifest);
 $formCustomName = $formParentSettings['customName'] ?? '';
 $formPostId = $formParentSettings['postId'] ?? '';
 $formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
-$formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
 $formType = $formParentSettings['formType'] ?? '';
 $formMultistepSkipScroll = $formParentSettings['multistepSkipScroll'] ?? false;
 
@@ -58,10 +59,10 @@ $formAttrs = Helpers::checkAttr('formAttrs', $attributes, $manifest);
 $customClassSelectorFilterName = HooksHelpers::getFilterName(['block', 'form', 'customClassSelector']);
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
-$formClass = Helpers::classnames([
+$formClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'form', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
-	Helpers::selector($customClassSelector, $customClassSelector),
+	$additionalClass,
+	$customClassSelector,
 	UtilsHelper::getStateSelector('form'),
 ]);
 
@@ -73,9 +74,7 @@ if ($formSecureData) {
 	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = $formSecureData; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }
 
-if ($formPhoneDisablePicker) {
-	$formAttrs[UtilsHelper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
-}
+$formAttrs[UtilsHelper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
 
 if ($formCustomName) {
 	$formAttrs[UtilsHelper::getStateAttribute('formCustomName')] = esc_attr($formCustomName);
@@ -102,7 +101,7 @@ if ($formConditionalTags) {
 	$rawConditionalTagData = $formConditionalTags;
 
 	if (str_contains($formConditionalTags, 'subItems')) {
-		$rawConditionalTagData = wp_json_encode(array_map(fn($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
+		$rawConditionalTagData = wp_json_encode(array_map(fn(array $item): array => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
 	}
 
 	$formAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);
@@ -133,7 +132,12 @@ if ($formMethod) {
 }
 
 $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
-$formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_encode($formDisabledDefaultStyles);
+
+$globalMsgOnBottom = SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_A11Y_GLOBAL_MSG_ON_BOTTOM_KEY, SettingsSettings::SETTINGS_GENERAL_A11Y_KEY);
+$globalMsg = Helpers::render(
+	'global-msg',
+	Helpers::props('globalMsg', $attributes)
+);
 
 // A11y: Provide an accessible name so Safari/VoiceOver exposes <form> as a landmark (WCAG 1.3.1, 4.1.2).
 if ($formPostId) {
@@ -144,51 +148,44 @@ if ($formPostId) {
 
 <form
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($formAttrs)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>
 	novalidate
 	onsubmit="event.preventDefault();">
 	<?php
-	if (is_user_logged_in() && !is_admin()) {
-		echo Helpers::render(
-			'form-edit-actions',
-			Helpers::props('formEditActions', $attributes, [
-				'formPostId' => $formPostId,
-				'formHasSteps' => $formHasSteps,
-				'formEditActionsTwSelectorsData' => $twClassesData,
-			])
-		);
-	}
-
 	echo Helpers::render(
-		'global-msg',
-		Helpers::props('globalMsg', $attributes, [
-			'globalMsgTwSelectorsData' => $twClassesData,
+		'form-edit-actions',
+		Helpers::props('formEditActions', $attributes, [
+			'formPostId' => $formPostId,
+			'formHasSteps' => $formHasSteps,
 		])
 	);
 
+	if (!$globalMsgOnBottom) {
+		echo wp_kses_post($globalMsg);
+	}
+
 	echo Helpers::render(
 		'progress-bar',
-		Helpers::props('progressBar', $attributes, [
-			'progressBarTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('progressBar', $attributes)
 	);
 	?>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
-		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-		?>
-
-		<?php echo GeneralHelpers::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php
+		echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		echo GeneralHelpers::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>
 	</div>
 
 	<?php
+	if ($globalMsgOnBottom) {
+		echo wp_kses_post($globalMsg);
+	}
+
 	echo Helpers::render(
 		'loader',
-		Helpers::props('loader', $attributes, [
-			'loaderTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('loader', $attributes)
 	);
 	?>
 </form>

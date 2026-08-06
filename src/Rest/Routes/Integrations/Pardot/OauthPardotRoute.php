@@ -25,20 +25,12 @@ class OauthPardotRoute extends AbstractOauth
 	public const ROUTE_SLUG = 'pardot';
 
 	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthPardot;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param OauthInterface $oauthPardot Inject Oauth methods.
 	 */
-	public function __construct(OauthInterface $oauthPardot)
+	public function __construct(protected OauthInterface $oauthPardot)
 	{
-		$this->oauthPardot = $oauthPardot;
 	}
 
 	/**
@@ -53,8 +45,6 @@ class OauthPardotRoute extends AbstractOauth
 
 	/**
 	 * Get the oauth type.
-	 *
-	 * @return string
 	 */
 	protected function getOauthType(): string
 	{
@@ -63,8 +53,6 @@ class OauthPardotRoute extends AbstractOauth
 
 	/**
 	 * Get the oauth allow key.
-	 *
-	 * @return string
 	 */
 	protected function getOauthAllowKey(): string
 	{
@@ -73,8 +61,6 @@ class OauthPardotRoute extends AbstractOauth
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

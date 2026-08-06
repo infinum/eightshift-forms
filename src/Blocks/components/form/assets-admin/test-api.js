@@ -22,8 +22,7 @@ export class TestApi {
 
 	async submit(target) {
 		const formId = this.state.getFormIdByElement(target);
-		const field = this.state.getFormFieldElementByChild(target);
-		const integrationType = field.getAttribute(this.state.getStateAttribute('testApiType'));
+		const integrationType = target.getAttribute(this.state.getStateAttribute('testApiType'));
 
 		const formData = new FormData();
 
@@ -48,10 +47,7 @@ export class TestApi {
 			const response = await fetch(this.state.getRestUrlByType('prefixTestApi', integrationType), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-			} = parsedResponse;
+			const { message, status } = parsedResponse;
 
 			this.utils.hideLoader(formId);
 			this.utils.setGlobalMsg(formId, message, status);
@@ -65,12 +61,12 @@ export class TestApi {
 					this.utils.unsetGlobalMsg(formId);
 				}, 6000);
 			}
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'adminTestApi', name, message));
 		}
-	};
+	}
 }

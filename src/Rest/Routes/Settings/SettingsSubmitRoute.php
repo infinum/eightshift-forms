@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use Override;
 
 /**
  * Class SettingsSubmitRoute
@@ -37,9 +39,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Detect what type of route it is.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function routeGetType(): string
 	{
 		return self::ROUTE_TYPE_SETTINGS;
@@ -47,8 +48,6 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -57,9 +56,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if filter params should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckFilterParams(): bool
 	{
 		return false;
@@ -67,9 +65,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if captcha should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckCaptcha(): bool
 	{
 		return false;
@@ -77,9 +74,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if security should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckSecurity(): bool
 	{
 		return false;
@@ -87,9 +83,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if enrichment should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckEnrichment(): bool
 	{
 		return false;
@@ -97,9 +92,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if country should be checked.
-	 *
-	 * @return bool
 	 */
+	#[Override]
 	protected function shouldCheckCountry(): bool
 	{
 		return false;
@@ -114,19 +108,17 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function getMandatoryParams(array $params): array
 	{
-		switch ($params[Config::FD_TYPE]) {
-			case Config::SETTINGS_GLOBAL_TYPE_NAME:
-				return [
-					Config::FD_TYPE => 'string',
-					Config::FD_PARAMS => 'array',
-				];
-			default:
-				return [
-					Config::FD_FORM_ID => 'string',
-					Config::FD_TYPE => 'string',
-					Config::FD_PARAMS => 'array',
-				];
-		}
+		return match ($params[Config::FD_TYPE]) {
+			Config::SETTINGS_GLOBAL_TYPE_NAME => [
+				Config::FD_TYPE => 'string',
+				Config::FD_PARAMS => 'array',
+			],
+			default => [
+				Config::FD_FORM_ID => 'string',
+				Config::FD_TYPE => 'string',
+				Config::FD_PARAMS => 'array',
+			],
+		};
 	}
 
 	/**
@@ -134,9 +126,9 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 		$params = $formDetails[Config::FD_PARAMS];
@@ -150,7 +142,7 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 			$fieldValue = $value['value'] ?? '';
 			$fieldType = $value['type'] ?? '';
 
-			if ($fieldType === 'checkbox' || $fieldType === 'select' || $fieldType === 'country') {
+			if (\in_array($fieldType, ['checkbox', 'select', 'country'], true)) {
 				$fieldValue = \implode(Config::DELIMITER, $fieldValue);
 			}
 
@@ -161,18 +153,18 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 				} else {
 					\update_post_meta((int) $formId, $key, $fieldValue);
 				}
+			} elseif (!$formId) {
+				\delete_option($key);
 			} else {
-				if (!$formId) {
-					\delete_option($key);
-				} else {
-					\delete_post_meta((int) $formId, $key);
-				}
+				\delete_post_meta((int) $formId, $key);
 			}
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('settingsSuccess'),
-
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_SETTINGS_SUCCESS),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_SETTINGS_SUCCESS,
+			],
 		];
 	}
 }

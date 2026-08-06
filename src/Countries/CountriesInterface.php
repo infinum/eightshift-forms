@@ -6,6 +6,8 @@
  * @package EightshiftForms\Countries
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Countries;
 
 /**

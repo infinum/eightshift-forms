@@ -31,7 +31,7 @@ $fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
-$fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
+$fileTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $fileId = $fileName . '-' . Helpers::getUnique();
 
@@ -40,17 +40,17 @@ $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes,
 
 $twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
 
-$fileClass = Helpers::classnames([
+$fileClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
 
 $customFile = '';
 
-$infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eightshift-forms');
-$infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eightshift-forms');
+$infoText = empty($fileCustomInfoText) ? __('Drag and drop files here', 'eightshift-forms') : $fileCustomInfoText;
+$infoButton = empty($fileCustomInfoButtonText) ? __('Add files', 'eightshift-forms') : $fileCustomInfoButtonText;
 
 $infoTextContent = '';
 if ($fileCustomInfoTextUse) {
@@ -72,7 +72,7 @@ $customFile = '
 	<a
 		href="#"
 		class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap {$jsSelector}")) . '"
-		' . Helpers::getAttrsOutput($fileButtonAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($fileButtonAttrs)) . '
 	>
 		' . $infoTextContent . '
 	</a>
@@ -87,7 +87,6 @@ if ($fileIsRequired) {
 
 $fileAttrs['aria-invalid'] = 'false';
 
-
 $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"
@@ -98,7 +97,7 @@ $file = '
 		' . disabled($fileIsDisabled, true, false) . '
 		type="file"
 		' . $fileIsMultiple . '
-		' . Helpers::getAttrsOutput($fileAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($fileAttrs)) . '
 	/>
 	' . $customFile . '
 	' . $additionalContent . '

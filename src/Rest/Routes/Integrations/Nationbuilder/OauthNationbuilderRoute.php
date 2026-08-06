@@ -25,21 +25,11 @@ class OauthNationbuilderRoute extends AbstractOauth
 	public const ROUTE_SLUG = 'nationbuilder';
 
 	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthNationbuilder;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 */
-	public function __construct(OauthInterface $oauthNationbuilder)
-	{
-		$this->oauthNationbuilder = $oauthNationbuilder;
-	}
+	public function __construct(protected OauthInterface $oauthNationbuilder) {} // phpcs:ignore
 
 	/**
 	 * Get the base url of the route
@@ -53,8 +43,6 @@ class OauthNationbuilderRoute extends AbstractOauth
 
 	/**
 	 * Get the oauth type.
-	 *
-	 * @return string
 	 */
 	protected function getOauthType(): string
 	{
@@ -63,8 +51,6 @@ class OauthNationbuilderRoute extends AbstractOauth
 
 	/**
 	 * Get the oauth allow key.
-	 *
-	 * @return string
 	 */
 	protected function getOauthAllowKey(): string
 	{
@@ -73,8 +59,6 @@ class OauthNationbuilderRoute extends AbstractOauth
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{

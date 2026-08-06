@@ -31,19 +31,15 @@ class ActivityLogAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
+		\add_action('admin_init', $this->checkIfJobIsSet(...));
+		\add_action(self::JOB_NAME, $this->getJobCallback(...));
 	}
 
 	/**
 	 * Check if job is set and add it if not.
-	 *
-	 * @return void
 	 */
 	public function checkIfJobIsSet(): void
 	{
@@ -58,10 +54,8 @@ class ActivityLogAutoDeleteJob implements ServiceInterface, ServiceCliInterface
 
 	/**
 	 * Run callback when event is triggered.
-	 *
-	 * @return void
 	 */
-	public function getJobCallback()
+	public function getJobCallback(): void
 	{
 		if (!\apply_filters(SettingsFallback::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return;

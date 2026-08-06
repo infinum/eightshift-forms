@@ -15,28 +15,21 @@ use EightshiftForms\Exception\ForbiddenException;
 use EightshiftForms\Exception\PermissionDeniedException;
 use EightshiftForms\Exception\RequestLimitException;
 use EightshiftForms\Exception\ValidationFailedException;
-use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Integrations\Mailer\MailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
+use Override;
 
 /**
  * Class AbstractSimpleFormSubmit
  */
 abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 {
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
 	/**
 	 * Instance variable of MailerInterface data.
 	 *
@@ -45,31 +38,18 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	public $mailer;
 
 	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param MailerInterface $mailer Inject mailer methods.
-	 *
-	 * @return void
 	 */
 	public function __construct(
 		SecurityInterface $security,
-		ValidatorInterface $validator,
-		LabelsInterface $labels,
+		protected ValidatorInterface $validator,
 		MailerInterface $mailer,
 	) {
 		$this->security = $security;
-		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->mailer = $mailer;
 	}
 
@@ -96,7 +76,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				throw new PermissionDeniedException(
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PERMISSION_DENIED,
 					]
 				);
 			}
@@ -104,9 +84,9 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			// Validate mandatory params.
 			if (!$this->getValidator()->validateMandatoryParams($params, $this->getMandatoryParams($params))) {
 				throw new ValidationFailedException(
-					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
+					Labels::getLabel(Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
+						AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
 			}
@@ -115,7 +95,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			$output = $this->submitAction($params);
 
 			$return = [
-				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? Labels::getLabel(Labels::LABEL_GENERIC_SUCCESS),
 				AbstractBaseRoute::R_CODE => $output[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -135,7 +115,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('submitFallbackError'),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: Labels::getLabel(Labels::LABEL_SUBMIT_FALLBACK_ERROR),
 				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
@@ -168,16 +148,6 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
-	 * Returns labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getLabels()
-	{
-		return $this->labels;
-	}
-
-	/**
 	 * Returns form submit mailer class.
 	 *
 	 * @return MailerInterface
@@ -195,13 +165,14 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[Override]
 	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		// Get params.
 		$params = $this->getRequestParams($request, $type);
 
 		// Bailout if there are no params.
-		if (!$params) {
+		if ($params === []) {
 			return [];
 		}
 

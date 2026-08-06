@@ -6,6 +6,8 @@
  * @package EightshiftForms\Integrations\Clearbit
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations\Clearbit;
 
 /**
@@ -35,8 +37,6 @@ interface ClearbitClientInterface
 	 * Set queue for Clearbit.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return bool
 	 */
 	public function setQueue(array $formDetails): bool;
 }

@@ -21,12 +21,10 @@ class ResultOutputItemPart implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_shortcode('esFormsROIP', [$this, 'callback']);
+		\add_shortcode('esFormsROIP', $this->callback(...));
 	}
 
 	/**
@@ -34,8 +32,6 @@ class ResultOutputItemPart implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $atts Attributes passed to the shortcode.
 	 * @param string $content Content inside the shortcode.
-	 *
-	 * @return string
 	 */
 	public function callback(array $atts, string $content): string
 	{
@@ -69,7 +65,7 @@ class ResultOutputItemPart implements ServiceInterface
 			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
 		];
 
-		return "<span " . Helpers::getAttrsOutput($attrs) . ">{$content}</span>";
+		return "<span " . \wp_kses_post(Helpers::getAttrsOutput($attrs)) . ">{$content}</span>";
 	}
 
 	/**
@@ -103,10 +99,12 @@ class ResultOutputItemPart implements ServiceInterface
 		$output = '';
 
 		foreach ($variationData as $key => $value) {
-			if (!$key || $value === '') {
+			if (!$key) {
 				continue;
 			}
-
+			if ($value === '') {
+				continue;
+			}
 			if ($name !== $key) {
 				continue;
 			}

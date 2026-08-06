@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitTalentlyftRoute
@@ -37,18 +36,10 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsTalentlyft::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable of ClientInterface data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $talentlyftClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,19 +48,16 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		ClientInterface $talentlyftClient
+		protected ClientInterface $talentlyftClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->talentlyftClient = $talentlyftClient;
 	}
 
 	/**
@@ -84,8 +72,6 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +103,9 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If test API fails.
 	 * @throws DisabledIntegrationException If integration is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -136,10 +122,10 @@ class FormSubmitTalentlyftRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsTalentlyft::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('talentlyftMissingConfig'),
+				Labels::getLabel(Labels::LABEL_TALENTLYFT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_TALENTLYFT_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TALENTLYFT_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

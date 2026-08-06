@@ -24,12 +24,10 @@ final class HooksHelpers
 	 * @param array<int, string> $names Array of names.
 	 * @param array<mixed> $data Array of data.
 	 * @param string $filterPrefix Filter prefix.
-	 *
-	 * @return string
 	 */
 	public static function getFilterName(array $names, array $data = [], string $filterPrefix = Config::FILTER_PREFIX): string
 	{
-		if (!$data) {
+		if ($data === []) {
 			$data = \EIGHTSHIFT_FORMS[Config::PUBLIC_FILTERS_NAME]; // @phpstan-ignore-line
 		}
 
@@ -42,12 +40,10 @@ final class HooksHelpers
 	 * @param array<int, string> $names Array of names.
 	 * @param array<mixed> $data Array of data.
 	 * @param string $filterPrefix Filter prefix.
-	 *
-	 * @return string
 	 */
 	public static function getActionName(array $names, array $data = [], string $filterPrefix = Config::FILTER_PREFIX): string
 	{
-		if (!$data) {
+		if ($data === []) {
 			$data = \EIGHTSHIFT_FORMS[Config::PUBLIC_ACTIONS_NAME]; // @phpstan-ignore-line
 		}
 
@@ -62,8 +58,6 @@ final class HooksHelpers
 	 * @param string $label Label.
 	 * @param array<mixed> $dataSet Data set.
 	 * @param string $filterPrefix Filter prefix.
-	 *
-	 * @return string
 	 */
 	private static function getHookName(array $names, string $cacheName, string $label, array $dataSet, string $filterPrefix = Config::FILTER_PREFIX): string
 	{
@@ -78,9 +72,7 @@ final class HooksHelpers
 
 		// List of all keys provided for the filter name.
 		$names = \array_map(
-			function ($item) {
-				return Helpers::kebabToSnakeCase(Helpers::camelToSnakeCase($item));
-			},
+			fn(string $item): string => Helpers::kebabToSnakeCase(Helpers::camelToSnakeCase($item)),
 			$names
 		);
 

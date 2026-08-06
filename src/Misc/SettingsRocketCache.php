@@ -42,29 +42,19 @@ class SettingsRocketCache implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ROCKET_CACHE_USE_KEY, self::SETTINGS_ROCKET_CACHE_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ROCKET_CACHE_USE_KEY, self::SETTINGS_ROCKET_CACHE_USE_KEY);
 	}
 
 	/**
@@ -87,12 +77,12 @@ class SettingsRocketCache implements SettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Forms cache', 'eightshift-forms'),
 						'introSubtitle' => \__('When you clear forms cache, you will also clear WP Rocket cache.', 'eightshift-forms'),
+						'introTitleType' => 'medium',
 					],
 				],
 			],

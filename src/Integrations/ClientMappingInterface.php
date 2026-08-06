@@ -7,6 +7,8 @@
  * @package EightshiftForms\Integrations
  */
 
+declare(strict_types=1);
+
 namespace EightshiftForms\Integrations;
 
 /**

@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitMailchimpRoute
@@ -37,18 +36,10 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsMailchimp::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Mailchimp data.
-	 *
-	 * @var MailchimpClientInterface
-	 */
-	protected $mailchimpClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,19 +48,16 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		MailchimpClientInterface $mailchimpClient
+		protected MailchimpClientInterface $mailchimpClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->mailchimpClient = $mailchimpClient;
 	}
 
 	/**
@@ -84,8 +72,6 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +103,9 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Mailchimp is missing config.
 	 * @throws DisabledIntegrationException If Mailchimp is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -136,10 +122,10 @@ class FormSubmitMailchimpRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsMailchimp::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('mailchimpMissingConfig'),
+				Labels::getLabel(Labels::LABEL_MAILCHIMP_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILCHIMP_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_MAILCHIMP_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

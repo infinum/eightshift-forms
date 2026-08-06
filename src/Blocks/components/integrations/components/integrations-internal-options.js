@@ -1,60 +1,115 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from "@wordpress/data";
-import { PanelBody, Button } from '@wordpress/components';
-import { props, Section, Control, icons } from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
+import { BaseControl, Button, ContainerPanel, HStack, ButtonGroup, Container, TriggeredPopover, RichLabel, Tabs, TabList, Tab, TabPanel } from '@eightshift/ui-components';
 import { LocationsButton, SettingsButton, resetInnerBlocks } from '../../utils';
-import { FormOptions } from '../../../components/form/components/form-options';
+import { formAlt, moreH, reset, treeAlt2, warning } from '@eightshift/ui-components/icons';
+import { FormOptions, FormOptionsAdvanced } from '../../../components/form/components/form-options';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 
-export const IntegrationsInternalOptions = ({
-	title,
-	attributes,
-	setAttributes,
-	clientId,
-}) => {
-
+export const IntegrationsInternalOptions = ({ attributes, setAttributes, clientId }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
 	return (
-		<>
-			<PanelBody title={title}>
-				<Control>
-					<div className='es-fifty-fifty-h es-gap-2!'>
+		<Tabs>
+			<TabList>
+				<Tab
+					icon={formAlt}
+					label={__('Form', 'eightshift-forms')}
+				/>
+				<Tab
+					icon={treeAlt2}
+					label={__('Multi-step/flow', 'eightshift-forms')}
+				/>
+				<Tab
+					icon={moreH}
+					label={__('Advanced', 'eightshift-forms')}
+				/>
+			</TabList>
+
+			<TabPanel>
+				<ContainerPanel>
+					<ButtonGroup>
 						<SettingsButton />
 						<LocationsButton />
-					</div>
-				</Control>
+					</ButtonGroup>
 
-				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')}>
-					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')} noBottomSpacing>
-						<Button
-							icon={icons.reset}
-							onClick={() => {
-								// Reset block to original state.
-								resetInnerBlocks(clientId, true);
-							}}
-							className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+					<FormOptions
+						{...props('form', attributes, {
+							setAttributes,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<StepMultiflowOptions
+						{...props('step', attributes, {
+							setAttributes,
+							stepMultiflowPostId: postId,
+						})}
+					/>
+				</ContainerPanel>
+			</TabPanel>
+
+			<TabPanel>
+				<ContainerPanel>
+					<FormOptionsAdvanced
+						{...props('form', attributes, {
+							setAttributes,
+						})}
+					/>
+
+					<Container
+						className='es-uic-theme-orange'
+						standalone
+						elevated
+						accent
+					>
+						<BaseControl
+							icon={warning}
+							label={__('Danger zone', 'eightshift-forms')}
+							inline
 						>
-							{__('Reset form', 'eightshift-forms')}
-						</Button>
-					</Control>
-				</Section>
+							<TriggeredPopover
+								triggerButtonLabel={__('Reset form', 'eightshift-forms')}
+								triggerButtonIcon={reset}
+								triggerButtonProps={{
+									className: 'esf:grow',
+								}}
+								className='esf:max-w-xs esf:p-16'
+								wrapperClassName='es-uic-theme-orange'
+							>
+								<RichLabel
+									icon={reset}
+									label={__('Reset form?', 'eightshift-forms')}
+									subtitle={__('Current configuration will be deleted.', 'eightshift-forms')}
+								/>
 
-				<FormOptions
-					{...props('form', attributes, {
-						setAttributes,
-					})}
-				/>
+								<HStack className='esf:justify-end esf:mt-20'>
+									<Button
+										slot='close'
+										type='ghost'
+									>
+										{__('Cancel', 'eightshift-forms')}
+									</Button>
 
-			</PanelBody>
-
-			<StepMultiflowOptions
-				{...props('step', attributes, {
-					setAttributes,
-					stepMultiflowPostId: postId,
-				})}
-			/>
-		</>
+									<Button
+										onClick={() => {
+											// Reset block to original state.
+											resetInnerBlocks(clientId, true);
+										}}
+										type='selected'
+									>
+										{__('Reset', 'eightshift-forms')}
+									</Button>
+								</HStack>
+							</TriggeredPopover>
+						</BaseControl>
+					</Container>
+				</ContainerPanel>
+			</TabPanel>
+		</Tabs>
 	);
 };

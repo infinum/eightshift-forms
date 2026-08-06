@@ -1,0 +1,16 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "pagination",
+	"title": "Pagination",
+	"componentClass": "es-pagination",
+	"attributes": {
+		"paginationTotalPages": {
+			"type": "integer",
+			"default": 1
+		},
+		"paginationCurrentPage": {
+			"type": "integer",
+			"default": 1
+		}
+	}
+}

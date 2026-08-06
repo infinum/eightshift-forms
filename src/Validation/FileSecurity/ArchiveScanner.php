@@ -14,6 +14,7 @@ namespace EightshiftForms\Validation\FileSecurity;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Labels\Labels;
 use ZipArchive;
 
 /**
@@ -34,12 +35,12 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 	public function scan(string $filepath, string $declaredName, string $detectedMime): string
 	{
 		if (!\class_exists(ZipArchive::class)) {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		$zip = new ZipArchive();
 		if ($zip->open($filepath, ZipArchive::RDONLY) !== true) {
-			return 'validationFileArchiveUnsafe';
+			return Labels::LABEL_VALIDATION_FILE_ARCHIVE_UNSAFE;
 		}
 
 		$denyList = $this->getDenyList();
@@ -49,18 +50,18 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 			for ($i = 0; $i < $zip->numFiles; $i++) {
 				$stat = $zip->statIndex($i);
 				if (!\is_array($stat)) {
-					return 'validationFileArchiveUnsafe';
+					return Labels::LABEL_VALIDATION_FILE_ARCHIVE_UNSAFE;
 				}
 
 				$name = (string) ($stat['name'] ?? '');
 
 				if ($this->hasPathTraversal($name)) {
-					return 'validationFileArchiveUnsafe';
+					return Labels::LABEL_VALIDATION_FILE_ARCHIVE_UNSAFE;
 				}
 
 				$ext = $this->getExtension($name);
 				if ($ext !== '' && isset($denyList[$ext])) {
-					return 'validationFileArchiveUnsafe';
+					return Labels::LABEL_VALIDATION_FILE_ARCHIVE_UNSAFE;
 				}
 
 				$size = (int) ($stat['size'] ?? 0);
@@ -68,11 +69,11 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 
 				$totalUncompressed += $size;
 				if ($totalUncompressed > Config::FILE_UPLOAD_ARCHIVE_MAX_UNCOMPRESSED) {
-					return 'validationFileArchiveUnsafe';
+					return Labels::LABEL_VALIDATION_FILE_ARCHIVE_UNSAFE;
 				}
 
 				if ($compressed > 0 && ($size / $compressed) > Config::FILE_UPLOAD_ARCHIVE_MAX_RATIO) {
-					return 'validationFileArchiveUnsafe';
+					return Labels::LABEL_VALIDATION_FILE_ARCHIVE_UNSAFE;
 				}
 			}
 		} finally {
@@ -86,8 +87,6 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 	 * Member name contains path traversal segments or absolute paths.
 	 *
 	 * @param string $name Member name.
-	 *
-	 * @return bool
 	 */
 	private function hasPathTraversal(string $name): bool
 	{
@@ -105,21 +104,13 @@ final class ArchiveScanner implements FileSecurityScannerInterface
 		}
 
 		$normalized = \str_replace('\\', '/', $name);
-		foreach (\explode('/', $normalized) as $segment) {
-			if ($segment === '..') {
-				return true;
-			}
-		}
-
-		return false;
+		return \array_any(\explode('/', $normalized), fn($segment): bool => $segment === '..');
 	}
 
 	/**
 	 * Lowercase extension extracted from an archive member name.
 	 *
 	 * @param string $name Member name.
-	 *
-	 * @return string
 	 */
 	private function getExtension(string $name): string
 	{

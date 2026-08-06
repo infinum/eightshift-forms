@@ -1,5 +1,4 @@
-import React from 'react';
-import { props } from '@eightshift/frontend-libs/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { PhoneOptions as PhoneOptionsComponent } from '../../../components/phone/components/phone-options';
 
 export const PhoneOptions = ({ attributes, setAttributes }) => {

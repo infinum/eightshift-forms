@@ -27,12 +27,10 @@ class General implements ServiceInterface
 
 	/**
 	 * Register all hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter('http_request_args', [$this, 'getHttpRequestArgs']);
+		\add_filter('http_request_args', $this->getHttpRequestArgs(...));
 	}
 
 	/**

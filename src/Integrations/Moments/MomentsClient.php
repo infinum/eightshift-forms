@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * MomentsClient integration class.
@@ -164,21 +164,16 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	 * Map service messages with our own.
 	 *
 	 * @param array<mixed> $body API response body.
-	 *
-	 * @return string
 	 */
 	private function getErrorMsg(array $body): string
 	{
 		$msg = $body['requestError']['serviceException']['messageId'] ?? '';
 
-		switch ($msg) {
-			case 'BAD_REQUEST':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_BAD_REQUEST_ERROR;
-			case 'UNAUTHORIZED':
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG;
-			default:
-				return SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR_WP;
-		}
+		return match ($msg) {
+			'BAD_REQUEST' => Labels::LABEL_MOMENTS_BAD_REQUEST_ERROR,
+			'UNAUTHORIZED' => Labels::LABEL_MOMENTS_MISSING_CONFIG,
+			default => Labels::LABEL_MOMENTS_INTEGRATION_ERROR,
+		};
 	}
 
 	/**
@@ -198,122 +193,122 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		}
 
 		// Validate req fields.
-		\preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", (string) $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
-		if ($matchesReq) {
+		if ($matchesReq !== []) {
 			$key = $matchesReq[0][2] ?: '';
-			if ($key) {
-				$output[$key] = 'validationRequired';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 			}
 		}
 
 		// Validate invalid email field.
-		\preg_match_all("/(\w*) (should have a valid email format)/", $msg, $matchesEmail, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should have a valid email format)/", (string) $msg, $matchesEmail, \PREG_SET_ORDER, 0);
 
-		if ($matchesEmail) {
+		if ($matchesEmail !== []) {
 			$key = $matchesEmail[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationEmail';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_EMAIL;
 			}
 		}
 
 		// Validate invalid phone field.
-		\preg_match_all("/(\w*) (is not a valid phone number)/", $msg, $matchesPhone, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (is not a valid phone number)/", (string) $msg, $matchesPhone, \PREG_SET_ORDER, 0);
 
-		if ($matchesPhone) {
+		if ($matchesPhone !== []) {
 			$key = $matchesPhone[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationPhone';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
 
 		// Validate invalid phone prefix field.
-		\preg_match_all("/(\w*) (number does not have valid country\/network prefix)/", $msg, $matchesPhonePrefix, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (number does not have valid country\/network prefix)/", (string) $msg, $matchesPhonePrefix, \PREG_SET_ORDER, 0);
 
-		if ($matchesPhonePrefix) {
+		if ($matchesPhonePrefix !== []) {
 			$key = $matchesPhonePrefix[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationPhone';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
 
 		// Validate invalid phone field.
-		\preg_match_all("/(\w*) (number is not numeric)/", $msg, $matchesPhoneIsNumeric, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (number is not numeric)/", (string) $msg, $matchesPhoneIsNumeric, \PREG_SET_ORDER, 0);
 
-		if ($matchesPhoneIsNumeric) {
+		if ($matchesPhoneIsNumeric !== []) {
 			$key = $matchesPhoneIsNumeric[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationPhone';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
 
 		// Validate invalid phone length field.
-		\preg_match_all("/(\w*) (number has invalid length for network)/", $msg, $matchesPhoneLength, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (number has invalid length for network)/", (string) $msg, $matchesPhoneLength, \PREG_SET_ORDER, 0);
 
-		if ($matchesPhoneLength) {
+		if ($matchesPhoneLength !== []) {
 			$key = $matchesPhoneLength[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationMomentsInvalidPhoneLength';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_MOMENTS_INVALID_PHONE_LENGTH;
 			}
 		}
 
 		// Validate invalid datetime field.
-		\preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", (string) $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
-		if ($matchesDate) {
+		if ($matchesDate !== []) {
 			$key = $matchesDate[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationDateTime';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_DATE_TIME;
 			}
 		}
 
 		// Validate invalid date field.
-		\preg_match_all("/(\w*) (should be an ISO date, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should be an ISO date, but there is)/", (string) $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
-		if ($matchesDate) {
+		if ($matchesDate !== []) {
 			$key = $matchesDate[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationDate';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_DATE;
 			}
 		}
 
 		// Validate invalid date field.
-		\preg_match_all("/(\w*) (should be earlier than current date)/", $msg, $matchesDateNoFuture, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should be earlier than current date)/", (string) $msg, $matchesDateNoFuture, \PREG_SET_ORDER, 0);
 
-		if ($matchesDateNoFuture) {
+		if ($matchesDateNoFuture !== []) {
 			$key = $matchesDateNoFuture[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationDateNoFuture';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_DATE_NO_FUTURE;
 			}
 		}
 
 		// Validate invalid country field.
-		\preg_match_all("/(\w*) (should be one of valid options)/", $msg, $matchesCountry, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (should be one of valid options)/", (string) $msg, $matchesCountry, \PREG_SET_ORDER, 0);
 
-		if ($matchesCountry) {
+		if ($matchesCountry !== []) {
 			$key = $matchesCountry[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationInvalid';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_INVALID;
 			}
 		}
 
 		// Validate invalid phone length field.
-		\preg_match_all("/(\w*) (contains forbidden special characters)/", $msg, $matchesForbiddenCharacters, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (contains forbidden special characters)/", (string) $msg, $matchesForbiddenCharacters, \PREG_SET_ORDER, 0);
 
-		if ($matchesForbiddenCharacters) {
+		if ($matchesForbiddenCharacters !== []) {
 			$key = $matchesForbiddenCharacters[0][1] ?: '';
 
-			if ($key) {
-				$output[$key] = 'validationMomentsInvalidSpecialCharacters';
+			if ($key !== '' && $key !== '0') {
+				$output[$key] = Labels::LABEL_VALIDATION_MOMENTS_INVALID_SPECIAL_CHARACTERS;
 			}
 		}
 
@@ -395,11 +390,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
 
-			if ($type === 'select' || $type === 'checkbox') {
-				$value = $param['value'] ?? [];
-			} else {
-				$value = $param['value'] ?? '';
-			}
+			$value = $type === 'select' || $type === 'checkbox' ? $param['value'] ?? [] : $param['value'] ?? '';
 
 			if (!$value) {
 				continue;
@@ -416,7 +407,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 					$value = \count($value) > 1 ? $value : $value[0];
 					break;
 				case 'input':
-					$value = \substr($value, 0, 1000);
+					$value = \substr((string) $value, 0, 1000);
 					break;
 				case 'phone':
 					$value = \filter_var($value, \FILTER_SANITIZE_NUMBER_INT);
@@ -425,10 +416,8 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			}
 
 			$typeCustom = $param['typeCustom'] ?? '';
-			switch ($typeCustom) {
-				case 'email':
-					$value = \strtolower($value);
-					break;
+			if ($typeCustom === 'email') {
+				$value = \strtolower((string) $value);
 			}
 
 			$output[$name] = $value;

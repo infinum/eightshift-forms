@@ -43,18 +43,14 @@ class I18n implements ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'loadTextdomain']);
+		\add_action('init', $this->loadTextdomain(...));
 	}
 
 	/**
 	 * Load the plugin text domain.
-	 *
-	 * @return void
 	 */
 	public function loadTextdomain(): void
 	{

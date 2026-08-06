@@ -1,0 +1,12 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "status-light",
+	"title": "Status light",
+	"componentClass": "es-status-light",
+	"attributes": {
+		"statusLightType": {
+			"type": "string",
+			"default": "error"
+		}
+	}
+}

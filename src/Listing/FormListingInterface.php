@@ -19,9 +19,8 @@ interface FormListingInterface
 	 * Get Forms List.
 	 *
 	 * @param array<string, mixed> $additionalQuery Additional query arguments.
-	 * @param bool $showTrash Whether to show trash posts.
 	 *
 	 * @return array<mixed>
 	 */
-	public function getFormsList(array $additionalQuery = [], bool $showTrash = false): array;
+	public function getFormsList(array $additionalQuery = []): array;
 }

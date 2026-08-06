@@ -14,12 +14,13 @@ use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use Override;
 
 /**
  * Class IntegrationEditorCreateRoute
@@ -32,30 +33,19 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'create';
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff
+		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -70,9 +60,8 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -80,8 +69,6 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -134,7 +121,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 				$message,
 				[
 					AbstractBaseRoute::R_DEBUG => $syncForm,
-					AbstractBaseRoute::R_DEBUG_KEY => 'createFormError',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_CREATE_FORM_ERROR,
 				]
 			);
 			// phpcs:enable
@@ -144,7 +131,7 @@ class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 			AbstractBaseRoute::R_MSG => $message,
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $syncForm,
-				AbstractBaseRoute::R_DEBUG_KEY => 'createFormSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_INTEGRATION_CREATE_FORM_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorSyncForm') => $syncForm,

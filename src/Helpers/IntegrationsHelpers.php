@@ -28,7 +28,7 @@ final class IntegrationsHelpers
 	{
 		$formDetails = GeneralHelpers::getFormDetails($id);
 
-		if (!$formDetails) {
+		if ($formDetails === []) {
 			return [];
 		}
 
@@ -39,7 +39,7 @@ final class IntegrationsHelpers
 			'label' => $formDetails[Config::FD_LABEL],
 			'icon' => $formDetails[Config::FD_ICON],
 			'value' => $type,
-			'isActive' => $useFilter ? SettingsHelpers::isOptionCheckboxChecked($useFilter, $useFilter) : false,
+			'isActive' => $useFilter && SettingsHelpers::isOptionCheckboxChecked($useFilter, $useFilter),
 			'isValid' => $formDetails[Config::FD_IS_VALID],
 			'isApiValid' => $formDetails[Config::FD_IS_API_VALID],
 		];

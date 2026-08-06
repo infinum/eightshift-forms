@@ -18,6 +18,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
+use Override;
 
 /**
  * Class AbstractBaseRoute
@@ -35,26 +36,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const R_DEBUG_SUCCESS_ADDITIONAL_DATA = 'debugSuccessAdditionalData';
 
 	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
 	 * Create a new instance that injects classes.
 	 *
 	 * @param SecurityInterface $security Security interface.
 	 */
-	public function __construct(SecurityInterface $security)
-	{
-		$this->security = $security;
-	}
+	public function __construct(protected SecurityInterface $security) {} // phpcs:ignore
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	abstract protected function isRouteAdminProtected(): bool;
 
@@ -96,15 +85,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	{
 		return [
 			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
+			'callback' => $this->routeCallback(...),
+			'permission_callback' => $this->permissionCallback(...),
 		];
 	}
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
 	protected function getMethods(): string
 	{
@@ -113,8 +100,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 	/**
 	 * By default allow public access to route.
-	 *
-	 * @return bool
 	 */
 	public function permissionCallback(): bool
 	{
@@ -123,8 +108,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 	/**
 	 * Toggle if this route requires nonce verification.
-	 *
-	 * @return bool
 	 */
 	protected function requiresNonceVerification(): bool
 	{
@@ -150,24 +133,19 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[Override]
 	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		// Check type of request and extract params.
-		switch ($type) {
-			case self::CREATABLE:
-				$params = $request->get_body_params();
-				break;
-			case self::READABLE:
-				$params = $request->get_params();
-				break;
-			default:
-				$params = [];
-				break;
-		}
+		$params = match ($type) {
+			self::CREATABLE => $request->get_body_params(),
+			self::READABLE => $request->get_params(),
+			default => [],
+		};
 
 		// Check if request maybe has json params usually sent by the Block editor.
 		if ($request->get_json_params()) {
-			$params = \array_merge(
+			return \array_merge(
 				$params,
 				$request->get_json_params(),
 			);
@@ -251,8 +229,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Check user permission for route action.
 	 *
 	 * @param string $permission Permission to check.
-	 *
-	 * @return bool
 	 */
 	protected function checkPermission(string $permission): bool
 	{

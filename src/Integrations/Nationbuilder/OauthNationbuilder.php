@@ -24,9 +24,9 @@ class OauthNationbuilder extends AbstractOauth
 	/**
 	 * Retry count for refresh token.
 	 *
-	 * @var integer
+	 * @var int
 	 */
-	private $refreshTokenRetryCounter = 0;
+	private int $refreshTokenRetryCounter = 0;
 
 	/**
 	 * Access token key.
@@ -42,8 +42,6 @@ class OauthNationbuilder extends AbstractOauth
 	 * Get Oauth URL based on the provider Id.
 	 *
 	 * @param string $path Path.
-	 *
-	 * @return string
 	 */
 	public function getApiUrl(string $path): string
 	{
@@ -54,8 +52,6 @@ class OauthNationbuilder extends AbstractOauth
 
 	/**
 	 * Get authorization URL based on the provider Id.
-	 *
-	 * @return string
 	 */
 	public function getOauthAuthorizeUrl(): string
 	{
@@ -121,8 +117,6 @@ class OauthNationbuilder extends AbstractOauth
 	 * Get access token.
 	 *
 	 * @param string $code Code.
-	 *
-	 * @return boolean
 	 */
 	public function getAccessToken(string $code): bool
 	{
@@ -133,8 +127,6 @@ class OauthNationbuilder extends AbstractOauth
 
 	/**
 	 * Get refresh token.
-	 *
-	 * @return boolean
 	 */
 	public function getRefreshToken(): bool
 	{
@@ -157,8 +149,6 @@ class OauthNationbuilder extends AbstractOauth
 	 * Check if token has expired.
 	 *
 	 * @param array<string, mixed> $body Body.
-	 *
-	 * @return boolean
 	 */
 	public function hasTokenExpired(array $body): bool
 	{
@@ -169,8 +159,6 @@ class OauthNationbuilder extends AbstractOauth
 	 * Get refresh token.
 	 *
 	 * @param array<string, mixed> $data Data.
-	 *
-	 * @return boolean
 	 */
 	private function getToken(array $data): bool
 	{

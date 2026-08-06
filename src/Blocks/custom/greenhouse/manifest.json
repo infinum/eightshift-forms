@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "greenhouse",
 	"title": "Greenhouse form",
 	"description" : "Greenhouse job application form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-greenhouse"
+		"src": "greenhouse"
 	},
 	"keywords": [
 		"greenhouse"

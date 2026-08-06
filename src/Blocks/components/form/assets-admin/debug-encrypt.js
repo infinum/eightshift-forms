@@ -49,11 +49,7 @@ export class DebugEncrypt {
 			const response = await fetch(this.state.getRestUrl('debugEncrypt'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				data,
-				status,
-			} = parsedResponse;
+			const { message, data, status } = parsedResponse;
 
 			this.utils.hideLoader(formId);
 			this.utils.setGlobalMsg(formId, message, status);
@@ -67,13 +63,12 @@ export class DebugEncrypt {
 			setTimeout(() => {
 				this.utils.unsetGlobalMsg(formId);
 			}, 6000);
-
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'adminDebugEncrypt', name, message));
 		}
-	};
+	}
 }

@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Pardot\PardotClientInterface;
 use EightshiftForms\Integrations\Pardot\SettingsPardot;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 
 /**
  * Class FormSubmitPardotRoute
@@ -37,18 +36,10 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsPardot::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Pardot data.
-	 *
-	 * @var PardotClientInterface
-	 */
-	protected $pardotClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,19 +48,16 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		PardotClientInterface $pardotClient
+		protected PardotClientInterface $pardotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->pardotClient = $pardotClient;
 	}
 
 	/**
@@ -84,8 +72,6 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -116,9 +102,9 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Pardot is missing config.
 	 * @throws DisabledIntegrationException If Pardot is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPardot::SETTINGS_PARDOT_SKIP_INTEGRATION_KEY, SettingsPardot::SETTINGS_PARDOT_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -135,10 +121,10 @@ class FormSubmitPardotRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPardot::FILTER_SETTINGS_IS_VALID_NAME, false, $formDetails[Config::FD_FORM_ID])) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('pardotMissingConfig'),
+				Labels::getLabel(Labels::LABEL_PARDOT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PARDOT_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_PARDOT_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable

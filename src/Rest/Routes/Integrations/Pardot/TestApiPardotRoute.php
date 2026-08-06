@@ -14,7 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Integrations\Pardot\PardotClientInterface;
 use EightshiftForms\Integrations\Pardot\SettingsPardot;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -32,30 +32,19 @@ class TestApiPardotRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = SettingsPardot::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Pardot data.
-	 *
-	 * @var PardotClientInterface
-	 */
-	protected $pardotClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param PardotClientInterface $pardotClient Inject Pardot client.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		PardotClientInterface $pardotClient
+		protected PardotClientInterface $pardotClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->pardotClient = $pardotClient;
 	}
 
 	/**
@@ -84,8 +73,6 @@ class TestApiPardotRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -108,20 +95,20 @@ class TestApiPardotRoute extends AbstractSimpleFormSubmit
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('testApiError'),
+				Labels::getLabel(Labels::LABEL_TEST_API_ERROR),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
-					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_ERROR,
 				]
 			);
 			// phpcs:enable
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('testApiSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_TEST_API_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
-				AbstractBaseRoute::R_DEBUG_KEY => 'testApiSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_TEST_API_SUCCESS,
 			],
 		];
 	}

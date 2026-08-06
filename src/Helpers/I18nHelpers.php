@@ -17,8 +17,6 @@ final class I18nHelpers
 {
 	/**
 	 * Set locale depending on default locale or hook override.
-	 *
-	 * @return string
 	 */
 	public static function getLocale(): string
 	{

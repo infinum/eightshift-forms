@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.0.0-preview]
+
+### Added
+
+- Added a redesigned block editor experience with reusable option panels, status indicators, contextual help, and improved controls across forms, fields, integrations, conditional visibility, steps, and result outputs.
+- Added Tailwind CSS selector support and per-form and per-field style overrides for admin, editor, and frontend rendering.
+- Added new admin listing and pagination components to improve settings and listing navigation.
+- Added media attachment metadata support for checkbox and radio image alt text.
+
+### Changed
+
+- Updated custom blocks for WordPress 6.9+ compatibility through Block API v3.
+- Reworked admin settings and listings with updated controls, empty states, search guidance, status indicators, and actions.
+- Replaced component SCSS styling with Tailwind CSS classes using the `esf:` prefix across admin, editor, and frontend assets.
+- Renamed the tab background attribute from `tabNoBg` to `tabWithBg`, with tabs now displaying a background by default.
+- Updated multistep step indicators to retain class names when initialized dynamically and improve accessibility.
+- Updated dynamic HTML attribute output to use WordPress-safe escaping.
+- Updated PHP and JavaScript dependencies and added Tailwind CSS tooling.
+
+### Fixed
+
+- Prevented forms from being saved when required field names are empty and added clearer editor feedback for invalid field configuration.
+- Improved conditional visibility editing so field, operator, and value changes stay synchronized and unavailable states are handled clearly.
+- Improved accessibility feedback for missing labels, hidden labels, disabled and hidden fields, conditional rules, and checkbox and radio image alt text.
+- Fixed checkbox, radio, and select `show as` option handling in the editor.
+- Fixed editor option persistence for the label-as-placeholder setting and conditional visibility on external blocks.
+- Fixed editor previews and sizing for field widths and checkbox controls.
+
+### Removed
+
+- Removed the `adminListingPagination` component attribute; pagination state is now supplied through `adminListingData`.
+- Removed legacy component attributes `ratingIsReadOnly`, `checkboxAsToggleSize`, `textareaIsMonospace`, `textareaSize`, and `textareaLimitHeight`.
+- Removed legacy `card-inline` presentation props and replaced `cardInlineTitleLink` with `cardInlineUrl`.
+
 ## [9.10.1]
 
 ### Fixed
@@ -23,6 +57,16 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Updated general settings tab labels: "After form submission" is now "Redirect" and "Single submit" is now "Auto-submit".
 - Updated conditional tags, enrichment, and form reset logic to set field values through the new `setManualValuesByFieldType` utility.
+
+## [9.9.1]
+
+### Added
+
+- Added forwarding of the Pardot visitor tracking cookie (`visitor_id{accountId}`) with form handler submissions, so submissions are linked to the prospect's activity history and campaign.
+
+### Fixed
+
+- Fixed Pardot OAuth refresh token being overwritten with an empty value on token refresh — Salesforce doesn't rotate refresh tokens, so the stored one is now kept when the response omits it.
 
 ## [9.9.1]
 
@@ -90,6 +134,17 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Fixed Friendly Captcha token handling so `One-click` mode reads and resets the correct widget per form.
 - Fixed Friendly Captcha v2 siteverify handling so HTTP 200 responses with `success=false` are treated as failed captcha checks.
+
+## [10.0.0]
+
+### Added
+
+- Compatibility for WordPress 6.9+ - apiVersion 3 blocks.
+
+### Updated
+
+- Updated admin visuals.
+- Reworked all editor options and editor components for all blocks, fields, ...
 
 ## [9.5.3]
 
@@ -1974,6 +2029,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.0.0-preview]: https://github.com/infinum/eightshift-forms/compare/9.10.1...10.0.0-preview
 [9.10.1]: https://github.com/infinum/eightshift-forms/compare/9.10.0...9.10.1
 [9.10.0]: https://github.com/infinum/eightshift-forms/compare/9.9.1...9.10.0
 [9.9.1]: https://github.com/infinum/eightshift-forms/compare/9.9.0...9.9.1
@@ -1982,6 +2038,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 [9.7.1]: https://github.com/infinum/eightshift-forms/compare/9.7.0...9.7.1
 [9.7.0]: https://github.com/infinum/eightshift-forms/compare/9.6.0...9.7.0
 [9.6.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...9.6.0
+[10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.5.3...10.0.0
 [9.5.3]: https://github.com/infinum/eightshift-forms/compare/9.5.2...9.5.3
 [9.5.2]: https://github.com/infinum/eightshift-forms/compare/9.5.1...9.5.2
 [9.5.1]: https://github.com/infinum/eightshift-forms/compare/9.5.0...9.5.1

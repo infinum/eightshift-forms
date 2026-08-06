@@ -32,31 +32,19 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	public const FILTER_FORM_FIELDS_NAME = 'es_hubspot_form_fields_filter';
 
 	/**
-	 * Instance variable for Hubspot data.
-	 *
-	 * @var HubspotClientInterface
-	 */
-	protected $hubspotClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(HubspotClientInterface $hubspotClient)
-	{
-		$this->hubspotClient = $hubspotClient;
-	}
+	public function __construct(protected HubspotClientInterface $hubspotClient) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		// Blocks string to value filter name constant.
-		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+		\add_filter(static::FILTER_FORM_FIELDS_NAME, $this->getFormFields(...), 10, 3);
 	}
 
 	/**
@@ -79,13 +67,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 
 		// Get fields.
 		$item = $this->hubspotClient->getItem($itemId);
-		if (empty($item)) {
+		if ($item === []) {
 			return $output;
 		}
 
 		$fields = $this->getFields($item, $formId);
 
-		if (!$fields) {
+		if ($fields === []) {
 			return $output;
 		}
 
@@ -106,7 +94,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	{
 		$output = [];
 
-		if (!$data) {
+		if ($data === []) {
 			return $output;
 		}
 
@@ -117,7 +105,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Find local but fallback to global settings.
 		$allowedFileTypes = SettingsHelpers::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: SettingsHelpers::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
-		if ($allowedFileTypes) {
+		if ($allowedFileTypes !== '' && $allowedFileTypes !== '0') {
 			$allowedFileTypes = \str_replace('.', '', $allowedFileTypes);
 			$allowedFileTypes = \str_replace(' ', '', $allowedFileTypes);
 		}
@@ -139,16 +127,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$name = $field['name'] ?? '';
 				$label = $field['label'] ?? '';
 				$type = $field['fieldType'] ?? '';
-				$isRequired = isset($field['required']) ? (bool) $field['required'] : false;
+				$isRequired = isset($field['required']) && (bool) $field['required'];
 				$value = $field['defaultValue'] ?? '';
 				$placeholder = $field['placeholder'] ?? '';
 				$options = $field['options'] ?? '';
 				$validation = $field['validation']['data'] ?? '';
 				$metaData = $field['metaData'] ?? [];
 				$enabled = $field['enabled'] ?? true;
-				$isHidden = isset($field['hidden']) ? (bool) $field['hidden'] : false;
+				$isHidden = isset($field['hidden']) && (bool) $field['hidden'];
 
-				$validation = \explode(':', $validation);
+				$validation = \explode(':', (string) $validation);
 				$min = $validation[0] ?? '';
 				$max = $validation[1] ?? '';
 
@@ -174,17 +162,17 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
-								$min ? 'inputMinLength' : '',
-								$max ? 'inputMaxLength' : '',
+								$min !== '' && $min !== '0' ? 'inputMinLength' : '',
+								$max !== '' && $max !== '0' ? 'inputMaxLength' : '',
 								'inputFieldAttrs',
 							]),
 						];
 
-						if ($min) {
+						if ($min !== '' && $min !== '0') {
 							$item['inputMinLength'] = (int) $min;
 						}
 
-						if ($max) {
+						if ($max !== '' && $max !== '0') {
 							$item['inputMaxLength'] = (int) $max;
 						}
 
@@ -242,18 +230,18 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
-								$min ? 'inputMin' : '',
-								$max ? 'inputMax' : '',
+								$min !== '' && $min !== '0' ? 'inputMin' : '',
+								$max !== '' && $max !== '0' ? 'inputMax' : '',
 								'inputType',
 								'inputFieldAttrs',
 							]),
 						];
 
-						if ($min) {
+						if ($min !== '' && $min !== '0') {
 							$item['inputMin'] = (int) $min;
 						}
 
-						if ($max) {
+						if ($max !== '' && $max !== '0') {
 							$item['inputMax'] = (int) $max;
 						}
 
@@ -305,7 +293,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					case 'file':
 						$isMultiple = \array_filter(
 							$metaData,
-							static function ($item) {
+							static function (array $item): bool {
 								$name = $item['name'] ?? '';
 								$value = $item['value'] ?? '';
 								return $name === 'isMultipleFileUpload' && $value === 'true';
@@ -322,18 +310,18 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'filePlaceholder' => $placeholder,
 							'fileIsRequired' => $isRequired,
 							'fileValue' => $value,
-							'fileIsMultiple' => !empty($isMultiple),
+							'fileIsMultiple' => $isMultiple !== [],
 							'fileFieldAttrs' => [
 								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$isRequired ? 'fileIsRequired' : '',
-								$allowedFileTypes ? 'fileAccept' : '',
+								$allowedFileTypes !== '' && $allowedFileTypes !== '0' ? 'fileAccept' : '',
 								'fileFieldAttrs',
 							]),
 						];
 
-						if ($allowedFileTypes) {
+						if ($allowedFileTypes !== '' && $allowedFileTypes !== '0') {
 							$fileOutput['fileAccept'] = $allowedFileTypes;
 						}
 
@@ -356,7 +344,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'selectContent' => \array_filter(\array_values(\array_map(
-								function ($selectOption) use ($selectedOption) {
+								function (array $selectOption) use ($selectedOption) {
 									$value = $selectOption['value'] ?? '';
 
 									if ($value) {
@@ -423,18 +411,16 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'checkboxesContent' => \array_map(
-								function ($checkbox) use ($name, $selectedOption) {
-									return [
-										'component' => 'checkbox',
-										'checkboxLabel' => $checkbox['label'],
-										'checkboxValue' => $checkbox['value'],
-										'checkboxIsChecked' => \in_array($checkbox['value'], $selectedOption, true),
-										'checkboxTracking' => $name,
-										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-											'checkboxValue',
-										], false),
-									];
-								},
+								fn(array $checkbox): array => [
+									'component' => 'checkbox',
+									'checkboxLabel' => $checkbox['label'],
+									'checkboxValue' => $checkbox['value'],
+									'checkboxIsChecked' => \in_array($checkbox['value'], $selectedOption, true),
+									'checkboxTracking' => $name,
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue',
+									], false),
+								],
 								$options
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
@@ -458,17 +444,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'radiosContent' => \array_map(
-								function ($radio) use ($selectedOption) {
-									return [
-										'component' => 'radio',
-										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
-										'radioLabel' => $radio['label'],
-										'radioValue' => $radio['value'],
-										'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-											'radioValue',
-										], false),
-									];
-								},
+								fn(array $radio): array => [
+									'component' => 'radio',
+									'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
+									'radioLabel' => $radio['label'],
+									'radioValue' => $radio['value'],
+									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
+										'radioValue',
+									], false),
+								],
 								$options
 							),
 							'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
@@ -539,7 +523,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$output[] = [
 					'component' => 'checkboxes',
 					'checkboxesFieldBeforeContent' => $processingText && !$processingIsHidden ? $processingText : '',
-					'checkboxesFieldAfterContent' => !$legitimate['isActive'] ? $legitimate['text'] ?? '' : '',
+					'checkboxesFieldAfterContent' => $legitimate['isActive'] ? '' : $legitimate['text'] ?? '',
 					'checkboxesFieldHideLabel' => true,
 					'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_PROCESSING,
 					'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_PROCESSING,
@@ -616,7 +600,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $formId) ?? [];
+			return \apply_filters($filterName, $output, $formId) ?? [];
 		}
 
 		return $output;

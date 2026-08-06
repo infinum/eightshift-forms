@@ -23,11 +23,10 @@ export class Cache {
 
 	async submit(target) {
 		const formId = this.state.getFormIdByElement(target);
-		const field = this.state.getFormFieldElementByChild(target);
 
 		const formData = new FormData();
 
-		formData.append('type', field.getAttribute(this.state.getStateAttribute('cacheType')));
+		formData.append('type', target.getAttribute(this.state.getStateAttribute('cacheType')));
 
 		this.utils.showLoader(formId);
 
@@ -48,10 +47,7 @@ export class Cache {
 			const response = await fetch(this.state.getRestUrl('cacheClear'), body);
 			const parsedResponse = await response.json();
 
-			const {
-				message,
-				status,
-			} = parsedResponse;
+			const { message, status } = parsedResponse;
 
 			this.utils.hideLoader(formId);
 			this.utils.setGlobalMsg(formId, message, status);
@@ -65,7 +61,7 @@ export class Cache {
 					this.utils.unsetGlobalMsg(formId);
 				}, 6000);
 			}
-		} catch ({name, message}) {
+		} catch ({ name, message }) {
 			if (name === 'AbortError') {
 				return;
 			}

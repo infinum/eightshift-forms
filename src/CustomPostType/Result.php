@@ -84,7 +84,7 @@ class Result extends AbstractPostType
 	 */
 	protected function getPostTypeArguments(): array
 	{
-		$output = [
+		return [
 			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
 			'labels' => [
 				'name' => esc_html_x(
@@ -116,7 +116,5 @@ class Result extends AbstractPostType
 				'with_front' => false,
 			],
 		];
-
-		return $output;
 	}
 }

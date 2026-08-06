@@ -97,27 +97,6 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	public const SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY = 'nationbuilder-oauth-allow';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
-	 * Instance variable for Oauth.
-	 *
-	 * @var OauthInterface
-	 */
-	protected $oauthNationbuilder;
-
-	/**
-	 * Instance variable for Jira data.
-	 *
-	 * @var NationbuilderClientInterface
-	 */
-	protected $nationbuilderClient;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback methods.
@@ -125,25 +104,19 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	 * @param NationbuilderClientInterface $nationbuilderClient Inject Jira which holds Jira connect data.
 	 */
 	public function __construct(
-		SettingsFallbackDataInterface $settingsFallback,
-		OauthInterface $oauthNationbuilder,
-		NationbuilderClientInterface $nationbuilderClient,
-	) {
-		$this->settingsFallback = $settingsFallback;
-		$this->oauthNationbuilder = $oauthNationbuilder;
-		$this->nationbuilderClient = $nationbuilderClient;
-	}
+		protected SettingsFallbackDataInterface $settingsFallback,
+		protected OauthInterface $oauthNationbuilder,
+		protected NationbuilderClientInterface $nationbuilderClient
+	) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
@@ -178,38 +151,53 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 							[
 								'component' => 'group',
 								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
-								'groupSaveOneField' => true,
-								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
-										'component' => 'field',
-										'fieldLabel' => '<b>' . \__('Form field', 'eightshift-forms') . '</b>',
-										'fieldContent' => '<b>' . \__('NationBuilder fields', 'eightshift-forms') . '</b>',
-										'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-										'fieldIsFiftyFiftyHorizontal' => true,
+										'component' => 'layout',
+										'layoutContent' => [
+											[
+												'component' => 'intro',
+												'introTitle' => \__('Form field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+											[
+												'component' => 'intro',
+												'introTitle' => \__('NationBuilder field', 'eightshift-forms'),
+												'introTitleType' => 'medium',
+											],
+										],
+										'layoutType' => 'layout-grid-half',
+										'layoutWithBg' => false,
 									],
 									...\array_map(
-										function ($item) use ($mapParams) {
-											return [
-												'component' => 'select',
-												'selectName' => $item,
-												'selectFieldLabel' => \ucfirst($item),
-												'selectValue' => $mapParams[$item] ?? '',
-												'selectFieldIsFiftyFiftyHorizontal' => true,
-												'selectFieldBeforeContent' => '&rarr;',
-												'selectContent' => \array_map(
-													static function ($option) use ($mapParams, $item) {
-														return [
+										fn($item): array => [
+											'component' => 'layout',
+											'layoutType' => 'layout-grid-half',
+											'layoutWithBg' => false,
+											'layoutContent' => [
+												[
+													'component' => 'intro',
+													'introTitle' => \ucfirst((string) $item),
+													'introTitleType' => 'small',
+												],
+												[
+													'component' => 'select',
+													'selectFieldHideLabel' => true,
+													'selectName' => $item,
+													'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+													'selectValue' => $mapParams[$item] ?? '',
+													'selectContent' => \array_map(
+														static fn(array $option): array => [
 															'component' => 'select-option',
 															'selectOptionLabel' => $option['title'],
 															'selectOptionValue' => $option['id'],
 															'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
-														];
-													},
-													$this->getFields()
-												),
-											];
-										},
+														],
+														$this->getFields()
+													),
+												],
+											],
+										],
 										$params
 									),
 								],
@@ -226,14 +214,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'selectFieldLabel' => \__('Select list', 'eightshift-forms'),
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId),
 								'selectContent' => \array_map(
-									static function ($option) use ($list) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => $option['id'] === $list,
-										];
-									},
+									static fn(array $option): array => [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => $option['id'] === $list,
+									],
 									$this->nationbuilderClient->getLists()
 								),
 							],
@@ -244,14 +230,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'selectIsMultiple' => true,
 								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId),
 								'selectContent' => \array_map(
-									static function ($option) use ($tags) {
-										return [
-											'component' => 'select-option',
-											'selectOptionLabel' => $option['title'],
-											'selectOptionValue' => $option['id'],
-											'selectOptionIsSelected' => isset($tags[$option['id']]),
-										];
-									},
+									static fn(array $option): array => [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option['title'],
+										'selectOptionValue' => $option['id'],
+										'selectOptionIsSelected' => isset($tags[$option['id']]),
+									],
 									$this->nationbuilderClient->getTags()
 								),
 							]
@@ -264,8 +248,6 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
@@ -273,12 +255,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 		$clientId = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_ID);
 		$clientSecret = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientSecretNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
 		$clientSlug = SettingsHelpers::getOptionWithConstant(Variables::getClientSlugNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
-
-		if (!$isUsed || !$clientId || !$clientSecret || !$clientSlug) {
-			return false;
-		}
-
-		return true;
+		return !(!$isUsed || !$clientId || !$clientSecret || !$clientSlug);
 	}
 
 	/**
@@ -322,15 +299,13 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientIdNationBuilder(),
@@ -340,7 +315,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientSecretNationBuilder(),
@@ -350,7 +325,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getClientSlugNationBuilder(),
@@ -360,12 +335,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getOauthConnection($this->oauthNationbuilder->getOauthAuthorizeUrl(), OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY, self::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -386,12 +361,11 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 								'component' => 'textarea',
 								'textareaFieldLabel' => \__('Queue jobs', 'eightshift-forms'),
 								'textareaFieldHelp' => \__('Subscriptions in queue that are still not processed.', 'eightshift-forms'),
-								'textareaIsReadOnly' => true,
+								'textareaIsDisabled' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'queue',
 								'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
-								'textareaSize' => 'huge',
-								'textareaLimitHeight' => true,
+								'additionalClass' => 'esf:min-h-800',
 							],
 						],
 					],
@@ -427,12 +401,10 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Sett
 	private function getFields(): array
 	{
 		$customFields = \array_values(\array_map(
-			static function ($field) {
-				return [
-					'id' => $field['id'],
-					'title' => $field['title'],
-				];
-			},
+			static fn(array $field): array => [
+				'id' => $field['id'],
+				'title' => $field['title'],
+			],
 			$this->nationbuilderClient->getCustomFields()
 		));
 

@@ -86,12 +86,15 @@ export class FriendlyCaptcha {
 			container.style.display = 'none';
 			document.body.appendChild(container);
 
-			this.widgets.set('__global', frcaptcha.createWidget({
-				element: container,
-				sitekey: siteKey,
-				startMode: 'auto',
-				apiEndpoint,
-			}));
+			this.widgets.set(
+				'__global',
+				frcaptcha.createWidget({
+					element: container,
+					sitekey: siteKey,
+					startMode: 'auto',
+					apiEndpoint,
+				}),
+			);
 
 			return;
 		}
@@ -102,12 +105,15 @@ export class FriendlyCaptcha {
 			container.setAttribute('data-frc-widget', '');
 			form.appendChild(container);
 
-			this.widgets.set(form, frcaptcha.createWidget({
-				element: container,
-				sitekey: siteKey,
-				startMode: 'focus',
-				apiEndpoint,
-			}));
+			this.widgets.set(
+				form,
+				frcaptcha.createWidget({
+					element: container,
+					sitekey: siteKey,
+					startMode: 'focus',
+					apiEndpoint,
+				}),
+			);
 		});
 	}
 

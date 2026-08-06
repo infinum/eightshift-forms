@@ -19,15 +19,11 @@ interface OauthInterface
 	 * Get Oauth URL based on the provider Id.
 	 *
 	 * @param string $path Path.
-	 *
-	 * @return string
 	 */
 	public function getApiUrl(string $path): string;
 
 	/**
 	 * Get authorization URL based on the provider Id.
-	 *
-	 * @return string
 	 */
 	public function getOauthAuthorizeUrl(): string;
 
@@ -51,15 +47,11 @@ interface OauthInterface
 	 * Get access token.
 	 *
 	 * @param string $code Code.
-	 *
-	 * @return boolean
 	 */
 	public function getAccessToken(string $code): bool;
 
 	/**
 	 * Get refresh token.
-	 *
-	 * @return boolean
 	 */
 	public function getRefreshToken(): bool;
 
@@ -67,8 +59,6 @@ interface OauthInterface
 	 * Check if token has expired.
 	 *
 	 * @param array<string, mixed> $body Body.
-	 *
-	 * @return boolean
 	 */
 	public function hasTokenExpired(array $body): bool;
 }

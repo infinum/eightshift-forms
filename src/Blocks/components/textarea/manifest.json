@@ -9,7 +9,6 @@
 			"textareaValue": "Value",
 			"textareaPlaceholder": "Placeholder",
 			"textareaIsDisabled": false,
-			"textareaIsReadOnly": false,
 			"textareaIsRequired": false
 		}
 	},
@@ -35,10 +34,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"textareaIsReadOnly": {
-			"type": "boolean",
-			"default": false
-		},
 		"textareaIsRequired": {
 			"type": "boolean",
 			"default": false
@@ -49,19 +44,11 @@
 		"textareaMaxLength": {
 			"type": "integer"
 		},
-		"textareaIsMonospace": {
-			"type": "boolean",
-			"default": false
-		},
 		"textareaSaveAsJson": {
 			"type": "boolean",
 			"default": false
 		},
 		"textareaAlternativeOutputEscape": {
-			"type": "boolean",
-			"default": false
-		},
-		"textareaLimitHeight": {
 			"type": "boolean",
 			"default": false
 		},
@@ -88,10 +75,6 @@
 		},
 		"textareaTypeCustom": {
 			"type": "string"
-		},
-		"textareaSize": {
-			"type": "string",
-			"default": "default"
 		},
 		"textareaIsPreventSubmit": {
 			"type": "boolean",

@@ -24,10 +24,8 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	 * Method that returns field object type
 	 *
 	 * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
-	 *
-	 * @return string
 	 */
-	protected function getObjectType()
+	protected function getObjectType(): string
 	{
 		return Forms::POST_TYPE_SLUG;
 	}
@@ -50,7 +48,7 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'get_callback' => [$this, 'fieldCallback'],
+			'get_callback' => $this->fieldCallback(...),
 		];
 	}
 

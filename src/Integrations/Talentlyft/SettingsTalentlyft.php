@@ -90,49 +90,30 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements Setting
 	public const SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY = 'prospect';
 
 	/**
-	 * Instance variable for Fallback settings.
-	 *
-	 * @var SettingsFallbackDataInterface
-	 */
-	protected $settingsFallback;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(SettingsFallbackDataInterface $settingsFallback)
-	{
-		$this->settingsFallback = $settingsFallback;
-	}
+	public function __construct(protected SettingsFallbackDataInterface $settingsFallback) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_NAME, $this->getSettingsData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_KEY, self::SETTINGS_TALENTLYFT_USE_KEY);
 		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyTalentlyft(), self::SETTINGS_TALENTLYFT_API_KEY_KEY);
-
-		if (!$isUsed || !$apiKey) {
-			return false;
-		}
-
-		return true;
+		return $isUsed && $apiKey;
 	}
 
 	/**
@@ -232,15 +213,13 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements Setting
 							],
 							...($deactivateIntegration ? [
 								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
+									'component' => 'notice',
+									'noticeContent' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 								],
 							] : [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyTalentlyft(),
@@ -250,7 +229,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements Setting
 								),
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
@@ -270,7 +249,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements Setting
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputFieldAfterContent' => 'MB',
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputPlaceholder' => self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT,
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,
@@ -279,7 +258,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements Setting
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'select',

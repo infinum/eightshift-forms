@@ -31,7 +31,7 @@ $customAttributes = [];
 
 $customAttributes[UtilsHelper::getStateAttribute('selectOptionIsHidden')] = $selectOptionIsHidden;
 
-if ($conditionalTags) {
+if ($conditionalTags !== '' && $conditionalTags !== '0') {
 	$customAttributes[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
@@ -40,8 +40,8 @@ if ($conditionalTags) {
 <option
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
-	<?php disabled($selectOptionIsDisabled); ?>
-	<?php echo Helpers::getAttrsOutput($customAttributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php disabled(($selectOptionIsDisabled || $selectOptionIsHidden)); ?>
+	<?php echo wp_kses_post(Helpers::getAttrsOutput($customAttributes));
 	?>>
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

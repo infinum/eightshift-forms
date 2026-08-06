@@ -22,9 +22,10 @@ $jsClass = $attributes['jsClass'] ?? '';
 
 $hideLabels = $attributes['hideLabels'] ?? false;
 
-$progressBarItemClass = Helpers::classnames([
+$progressBarItemClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'progress-bar', 'item', "{$componentClass}__item"),
 	Helpers::selector($jsClass, $jsClass),
+	FormsHelper::getTwPart($twClasses, 'progress-bar', 'step')
 ]);
 
 foreach ($steps as $step) { ?>
@@ -32,7 +33,10 @@ foreach ($steps as $step) { ?>
 	$name = $step['name'] ?? '';
 	$label = $step['label'] ?? '';
 
-	if (!$name || !$label) {
+	if (!$name) {
+		continue;
+	}
+	if (!$label) {
 		continue;
 	}
 
@@ -41,7 +45,7 @@ foreach ($steps as $step) { ?>
 	?>
 	<div
 		class="<?php echo esc_attr($progressBarItemClass); ?>"
-		<?php echo Helpers::getAttrsOutput($progressBarAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php echo Helpers::getAttrsOutput($progressBarAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		?>>
 		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'progress-bar', 'item-inner', "{$componentClass}__item-inner")); ?>">
 			<?php

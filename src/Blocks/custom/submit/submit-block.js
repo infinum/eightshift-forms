@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { SubmitEditor } from './components/submit-editor';
 import { SubmitOptions } from './components/submit-options';

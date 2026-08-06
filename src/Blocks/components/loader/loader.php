@@ -15,23 +15,23 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
-$loaderTwSelectorsData = Helpers::checkAttr('loaderTwSelectorsData', $attributes, $manifest);
+$loaderTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader']);
 
-$loaderClass = Helpers::classnames([
+$loaderClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'loader', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	UtilsHelper::getStateSelector('loader'),
 	Helpers::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),
 	Helpers::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),
 ]);
 
-$loaderSpinnerClass = Helpers::classnames([
+$loaderSpinnerClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'loader', 'spinner', "{$componentClass}__spinner"),
 ]);
 
-$loaderOverlayClass = Helpers::classnames([
+$loaderOverlayClass = Helpers::clsx([
 	FormsHelper::getTwPart($twClasses, 'loader', 'overlay', "{$componentClass}__overlay"),
 ]);
 
@@ -42,7 +42,7 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('loader'
 <div class="<?php echo esc_attr($loaderClass); ?>" role="none" aria-hidden="true" tabindex="-1">
 	<div class="<?php echo esc_attr($loaderSpinnerClass); ?>"></div>
 	<div class="<?php echo esc_attr($loaderOverlayClass); ?>"></div>
-	<?php if ($additionalContent) { ?>
+	<?php if ($additionalContent !== '' && $additionalContent !== '0') { ?>
 		<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>
 	<?php } ?>

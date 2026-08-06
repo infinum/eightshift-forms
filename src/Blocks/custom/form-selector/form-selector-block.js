@@ -1,13 +1,10 @@
-import React from 'react';
 import { useSelect, select } from '@wordpress/data';
 import { InspectorControls } from '@wordpress/block-editor';
 import { FormSelectorEditor } from './components/form-selector-editor';
 import { FormSelectorOptions } from './components/form-selector-options';
 
 export const FormSelector = (props) => {
-	const {
-		clientId
-	} = props;
+	const { clientId } = props;
 
 	const postId = select('core/editor').getCurrentPostId();
 

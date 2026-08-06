@@ -76,47 +76,28 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY = 'enrichment-prefill-expiration-time';
 
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
+	public function __construct(protected EnrichmentInterface $enrichment) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY)) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY);
 	}
 
 	/**
@@ -156,18 +137,17 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'inputStep' => 1,
 								'inputPlaceholder' => Enrichment::ENRICHMENT_EXPIRATION,
 								'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
+								'additionalFieldClass' => 'esf-input-with-suffix',
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment parameters', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('
@@ -179,32 +159,52 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
+								'dividerSeparator' => true,
 							],
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
+								'introSubtitle' => \__('
+									Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />
+									You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
 							],
 							[
-								'component' => 'field',
-								'fieldLabel' => '<b>' . \__('URL parameter', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . \__('Field name', 'eightshift-forms') . '</b>',
-								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-								'fieldIsFiftyFiftyHorizontal' => true,
+								'component' => 'layout',
+								'layoutContent' => [
+									[
+										'component' => 'intro',
+										'introTitle' => \__('URL parameter', 'eightshift-forms'),
+										'introTitleType' => 'medium',
+									],
+									[
+										'component' => 'intro',
+										'introTitle' => \__('Field name', 'eightshift-forms'),
+										'introTitleType' => 'medium',
+									],
+								],
+								'layoutType' => 'layout-grid-half',
+								'layoutWithBg' => false,
 							],
 							...\array_map(
-								function ($item) {
-									return [
-										'component' => 'input',
-										'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-										'inputFieldLabel' => $item,
-										'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
-										'inputFieldIsFiftyFiftyHorizontal' => true,
-										'inputFieldBeforeContent' => '&rarr;',
-									];
-								},
+								fn($item): array => [
+									'component' => 'layout',
+									'layoutType' => 'layout-grid-half',
+									'layoutWithBg' => false,
+									'layoutContent' => [
+										[
+											'component' => 'intro',
+											'introTitle' => $item,
+											'introTitleType' => 'small',
+										],
+										[
+											'component' => 'input',
+											'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+											'inputFieldHideLabel' => true,
+											'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+										],
+									],
+								],
 								$enrichment['settingsFields'] ?? []
-							),
+							)
 						],
 					],
 					[
@@ -235,7 +235,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 							...($isUsedPrefill ? [
 								[
 									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									'dividerSeparator' => true,
 								],
 								[
 									'component' => 'input',
@@ -248,7 +248,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 									'inputStep' => 1,
 									'inputPlaceholder' => Enrichment::ENRICHMENT_PREFILL_EXPIRATION,
 									'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-									'inputFieldInlineBeforeAfterContent' => true,
+									'additionalFieldClass' => 'esf-input-with-suffix',
 									'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
 								],
 							] : []),
@@ -284,7 +284,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'component' => 'textarea',
 								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment smart parameters', 'eightshift-forms'),
-								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('

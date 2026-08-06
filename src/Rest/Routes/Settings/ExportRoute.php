@@ -15,6 +15,7 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
@@ -40,8 +41,6 @@ class ExportRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -74,46 +73,40 @@ class ExportRoute extends AbstractSimpleFormSubmit
 	 */
 	protected function submitAction(array $params): array
 	{
-		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
+		$ids = isset($params['ids']) ? \json_decode((string) $params['ids'], true) : [];
 
 		if (!$ids) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportMissingItems'),
+				Labels::getLabel(Labels::LABEL_EXPORT_MISSING_ITEMS),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'exportMissingItems',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_EXPORT_MISSING_ITEMS,
 				]
 			);
 			// phpcs:enable
 		}
 
-		switch ($params['type']) {
-			case 'entry':
-				$output = $this->getEntryOutput($ids);
-				break;
-			case 'activity-log':
-				$output = $this->getActivityLogOutput($ids);
-				break;
-			default:
-				$output = [];
-				break;
-		}
+		$output = match ($params['type']) {
+			'entry' => $this->getEntryOutput($ids),
+			'activity-log' => $this->getActivityLogOutput($ids),
+			default => [],
+		};
 
-		if (!$output) {
+		if ($output === []) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('exportDataEmpty'),
+				Labels::getLabel(Labels::LABEL_EXPORT_DATA_EMPTY),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_EXPORT_DATA_EMPTY,
 				]
 			);
 			// phpcs:enable
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('exportSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_EXPORT_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_EXPORT_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('adminExportContent') => \wp_json_encode($output),
@@ -135,7 +128,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		foreach ($ids as $id) {
 			$entry = EntriesHelper::getEntry((string) $id);
 
-			if (!$entry) {
+			if ($entry === []) {
 				continue;
 			}
 
@@ -157,9 +150,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 						$outputInner[$key] = \implode(Config::DELIMITER, $value);
 					} else {
 						$outputItems = \array_map(
-							function ($value, $key) {
-								return "{$key}={$value}";
-							},
+							fn($value, int|string $key): string => "{$key}={$value}",
 							$value,
 							\array_keys($value)
 						);
@@ -190,7 +181,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		foreach ($ids as $id) {
 			$activityLog = ActivityLogHelper::getActivityLog((string) $id);
 
-			if (!$activityLog) {
+			if ($activityLog === []) {
 				continue;
 			}
 

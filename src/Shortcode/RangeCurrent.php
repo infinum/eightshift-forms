@@ -21,20 +21,16 @@ class RangeCurrent implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_shortcode('esFormsRangeCurrent', [$this, 'callback']);
+		\add_shortcode('esFormsRangeCurrent', $this->callback(...));
 	}
 
 	/**
 	 * Shortcode callback
 	 *
 	 * @param array<string, mixed> $atts Attributes passed to the shortcode.
-	 *
-	 * @return string
 	 */
 	public function callback(array $atts): string
 	{

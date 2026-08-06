@@ -22,7 +22,9 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Theme\AbstractTheme;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
+use Override;
 
 /**
  * FormAdminMenu class.
@@ -30,21 +32,11 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 class FormAdminMenu extends AbstractAdminMenu
 {
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var FormListingInterface
-	 */
-	protected $formsListing;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param FormListingInterface $formsListing Inject form listing data.
 	 */
-	public function __construct(FormListingInterface $formsListing)
-	{
-		$this->formsListing = $formsListing;
-	}
+	public function __construct(protected FormListingInterface $formsListing) {} // phpcs:ignore
 
 	/**
 	 * Capability for this admin sub menu
@@ -126,6 +118,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *                  e.g. 'dashicons-chart-pie'.
 	 *                * Pass 'none' to leave div.wp-menu-image empty so an icon can be added via CSS.
 	 */
+	#[Override]
 	protected function getIcon(): string
 	{
 		return 'data:image/svg+xml;base64,' . \base64_encode(UtilsHelper::getUtilsIcons('menuIcon')); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -147,9 +140,10 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * 80  - below Settings
 	 * 100 - below second separator
 	 */
+	#[Override]
 	protected function getPosition(): int
 	{
-		return (int) self::ADMIN_MENU_POSITION;
+		return self::ADMIN_MENU_POSITION;
 	}
 
 	/**
@@ -202,7 +196,16 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
-				if ($formId) {
+				$adminListingEntriesCustomSearch = $this->getCustomSearchQueryForItems(['s' => $search]);
+
+				if (isset($adminListingEntriesCustomSearch['p'])) {
+					$data = [
+						'items' => [
+							EntriesHelper::getEntry((string) $adminListingEntriesCustomSearch['p'])
+						],
+						'count' => 1
+					];
+				} elseif ($formId) {
 					$data = EntriesHelper::getEntries($formId, $page, $perPage, $search);
 				} else {
 					$data = EntriesHelper::getEntriesAll($page, $perPage, $search);
@@ -219,7 +222,14 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
-				if ($formId) {
+				$adminListingActivityLogsCustomSearch = $this->getCustomSearchQueryForItems(['s' => $search]);
+
+				if (isset($adminListingActivityLogsCustomSearch['p'])) {
+					$data = [
+						'items' => [ActivityLogHelper::getActivityLog((string) $adminListingActivityLogsCustomSearch['p'])],
+						'count' => 1
+					];
+				} elseif ($formId) {
 					$data = ActivityLogHelper::getActivityLogs($formId, $page, $perPage, $search);
 				} else {
 					$data = ActivityLogHelper::getActivityLogsAll($page, $perPage, $search);
@@ -236,13 +246,13 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
-				$data = $this->formsListing->getFormsList([
+				$data = $this->formsListing->getFormsList($this->getCustomSearchQueryForItems([
 					'post_type' => $parent === Config::SLUG_ADMIN_LISTING_RESULTS ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG,
 					'post_status' => 'trash',
 					'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 					'paged' => $page,
 					's' => $search,
-				], true);
+				]));
 
 				$items = $data['items'] ?? [];
 				$count = $data['count'] ?? 0;
@@ -297,7 +307,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				'adminListingItems' => $this->getListingItems($items, $type, $parent),
 				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent, $search, $perPage),
 				'adminListingNoItems' => $this->getNoItemsMessage($type, $parent),
-				'adminListingPagination' => $data
+				'adminListingData' => $data,
 			]
 		);
 	}
@@ -306,8 +316,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * Get multilinguals title depending on the settings flag.
 	 *
 	 * @param string $title Title to be translated.
-	 *
-	 * @return string
 	 */
 	private function getMultiLangTitle(string $title): string
 	{
@@ -315,7 +323,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		if ($useWpml) {
 			$lang = \apply_filters('wpml_current_language', '');
 			if ($lang) {
-				$title = $title . ' - ' . \strtoupper($lang);
+				$title = $title . ' - ' . \strtoupper((string) $lang);
 			}
 		}
 
@@ -337,16 +345,16 @@ class FormAdminMenu extends AbstractAdminMenu
 			return $query;
 		}
 
-		if (\str_starts_with($search, 'status:')) {
-			$status = \substr($search, \strlen('status:'));
+		if (\str_starts_with((string) $search, 'STATUS:')) {
+			$status = \substr((string) $search, \strlen('STATUS:'));
 			if ($status && \array_key_exists($status, \get_post_stati())) {
 				$query['post_status'] = $status;
 				unset($query['s']);
 			}
 		}
 
-		if (\str_starts_with($search, 'id:')) {
-			$id = (int) \substr($search, \strlen('id:'));
+		if (\str_starts_with((string) $search, 'ID:')) {
+			$id = (int) \substr((string) $search, \strlen('ID:'));
 			if ($id > 0) {
 				$query['p'] = $id;
 				unset($query['s']);
@@ -369,86 +377,107 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Location list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							Your form is not assigned to any location.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateLocations',
+					Helpers::render('intro', [
+						'introTitle' => \__('Location list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('Your form is not assigned to any location.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateLocations',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
 					$output = [
-						Helpers::render('highlighted-content', [
-							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
-							// Translators: %s is the link to the forms listing page.
-							'highlightedContentSubtitle' => \sprintf(\__('
-								Your don\'t have any result outputs in trash.<br />
-								<br /><a class="es-submit es-submit--outline" href="%s">Go to result outputs</a>', 'eightshift-forms'), GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS, '', \esc_url($parent))),
-							'highlightedContentIcon' => 'emptyStateTrash',
+						Helpers::render('intro', [
+							'introTitle' => \__('Trash list is empty', 'eightshift-forms'),
+							'introSubtitle' => \__('Your don\'t have any result outputs in trash.', 'eightshift-forms'),
+							'introIcon' => 'emptyStateTrash',
+							'introType' => 'highlighted',
+							'introActions' => Helpers::render('button', [
+								'buttonLabel' => \__('Go to result outputs', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS, '', \esc_url($parent)),
+							]),
 						]),
 					];
 				} else {
 					$output = [
-						Helpers::render('highlighted-content', [
-							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
-							// Translators: %s is the link to the forms listing page.
-							'highlightedContentSubtitle' => \sprintf(\__('
-								Your don\'t have any form in trash.<br />
-								<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-							'highlightedContentIcon' => 'emptyStateTrash',
+						Helpers::render('intro', [
+							'introTitle' => \__('Trash list is empty', 'eightshift-forms'),
+							'introSubtitle' => \__('Your don\'t have any form in trash.', 'eightshift-forms'),
+							'introIcon' => 'emptyStateTrash',
+							'introType' => 'highlighted',
+							'introActions' => Helpers::render('button', [
+								'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
+								'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+							]),
 						]),
 					];
 				}
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Result output list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							Your don\'t have any result outputs.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateResults',
+					Helpers::render('intro', [
+						'introTitle' => \__('Result output list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('Your don\'t have any result outputs.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateResults',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Entry list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							You don\'t have any form entries on this form.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateEntries',
+					Helpers::render('intro', [
+						'introTitle' => \__('Entry list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('You don\'t have any form entries on this form.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateEntries',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Activity log list is empty', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							You don\'t have any activity logs on this form.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getListingPageUrl())),
-						'highlightedContentIcon' => 'emptyStateEntries',
+					Helpers::render('intro', [
+						'introTitle' => \__('Activity log list is empty', 'eightshift-forms'),
+						'introSubtitle' => \__('You don\'t have any activity logs on this form.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateEntries',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Go to forms', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						]),
 					]),
 				];
 				break;
 			default:
 				$output = [
-					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('You have no forms', 'eightshift-forms'),
-						// Translators: %s is the link to the forms listing page.
-						'highlightedContentSubtitle' => \sprintf(\__('
-							You don\'t have any forms to show.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Add your first form</a>', 'eightshift-forms'), \esc_url(GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG))),
-						'highlightedContentIcon' => 'emptyStateFormList',
+					Helpers::render('intro', [
+						'introTitle' => \__('You have no forms', 'eightshift-forms'),
+						'introSubtitle' => \__('You don\'t have any forms to show.', 'eightshift-forms'),
+						'introIcon' => 'emptyStateFormList',
+						'introType' => 'highlighted',
+						'introActions' => Helpers::render('button', [
+							'buttonLabel' => \__('Add your first form', 'eightshift-forms'),
+							'buttonVariant' => 'primaryOutline',
+							'buttonUrl' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
+						]),
 					]),
 				];
 				break;
@@ -465,7 +494,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * @param string $parent Parent type of the listing.
 	 * @param string $search Search query.
 	 * @param int $perPage Number of items per page.
-	 *
 	 * @return array<string, mixed>
 	 */
 	private function getTopBarItems(string $type, string $formId, string $parent, string $search, int $perPage): array
@@ -479,42 +507,41 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$left = [
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(),
-						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonUrl' => GeneralHelpers::getListingPageUrl(),
+						'buttonLabel' => \__('Back', 'eightshift-forms'),
+						'buttonIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Delete', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Delete', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'delete',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Duplicate', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Locations', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Locations', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'locations',
 							UtilsHelper::getStateAttribute('viewType') => Result::POST_TYPE_SLUG,
 						],
@@ -522,50 +549,50 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 
 				$right = [
-					Helpers::render('submit', [
-						'submitVariant' => 'outline',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_TRASH, '', Config::SLUG_ADMIN_LISTING_RESULTS),
-						'submitValue' => \__('Trashed', 'eightshift-forms'),
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryOutline',
+						'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_TRASH, '', Config::SLUG_ADMIN_LISTING_RESULTS),
+						'buttonLabel' => \__('Trashed', 'eightshift-forms'),
 					]),
-					Helpers::render('submit', [
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getNewFormPageUrl(Result::POST_TYPE_SLUG),
-						'submitValue' => \__('Create', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
+					Helpers::render('button', [
+						'buttonVariant' => 'button-primary',
+						'buttonUrl' => GeneralHelpers::getNewFormPageUrl(Result::POST_TYPE_SLUG),
+						'buttonLabel' => \__('Create', 'eightshift-forms'),
+						'buttonIcon' => UtilsHelper::getUtilsIcons('addHighContrast'),
+						'buttonIconSize' => 'small',
 					]),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Delete', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Delete', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'delete-entry',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Duplicate', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate-entry',
 						],
 					]),
 				];
 
 				$right = [
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Export to CSV', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Export to CSV', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => "{$exportSelector} {$bulkSelector}",
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'fake',
 							UtilsHelper::getStateAttribute('exportType') => 'entry',
 							UtilsHelper::getStateAttribute('formId') => $formId,
@@ -576,33 +603,33 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Delete', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Delete', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'delete-activity-log',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Duplicate', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate-activity-log',
 						],
 					]),
 				];
 
 				$right = [
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Export to CSV', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Export to CSV', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => "{$exportSelector} {$bulkSelector}",
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'fake',
 							UtilsHelper::getStateAttribute('exportType') => 'activity-log',
 							UtilsHelper::getStateAttribute('formId') => $formId,
@@ -614,21 +641,21 @@ class FormAdminMenu extends AbstractAdminMenu
 				if ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) {
 					$left = [
 						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitValue' => \__('Restore', 'eightshift-forms'),
-							'submitIsDisabled' => true,
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Restore', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
 							'additionalClass' => $bulkSelector,
-							'submitAttrs' => [
+							'buttonAttrs' => [
 								UtilsHelper::getStateAttribute('bulkType') => 'restore',
 							],
 						]),
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitValue' => \__('Locations', 'eightshift-forms'),
-							'submitIsDisabled' => true,
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Locations', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
 							'additionalClass' => $bulkSelector,
-							'submitAttrs' => [
+							'buttonAttrs' => [
 								UtilsHelper::getStateAttribute('bulkType') => 'locations',
 								UtilsHelper::getStateAttribute('viewType') => Result::POST_TYPE_SLUG,
 							],
@@ -637,21 +664,21 @@ class FormAdminMenu extends AbstractAdminMenu
 				} else {
 					$left = [
 						...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitValue' => \__('Restore', 'eightshift-forms'),
-							'submitIsDisabled' => true,
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Restore', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
 							'additionalClass' => $bulkSelector,
-							'submitAttrs' => [
+							'buttonAttrs' => [
 								UtilsHelper::getStateAttribute('bulkType') => 'restore',
 							],
 						]),
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitValue' => \__('Locations', 'eightshift-forms'),
-							'submitIsDisabled' => true,
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonLabel' => \__('Locations', 'eightshift-forms'),
+							'buttonIsDisabled' => true,
 							'additionalClass' => $bulkSelector,
-							'submitAttrs' => [
+							'buttonAttrs' => [
 								UtilsHelper::getStateAttribute('bulkType') => 'locations',
 								UtilsHelper::getStateAttribute('viewType') => Forms::POST_TYPE_SLUG,
 							],
@@ -660,12 +687,13 @@ class FormAdminMenu extends AbstractAdminMenu
 				}
 
 				$right = [
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Delete permanently', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'button-primary',
+						'buttonLabel' => \__('Delete permanently', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonIcon' => UtilsHelper::getUtilsIcons('trash'),
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'delete-permanently',
 						],
 					]),
@@ -674,39 +702,39 @@ class FormAdminMenu extends AbstractAdminMenu
 			default:
 				$left = [
 					...$this->getDefaultLeftTopBarItems($search, $perPage, ['search', 'perPage']),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Delete', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Delete', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'delete',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Sync', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Sync', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'sync',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Duplicate', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Duplicate', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
 						],
 					]),
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Locations', 'eightshift-forms'),
-						'submitIsDisabled' => true,
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Locations', 'eightshift-forms'),
+						'buttonIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('bulkType') => 'locations',
 							UtilsHelper::getStateAttribute('viewType') => Forms::POST_TYPE_SLUG,
 						],
@@ -714,17 +742,17 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 
 				$right = [
-					Helpers::render('submit', [
-						'submitVariant' => 'outline',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_TRASH),
-						'submitValue' => \__('Trashed', 'eightshift-forms'),
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryOutline',
+						'buttonUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_TRASH),
+						'buttonLabel' => \__('Trashed', 'eightshift-forms'),
 					]),
-					Helpers::render('submit', [
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
-						'submitValue' => \__('Create', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
+					Helpers::render('button', [
+						'buttonVariant' => 'button-primary',
+						'buttonUrl' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
+						'buttonLabel' => \__('Create', 'eightshift-forms'),
+						'buttonIcon' => UtilsHelper::getUtilsIcons('addHighContrast'),
+						'buttonIconSize' => 'small',
 					]),
 				];
 				break;
@@ -758,14 +786,13 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$itemTitle = \get_the_title($itemId) ?: \__('No title', 'eightshift-forms');
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item)),
-						'cardInlineUseHover' => true,
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingUrl' => $editLink,
+						'cardListingSubTitle' => \implode('|', $this->getSubtitle($item)),
+						'cardListingIcon' => UtilsHelper::getUtilsIcons('post'),
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 					]);
 				}
 				break;
@@ -776,14 +803,14 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$itemTitle = \get_the_title($itemId) ?: \__('No title', 'eightshift-forms');
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode('<span>|</span>', $this->getSubtitle($item, ['status'])),
-						'cardInlineUseHover' => true,
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingUrl' => $editLink,
+						'cardListingSubTitle' => \implode('|', $this->getSubtitle($item, ['status'])),
+						'cardListingIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
@@ -818,9 +845,7 @@ class FormAdminMenu extends AbstractAdminMenu
 								$entryValue = \implode('<br/>', $entryValue);
 							} else {
 								$entryValue = \array_map(
-									function ($value, $key) {
-										return "{$key}={$value}";
-									},
+									fn($value, int|string $key): string => "{$key}={$value}",
 									$entryValue,
 									\array_keys($entryValue)
 								);
@@ -839,12 +864,12 @@ class FormAdminMenu extends AbstractAdminMenu
 						}
 
 						if (!isset($tableHead[$entryKey])) {
-							$tableHead[$entryKey] = \ucfirst($entryKey);
+							$tableHead[$entryKey] = \ucfirst((string) $entryKey);
 						}
 						$tableContent[$itemId][$entryKey] = $entryValue;
 					}
 
-					\uksort($tableHead, 'strcasecmp');
+					\uksort($tableHead, \strcasecmp(...));
 
 					$i++;
 				}
@@ -885,20 +910,20 @@ class FormAdminMenu extends AbstractAdminMenu
 					$tableHead['createdAt'] = \__('Created', 'eightshift-forms');
 					$tableContent[$itemId]['createdAt'] = $item['createdAt'] ?? '';
 					$tableHead['submit'] = \__('Submit', 'eightshift-forms');
-					$tableContent[$itemId]['submit'] = Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Submit', 'eightshift-forms'),
+					$tableContent[$itemId]['submit'] = Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonLabel' => \__('Submit', 'eightshift-forms'),
 						'additionalClass' => "{$manualSubmitTrigger}",
-						'submitItemAttrs' => [
+						'buttonAttrs' => [
 							UtilsHelper::getStateAttribute('formId') => $formId,
 							UtilsHelper::getStateAttribute('manualSubmitId') => $itemId,
 							'title' => \__('Manual submit data to external integration.', 'eightshift-forms'),
 						],
 					]);
 					$tableHead['data'] = \__('Data', 'eightshift-forms');
-					$tableContent[$itemId]['data'] = '<span class="' . $manualSubmitData . '" ' . Helpers::getAttrsOutput([
+					$tableContent[$itemId]['data'] = '<span class="' . $manualSubmitData . '" ' . \wp_kses_post(Helpers::getAttrsOutput([
 						UtilsHelper::getStateAttribute('manualSubmitId') => $itemId,
-					]) . '>' . ($item['data'] ?? '') . '</span>';
+					])) . '>' . ($item['data'] ?? '') . '</span>';
 
 					$i++;
 				}
@@ -918,14 +943,14 @@ class FormAdminMenu extends AbstractAdminMenu
 					// Translators: %s is the form ID.
 					$itemTitle = $item['title'] ?: \sprintf(\__('No Form title for ID %s', 'eightshift-forms'), $itemId);
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $item['editLink'] ?? '#',
-						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
-						'cardInlineUseHover' => true,
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingUrl' => $item['editLink'] ?? '#',
+						'cardListingSubTitle' => \implode('|', $this->getSubtitle($item, ['all'])),
+						'cardListingIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
@@ -943,19 +968,19 @@ class FormAdminMenu extends AbstractAdminMenu
 					$itemTitle = $item['title'] ?: \sprintf(\__('No Form title for ID %s', 'eightshift-forms'), $itemId);
 					$editLink = $item['editLink'] ?? '#';
 					$activeIntegration = $item['activeIntegration'] ?? [];
-					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					$cardIcon = $activeIntegration['icon'] ?? UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 					$isValid = $this->isIntegrationValid($item);
 
-					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
-						'cardInlineTitleLink' => $editLink,
-						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
-						'cardInlineIcon' => $cardIcon,
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
-						'cardInlineInvalid' => !$isValid,
-						'cardInlineUseHover' => true,
+					$output[] = Helpers::render('card-listing', [
+						'cardListingTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
+						'cardListingUrl' => $editLink,
+						'cardListingSubTitle' => \implode('|', $this->getSubtitle($item)),
+						'cardListingIcon' => $cardIcon,
+						'cardListingUseCheckbox' => true,
+						'cardListingId' => $itemId,
+						'cardListingRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardListingInvalid' => !$isValid,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
 							UtilsHelper::getStateAttribute('bulkId') => $itemId,
@@ -975,8 +1000,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * Get is integration valid.
 	 *
 	 * @param array<string, mixed> $item Item to be checked.
-	 *
-	 * @return boolean
 	 */
 	private function isIntegrationValid(array $item): bool
 	{
@@ -1000,10 +1023,10 @@ class FormAdminMenu extends AbstractAdminMenu
 		$output = [];
 
 		$showOnly = \array_flip($showOnly);
-		$showOnlyStatus = isset($showOnly['status']) || empty($showOnly);
-		$showOnlyIntegrationIsActive = isset($showOnly['integrationIsActive']) || empty($showOnly);
-		$showOnlyIntegrationIsValid = isset($showOnly['integrationIsValid']) || empty($showOnly);
-		$showOnlyIntegrationIsApiValid = isset($showOnly['integrationIsApiValid']) || empty($showOnly);
+		$showOnlyStatus = isset($showOnly['status']) || $showOnly === [];
+		$showOnlyIntegrationIsActive = isset($showOnly['integrationIsActive']) || $showOnly === [];
+		$showOnlyIntegrationIsValid = isset($showOnly['integrationIsValid']) || $showOnly === [];
+		$showOnlyIntegrationIsApiValid = isset($showOnly['integrationIsApiValid']) || $showOnly === [];
 
 		$status = $item['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$postType = $item['postType'] ?? '';
@@ -1012,23 +1035,23 @@ class FormAdminMenu extends AbstractAdminMenu
 		$isApiValid = $item['activeIntegration']['isApiValid'] ?? false;
 
 		if ($postType) {
-			$output[] = ($postType === 'wp_block' ? \__('Patterns', 'eightshift-forms') : \ucfirst($postType));
+			$output[] = ($postType === 'wp_block' ? \__('Patterns', 'eightshift-forms') : \ucfirst((string) $postType));
 		}
 
 		if (!$isActive && $showOnlyIntegrationIsActive) {
-			$output[] = '<span class="error-text">' . \esc_html__('Integration not enabled', 'eightshift-forms') . '</span>';
+			$output[] = '<span class="esf:text-red-500">' . \esc_html__('Integration not enabled', 'eightshift-forms') . '</span>';
 		}
 
 		if (!$isValid && $showOnlyIntegrationIsValid) {
-			$output[] = '<span class="error-text">' . \esc_html__('Form configuration not valid', 'eightshift-forms') . '</span>';
+			$output[] = '<span class="esf:text-red-500">' . \esc_html__('Form configuration not valid', 'eightshift-forms') . '</span>';
 		}
 
 		if (!$isApiValid && $showOnlyIntegrationIsApiValid) {
-			$output[] = '<span class="error-text">' . \esc_html__('Missing form fields', 'eightshift-forms') . '</span>';
+			$output[] = '<span class="esf:text-red-500">' . \esc_html__('Missing form fields', 'eightshift-forms') . '</span>';
 		}
 
 		if ($status !== 'publish' && $showOnlyStatus) {
-			$output[] = '<span class="status-text">' . \ucfirst($status) . '</span>';
+			$output[] = '<span class="esf:text-current/90 esf:bg-current/5 esf:text-xs esf:px-5 esf:py-2 esf:rounded-md">' . ($status) . '</span>';
 		}
 
 		return $output;
@@ -1074,19 +1097,17 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
 					...($viewLink ? [
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $viewLink,
-							'submitValue' => \__('View', 'eightshift-forms'),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonUrl' => $viewLink,
+							'buttonLabel' => \__('View', 'eightshift-forms'),
 						])
 					] : []),
 					...($editLink ? [
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $editLink,
-							'submitValue' => \__('Edit', 'eightshift-forms'),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonUrl' => $editLink,
+							'buttonLabel' => \__('Edit', 'eightshift-forms'),
 						])
 					] : []),
 				];
@@ -1094,7 +1115,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
 					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
+						'submitVariant' => 'primaryGhost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $editLink,
 						'submitValue' => \__('Edit', 'eightshift-forms'),
@@ -1109,17 +1130,15 @@ class FormAdminMenu extends AbstractAdminMenu
 				if ($parent === '') {
 					$output = [
 						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
-							Helpers::render('submit', [
-								'submitVariant' => 'ghost',
-								'submitButtonAsLink' => true,
-								'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
-								'submitValue' => \__('Entries', 'eightshift-forms'),
+							Helpers::render('button', [
+								'buttonVariant' => 'primaryGhost',
+								'buttonUrl' => $item['entriesLink'] ?? '',
+								'buttonLabel' => \__('Entries', 'eightshift-forms'),
 							]) : null,
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $item['settingsLink'] ?? '',
-							'submitValue' => \__('Settings', 'eightshift-forms'),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonUrl' => $item['settingsLink'] ?? '',
+							'buttonLabel' => \__('Settings', 'eightshift-forms'),
 						]),
 					];
 				}
@@ -1127,17 +1146,15 @@ class FormAdminMenu extends AbstractAdminMenu
 			default:
 				$output = [
 					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) ?
-						Helpers::render('submit', [
-							'submitVariant' => 'ghost',
-							'submitButtonAsLink' => true,
-							'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
-							'submitValue' => \__('Entries', 'eightshift-forms'),
+						Helpers::render('button', [
+							'buttonVariant' => 'primaryGhost',
+							'buttonUrl' => $item['entriesLink'] ?? '',
+							'buttonLabel' => \__('Entries', 'eightshift-forms'),
 						]) : null,
-					Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => $item['settingsLink'] ?? '',
-						'submitValue' => \__('Settings', 'eightshift-forms'),
+					Helpers::render('button', [
+						'buttonVariant' => 'primaryGhost',
+						'buttonUrl' => $item['settingsLink'] ?? '',
+						'buttonLabel' => \__('Settings', 'eightshift-forms'),
 					]),
 				];
 				break;
@@ -1155,7 +1172,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @return array<mixed>
 	 */
-	private function getDefaultLeftTopBarItems($search, $perPage, $include = []): array
+	private function getDefaultLeftTopBarItems(string $search, int $perPage, array $include = []): array
 	{
 		$selectAllSelector = UtilsHelper::getStateSelectorAdmin('listingSelectAll');
 		$searchSelector = UtilsHelper::getStateSelectorAdmin('listingSearch');
@@ -1174,7 +1191,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					'fieldSkip' => true,
 					'inputName' => 'search',
 					'inputPlaceholder' => \__('Search', 'eightshift-forms'),
-					'additionalClass' => $searchSelector,
+					'additionalClass' => "$searchSelector esf:w-170!",
 					'inputValue' => $search,
 				]),
 			] : []),
@@ -1210,7 +1227,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						]),
 					]),
 					'selectPlaceholder' => \__('Per page', 'eightshift-forms'),
-					'additionalClass' => $perPageSelector,
+					'additionalClass' => Helpers::clsx([...AbstractTheme::THEME_SELECTORS['input'], $perPageSelector, 'esf:w-95!']),
 				]),
 			] : []),
 		];

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation\FileSecurity;
 
+use EightshiftForms\Labels\Labels;
+
 /**
  * Scans .txt uploads.
  */
@@ -23,7 +25,7 @@ final class TextScanner implements FileSecurityScannerInterface
 	 *
 	 * @var array<int, string>
 	 */
-	private const SCRIPT_PATTERNS = [
+	private const array SCRIPT_PATTERNS = [
 		'<?php',
 		'<?=',
 		'<%@ page',
@@ -47,12 +49,12 @@ final class TextScanner implements FileSecurityScannerInterface
 	{
 		$contents = @\file_get_contents($filepath); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if (!\is_string($contents)) {
-			return 'validationFileScanFailed';
+			return Labels::LABEL_VALIDATION_FILE_SCAN_FAILED;
 		}
 
 		foreach (self::SCRIPT_PATTERNS as $pattern) {
 			if (\stripos($contents, $pattern) !== false) {
-				return 'validationFileTextUnsafe';
+				return Labels::LABEL_VALIDATION_FILE_TEXT_UNSAFE;
 			}
 		}
 

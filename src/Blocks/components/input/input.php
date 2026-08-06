@@ -24,7 +24,6 @@ $inputPlaceholder = Helpers::checkAttr('inputPlaceholder', $attributes, $manifes
 $inputType = Helpers::checkAttr('inputType', $attributes, $manifest);
 $inputTypeCustom = Helpers::checkAttr('inputTypeCustom', $attributes, $manifest);
 $inputIsDisabled = Helpers::checkAttr('inputIsDisabled', $attributes, $manifest);
-$inputIsReadOnly = Helpers::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputIsRequired = Helpers::checkAttr('inputIsRequired', $attributes, $manifest);
 $inputTracking = Helpers::checkAttr('inputTracking', $attributes, $manifest);
 $inputMin = Helpers::checkAttr('inputMin', $attributes, $manifest);
@@ -44,7 +43,7 @@ $inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes
 $inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
 $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
 $inputRangeUseCustomField = Helpers::checkAttr('inputRangeUseCustomField', $attributes, $manifest);
-$inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
+$inputTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $inputId = $inputName . '-' . Helpers::getUnique();
 
@@ -56,7 +55,7 @@ $twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range
 
 $inputClass = Helpers::clsx([
 	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -77,6 +76,8 @@ if ($inputUseLabelAsPlaceholder) {
 }
 
 if ($inputType === 'range') {
+	$rangeAdditionalContent = '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'range', 'output', "{$componentClass}__output")) . '">';
+
 	// Fallback is the browser default value if no min is set.
 	// Without fallback .value in JS returns a mid value between min (or 0 if unset) and max (or 100 if unset), which can cause weird display issue.
 	$inputAttrs['min'] = esc_attr($inputMin ?: 0);
@@ -101,14 +102,14 @@ if ($inputType === 'range') {
 
 		$min = $inputAttrs['min'] ?? '';
 
-		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$min}{$inputRangeShowMinSuffix}</span>");
+		$rangeAdditionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$min}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
 		$cssSelector = FormsHelper::getTwPart($twClasses, 'range', 'current', "{$componentClass}__range--current");
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
-		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
+		$rangeAdditionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
 	}
 
 	if ($inputRangeShowMax) {
@@ -119,8 +120,23 @@ if ($inputType === 'range') {
 
 		$max = $inputAttrs['max'] ?? '';
 
-		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$max}{$inputRangeShowMaxSuffix}</span>");
+		$rangeAdditionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$max}{$inputRangeShowMaxSuffix}</span>");
 	}
+
+	$rangeAdditionalContent .= '</div>';
+
+	if ($inputRangeUseCustomField) {
+		$additionalContent .= '<input
+			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'range', 'custom', "{$componentClass}__range-custom")) . '"
+			type="number"
+			' . disabled($inputIsDisabled, true, false) . '
+			' . wp_kses_post(Helpers::getAttrsOutput($inputAttrs)) . '
+		/>';
+
+		$inputFieldAttrs[UtilsHelper::getStateAttribute('fieldHasCustomRangeInput')] = true;
+	}
+
+	$additionalContent .= $rangeAdditionalContent;
 }
 
 if ($inputType === 'hidden') {
@@ -144,27 +160,12 @@ $input = '
 		id="' . esc_attr($inputId) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
-		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($inputAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($inputAttrs)) . '
 	/>
 ';
 
-if ($inputRangeUseCustomField && $inputType === 'range') {
-	$input .= '<input
-		class="' . esc_attr(FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range-custom")) . '"
-		type="number"
-		' . disabled($inputIsDisabled, true, false) . '
-		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . Helpers::getAttrsOutput($inputAttrs) . '
-	/>';
-}
-
-if ($additionalContent) {
-	$input .= $additionalContent;
-}
-
 $fieldOutput = [
-	'fieldContent' => $input,
+	'fieldContent' => "{$input}{$additionalContent}",
 	'fieldId' => $inputId,
 	'fieldName' => $inputName,
 	'fieldTwSelectorsData' => $inputTwSelectorsData,

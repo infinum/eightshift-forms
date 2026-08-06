@@ -24,18 +24,14 @@ class Editor implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_head-edit.php', [$this, 'getEditorBackLink']);
+		\add_action('admin_head-edit.php', $this->getEditorBackLink(...));
 	}
 
 	/**
 	 * Create back link for editor.
-	 *
-	 * @return void
 	 */
 	public function getEditorBackLink(): void
 	{

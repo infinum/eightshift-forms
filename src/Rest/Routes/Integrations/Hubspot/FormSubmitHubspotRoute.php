@@ -15,7 +15,6 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -25,7 +24,8 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
+use Override;
 
 /**
  * Class FormSubmitHubspotRoute
@@ -38,25 +38,10 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsHubspot::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Hubspot data.
-	 *
-	 * @var HubspotClientInterface
-	 */
-	protected $hubspotClient;
-
-	/**
-	 * Instance variable for Clearbit data.
-	 *
-	 * @var ClearbitClientInterface
-	 */
-	protected $clearbitClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -66,21 +51,17 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		HubspotClientInterface $hubspotClient,
-		ClearbitClientInterface $clearbitClient
+		protected HubspotClientInterface $hubspotClient,
+		protected ClearbitClientInterface $clearbitClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->hubspotClient = $hubspotClient;
-		$this->clearbitClient = $clearbitClient;
 	}
 
 	/**
@@ -95,8 +76,6 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -128,9 +107,9 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Hubspot is missing config.
 	 * @throws DisabledIntegrationException If Hubspot is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -147,10 +126,10 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('hubspotMissingConfig'),
+				Labels::getLabel(Labels::LABEL_HUBSPOT_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_HUBSPOT_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_HUBSPOT_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -170,9 +149,8 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
 	{
 		$this->clearbitClient->setQueue(

@@ -14,7 +14,6 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Jira\JiraClientInterface;
 use EightshiftForms\Integrations\Jira\SettingsJira;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -24,7 +23,8 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
+use Override;
 
 /**
  * Class FormSubmitJiraRoute
@@ -37,18 +37,10 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	public const ROUTE_SLUG = SettingsJira::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Jira data.
-	 *
-	 * @var JiraClientInterface
-	 */
-	protected $jiraClient;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
@@ -57,19 +49,16 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
-		JiraClientInterface $jiraClient
+		protected JiraClientInterface $jiraClient
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
-		$this->jiraClient = $jiraClient;
 	}
 
 	/**
@@ -84,8 +73,6 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -117,9 +104,9 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 * @throws BadRequestException If Jira is missing config.
 	 * @throws DisabledIntegrationException If Jira is disabled.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
-	protected function submitAction(array $formDetails)
+	protected function submitAction(array $formDetails): array
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
@@ -138,10 +125,10 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsJira::FILTER_SETTINGS_IS_VALID_NAME, false, $formId)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('jiraMissingConfig'),
+				Labels::getLabel(Labels::LABEL_JIRA_MISSING_CONFIG),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_JIRA_MISSING_CONFIG,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_JIRA_MISSING_CONFIG,
 				],
 			);
 			// phpcs:enable
@@ -163,6 +150,7 @@ class FormSubmitJiraRoute extends AbstractIntegrationFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
+	#[Override]
 	protected function getEmailResponseTags(array $formDetails): array
 	{
 		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body'] ?? [];

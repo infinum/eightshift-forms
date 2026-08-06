@@ -66,30 +66,20 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, [$this, 'isDebugActive'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $this->isSettingsGlobalValid(...));
+		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, $this->isDebugActive(...), 10, 2);
 	}
 
 	/**
 	 * Determine if settings global are valid.
-	 *
-	 * @return boolean
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
 	}
 
 	/**
@@ -113,10 +103,8 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 						'tabLabel' => \__('Debug', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'intro',
-								'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
-								'introIsHighlighted' => true,
-								'introIsHighlightedImportant' => true,
+								'component' => 'notice',
+								'noticeContent' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
 							],
 							[
 								'component' => 'checkboxes',
@@ -134,7 +122,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -147,7 +135,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -160,7 +148,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -179,7 +167,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -192,8 +180,9 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 									],
 									[
 										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
+										'dividerSeparator' => true,
 									],
+									// phpcs:disable Generic.Files.LineLength.TooLong
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
@@ -203,6 +192,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
 									],
+									// phpcs:enable Generic.Files.LineLength.TooLong
 								]
 							],
 						],
@@ -241,70 +231,15 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'component' => 'textarea',
 								'textareaName' => 'debug-encrypt-output',
 								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
-								'textareaSize' => 'big',
 								'textareaIsPreventSubmit' => true,
-								'textareaLimitHeight' => true,
-								'textareaIsReadOnly' => true,
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput'),
+								'textareaIsDisabled' => true,
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput') . ' esf:min-h-800',
 							],
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Test Computed', 'eightshift-forms'),
-								'submitVariant' => 'outline',
+								'component' => 'button',
+								'buttonLabel' => \__('Test Computed', 'eightshift-forms'),
+								'buttonVariant' => 'primaryOutline',
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionRun'),
-							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Support', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introTitle' => \__('Diagnostics', 'eightshift-forms'),
-								'introSubtitle' => '<p>' . \__("Check these settings to make sure your forms work correctly. For more details check <a href='/wp-admin/site-health.php' target='_blank' rel='noopener noreferrer'>Site Health</a>.", 'eightshift-forms') . '</p>',
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://www.php.net/supported-versions.php" target="_blank" rel="noopener noreferrer">PHP version</a>',
-								'cardInlineSubTitle' => 'Version of PHP running on the server.',
-								'cardInlineRightContent' => \phpversion(),
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://wordpress.org/documentation/article/wordpress-versions/" target="_blank" rel="noopener noreferrer">WordPress version</a>',
-								'cardInlineSubTitle' => 'Version of WordPress running on the server.',
-								'cardInlineRightContent' => \get_bloginfo('version'),
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://www.php.net/manual/en/ini.core.php#ini.memory-limit" target="_blank" rel="noopener noreferrer">Memory limit</a>',
-								'cardInlineSubTitle' => 'Maximum amount of memory (in bytes) that a script is allowed to allocate.',
-								'cardInlineRightContent' => (int)\ini_get('memory_limit') <= 64 ? '<span class="error-text">' . \ini_get('memory_limit') . '</span>' : '<span class="success-text">' . \ini_get('memory_limit') . '</span>',
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time" target="_blank" rel="noopener noreferrer">Max execution time</a>',
-								'cardInlineSubTitle' => 'Maximum time (in seconds) a script is allowed to run.',
-								'cardInlineRightContent' => (int)\ini_get('max_execution_time') <= 30 ? '<span class="error-text">' . \ini_get('max_execution_time') . '</span>' : '<span class="success-text">' . \ini_get('max_execution_time') . '</span>',
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://www.php.net/manual/en/info.configuration.php#ini.max-input-vars" target="_blank" rel="noopener noreferrer">Max input vars</a>',
-								'cardInlineSubTitle' => 'Maximum number of input variables that can be used in a single function.',
-								'cardInlineRightContent' => (int)\ini_get('max_input_vars') <= 50 ? '<span class="error-text">' . \ini_get('max_input_vars') . '</span>' : '<span class="success-text">' . \ini_get('max_input_vars') . '</span>',
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://www.php.net/manual/en/features.file-upload.common-pitfalls.php" target="_blank" rel="noopener noreferrer">Max POST size</a>',
-								'cardInlineSubTitle' => 'Maximum size of POST data that is accepted.',
-								'cardInlineRightContent' => (int)\ini_get('post_max_size') <= 64 ? '<span class="error-text">' . \ini_get('post_max_size') . '</span>' : '<span class="success-text">' . \ini_get('post_max_size') . '</span>',
-							],
-							[
-								'component' => 'card-inline',
-								'cardInlineTitle' => '<a href="https://www.php.net/manual/en/features.file-upload.common-pitfalls.php" target="_blank" rel="noopener noreferrer">Max upload filesize</a>',
-								'cardInlineSubTitle' => 'Maximum allowed file size for file uploads.',
-								'cardInlineRightContent' => (int)\ini_get('upload_max_filesize') <= 64 ? '<span class="error-text">' . \ini_get('upload_max_filesize') . '</span>' : '<span class="success-text">' . \ini_get('upload_max_filesize') . '</span>',
 							],
 						],
 					],
@@ -318,8 +253,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 *
 	 * @param boolean $default Default value.
 	 * @param string $settingKey Setting key to check.
-	 *
-	 * @return boolean
 	 */
 	public function isDebugActive(bool $default, string $settingKey): bool
 	{

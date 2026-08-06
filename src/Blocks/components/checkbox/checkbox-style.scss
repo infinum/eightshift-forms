@@ -1,7 +1,0 @@
-.es-checkbox {
-	@include checkbox-styles;
-
-	&__label::before {
-		border-radius: 0.25rem;
-	}
-}

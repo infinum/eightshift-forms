@@ -23,22 +23,21 @@ if (!$ratingName) {
 $ratingValue = Helpers::checkAttr('ratingValue', $attributes, $manifest);
 $ratingTypeCustom = Helpers::checkAttr('ratingTypeCustom', $attributes, $manifest);
 $ratingIsDisabled = Helpers::checkAttr('ratingIsDisabled', $attributes, $manifest);
-$ratingIsReadOnly = Helpers::checkAttr('ratingIsReadOnly', $attributes, $manifest);
 $ratingIsRequired = Helpers::checkAttr('ratingIsRequired', $attributes, $manifest);
 $ratingTracking = Helpers::checkAttr('ratingTracking', $attributes, $manifest);
 $ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);
 $ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifest);
 $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
-$ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
+$ratingTwSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 
 $ratingId = $ratingName . '-' . Helpers::getUnique();
 
 $twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
 
-$ratingClass = Helpers::classnames([
+$ratingClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
-	Helpers::selector($additionalClass, $additionalClass),
+	$additionalClass,
 	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
 ]);
@@ -64,7 +63,7 @@ $stars = '';
 $iconFilterName = HooksHelpers::getFilterName(['block', 'rating', 'starIcon']);
 
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
-	$stars .= '
+	$input = '
 		<input
 			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
 			type="radio"
@@ -79,7 +78,9 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$ariaLabel = sprintf(__('Star rating %s', 'eightshift-forms'), $i);
 
 	$stars .= '
+' . $input . '
 		<label
+			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'label', "{$componentClass}__label")) . '"
 			for="' . esc_attr($ratingId . $i) . '"
 			aria-label="' . esc_attr($ariaLabel) . '"
 		>
@@ -90,7 +91,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 
 $rating = '
 	<div class="' . esc_attr($ratingClass) . '"
-		' . Helpers::getAttrsOutput($ratingAttrs) . '
+		' . wp_kses_post(Helpers::getAttrsOutput($ratingAttrs)) . '
 	>
 	' . $stars . '
 	</div>

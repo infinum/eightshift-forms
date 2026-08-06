@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * FriendlyCaptcha class.
@@ -32,34 +32,17 @@ class FriendlyCaptcha implements CaptchaInterface
 	/**
 	 * Friendly Captcha siteverify error codes that indicate a missing or invalid API key.
 	 */
-	private const ERROR_CODES_AUTH = ['secret_missing', 'secret_invalid', 'auth_invalid', 'auth_required'];
+	private const array ERROR_CODES_AUTH = ['secret_missing', 'secret_invalid', 'auth_invalid', 'auth_required'];
 
 	/**
 	 * Friendly Captcha siteverify error codes that indicate a malformed request.
 	 */
-	private const ERROR_CODES_BAD_REQUEST = ['bad_request', 'solution_missing', 'sitekey_invalid', 'sitekey_missing'];
+	private const array ERROR_CODES_BAD_REQUEST = ['bad_request', 'solution_missing', 'sitekey_invalid', 'sitekey_missing'];
 
 	/**
 	 * Friendly Captcha siteverify error codes recoverable by a fresh widget solution.
 	 */
-	private const ERROR_CODES_TIMEOUT_OR_DUPLICATE = ['solution_timeout_or_duplicate', 'solution_expired', 'solution_already_used'];
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param LabelsInterface $labels Inject labels methods.
-	 */
-	public function __construct(LabelsInterface $labels)
-	{
-		$this->labels = $labels;
-	}
+	private const array ERROR_CODES_TIMEOUT_OR_DUPLICATE = ['solution_timeout_or_duplicate', 'solution_expired', 'solution_already_used'];
 
 	/**
 	 * Check captcha request.
@@ -80,25 +63,24 @@ class FriendlyCaptcha implements CaptchaInterface
 	{
 		if (!\apply_filters(SettingsFriendlyCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
+				AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_SUCCESS),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FEATURE_DISABLED,
 				],
 			];
 		}
 
-		$debug = [
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = [
 			'token' => $token,
-			'formDetails' => $formDetails,
 		];
 
-		if (!$token) {
+		if ($token === '' || $token === '0') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaBadRequest'),
+				Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_MISSING_TOKEN,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -126,10 +108,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\is_wp_error($response)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('submitWpError'),
+				Labels::getLabel(Labels::LABEL_SUBMIT_WP_ERROR),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_REQUEST_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -139,18 +121,18 @@ class FriendlyCaptcha implements CaptchaInterface
 		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true) ?? [];
 		$errorCode = (string) ($responseBody['errors'][0]['error_code'] ?? '');
 
-		$debug['responseCode'] = $responseCode;
-		$debug['responseBody'] = $responseBody;
-		$debug['errorCode'] = $errorCode;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['responseCode'] = $responseCode;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['responseBody'] = $responseBody;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['errorCode'] = $errorCode;
 
 		// FC v2 returns HTTP 200 for both success and solution-level failures.
 		// Must check the `success` field in the body — a 200 with success=false means the solution was rejected.
 		if (ApiHelpers::isSuccessResponse($responseCode) && ($responseBody['success'] ?? false)) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('friendlyCaptchaSuccess'),
+				AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_SUCCESS),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_SUCCESS,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				],
 			];
 		}
@@ -159,10 +141,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\in_array($errorCode, self::ERROR_CODES_AUTH, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaAuthError'),
+				Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_AUTH_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_AUTH_ERROR,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -172,10 +154,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\in_array($errorCode, self::ERROR_CODES_BAD_REQUEST, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaBadRequest'),
+				Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_BAD_REQUEST,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_BAD_REQUEST,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -185,10 +167,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (\in_array($errorCode, self::ERROR_CODES_TIMEOUT_OR_DUPLICATE, true)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaTimeoutOrDuplicate'),
+				Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_TIMEOUT_OR_DUPLICATE,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_TIMEOUT_OR_DUPLICATE,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -198,10 +180,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		if ($errorCode === 'solution_invalid') {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaInvalidSolution'),
+				Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_INVALID_SOLUTION,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_INVALID_SOLUTION,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -211,10 +193,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		if (ApiHelpers::isErrorResponse($responseCode)) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->labels->getLabel('friendlyCaptchaHttpError'),
+				Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_HTTP_ERROR),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_HTTP_ERROR,
-					AbstractBaseRoute::R_DEBUG => $debug,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_HTTP_ERROR,
+					AbstractBaseRoute::R_DEBUG => $formDetails,
 				]
 			);
 			// phpcs:enable
@@ -223,10 +205,10 @@ class FriendlyCaptcha implements CaptchaInterface
 		// Generic catch-all for any other unsuccessful response.
 		// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 		throw new BadRequestException(
-			$this->labels->getLabel('friendlyCaptchaError'),
+			Labels::getLabel(Labels::LABEL_CAPTCHA_FRIENDLY_ERROR),
 			[
-				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_FRIENDLY_CAPTCHA_OUTPUT_ERROR,
-				AbstractBaseRoute::R_DEBUG => $debug,
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_FRIENDLY_OUTPUT_ERROR,
+				AbstractBaseRoute::R_DEBUG => $formDetails,
 			]
 		);
 		// phpcs:enable
@@ -234,8 +216,6 @@ class FriendlyCaptcha implements CaptchaInterface
 
 	/**
 	 * Get the selected endpoint value.
-	 *
-	 * @return string
 	 */
 	public static function getEndpoint(): string
 	{
@@ -244,8 +224,6 @@ class FriendlyCaptcha implements CaptchaInterface
 
 	/**
 	 * Get the siteverify URL for the selected endpoint.
-	 *
-	 * @return string
 	 */
 	public static function getEndpointUrl(): string
 	{

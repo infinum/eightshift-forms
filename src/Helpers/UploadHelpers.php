@@ -22,8 +22,6 @@ final class UploadHelpers
 	 * Detect if there is and error in the file upload.
 	 *
 	 * @param string $error String value, can be file path or error key.
-	 *
-	 * @return boolean
 	 */
 	public static function isUploadError(string $error): bool
 	{
@@ -66,12 +64,12 @@ final class UploadHelpers
 		$fileId = $file['id'] ?? '';
 		$fileName = $file['name'] ?? '';
 		$error = $file['error'] ?? '';
-		$ext = \pathinfo($fileName, \PATHINFO_EXTENSION);
-		$name = \pathinfo($fileName, \PATHINFO_FILENAME);
+		$ext = \pathinfo((string) $fileName, \PATHINFO_EXTENSION);
+		$name = \pathinfo((string) $fileName, \PATHINFO_FILENAME);
 		$tmpName = $file['tmp_name'] ?? '';
 		$uniqueId = \bin2hex(\random_bytes(4));
 
-		if (!$file) {
+		if ($file === []) {
 			return \array_merge(
 				$output,
 				[
@@ -135,7 +133,7 @@ final class UploadHelpers
 		// file leaves PHP's managed tmp area. If the caller forgot to call
 		// validateFiles, the file still never reaches esforms-tmp.
 		if (\is_string($tmpName) && $tmpName !== '') {
-			$scanError = (new FileSecurityScanner())->scan($tmpName, (string) $fileName, $extraAllowedMimes);
+			$scanError = new FileSecurityScanner()->scan($tmpName, (string) $fileName, $extraAllowedMimes);
 			if ($scanError !== '') {
 				return \array_merge(
 					$output,
@@ -176,12 +174,10 @@ final class UploadHelpers
 	 * Delete files from the uploads folder.
 	 *
 	 * @param array<string, mixed> $files Delete submitted files.
-	 *
-	 * @return void
 	 */
 	public static function deleteFiles(array $files): void
 	{
-		if (!$files) {
+		if ($files === []) {
 			return;
 		}
 
@@ -202,8 +198,6 @@ final class UploadHelpers
 	 * Delete all items in the tem upload folder
 	 *
 	 * @param int $numberOfHours Number of hours used.
-	 *
-	 * @return void
 	 */
 	public static function deleteUploadFolderContent(int $numberOfHours = 2): void
 	{
@@ -237,8 +231,6 @@ final class UploadHelpers
 	 * Return file path by provided name with ext.
 	 *
 	 * @param string $name File name.
-	 *
-	 * @return string
 	 */
 	public static function getFilePath(string $name): string
 	{
@@ -260,8 +252,6 @@ final class UploadHelpers
 	 * Return file name from path.
 	 *
 	 * @param string $path File path.
-	 *
-	 * @return string
 	 */
 	public static function getFileNameFromPath(string $path): string
 	{
@@ -273,8 +263,6 @@ final class UploadHelpers
 	 * Return file ext from path.
 	 *
 	 * @param string $path File path.
-	 *
-	 * @return string
 	 */
 	public static function getFileExtFromPath(string $path): string
 	{
@@ -287,27 +275,14 @@ final class UploadHelpers
 	 * Check if there is a faulty file in the array.
 	 *
 	 * @param array<string, mixed> $files Files to check.
-	 *
-	 * @return boolean
 	 */
 	public static function isFileFaulty(array $files): bool
 	{
-		$isFaulty = false;
-
-		foreach ($files as $file) {
-			if ($file === 'error') {
-				$isFaulty = true;
-				break;
-			}
-		}
-
-		return $isFaulty;
+		return \array_any($files, fn($file): bool => $file === 'error');
 	}
 
 	/**
 	 * Get upload folder path.
-	 *
-	 * @return string
 	 */
 	private static function getUploadFolderPath(): string
 	{

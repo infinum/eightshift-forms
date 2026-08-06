@@ -1,4 +1,3 @@
-import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { TalentlyftEditor } from './components/talentlyft-editor';
 import { TalentlyftOptions } from './components/talentlyft-options';

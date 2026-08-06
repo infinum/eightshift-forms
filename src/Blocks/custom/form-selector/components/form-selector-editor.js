@@ -1,76 +1,94 @@
-import React from 'react';
-import { camelCase } from 'lodash';
+import { Toaster } from 'sonner';
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
-import { Button, Placeholder } from '@wordpress/components';
-import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+import { form, JsxSvg, warningCircle } from '@eightshift/ui-components/icons';
+import { Button, VStack, HStack, RichLabel, Spacer } from '@eightshift/ui-components';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
+import { camelCase } from '@eightshift/ui-components/utilities';
 import { getUtilsIcons } from '../../../components/form/assets/state-init';
 import globalSettings from './../../../manifest.json';
+import manifest from '../manifest.json';
 
-export const FormSelectorEditor = ({
-	clientId,
-	hasInnerBlocks,
-}) => {
-	const manifest = select(STORE_NAME).getBlock('form-selector');
+export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
+	const { forms } = manifest;
 
-	const {
-		forms,
-	} = manifest;
+	const blockProps = useBlockProps({
+		className: 'esf:max-w-3xl esf:mx-auto',
+	});
 
 	return (
 		<>
-			 {!hasInnerBlocks && (
-				<Placeholder
-					icon={icons.form}
-					label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-					className='es-max-w-108 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
-				>
-					<h4 className='es-mb-0! es-mx-0! es-mt-1! es-text-5 es-font-weight-500 es-color-pure-black es-min-w-full {'>{__('What type is your new form?', 'eightshift-forms')}</h4>
-					{forms.length > 0 &&
-						<div className='es-h-spaced-wrap es-gap-2!'>
-							{forms.map((form, index) => {
-									const { label, slug, icon } = form;
+			{!hasInnerBlocks && (
+				<div {...blockProps}>
+					<VStack
+						className='esf:items-center esf:py-8 es:font-sans'
+						noWrap
+					>
+						<RichLabel
+							icon={form}
+							label={__('Eightshift Forms', 'eightshift-ui-kit')}
+							className='esf:mb-24 esf:not-contrast-more:opacity-60'
+						/>
 
-									let iconComponent = icon;
+						{forms.length > 0 && (
+							<RichLabel
+								labelClassName='esf:text-lg!'
+								label={__('Create a form', 'eightshift-ui-kit')}
+							/>
+						)}
 
-									if (!icon) {
-										iconComponent = getUtilsIcons(camelCase(slug));
-									}
+						{forms.length < 1 && (
+							<VStack className='esf:max-w-xs esf:items-center esf:gap-8 esf:text-center'>
+								<RichLabel
+									icon={warningCircle}
+									label={__('No integrations are active, configure one in the Dashboard', 'eightshift-forms')}
+									contentsOnly
+								/>
 
-									return (
-										<Button
-											key={index}
-											className='es-v-spaced es-content-center! es-m-0! es-nested-w-8 es-nested-h-8 es-h-auto es-w-32 es-h-24 es-rounded-1.5 es-border es-border-cool-gray-100 es-hover-border-cool-gray-400 es-transition es-nested-m-0!'
-											onClick={() => createBlockFromTemplate(clientId, slug, forms)}
-											icon={<div dangerouslySetInnerHTML={{ __html: iconComponent }} />}
-										>
-											{label}
-										</Button>
-									);
-								})}
-						</div>
-					}
+								<Spacer />
 
-					{forms.length < 1 &&
-						<>
-							{__('It appears that you don\'t have any active integrations set up for your project. Please go to the Eightshift Forms dashboard and configure your first integration.', 'eightshift-forms')}
-							<DashboardButton />
-						</>
-					}
-				</Placeholder>
+								<DashboardButton />
+							</VStack>
+						)}
+
+						<HStack className='esf:max-w-2xs esf:justify-center'>
+							{forms?.map((option) => {
+								const { label, slug, icon } = option;
+
+								let iconComponent = icon;
+
+								if (!icon) {
+									iconComponent = <JsxSvg svg={getUtilsIcons(camelCase(slug))} />;
+								}
+
+								return (
+									<Button
+										key={slug}
+										icon={iconComponent}
+										onPress={() => createBlockFromTemplate(clientId, slug, forms)}
+										size='large'
+										className='esf:size-80! esf:flex-col'
+									>
+										{label}
+									</Button>
+								);
+							})}
+						</HStack>
+					</VStack>
+				</div>
 			)}
-
-			<InnerBlocks
-				templateLock={false}
-				allowedBlocks={
-					[
-						...globalSettings.allowedBlocksList.integrationsBuilder,
-						...globalSettings.allowedBlocksList.integrationsNoBuilder,
-					]
-				}
+			<Toaster
+				richColors
+				position='bottom-center'
+				offset={40}
 			/>
+
+			<div {...blockProps}>
+				<InnerBlocks
+					templateLock={false}
+					allowedBlocks={[...globalSettings.allowedBlocksList.integrationsBuilder, ...globalSettings.allowedBlocksList.integrationsNoBuilder]}
+				/>
+			</div>
 		</>
 	);
 };

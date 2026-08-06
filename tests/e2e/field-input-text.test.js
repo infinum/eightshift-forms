@@ -1,17 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const {
-	openUrl,
-	submitFormAction,
-	populateInput,
-	getFieldInput,
-	getFieldLabel,
-	getField,
-	getFieldError,
-	getFieldBeforeContent,
-	getFieldAfterContent,
-	getFieldSuffixContent,
-	getFieldHelp,
-} = require('./helpers');
+const { openUrl, submitFormAction, populateInput, getFieldInput, getFieldLabel, getField, getFieldError, getFieldBeforeContent, getFieldAfterContent, getFieldSuffixContent, getFieldHelp } = require('./helpers');
 const { testFieldSingle, testFieldSingleMissing } = require('./helpers/tests');
 
 const URL = 'field-input-text';
@@ -24,7 +12,6 @@ test.describe('Field input text tests', () => {
 		const label = await getFieldLabel(page, selector);
 		const field = await getField(page, selector);
 		const error = await getFieldError(page, selector);
-
 
 		await expect(field).toHaveClass('es-field es-field--input js-es-block-field');
 		await expect(input).toHaveAttribute('type', 'text');

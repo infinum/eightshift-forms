@@ -22,8 +22,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	 * Check if string is url.
 	 *
 	 * @param string $url String to check.
-	 *
-	 * @return boolean
 	 */
 	public function isUrl(string $url): bool
 	{
@@ -34,8 +32,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	 * Check if string is email.
 	 *
 	 * @param string $email String to check.
-	 *
-	 * @return boolean
 	 */
 	public function isEmail(string $email): bool
 	{
@@ -48,8 +44,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	 *
 	 * @param string $email String to check.
 	 * @param array<int, string> $db Database to reference.
-	 *
-	 * @return boolean
 	 */
 	public function isEmailTldValid(string $email, array $db): bool
 	{
@@ -59,9 +53,7 @@ abstract class AbstractValidation implements ValidatorInterface
 
 		$check = \array_filter(
 			$db,
-			static function ($item) use ($email) {
-				return $item === $email;
-			}
+			static fn(string $item): bool => $item === $email
 		);
 
 		return (bool) $check;
@@ -72,8 +64,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	 *
 	 * @param integer $fileSize File size value.
 	 * @param integer $maxFileSize Max file size.
-	 *
-	 * @return boolean
 	 */
 	public function isFileMaxSizeValid(int $fileSize, int $maxFileSize): bool
 	{
@@ -85,8 +75,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	 *
 	 * @param integer $fileSize File size value.
 	 * @param integer $minFileSize Min file size.
-	 *
-	 * @return boolean
 	 */
 	public function isFileMinSizeValid(int $fileSize, int $minFileSize): bool
 	{
@@ -98,8 +86,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	 *
 	 * @param string $fileName Full name for file.
 	 * @param string $fileTypes String of all file types.
-	 *
-	 * @return boolean
 	 */
 	public function isFileTypeValid(string $fileName, string $fileTypes): bool
 	{
@@ -164,7 +150,7 @@ abstract class AbstractValidation implements ValidatorInterface
 				if (\is_string($mime) && $mime !== '') {
 					return \strtolower($mime);
 				}
-			} catch (Throwable $t) {
+			} catch (Throwable) {
 				// Fall through to mime_content_type.
 			}
 		}
@@ -175,7 +161,7 @@ abstract class AbstractValidation implements ValidatorInterface
 				if (\is_string($mime) && $mime !== '') {
 					return \strtolower($mime);
 				}
-			} catch (Throwable $t) {
+			} catch (Throwable) {
 				return '';
 			}
 		}
@@ -195,8 +181,8 @@ abstract class AbstractValidation implements ValidatorInterface
 		$fileTypes = \str_replace(['.', ' '], '', $fileTypes);
 		$fileTypes = \explode(',', \strtolower($fileTypes));
 
-		if ($fileTypes) {
-			$fileTypes = \array_unique($fileTypes);
+		if ($fileTypes !== []) {
+			return \array_unique($fileTypes);
 		}
 
 		return $fileTypes;

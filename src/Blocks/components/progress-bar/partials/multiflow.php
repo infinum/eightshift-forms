@@ -6,9 +6,15 @@
  * @package EightshiftForms
  */
 
+declare(strict_types=1);
+
+use EightshiftForms\Helpers\FormsHelper;
+
+$twClasses = $attributes['twClasses'] ?? [];
+
 $count = $attributes['count'] ? (int) $attributes['count'] : 0;
 
-if (!$count) {
+if ($count === 0) {
 	return;
 }
 
@@ -19,5 +25,7 @@ for ($i = 0; $i < $count; $i++) {
 		$filled = 'es-form-is-filled';
 	}
 
-	echo "<div class='{$filled}'></div>"; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+	$className = FormsHelper::getTwPart($twClasses, 'progress-bar', 'step', $filled);
+
+	echo "<div class='{$className}'></div>"; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }

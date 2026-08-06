@@ -43,12 +43,10 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, $this->getSettingsGlobalData(...));
 	}
 
 	/**
@@ -61,7 +59,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		$outputIntegrations = \array_values(\array_filter(\array_map(
-			function ($key, $value) {
+			function (int|string $key, array $value) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
@@ -74,10 +72,10 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'cardInlineIcon' => $value['labels']['icon'] ?? '',
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Clear', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
+								'component' => 'button',
+								'buttonLabel' => \__('Clear', 'eightshift-forms'),
+								'buttonVariant' => 'primaryGhost',
+								'buttonAttrs' => [
 									UtilsHelper::getStateAttribute('cacheType') => $key,
 									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
@@ -95,7 +93,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
@@ -104,10 +101,10 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[
-								'component' => 'submit',
-								'submitValue' => \__('Clear', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
+								'component' => 'button',
+								'buttonLabel' => \__('Clear', 'eightshift-forms'),
+								'buttonVariant' => 'primaryGhost',
+								'buttonAttrs' => [
 									UtilsHelper::getStateAttribute('cacheType') => 'allOperational',
 									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
@@ -117,7 +114,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					],
 				]
 			],
-			...($outputIntegrations ? [
+			...($outputIntegrations !== [] ? [
 				[
 					'component' => 'intro',
 					'introTitle' => \__('Integration cache', 'eightshift-forms'),
@@ -125,7 +122,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 				],
 				[
 					'component' => 'layout',
-					'layoutType' => 'layout-v-stack-clean',
 					'layoutContent' => $outputIntegrations,
 				],
 			] : []),

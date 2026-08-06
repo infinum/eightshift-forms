@@ -16,6 +16,7 @@ use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Settings\SettingsBuilderInterface;
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
+use Override;
 
 /**
  * FormGlobalSettingsAdminSubMenu class.
@@ -23,39 +24,28 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Instance variable for global settings.
-	 *
-	 * @var SettingsBuilderInterface
-	 */
-	protected $settings;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsBuilderInterface $settings Inject form global settings data.
 	 */
-	public function __construct(SettingsBuilderInterface $settings)
-	{
-		$this->settings = $settings;
-	}
+	public function __construct(protected SettingsBuilderInterface $settings) {} // phpcs:ignore
 
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function register(): void
 	{
 		\add_action(
 			'admin_menu',
-			function () {
+			function (): void {
 				\add_submenu_page(
 					$this->getParentMenu(),
 					$this->getTitle(),
 					$this->getMenuTitle(),
 					$this->getCapability(),
 					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
+					$this->processAdminSubmenu(...)
 				);
 			},
 			40

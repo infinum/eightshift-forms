@@ -19,8 +19,6 @@ final class DeveloperHelpers
 {
 	/**
 	 * Check if developer debugging is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperDebuggingActive(): bool
 	{
@@ -29,8 +27,6 @@ final class DeveloperHelpers
 
 	/**
 	 * Check if developer skip form validation is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperSkipFormValidationActive(): bool
 	{
@@ -39,8 +35,6 @@ final class DeveloperHelpers
 
 	/**
 	 * Check if developer skip form reset is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperSkipFormResetActive(): bool
 	{
@@ -49,8 +43,6 @@ final class DeveloperHelpers
 
 	/**
 	 * Check if developer skip captcha is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperSkipCaptchaActive(): bool
 	{
@@ -59,8 +51,6 @@ final class DeveloperHelpers
 
 	/**
 	 * Check if developer skip forms sync is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperSkipFormsSyncActive(): bool
 	{
@@ -69,8 +59,6 @@ final class DeveloperHelpers
 
 	/**
 	 * Check if developer skip cache is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperSkipCacheActive(): bool
 	{
@@ -79,8 +67,6 @@ final class DeveloperHelpers
 
 	/**
 	 * Check if developer mode is active.
-	 *
-	 * @return boolean
 	 */
 	public static function isDeveloperModeActive(): bool
 	{

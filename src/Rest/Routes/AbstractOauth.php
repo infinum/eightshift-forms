@@ -14,6 +14,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use WP_REST_Request;
+use Override;
 
 /**
  * Class AbstractOauth
@@ -65,7 +66,7 @@ abstract class AbstractOauth extends AbstractBaseRoute
 			$code = \sanitize_text_field($code);
 
 			return $this->submitAction($code);
-		} catch (UnverifiedRequestException $e) {
+		} catch (UnverifiedRequestException) {
 			$this->redirect(\esc_html__('Error.', 'eightshift-forms'));
 		}
 	}
@@ -81,23 +82,18 @@ abstract class AbstractOauth extends AbstractBaseRoute
 
 	/**
 	 * Get the oauth type.
-	 *
-	 * @return string
 	 */
 	abstract protected function getOauthType(): string;
 
 	/**
 	 * Get the oauth allow key.
-	 *
-	 * @return string
 	 */
 	abstract protected function getOauthAllowKey(): string;
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -107,8 +103,6 @@ abstract class AbstractOauth extends AbstractBaseRoute
 	 * Redirect with error message
 	 *
 	 * @param string $message Message to output.
-	 *
-	 * @return void
 	 */
 	protected function redirect(string $message): void
 	{
@@ -125,8 +119,6 @@ abstract class AbstractOauth extends AbstractBaseRoute
 
 	/**
 	 * Check if connection permission is enabled.
-	 *
-	 * @return boolean
 	 */
 	protected function checkEnabledConnectionPermission(): bool
 	{

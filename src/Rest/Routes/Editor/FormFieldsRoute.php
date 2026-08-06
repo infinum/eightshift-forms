@@ -15,12 +15,13 @@ use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class FormFieldsRoute
@@ -33,30 +34,19 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = '/form-fields/';
 
 	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var IntegrationSyncInterface
-	 */
-	protected $integrationSyncDiff;
-
-	/**
 	 * Create a new instance.
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		IntegrationSyncInterface $integrationSyncDiff
+		protected IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
 	/**
@@ -71,9 +61,8 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Returns allowed methods for this route.
-	 *
-	 * @return string
 	 */
+	#[Override]
 	protected function getMethods(): string
 	{
 		return static::READABLE;
@@ -81,8 +70,6 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -121,10 +108,10 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		if (!$fieldsOnly) {
 			// phpcs:disable Eightshift.Security.HelpersEscape.ExceptionNotEscaped
 			throw new BadRequestException(
-				$this->getLabels()->getLabel('formFieldsMissing'),
+				Labels::getLabel(Labels::LABEL_FORM_FIELDS_MISSING),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsMissing',
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FORM_FIELDS_MISSING,
 				]
 			);
 			// phpcs:enable
@@ -135,10 +122,10 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		$steps = $formDetails[Config::FD_STEPS_SETUP] ?? [];
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('formFieldsSuccess'),
+			AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_FORM_FIELDS_SUCCESS),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $fieldsOutput,
-				AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_FORM_FIELDS_SUCCESS,
 			],
 			AbstractBaseRoute::R_DATA => [
 				UtilsHelper::getStateResponseOutputKey('editorFormFields') => \array_values($fieldsOutput),
@@ -254,7 +241,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	{
 		$output = [];
 
-		if (!$items) {
+		if ($items === []) {
 			return $output;
 		}
 

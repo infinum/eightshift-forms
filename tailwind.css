@@ -1,0 +1,377 @@
+/* stylelint-disable at-rule-no-unknown, selector-max-specificity, custom-property-empty-line-before, custom-property-pattern, nesting-selector-no-missing-scoping-root, no-invalid-position-declaration, declaration-block-no-duplicate-properties */
+
+@source '/src/*.{html,js,php,json,css}';
+@source inline('esf:col-end-span-{1..20}');
+
+@theme {
+	--spacing: 0.0625rem; /* 1px */
+	--default-font-family: var(--es-font-sans, system-ui, sans-serif);
+	--default-mono-font-family: var(--es-font-mono, ui-monospace, monospace);
+
+	/* Easings */
+	--ease-spring-smooth: var(--motion-spring-smooth);
+	--ease-spring-snappy: var(--motion-spring-snappy);
+	--ease-spring-bouncy: var(--motion-spring-bouncy);
+	--ease-spring-bouncier: var(--motion-spring-bouncier);
+	--ease-spring-bounciest: var(--motion-spring-bounciest);
+	--ease-bounce: var(--motion-bounce);
+}
+
+@utility outline-auto {
+	/* stylelint-disable declaration-no-important */
+	outline: auto !important;
+	outline-offset: 2px;
+
+	/* Safari-only */
+	@supports (font: -apple-system-body) {
+		outline: 2px solid var(--esf-color-white) !important;
+		box-shadow: 0 0 0 3px var(--esf-color-mauve-500) !important;
+	}
+	/* stylelint-enable declaration-no-important */
+}
+
+@custom-variant is-toggle {
+	&:is(.es-checkbox-toggle__input) {
+		@slot;
+	}
+}
+
+@custom-variant is-check {
+	&:is(.es-checkbox__input, .es-checkbox),
+	&:is(.es-radio__input, .es-radio) {
+		@slot;
+	}
+}
+
+@utility font-variation-* {
+	font-variation-settings: --value([*]);
+}
+
+/* 'fill' utilities */
+
+@utility w-fill {
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: stretch;
+}
+
+@utility h-fill {
+	height: -moz-available;
+	height: -webkit-fill-available;
+	height: stretch;
+}
+
+@utility min-w-fill {
+	min-width: -moz-available;
+	min-width: -webkit-fill-available;
+	min-width: stretch;
+}
+
+@utility min-h-fill {
+	min-height: -moz-available;
+	min-height: -webkit-fill-available;
+	min-height: stretch;
+}
+
+@utility max-w-fill {
+	max-width: -moz-available;
+	max-width: -webkit-fill-available;
+	max-width: stretch;
+}
+
+@utility max-h-fill {
+	max-height: -moz-available;
+	max-height: -webkit-fill-available;
+	max-height: stretch;
+}
+
+@utility transition-plus {
+	/* stylelint-disable-next-line @stylistic/max-line-length */
+	transition-property:
+		color,
+		background-color,
+		border-color,
+		outline-color,
+		text-decoration-color,
+		fill,
+		stroke,
+		--tw-gradient-from,
+		--tw-gradient-via,
+		--tw-gradient-to,
+		opacity,
+		box-shadow,
+		transform,
+		translate,
+		scale,
+		rotate,
+		filter,
+		-webkit-backdrop-filter,
+		backdrop-filter,
+		display,
+		content-visibility,
+		overlay,
+		pointer-events,
+		border-radius,
+		font-variation-settings;
+	transition-duration: var(--es-default-transition-duration);
+	transition-timing-function: var(--es-default-transition-timing-function);
+}
+
+@utility col-end-span-* {
+	grid-column-end: span --value(integer);
+}
+
+@utility row-end-span-* {
+	grid-row-end: span --value(integer);
+}
+
+@utility text-box-trim {
+	@supports (text-box: trim-both cap alphabetic) {
+		text-box: trim-both cap alphabetic;
+	}
+}
+
+@custom-variant any-icon {
+	& svg {
+		@slot;
+	}
+}
+
+@custom-variant field-disabled {
+	&:is(:where(.es-form-is-disabled) *) {
+		@slot;
+	}
+}
+
+@custom-variant field-error {
+	&:is(:where(.es-form-has-error) *) {
+		@slot;
+	}
+}
+
+@custom-variant step-preview {
+	&:is(:where(.es-form-is-step-preview-active) *) {
+		@slot;
+	}
+}
+
+@custom-variant slider-track {
+	&::-webkit-slider-runnable-track {
+		@slot;
+	}
+
+	&::-moz-range-track {
+		@slot;
+	}
+}
+
+@custom-variant slider-thumb {
+	&::-webkit-slider-thumb {
+		@slot;
+	}
+
+	&::-moz-range-thumb {
+		@slot;
+	}
+}
+
+@custom-variant choices-one-inner {
+	&[data-type='select-one'] .choices__inner {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-inner {
+	&[data-type='select-multiple'] .choices__inner {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-item {
+	&[data-type='select-multiple'] .choices__inner .choices__item {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-button {
+	&[data-type='select-multiple'] .choices__inner .choices__item .choices__button {
+		@slot;
+	}
+}
+
+@custom-variant choices-multi-cloned {
+	&[data-type='select-multiple'] .choices__inner .choices__input--cloned {
+		@slot;
+	}
+}
+
+@custom-variant hover-focus {
+	&:is(:hover, :focus) {
+		@slot;
+	}
+}
+
+@custom-variant form-active {
+	&:is(.es-form-is-active) {
+		@slot;
+	}
+}
+
+@custom-variant label-required {
+	&:is(:where(.es-field__label--is-required) *) {
+		@slot;
+	}
+}
+
+@utility hidden-fully {
+	display: none;
+	visibility: hidden;
+	user-select: none;
+	pointer-events: none;
+}
+
+@utility focus-ring-clear {
+	&:is(:focus, :focus-visible) {
+		@apply esf:outline-hidden!;
+		@apply esf:shadow-none!;
+	}
+}
+
+@utility focus-ring {
+	&:focus-visible {
+		@apply esf:ring-2;
+		@apply esf:ring-mauve-500;
+		@apply esf:outline-hidden!;
+		@apply esf:ring-offset-2;
+	}
+
+	&:focus {
+		@apply esf:outline-hidden;
+	}
+
+}
+
+@utility focus-ring-href {
+	&:focus-visible {
+		@apply esf:ring-2;
+		@apply esf:ring-mauve-500;
+		@apply esf:outline-hidden!;
+		@apply esf:ring-offset-2;
+	}
+
+	&:visited,
+	&:active,
+	&:focus {
+		@apply esf:shadow-none;
+		@apply esf:outline-hidden;
+	}
+
+}
+
+@utility focus-ring-direct {
+	@apply esf:ring-2;
+	@apply esf:ring-mauve-500;
+	@apply esf:outline-hidden!;
+	@apply esf:ring-offset-2;
+}
+
+/* Frontend facing helpers */
+.es-form-is-hidden {
+	@apply esf:hidden!;
+	@apply esf:pointer-events-none!;
+}
+
+.esf-button-disabled {
+	@apply esf:opacity-60;
+	@apply esf:cursor-not-allowed;
+	@apply esf:pointer-events-none;
+	@apply esf:grayscale;
+}
+
+.esf-button {
+	@apply esf:bg-transparent;
+	@apply esf:inline-flex;
+	@apply esf:cursor-pointer;
+	@apply esf:text-nowrap;
+	@apply esf:no-underline;
+	@apply esf:items-center;
+	@apply esf:justify-center;
+	@apply esf:gap-10;
+	@apply esf:rounded-xl!;
+	@apply esf:px-12 esf:py-11 esf:has-[svg]:py-9;
+	@apply esf:text-xs!;
+	@apply esf:border;
+	@apply esf:duration-300;
+	@apply esf:transition-colors;
+	@apply esf:focus-ring!;
+	@apply esf:focus:shadow-none!;
+	@apply esf:disabled:opacity-60;
+	@apply esf:disabled:cursor-not-allowed;
+	@apply esf:disabled:pointer-events-none;
+	@apply esf:select-none;
+}
+
+.esf-button-primary {
+	@apply esf:text-white;
+	@apply esf:bg-teal-600;
+	@apply esf:border-teal-700/30;
+	@apply esf:hover:text-white;
+	@apply esf:hover:bg-teal-700;
+	@apply esf:hover:border-teal-800/40;
+	@apply esf:active:text-white;
+	@apply esf:active:bg-teal-700;
+	@apply esf:active:border-teal-800/30;
+	@apply esf:focus:text-white;
+	@apply esf:focus-visible:bg-teal-800;
+	@apply esf:focus-visible:border-teal-900/30;
+	@apply esf:inset-shadow-xs;
+	@apply esf:inset-shadow-teal-50/10;
+	@apply esf:bg-linear-to-b;
+	@apply esf:from-teal-800/0;
+	@apply esf:to-teal-800/15;
+}
+
+.esf-button-primary-outline {
+	@apply esf:text-mauve-600;
+	@apply esf:border-mauve-600;
+	@apply esf:hover:text-white;
+	@apply esf:hover:bg-mauve-700;
+	@apply esf:hover:border-mauve-600;
+	@apply esf:active:text-white;
+	@apply esf:active:bg-mauve-800;
+	@apply esf:active:border-mauve-800;
+	@apply esf:focus:text-white;
+	@apply esf:focus:bg-mauve-800;
+	@apply esf:focus:border-mauve-800;
+}
+
+.esf-button-primary-ghost {
+	@apply esf:text-mauve-600;
+	@apply esf:hover:text-mauve-600;
+	@apply esf:border-transparent;
+	@apply esf:hover:bg-mauve-600/5;
+	@apply esf:active:text-mauve-700;
+	@apply esf:active:bg-mauve-600/30;
+	@apply esf:focus:text-mauve-700;
+	@apply esf:focus:bg-mauve-600/8;
+}
+
+.esf-button-secondary-ghost {
+	@apply esf:text-inherit;
+	@apply esf:border-transparent;
+	@apply esf:hover:text-inherit;
+	@apply esf:hover:bg-mauve-600/30;
+	@apply esf:active:text-inherit;
+	@apply esf:active:bg-mauve-600/30;
+	@apply esf:focus:text-inherit;
+	@apply esf:focus:bg-mauve-600/30;
+}
+
+.esf-button-primary-basic {
+	@apply esf:p-0;
+	@apply esf:text-inherit;
+	@apply esf:border-transparent;
+	@apply esf:hover:text-inherit;
+	@apply esf:active:text-inherit;
+	@apply esf:focus:text-inherit;
+}

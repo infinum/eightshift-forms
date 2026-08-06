@@ -63,8 +63,7 @@ export class Bulk {
 	async submit(target) {
 		const formData = new FormData();
 
-		const field = this.state.getFormFieldElementByChild(target);
-		const type = field?.getAttribute(this.state.getStateAttribute('bulkType'));
+		const type = target?.getAttribute(this.state.getStateAttribute('bulkType'));
 
 		// Can be fake to prevent submit and use button toggles for other things like export.
 		if (type === 'fake') {
@@ -72,7 +71,7 @@ export class Bulk {
 		}
 
 		formData.append('type', type);
-		formData.append('viewType', field?.getAttribute(this.state.getStateAttribute('viewType')));
+		formData.append('viewType', target?.getAttribute(this.state.getStateAttribute('viewType')));
 		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
 
 		this.utils.showLoader(this.FORM_ID);
@@ -193,11 +192,9 @@ export class Bulk {
 			element.remove();
 		});
 
-		const { id, html } = data[this.state.getStateResponseOutputKey('adminLocations')];
-
-		[...data[this.state.getStateResponseOutputKey('adminLocations')]].forEach((location) => {
-			[...document.querySelectorAll(`${this.itemSelector}[${this.state.getStateAttribute('bulkId')}="${location.id}"]`)].forEach((element) => {
-				element.insertAdjacentHTML('afterend', location.html);
+		[...data[this.state.getStateResponseOutputKey('adminLocations')]].forEach(({ id, html }) => {
+			[...document.querySelectorAll(`${this.itemSelector}[${this.state.getStateAttribute('bulkId')}="${id}"]`)].forEach((element) => {
+				element.insertAdjacentHTML('afterend', html);
 			});
 		});
 	}

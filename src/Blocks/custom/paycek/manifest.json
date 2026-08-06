@@ -1,11 +1,12 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"apiVersion": 3,
 	"blockName": "paycek",
 	"title": "PayCek form",
 	"description" : "PayCek payment form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-paycek"
+		"src": "paycek"
 	},
 	"keywords": [
 		"paycek"

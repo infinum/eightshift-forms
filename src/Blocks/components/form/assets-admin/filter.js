@@ -1,10 +1,9 @@
 export class Filter {
-	constructor(options={}) {
+	constructor(options = {}) {
 		/** @type {import('./../assets/utils').Utils} */
 		this.utils = options.utils;
 		/** @type {import('./../assets/state').State} */
 		this.state = this.utils.getState();
-
 
 		this.searchSelector = document.querySelector(options.searchSelector);
 		this.pageSelector = document.querySelector(options.pageSelector);

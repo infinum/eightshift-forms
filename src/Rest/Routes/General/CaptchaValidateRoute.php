@@ -11,12 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftForms\Labels\Labels;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -30,30 +29,19 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	public const ROUTE_SLUG = 'captcha';
 
 	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
-	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 */
 	public function __construct(
 		SecurityInterface $security,
 		ValidatorInterface $validator,
-		LabelsInterface $labels,
-		CaptchaInterface $captcha
+		protected CaptchaInterface $captcha
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
 	}
 
 	/**
@@ -84,8 +72,6 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 
 	/**
 	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
 	 */
 	protected function isRouteAdminProtected(): bool
 	{
@@ -104,9 +90,9 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		// Bailout if troubleshooting skip captcha is on.
 		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('captchaSkipCheck'),
+				AbstractBaseRoute::R_MSG => Labels::getLabel(Labels::LABEL_CAPTCHA_SKIP_CHECK),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_DEBUG_SKIP_CHECK,
+					AbstractBaseRoute::R_DEBUG_KEY => Labels::LABEL_CAPTCHA_DEBUG_SKIP_CHECK,
 				],
 			];
 		}
