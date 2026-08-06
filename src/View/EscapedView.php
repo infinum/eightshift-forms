@@ -45,9 +45,13 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 		$items = ['button', 'form', 'select', 'input', 'textarea', 'label', 'span', 'option'];
 		foreach ($items as $item) {
 			$output[$item]['data-*'] = true;
+			$output[$item]['aria-*'] = true;
 		}
 
 		$output['select']['multiple'] = true;
+
+		$output['input']['autocomplete'] = true;
+		$output['textarea']['autocomplete'] = true;
 
 		$result = $output;
 
