@@ -431,6 +431,16 @@ class Labels
 	}
 
 	/**
+	 * Return one flag description by key.
+	 *
+	 * @param string $key Flag key.
+	 */
+	public static function getDescription(string $key): string
+	{
+		return \esc_html(self::getFlagsList()[$key]['description'] ?? '');
+	}
+
+	/**
 	 * Get flags list.
 	 *
 	 * No all keys are used in public and in activity log.

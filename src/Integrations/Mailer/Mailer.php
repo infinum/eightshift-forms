@@ -178,7 +178,7 @@ class Mailer implements MailerInterface
 			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
 
 			// translators: %s replaces the debug key description.
-			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), \esc_html(Labels::getLabel($debugKeyValue))) . '</p>';
+			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key description: <strong>%s</strong>', 'eightshift-forms')), Labels::getDescription($debugKeyValue)) . '</p>';
 		}
 
 		// translators: %s replaces the website url.
