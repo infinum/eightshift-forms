@@ -56,7 +56,7 @@ final class FileSecurityDiagnostics
 		}
 
 		$disabled = \explode(',', (string) \ini_get('disable_functions'));
-		return \array_all($disabled, fn($name): bool => \trim((string) $name) !== 'proc_open');
+		return \array_all($disabled, fn($name): bool => \trim($name) !== 'proc_open');
 	}
 
 	/**
