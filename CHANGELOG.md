@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.2.0]
+
+### Added
+
+- *Show as* on *Checkboxes* now passes through min. option count, and now allows setting a max. number of selections when set to `Select`, to match *Select* options.
+
+### Fixed
+
+- `min`/`max`/`step` attributes missing in output (added to `EscapedView`).
+
 ## [10.1.0]
 
 ### Fixed
@@ -2039,6 +2049,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.2.0]: https://github.com/infinum/eightshift-forms/compare/10.1.0...10.2.0
 [10.1.0]: https://github.com/infinum/eightshift-forms/compare/10.0.0...10.1.0
 [10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.10.1...10.0.0
 [9.10.1]: https://github.com/infinum/eightshift-forms/compare/9.10.0...9.10.1

@@ -111,7 +111,9 @@
 				"checkboxesCheckboxesConditionalTagsRulesForms": "selectSelectConditionalTagsRulesForms",
 				"checkboxesCheckboxesConditionalTagsPostId": "selectSelectConditionalTagsPostId",
 				"checkboxesCheckboxesConditionalTagsBlockName": "selectSelectConditionalTagsBlockName",
-				"checkboxesCheckboxesConditionalTagsIsHidden": "selectSelectConditionalTagsIsHidden"
+				"checkboxesCheckboxesConditionalTagsIsHidden": "selectSelectConditionalTagsIsHidden",
+				"checkboxesCheckboxesIsRequiredCount": "selectSelectMinCount",
+				"checkboxesCheckboxesDropdownMaxCount": "selectSelectMaxCount"
 			},
 			"children": {
 				"checkboxCheckboxLabel": "selectOptionSelectOptionLabel",
