@@ -26,8 +26,8 @@ export const SelectOptions = (attributes) => {
 	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
 	const selectUseLabelAsPlaceholder = checkAttr('selectUseLabelAsPlaceholder', attributes, manifest);
 	const selectIsMultiple = checkAttr('selectIsMultiple', attributes, manifest);
-	const selectMinCount = checkAttr('selectMinCount', attributes, manifest);
-	const selectMaxCount = checkAttr('selectMaxCount', attributes, manifest);
+	const selectMinCount = checkAttr('selectMinCount', attributes, manifest, true);
+	const selectMaxCount = checkAttr('selectMaxCount', attributes, manifest, true);
 	const selectShowAs = checkAttr('selectShowAs', attributes, manifest);
 
 	return (
