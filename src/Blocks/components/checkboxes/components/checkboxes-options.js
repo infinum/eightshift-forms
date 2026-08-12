@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ContainerPanel, InputField, Toggle, Tab, TabList, Tabs, TabPanel, Container, ContainerGroup, OptionSelect } from '@eightshift/ui-components';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
-import { buttonGhost, checks, design, fieldPlaceholder, moreH, optionListAlt, requiredAlt, sliders, tag } from '@eightshift/ui-components/icons';
+import { buttonGhost, checks, chevronLeft, chevronRight, design, fieldPlaceholder, moreH, optionListAlt, requiredAlt, sliders, tag } from '@eightshift/ui-components/icons';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -22,11 +22,12 @@ export const CheckboxesOptions = (attributes) => {
 
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
 	const checkboxesIsRequired = checkAttr('checkboxesIsRequired', attributes, manifest);
-	const checkboxesIsRequiredCount = checkAttr('checkboxesIsRequiredCount', attributes, manifest);
+	const checkboxesIsRequiredCount = checkAttr('checkboxesIsRequiredCount', attributes, manifest, true);
 	const checkboxesDisabledOptions = checkAttr('checkboxesDisabledOptions', attributes, manifest);
 	const checkboxesShowAs = checkAttr('checkboxesShowAs', attributes, manifest);
 	const checkboxesUseLabelAsPlaceholder = checkAttr('checkboxesUseLabelAsPlaceholder', attributes, manifest);
 	const checkboxesPlaceholder = checkAttr('checkboxesPlaceholder', attributes, manifest);
+	const checkboxesDropdownMaxCount = checkAttr('checkboxesDropdownMaxCount', attributes, manifest, true);
 
 	const [countInnerBlocks, setCountInnerBlocks] = useState(0);
 
@@ -210,13 +211,28 @@ export const CheckboxesOptions = (attributes) => {
 
 						<Container hidden={!checkboxesIsRequired || checkboxesShowAs === 'radio'}>
 							<NumberPicker
-								icon={optionListAlt}
-								label={__('Minimum selections', 'eightshift-forms')}
+								icon={checkboxesShowAs === 'select' ? chevronRight : optionListAlt}
+								label={checkboxesShowAs === 'select' ? __('Min. selected options', 'eightshift-forms') : __('Minimum selections', 'eightshift-forms')}
 								value={checkboxesIsRequiredCount}
 								onChange={(value) => setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })}
 								min={options.checkboxesIsRequiredCount.min}
 								max={countInnerBlocks}
 								disabled={isOptionDisabled(getAttrKey('checkboxesIsRequiredCount', attributes, manifest), checkboxesDisabledOptions)}
+								fixedWidth={4}
+								inline
+							/>
+						</Container>
+
+						<Container hidden={!checkboxesIsRequired || checkboxesShowAs !== 'select'}>
+							<NumberPicker
+								icon={chevronLeft}
+								label={__('Max. selected options', 'eightshift-forms')}
+								value={checkboxesDropdownMaxCount}
+								onChange={(value) => setAttributes({ [getAttrKey('checkboxesDropdownMaxCount', attributes, manifest)]: value })}
+								min={options.checkboxesDropdownMaxCount.min}
+								step={options.checkboxesDropdownMaxCount.step}
+								disabled={isOptionDisabled(getAttrKey('checkboxesDropdownMaxCount', attributes, manifest), checkboxesDisabledOptions)}
+								fixedWidth={4}
 								inline
 							/>
 						</Container>

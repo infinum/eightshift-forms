@@ -57,11 +57,18 @@
 		},
 		"checkboxesTwSelectorsData": {
 			"type": "array"
+		},
+		"checkboxesDropdownMaxCount": {
+			"type": "integer"
 		}
 	},
 	"options": {
 		"checkboxesIsRequiredCount": {
-			"min":  1,
+			"min": 1,
+			"step": 1
+		},
+		"checkboxesDropdownMaxCount": {
+			"min": 1,
 			"step": 1
 		}
 	}
