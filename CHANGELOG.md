@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.1.0]
+
+### Fixed
+
+- Re-added missing `$additionalClass` passthrough to the `divider` component.
+
+### Changed
+
+- Updated admin notification style.
+
 ## [10.0.0]
 
 ### Added
@@ -2029,6 +2039,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.1.0]: https://github.com/infinum/eightshift-forms/compare/10.0.0...10.1.0
 [10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.10.1...10.0.0
 [9.10.1]: https://github.com/infinum/eightshift-forms/compare/9.10.0...9.10.1
 [9.10.0]: https://github.com/infinum/eightshift-forms/compare/9.9.1...9.10.0
