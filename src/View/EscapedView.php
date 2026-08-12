@@ -40,12 +40,16 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 		foreach ($items as $item) {
 			$output[$item]['data-*'] = true;
 			$output[$item]['aria-*'] = true;
+			$output[$item]['role'] = true;
+			$output[$item]['value'] = true;
+			$output[$item]['placeholder'] = true;
+			$output[$item]['min'] = true;
+			$output[$item]['max'] = true;
+			$output[$item]['step'] = true;
+			$output[$item]['autocomplete'] = true;
 		}
 
 		$output['select']['multiple'] = true;
-
-		$output['input']['autocomplete'] = true;
-		$output['textarea']['autocomplete'] = true;
 
 		return $output;
 	}
