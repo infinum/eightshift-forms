@@ -4,11 +4,22 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.3.0]
+
+### Changed
+
+- Updated the `$schema` path in all block and component manifests to point to `eightshift-frontend-libs-tailwind`.
+
+### Fixed
+
+- Fixed arbitrary values not working in the `col-end-span-*` utility, which caused incorrect field widths.
+- Fixed a broken field style attribute on older projects, where a non-array value would break the `field`, `checkboxes` and `radios` components.
+
 ## [10.2.0]
 
 ### Added
 
-- *Show as* on *Checkboxes* now passes through min. option count, and now allows setting a max. number of selections when set to `Select`, to match *Select* options.
+- _Show as_ on _Checkboxes_ now passes through min. option count, and now allows setting a max. number of selections when set to `Select`, to match _Select_ options.
 
 ### Fixed
 
@@ -2049,6 +2060,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.3.0]: https://github.com/infinum/eightshift-forms/compare/10.2.0...10.3.0
 [10.2.0]: https://github.com/infinum/eightshift-forms/compare/10.1.0...10.2.0
 [10.1.0]: https://github.com/infinum/eightshift-forms/compare/10.0.0...10.1.0
 [10.0.0]: https://github.com/infinum/eightshift-forms/compare/9.10.1...10.0.0

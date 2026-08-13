@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "progress-bar",
 	"title": "Progress bar",
 	"componentClass": "es-progress-bar",

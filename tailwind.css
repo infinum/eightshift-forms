@@ -119,6 +119,7 @@
 
 @utility col-end-span-* {
 	grid-column-end: span --value(integer);
+	grid-column-end: span --value([*]);
 }
 
 @utility row-end-span-* {

@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/globalManifest.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/globalManifest.json",
 	"namespace": "eightshift-forms",
 	"background": "#ffffff",
 	"foreground": "#594c5b",
