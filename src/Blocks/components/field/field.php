@@ -78,6 +78,10 @@ if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	);
 }
 
+if (!is_array($fieldStyle)) {
+	$fieldStyle = [$fieldStyle];
+}
+
 $twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
 	'field',
 	$fieldTypeInternal,

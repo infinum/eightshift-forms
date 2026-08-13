@@ -27,6 +27,10 @@ $radiosShowAs = $attributes[Helpers::getAttrKey('radiosShowAs', $attributes, $ma
 $twSelectorsData = FormsHelper::getTwSelectorsData($attributes);
 $radiosFieldStyle = is_admin() ? [] : Helpers::checkAttr('radiosFieldStyle', $attributes, $manifest);
 
+if (!is_array($radiosFieldStyle)) {
+	$radiosFieldStyle = [$radiosFieldStyle];
+}
+
 $fieldStyleOverrides = [
 	'content' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'content'),
 	'label' => FormsHelper::getTwFieldStyleOutput($twSelectorsData, $radiosFieldStyle, $radiosShowAs ?: $manifest['componentName'], 'label'),
