@@ -94,7 +94,7 @@ class EntryProgress implements ServiceInterface
 			$current += $number;
 		}
 
-		$percentage = 0;
+		$percentage = 0 . '%';
 
 		if ($current > 0 && $limit > 0) {
 			$percentage = \number_format(($current / $limit) * 100, 2) . '%';
@@ -109,9 +109,9 @@ class EntryProgress implements ServiceInterface
 		if ($output === 'number') {
 			$outoutNumberValue = \round($current);
 
-			return "<div class='es-entry-progress'>{$bar}<div class='es-entry-progress__text'>{$prefix}{$outoutNumberValue}{$suffix}</div>";
+			return "<div class='es-entry-progress'>{$bar}<div class='es-entry-progress__text'>{$prefix}{$outoutNumberValue}{$suffix}</div></div>";
 		}
 
-		return "<div class='es-entry-progress'>{$bar}<div class='es-entry-progress__text'>{$prefix}{$percentage}{$suffix}</div>";
+		return "<div class='es-entry-progress'>{$bar}<div class='es-entry-progress__text'>{$prefix}{$percentage}{$suffix}</div></div>";
 	}
 }
