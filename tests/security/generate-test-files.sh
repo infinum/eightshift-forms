@@ -196,6 +196,76 @@ startxref
 %%EOF
 EOF
 
+# ---------------------------------------------------------------------------
+# C2PA Content Credentials cases. A JUMBF superbox is: BE32 box length,
+# 'jumb', BE32 description length, 'jumd', then the registered C2PA UUID.
+# The 32-byte payload plus the 32-byte header makes 64 — which is what the
+# box length field and the stream /Length must both say.
+#
+# Each fixture carries a real page tree so qpdf can process it.
+# ---------------------------------------------------------------------------
+
+# Shared JUMBF payload, exactly 64 bytes.
+c2pa_payload() {
+  printf '\x00\x00\x00\x40jumb\x00\x00\x00\x1ejumd\x63\x32\x70\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71'
+  printf 'C2PA-STRUCTURE-ONLY-TEST-FIXTURE'
+}
+
+c2pa_tail() {
+  printf '6 0 obj << /Type /Pages /Kids [7 0 R] /Count 1 >> endobj\n'
+  printf '7 0 obj << /Type /Page /Parent 6 0 R /MediaBox [0 0 612 792] >> endobj\n'
+  printf 'trailer << /Size 8 /Root 1 0 R >>\n%%%%EOF\n'
+}
+
+# Genuine manifest — EXPECTED TO BE ACCEPTED when the exemption is enabled.
+{
+  printf '%%PDF-1.4\n'
+  printf '1 0 obj << /Type /Catalog /Pages 6 0 R /AF [2 0 R] /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R] >> >> >> endobj\n'
+  printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /F (Content Credentials) /EF << /F 3 0 R >> /Subtype (application/c2pa) >> endobj\n'
+  printf '3 0 obj << /Length 64 >>\nstream\n'
+  c2pa_payload
+  printf '\nendstream endobj\n'
+  c2pa_tail
+} > pdf-c2pa-valid.pdf
+
+# Correct labels, wrong bytes — EXPECTED TO BE REJECTED.
+# This is the attack the exemption must stop.
+{
+  printf '%%PDF-1.4\n'
+  printf '1 0 obj << /Type /Catalog /Pages 6 0 R /AF [2 0 R] /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R] >> >> >> endobj\n'
+  printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /F (Content Credentials) /EF << /F 3 0 R >> /Subtype (application/c2pa) >> endobj\n'
+  printf '3 0 obj << /Length 64 >>\nstream\n'
+  printf 'MZ\x90\x00This is where an executable payload would sit, mislabelled.\x00\x00'
+  printf '\nendstream endobj\n'
+  c2pa_tail
+} > pdf-c2pa-mislabelled.pdf
+
+# Genuine manifest PLUS an ordinary attachment — EXPECTED TO BE REJECTED.
+{
+  printf '%%PDF-1.4\n'
+  printf '1 0 obj << /Type /Catalog /Pages 6 0 R /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R (notes.txt) 4 0 R] >> >> >> endobj\n'
+  printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /EF << /F 3 0 R >> >> endobj\n'
+  printf '3 0 obj << /Length 64 >>\nstream\n'
+  c2pa_payload
+  printf '\nendstream endobj\n'
+  printf '4 0 obj << /Type /FileSpec /EF << /F 5 0 R >> >> endobj\n'
+  printf '5 0 obj << /Length 10 >>\nstream\nplain text\nendstream endobj\n'
+  c2pa_tail
+} > pdf-c2pa-mixed.pdf
+
+# Genuine manifest PLUS JavaScript — EXPECTED TO BE REJECTED (exemption must
+# not apply when any other dangerous key matched).
+{
+  printf '%%PDF-1.4\n'
+  printf '1 0 obj << /Type /Catalog /Pages 6 0 R /AF [2 0 R] /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R] >> >> /OpenAction 8 0 R >> endobj\n'
+  printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /F (Content Credentials) /EF << /F 3 0 R >> /Subtype (application/c2pa) >> endobj\n'
+  printf '3 0 obj << /Length 64 >>\nstream\n'
+  c2pa_payload
+  printf '\nendstream endobj\n'
+  printf '8 0 obj << /S /JavaScript /JS (app.alert\050 1 \051) >> endobj\n'
+  c2pa_tail
+} > pdf-c2pa-plus-js.pdf
+
 echo
 echo "Done. Files generated in: $(pwd)"
 ls -la
