@@ -42,18 +42,35 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return Labels::LABEL_VALIDATION_FILE_MIME_MISMATCH;
 		}
 
-		if ($this->containsDangerousKey($contents)) {
+		if ($this->bodyIsUnsafe($contents)) {
 			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
 		// Compressed object streams hide content from the raw scan. qpdf
 		// expands them so the raw scan can run again on the expanded form.
 		$expanded = $this->expandWithQpdf($filepath);
-		if ($expanded !== null && $this->containsDangerousKey($expanded)) {
+		if ($expanded !== null && $this->bodyIsUnsafe($expanded)) {
 			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
 		return '';
+	}
+
+	/**
+	 * Does this body contain a dangerous key that is not covered by the
+	 * Content Credentials exemption?
+	 *
+	 * @param string $body PDF bytes (raw or qpdf-expanded).
+	 */
+	private function bodyIsUnsafe(string $body): bool
+	{
+		$matched = $this->getMatchedKeys($body);
+
+		if ($matched === []) {
+			return false;
+		}
+
+		return !$this->isExemptC2paManifest($matched, $body);
 	}
 
 	/**
@@ -71,26 +88,71 @@ final class PdfScanner implements FileSecurityScannerInterface
 	}
 
 	/**
-	 * Does the haystack contain any of the documented dangerous PDF keys?
+	 * Which dangerous PDF keys does this body contain?
 	 *
 	 * Matches the key only when it is followed by a PDF name-token delimiter
 	 * (whitespace, `/`, `<`, `[`, `(`, `%`). This avoids substring-style false
 	 * positives where the key appears inside a longer PDF name — most commonly
 	 * a font subset prefix like `/AAAAAA+GentiumPlus` which would otherwise
-	 * match `/AA`.
+	 * match `/AA`, or coincidental bytes inside ASCII85 stream data.
 	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
+	 *
+	 * @return array<int, string> Matched keys, in Config order.
 	 */
-	private function containsDangerousKey(string $haystack): bool
+	private function getMatchedKeys(string $haystack): array
 	{
-		foreach (Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS as $key) {
+		$keys = \apply_filters( // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+			HooksHelpers::getFilterName(['validation', 'fileSecurityPdfDangerousKeys']),
+			Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS
+		);
+
+		if (!\is_array($keys)) {
+			$keys = Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS;
+		}
+
+		$matched = [];
+
+		foreach ($keys as $key) {
+			if (!\is_string($key) || $key === '') {
+				continue;
+			}
+
 			$pattern = '/' . \preg_quote($key, '/') . '(?=[\s\/<\[(%])/';
+
 			if (\preg_match($pattern, $haystack) === 1) {
-				return true;
+				$matched[] = $key;
 			}
 		}
 
-		return false;
+		return $matched;
+	}
+
+	/**
+	 * Is every matched key explained by an embedded C2PA provenance manifest?
+	 *
+	 * Returns false the moment any key outside the embedded-file pair matched,
+	 * so a document carrying both `/JS` and a genuine manifest is still
+	 * rejected.
+	 *
+	 * @param array<int, string> $matched Keys that matched in this body.
+	 * @param string             $body    PDF bytes (raw or qpdf-expanded).
+	 */
+	private function isExemptC2paManifest(array $matched, string $body): bool
+	{
+		// Opt-in: the exemption is inactive until a site explicitly enables it.
+		// Compared with `!== true` so any non-boolean filter return fails closed.
+		$allow = \apply_filters(HooksHelpers::getFilterName(['validation', 'fileSecurityPdfAllowC2pa']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+
+		if ($allow !== true) {
+			return false;
+		}
+
+		if (\array_diff($matched, ['/EmbeddedFile', '/EmbeddedFiles']) !== []) {
+			return false;
+		}
+
+		return new C2paManifestVerifier()->allEmbeddedFilesAreC2paManifests($body);
 	}
 
 	/**

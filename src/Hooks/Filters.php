@@ -339,6 +339,8 @@ final class Filters
 				'fileSecurityDenyExtensions',
 				'fileSecurityPdfQpdfBinary',
 				'fileSecurityPdfUseQpdf',
+				'fileSecurityPdfDangerousKeys',
+				'fileSecurityPdfAllowC2pa',
 			],
 			'encryption' => [
 				'secretKey',
