@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.5.0]
+
+### Added
+
+- Added `fileSecurityPdfAllowC2pa` filter. When enabled, the PDF scanner accepts files whose only dangerous key is an embedded C2PA "Content Credentials" provenance manifest, verified by inspecting the JUMBF payload bytes rather than trusting the PDF's own labels. Disabled by default. Adobe, Canva and OpenAI attach these manifests automatically, which previously caused legitimate uploads to be rejected.
+- Added `fileSecurityPdfDangerousKeys` filter to customise the list of PDF dictionary keys that cause rejection.
+
 ## [10.4.1]
 
 ### Fixed
