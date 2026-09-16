@@ -2079,6 +2079,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.5.0]: https://github.com/infinum/eightshift-forms/compare/10.4.1...10.5.0
 [10.4.1]: https://github.com/infinum/eightshift-forms/compare/10.4.0...10.4.1
 [10.4.0]: https://github.com/infinum/eightshift-forms/compare/10.3.0...10.4.0
 [10.3.0]: https://github.com/infinum/eightshift-forms/compare/10.2.0...10.3.0
