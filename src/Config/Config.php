@@ -277,6 +277,13 @@ class Config
 	 *                                   payload itself is caught by
 	 *                                   `/EmbeddedFile`.
 	 *
+	 * `/EmbeddedFile` and `/EmbeddedFiles` stay on this list, but see
+	 * C2paManifestVerifier: a PDF whose only match is an embedded file that
+	 * verifies as a C2PA provenance manifest can be exempted, because Adobe,
+	 * Canva and OpenAI attach those by default and they carry no executable
+	 * content. That exemption is opt-in via the
+	 * `fileSecurityPdfAllowC2pa` filter.
+	 *
 	 * @var array<int, string>
 	 */
 	public const FILE_UPLOAD_PDF_DANGEROUS_KEYS = [
@@ -290,6 +297,15 @@ class Config
 		'/RichMedia',
 		'/XFA',
 	];
+
+	/**
+	 * Maximum size (bytes) of an embedded C2PA manifest that the PDF scanner
+	 * will accept under the Content Credentials exemption. Real manifests run
+	 * 10–100 KB; the cap bounds how much opaque data the exemption can carry.
+	 *
+	 * @var int
+	 */
+	public const FILE_UPLOAD_PDF_C2PA_MAX_BYTES = 2097152; // 2 MB.
 
 	/**
 	 * Maximum uncompressed size (bytes) the archive scanner will accept across
