@@ -42,18 +42,89 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return Labels::LABEL_VALIDATION_FILE_MIME_MISMATCH;
 		}
 
-		if ($this->containsDangerousKey($contents)) {
+		$raw = $this->assessBody($contents, false);
+
+		if ($raw === PdfVerdict::Unsafe) {
 			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
 		// Compressed object streams hide content from the raw scan. qpdf
 		// expands them so the raw scan can run again on the expanded form.
 		$expanded = $this->expandWithQpdf($filepath);
-		if ($expanded !== null && $this->containsDangerousKey($expanded)) {
-			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
+
+		if ($expanded === null) {
+			// Fail closed: an undetermined body stays rejected when there is
+			// no qpdf to expand it. The exemption is a convenience, and a
+			// host without qpdf can neither see inside object streams nor
+			// resolve references the way a PDF reader would.
+			return $raw === PdfVerdict::Undetermined ? Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE : '';
 		}
 
-		return '';
+		// Only an outright "safe" passes. Still undetermined after expansion
+		// means qpdf left object streams in place, which is the same
+		// fail-closed case.
+		return $this->assessBody($expanded, true) === PdfVerdict::Safe ? '' : Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
+	}
+
+	/**
+	 * Assess a body for dangerous keys not covered by the Content
+	 * Credentials exemption.
+	 *
+	 * @param string $body     PDF bytes.
+	 * @param bool   $expanded Whether these bytes came from qpdf.
+	 */
+	private function assessBody(string $body, bool $expanded): PdfVerdict
+	{
+		$matched = $this->getMatchedKeys($body);
+
+		if ($matched === []) {
+			return PdfVerdict::Safe;
+		}
+
+		// Any key outside the embedded-file pair is unsafe on sight, and
+		// expanding object streams cannot make it go away.
+		if (\array_diff($matched, ['/EmbeddedFile', '/EmbeddedFiles']) !== []) {
+			return PdfVerdict::Unsafe;
+		}
+
+		if (!$this->c2paExemptionEnabled()) {
+			return PdfVerdict::Unsafe;
+		}
+
+		// The exemption is granted on qpdf output only. A raw body resolves
+		// `2 0 R` by reading the file top to bottom; a PDF reader resolves it
+		// through the xref table. An attacker controls both, so a body can
+		// define an object twice and show the verifier the manifest while the
+		// reader extracts the other one. qpdf resolves through the xref and
+		// writes each object once, which removes the gap between the two.
+		if (!$expanded) {
+			return PdfVerdict::Undetermined;
+		}
+
+		$verifier = new C2paManifestVerifier();
+
+		// qpdf was asked to disable object streams, so this should not fire.
+		// It stays because the exemption must never vouch for bytes it cannot
+		// see, whatever qpdf did.
+		if ($verifier->containsObjectStreams($body)) {
+			return PdfVerdict::Undetermined;
+		}
+
+		return $verifier->allEmbeddedFilesAreC2paManifests($body) ? PdfVerdict::Safe : PdfVerdict::Unsafe;
+	}
+
+	/**
+	 * Has this site opted in to the Content Credentials exemption?
+	 *
+	 * Off unless a site explicitly enables it. Compared with `=== true` so a
+	 * truthy non-boolean filter return — `1`, `'yes'` — fails closed rather
+	 * than quietly switching the exemption on.
+	 */
+	private function c2paExemptionEnabled(): bool
+	{
+		$allow = \apply_filters(HooksHelpers::getFilterName(['validation', 'fileSecurityPdfAllowC2pa']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+
+		return $allow === true;
 	}
 
 	/**
@@ -71,26 +142,39 @@ final class PdfScanner implements FileSecurityScannerInterface
 	}
 
 	/**
-	 * Does the haystack contain any of the documented dangerous PDF keys?
+	 * Which dangerous PDF keys does this body contain?
 	 *
-	 * Matches the key only when it is followed by a PDF name-token delimiter
-	 * (whitespace, `/`, `<`, `[`, `(`, `%`). This avoids substring-style false
-	 * positives where the key appears inside a longer PDF name — most commonly
-	 * a font subset prefix like `/AAAAAA+GentiumPlus` which would otherwise
-	 * match `/AA`.
+	 * Presence is decided by PdfTokens so this and C2paManifestVerifier cannot
+	 * drift apart on what "present" means.
 	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
+	 *
+	 * @return array<int, string> Matched keys, in Config order.
 	 */
-	private function containsDangerousKey(string $haystack): bool
+	private function getMatchedKeys(string $haystack): array
 	{
-		foreach (Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS as $key) {
-			$pattern = '/' . \preg_quote($key, '/') . '(?=[\s\/<\[(%])/';
-			if (\preg_match($pattern, $haystack) === 1) {
-				return true;
+		$keys = \apply_filters( // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+			HooksHelpers::getFilterName(['validation', 'fileSecurityPdfDangerousKeys']),
+			Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS
+		);
+
+		if (!\is_array($keys)) {
+			$keys = Config::FILE_UPLOAD_PDF_DANGEROUS_KEYS;
+		}
+
+		$matched = [];
+
+		foreach ($keys as $key) {
+			if (!\is_string($key) || $key === '') {
+				continue;
+			}
+
+			if (PdfTokens::contains($haystack, $key)) {
+				$matched[] = $key;
 			}
 		}
 
-		return false;
+		return $matched;
 	}
 
 	/**
@@ -120,18 +204,28 @@ final class PdfScanner implements FileSecurityScannerInterface
 		}
 
 		return $this->runProcess(
-			[$binary, '--qdf', '--object-streams=disable', $filepath, '-']
+			[$binary, '--qdf', '--object-streams=disable', $filepath, '-'],
+			// qpdf exits 0 on a clean run and 3 when it produced output but
+			// had something to say about the input — a missing startxref it
+			// reconstructed, a repaired page tree. Real PDFs hit that
+			// constantly, and the expansion is still faithful, so treating 3
+			// as failure would leave object streams unexamined on a large
+			// share of uploads and withhold the Content Credentials exemption
+			// from files that deserve it. Exit 2 is errors, where the output
+			// cannot be trusted.
+			[0, 3]
 		);
 	}
 
 	/**
 	 * Run a child process with an explicit argv (no shell), capture stdout.
 	 *
-	 * @param array<int, string> $argv Command and arguments.
+	 * @param array<int, string> $argv         Command and arguments.
+	 * @param array<int, int>    $successCodes Exit codes whose stdout is usable.
 	 *
 	 * @return string|null Stdout contents, or null on failure.
 	 */
-	private function runProcess(array $argv): ?string
+	private function runProcess(array $argv, array $successCodes): ?string
 	{
 		$descriptors = [
 			0 => ['pipe', 'r'],
@@ -198,6 +292,6 @@ final class PdfScanner implements FileSecurityScannerInterface
 		\fclose($pipes[2]); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		$exitCode = \proc_close($process);
 
-		return $exitCode === 0 && $output !== '' ? $output : null;
+		return \in_array($exitCode, $successCodes, true) && $output !== '' ? $output : null;
 	}
 }
