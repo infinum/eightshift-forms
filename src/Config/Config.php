@@ -282,7 +282,8 @@ class Config
 	 * verifies as a C2PA provenance manifest can be exempted, because Adobe,
 	 * Canva and OpenAI attach those by default and they carry no executable
 	 * content. That exemption is opt-in via the
-	 * `fileSecurityPdfAllowC2pa` filter.
+	 * `fileSecurityPdfAllowC2pa` filter, and applies only where qpdf is
+	 * available to expand the body first.
 	 *
 	 * @var array<int, string>
 	 */

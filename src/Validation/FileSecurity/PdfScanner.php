@@ -42,14 +42,28 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return Labels::LABEL_VALIDATION_FILE_MIME_MISMATCH;
 		}
 
-		if ($this->bodyIsUnsafe($contents)) {
+		$rawAssessment = $this->assessBody($contents, false);
+
+		if ($rawAssessment === true) {
 			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
 		// Compressed object streams hide content from the raw scan. qpdf
 		// expands them so the raw scan can run again on the expanded form.
 		$expanded = $this->expandWithQpdf($filepath);
-		if ($expanded !== null && $this->bodyIsUnsafe($expanded)) {
+
+		if ($expanded === null) {
+			// Fail closed: an undetermined body stays rejected when there is
+			// no qpdf to expand it. The exemption is a convenience, and a
+			// host without qpdf can neither see inside object streams nor
+			// resolve references the way a PDF reader would.
+			return $rawAssessment === null ? Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE : '';
+		}
+
+		// Anything other than an outright "safe" rejects. Still undetermined
+		// after expansion means qpdf left object streams in place, which is
+		// the same fail-closed case.
+		if ($this->assessBody($expanded, true) !== false) {
 			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
@@ -57,12 +71,22 @@ final class PdfScanner implements FileSecurityScannerInterface
 	}
 
 	/**
-	 * Does this body contain a dangerous key that is not covered by the
-	 * Content Credentials exemption?
+	 * Assess a body for dangerous keys not covered by the Content
+	 * Credentials exemption.
 	 *
-	 * @param string $body PDF bytes (raw or qpdf-expanded).
+	 * Three outcomes, because a raw body cannot settle the question alone:
+	 *
+	 * - `true`  — unsafe. Reject.
+	 * - `false` — safe.
+	 * - `null`  — undetermined. Only the qpdf-expanded form can decide, and
+	 *             the caller rejects when that is unavailable.
+	 *
+	 * @param string $body     PDF bytes.
+	 * @param bool   $expanded Whether these bytes came from qpdf.
+	 *
+	 * @return bool|null True when unsafe, false when safe, null when undetermined.
 	 */
-	private function bodyIsUnsafe(string $body): bool
+	private function assessBody(string $body, bool $expanded): ?bool
 	{
 		$matched = $this->getMatchedKeys($body);
 
@@ -70,7 +94,50 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return false;
 		}
 
-		return !$this->isExemptC2paManifest($matched, $body);
+		// Any key outside the embedded-file pair is unsafe on sight, and
+		// expanding object streams cannot make it go away.
+		if (\array_diff($matched, ['/EmbeddedFile', '/EmbeddedFiles']) !== []) {
+			return true;
+		}
+
+		if (!$this->c2paExemptionEnabled()) {
+			return true;
+		}
+
+		// The exemption is granted on qpdf output only. A raw body resolves
+		// `2 0 R` by reading the file top to bottom; a PDF reader resolves it
+		// through the xref table. An attacker controls both, so a body can
+		// define an object twice and show the verifier the manifest while the
+		// reader extracts the other one. qpdf resolves through the xref and
+		// writes each object once, which removes the gap between the two.
+		if (!$expanded) {
+			return null;
+		}
+
+		$verifier = new C2paManifestVerifier();
+
+		// qpdf was asked to disable object streams, so this should not fire.
+		// It stays because the exemption must never vouch for bytes it cannot
+		// see, whatever qpdf did.
+		if ($verifier->containsObjectStreams($body)) {
+			return null;
+		}
+
+		return !$verifier->allEmbeddedFilesAreC2paManifests($body);
+	}
+
+	/**
+	 * Has this site opted in to the Content Credentials exemption?
+	 *
+	 * Off unless a site explicitly enables it. Compared with `=== true` so a
+	 * truthy non-boolean filter return — `1`, `'yes'` — fails closed rather
+	 * than quietly switching the exemption on.
+	 */
+	private function c2paExemptionEnabled(): bool
+	{
+		$allow = \apply_filters(HooksHelpers::getFilterName(['validation', 'fileSecurityPdfAllowC2pa']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+
+		return $allow === true;
 	}
 
 	/**
@@ -90,11 +157,8 @@ final class PdfScanner implements FileSecurityScannerInterface
 	/**
 	 * Which dangerous PDF keys does this body contain?
 	 *
-	 * Matches the key only when it is followed by a PDF name-token delimiter
-	 * (whitespace, `/`, `<`, `[`, `(`, `%`). This avoids substring-style false
-	 * positives where the key appears inside a longer PDF name — most commonly
-	 * a font subset prefix like `/AAAAAA+GentiumPlus` which would otherwise
-	 * match `/AA`, or coincidental bytes inside ASCII85 stream data.
+	 * Presence is decided by PdfTokens so this and C2paManifestVerifier cannot
+	 * drift apart on what "present" means.
 	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
 	 *
@@ -118,41 +182,12 @@ final class PdfScanner implements FileSecurityScannerInterface
 				continue;
 			}
 
-			$pattern = '/' . \preg_quote($key, '/') . '(?=[\s\/<\[(%])/';
-
-			if (\preg_match($pattern, $haystack) === 1) {
+			if (PdfTokens::contains($haystack, $key)) {
 				$matched[] = $key;
 			}
 		}
 
 		return $matched;
-	}
-
-	/**
-	 * Is every matched key explained by an embedded C2PA provenance manifest?
-	 *
-	 * Returns false the moment any key outside the embedded-file pair matched,
-	 * so a document carrying both `/JS` and a genuine manifest is still
-	 * rejected.
-	 *
-	 * @param array<int, string> $matched Keys that matched in this body.
-	 * @param string             $body    PDF bytes (raw or qpdf-expanded).
-	 */
-	private function isExemptC2paManifest(array $matched, string $body): bool
-	{
-		// Opt-in: the exemption is inactive until a site explicitly enables it.
-		// Compared with `!== true` so any non-boolean filter return fails closed.
-		$allow = \apply_filters(HooksHelpers::getFilterName(['validation', 'fileSecurityPdfAllowC2pa']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
-
-		if ($allow !== true) {
-			return false;
-		}
-
-		if (\array_diff($matched, ['/EmbeddedFile', '/EmbeddedFiles']) !== []) {
-			return false;
-		}
-
-		return new C2paManifestVerifier()->allEmbeddedFilesAreC2paManifests($body);
 	}
 
 	/**
@@ -182,18 +217,28 @@ final class PdfScanner implements FileSecurityScannerInterface
 		}
 
 		return $this->runProcess(
-			[$binary, '--qdf', '--object-streams=disable', $filepath, '-']
+			[$binary, '--qdf', '--object-streams=disable', $filepath, '-'],
+			// qpdf exits 0 on a clean run and 3 when it produced output but
+			// had something to say about the input — a missing startxref it
+			// reconstructed, a repaired page tree. Real PDFs hit that
+			// constantly, and the expansion is still faithful, so treating 3
+			// as failure would leave object streams unexamined on a large
+			// share of uploads and withhold the Content Credentials exemption
+			// from files that deserve it. Exit 2 is errors, where the output
+			// cannot be trusted.
+			[0, 3]
 		);
 	}
 
 	/**
 	 * Run a child process with an explicit argv (no shell), capture stdout.
 	 *
-	 * @param array<int, string> $argv Command and arguments.
+	 * @param array<int, string> $argv         Command and arguments.
+	 * @param array<int, int>    $successCodes Exit codes whose stdout is usable.
 	 *
 	 * @return string|null Stdout contents, or null on failure.
 	 */
-	private function runProcess(array $argv): ?string
+	private function runProcess(array $argv, array $successCodes): ?string
 	{
 		$descriptors = [
 			0 => ['pipe', 'r'],
@@ -260,6 +305,6 @@ final class PdfScanner implements FileSecurityScannerInterface
 		\fclose($pipes[2]); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		$exitCode = \proc_close($process);
 
-		return $exitCode === 0 && $output !== '' ? $output : null;
+		return \in_array($exitCode, $successCodes, true) && $output !== '' ? $output : null;
 	}
 }

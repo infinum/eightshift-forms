@@ -197,19 +197,46 @@ startxref
 EOF
 
 # ---------------------------------------------------------------------------
-# C2PA Content Credentials cases. A JUMBF superbox is: BE32 box length,
-# 'jumb', BE32 description length, 'jumd', then the registered C2PA UUID.
-# The 32-byte payload plus the 32-byte header makes 64 — which is what the
-# box length field and the stream /Length must both say.
+# C2PA Content Credentials cases.
 #
-# Each fixture carries a real page tree so qpdf can process it.
+# A C2PA manifest store is a JUMBF tree (ISO/IEC 19566-5). Every box is a BE32
+# length covering its own 8-byte header, a 4-byte type, then contents. The
+# store is a 'jumb' superbox whose first child is a 'jumd' description carrying
+# the registered C2PA UUID, followed by 'jumb' manifest superboxes.
+#
+# The verifier requires those boxes to tile the payload exactly, so these are
+# built by a real encoder rather than hand-written hex: a payload with a single
+# byte of slack is a reject, which is the whole point of the check.
 # ---------------------------------------------------------------------------
 
-# Shared JUMBF payload, exactly 64 bytes.
+# Emits a complete, well-formed C2PA manifest store on stdout.
 c2pa_payload() {
-  printf '\x00\x00\x00\x40jumb\x00\x00\x00\x1ejumd\x63\x32\x70\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71'
-  printf 'C2PA-STRUCTURE-ONLY-TEST-FIXTURE'
+  python3 - <<'C2PA_PY'
+import sys
+
+STORE_UUID = bytes.fromhex('6332706100110010800000aa00389b71')
+MANIFEST_UUID = bytes.fromhex('63326d6100110010800000aa00389b71')
+
+
+def box(box_type, contents):
+    return (len(contents) + 8).to_bytes(4, 'big') + box_type + contents
+
+
+def jumd(uuid, label):
+    return box(b'jumd', uuid + b'\x03' + label + b'\x00')
+
+
+def superbox(uuid, label, contents):
+    return box(b'jumb', jumd(uuid, label) + contents)
+
+
+claim = box(b'c2cl', b'{"claim":"structure-only-test-fixture"}')
+manifest = superbox(MANIFEST_UUID, b'urn:uuid:test-fixture', claim)
+sys.stdout.buffer.write(superbox(STORE_UUID, b'c2pa', manifest))
+C2PA_PY
 }
+
+C2PA_LEN=$(c2pa_payload | wc -c | tr -d ' ')
 
 c2pa_tail() {
   printf '6 0 obj << /Type /Pages /Kids [7 0 R] /Count 1 >> endobj\n'
@@ -222,7 +249,7 @@ c2pa_tail() {
   printf '%%PDF-1.4\n'
   printf '1 0 obj << /Type /Catalog /Pages 6 0 R /AF [2 0 R] /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R] >> >> >> endobj\n'
   printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /F (Content Credentials) /EF << /F 3 0 R >> /Subtype (application/c2pa) >> endobj\n'
-  printf '3 0 obj << /Length 64 >>\nstream\n'
+  printf '3 0 obj << /Length %s >>\nstream\n' "$C2PA_LEN"
   c2pa_payload
   printf '\nendstream endobj\n'
   c2pa_tail
@@ -240,12 +267,39 @@ c2pa_tail() {
   c2pa_tail
 } > pdf-c2pa-mislabelled.pdf
 
+# A real ZIP with a plausible JUMBF header glued in front — EXPECTED TO BE
+# REJECTED. The header alone satisfies a shallow "does this start with a C2PA
+# superbox" check, while unzip ignores the prefix and extracts the member
+# regardless, so only tiling the whole payload catches it.
+python3 - <<'PREFIX_PY' > c2pa-prefixed.bin
+import sys
+
+STORE_UUID = bytes.fromhex('6332706100110010800000aa00389b71')
+payload = open('archive-with-exe.zip', 'rb').read()
+blob = b'jumb' + (30).to_bytes(4, 'big') + b'jumd' + STORE_UUID + payload
+sys.stdout.buffer.write((len(blob) + 4).to_bytes(4, 'big') + blob)
+PREFIX_PY
+
+PREFIXED_LEN=$(wc -c < c2pa-prefixed.bin | tr -d ' ')
+
+{
+  printf '%%PDF-1.4\n'
+  printf '1 0 obj << /Type /Catalog /Pages 6 0 R /AF [2 0 R] /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R] >> >> >> endobj\n'
+  printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /F (Content Credentials) /EF << /F 3 0 R >> /Subtype (application/c2pa) >> endobj\n'
+  printf '3 0 obj << /Length %s >>\nstream\n' "$PREFIXED_LEN"
+  cat c2pa-prefixed.bin
+  printf '\nendstream endobj\n'
+  c2pa_tail
+} > pdf-c2pa-prefixed-zip.pdf
+
+rm -f c2pa-prefixed.bin
+
 # Genuine manifest PLUS an ordinary attachment — EXPECTED TO BE REJECTED.
 {
   printf '%%PDF-1.4\n'
   printf '1 0 obj << /Type /Catalog /Pages 6 0 R /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R (notes.txt) 4 0 R] >> >> >> endobj\n'
   printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /EF << /F 3 0 R >> >> endobj\n'
-  printf '3 0 obj << /Length 64 >>\nstream\n'
+  printf '3 0 obj << /Length %s >>\nstream\n' "$C2PA_LEN"
   c2pa_payload
   printf '\nendstream endobj\n'
   printf '4 0 obj << /Type /FileSpec /EF << /F 5 0 R >> >> endobj\n'
@@ -253,13 +307,13 @@ c2pa_tail() {
   c2pa_tail
 } > pdf-c2pa-mixed.pdf
 
-# Genuine manifest PLUS JavaScript — EXPECTED TO BE REJECTED (exemption must
+# Genuine manifest PLUS JavaScript — EXPECTED TO BE REJECTED (the exemption must
 # not apply when any other dangerous key matched).
 {
   printf '%%PDF-1.4\n'
   printf '1 0 obj << /Type /Catalog /Pages 6 0 R /AF [2 0 R] /Names << /EmbeddedFiles << /Names [(Content Credentials) 2 0 R] >> >> /OpenAction 8 0 R >> endobj\n'
   printf '2 0 obj << /Type /FileSpec /AFRelationship /C2PA_Manifest /F (Content Credentials) /EF << /F 3 0 R >> /Subtype (application/c2pa) >> endobj\n'
-  printf '3 0 obj << /Length 64 >>\nstream\n'
+  printf '3 0 obj << /Length %s >>\nstream\n' "$C2PA_LEN"
   c2pa_payload
   printf '\nendstream endobj\n'
   printf '8 0 obj << /S /JavaScript /JS (app.alert\050 1 \051) >> endobj\n'
