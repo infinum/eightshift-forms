@@ -199,6 +199,80 @@ $check('/EF pointing at an object that carries no stream', sprintf(
 ), false);
 $check('/EF present but object stream in document', "%PDF-1.4\n/ObjStm\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n", false);
 
+echo "\n--- reference resolution ---\n";
+// PDF lets any value be written as an indirect reference, and qpdf keeps one
+// indirect. Reading only the direct `/EF << ... >>` shape left whatever the
+// other shape pointed at unverified while a reader still extracted it.
+$smuggled = "PK\x03\x04" . str_repeat('S', 60);
+
+$indirectEf = static fn(string $payload): string => sprintf(
+	"%%PDF-1.4\n1 0 obj << /Type /Filespec /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n"
+	. "3 0 obj << /Type /Filespec /EF 4 0 R >> endobj\n"
+	. "4 0 obj << /F 5 0 R >> endobj\n"
+	. "5 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($manifest()),
+	$manifest(),
+	strlen($payload),
+	$payload
+);
+
+$check('indirect /EF beside an inline manifest', $indirectEf($smuggled), false);
+$check('indirect /EF pointing at a genuine manifest', $indirectEf($manifest()), true);
+$check('/EF value that is neither a dictionary nor a reference', "%PDF-1.4\n1 0 obj << /EF true >> endobj\n", false);
+
+echo "\n--- stream extent ---\n";
+// The verified slice has to be the bytes a reader extracts. Each shape below
+// puts a second /Length where a first-match read finds it, leaving the real
+// stream longer than the tree that was checked.
+$check('decoy /Length inside a string value', sprintf(
+	"%%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /Desc (/Length %d ) /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($manifest()),
+	strlen($manifest()) + strlen($smuggled),
+	$manifest() . $smuggled
+), false);
+
+$check('/Length left behind by a nested dict in /F', sprintf(
+	"%%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /F << /Params << /Size 1 >> /Length %d >> /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($manifest()),
+	strlen($manifest()) + strlen($smuggled),
+	$manifest() . $smuggled
+), false);
+
+// The dictionary is walked with balanced brackets, so neither of these ends
+// it early and hides the /Length that follows.
+$check('>> spelled inside a string value', sprintf(
+	"%%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /Desc (>> stream) /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($manifest()),
+	$manifest()
+), true);
+
+$check('name value spelled /stream', sprintf(
+	"%%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /Desc /stream\n  /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($manifest()),
+	$manifest()
+), true);
+
+echo "\n--- shadow objects ---\n";
+// qpdf writes every object exactly once, so a second definition is either a
+// damaged body or a decoy planted inside another object's payload — which a
+// "later definition wins" lookup would have verified in place of the object a
+// reader resolves through the xref.
+$shadow = sprintf("2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n", strlen($manifest()), $manifest());
+$check('second definition planted in another stream payload', sprintf(
+	"%%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n"
+	. "9 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($smuggled),
+	$smuggled,
+	strlen($shadow),
+	$shadow
+), false);
+
 echo "\n--- cost ---\n";
 // Guard against the object lookup going quadratic again. Resolving each
 // reference used to rescan the whole body, so cost grew with
