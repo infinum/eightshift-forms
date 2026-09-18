@@ -42,9 +42,9 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return Labels::LABEL_VALIDATION_FILE_MIME_MISMATCH;
 		}
 
-		$rawAssessment = $this->assessBody($contents, false);
+		$raw = $this->assessBody($contents, false);
 
-		if ($rawAssessment === true) {
+		if ($raw === PdfVerdict::Unsafe) {
 			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 		}
 
@@ -57,51 +57,38 @@ final class PdfScanner implements FileSecurityScannerInterface
 			// no qpdf to expand it. The exemption is a convenience, and a
 			// host without qpdf can neither see inside object streams nor
 			// resolve references the way a PDF reader would.
-			return $rawAssessment === null ? Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE : '';
+			return $raw === PdfVerdict::Undetermined ? Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE : '';
 		}
 
-		// Anything other than an outright "safe" rejects. Still undetermined
-		// after expansion means qpdf left object streams in place, which is
-		// the same fail-closed case.
-		if ($this->assessBody($expanded, true) !== false) {
-			return Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
-		}
-
-		return '';
+		// Only an outright "safe" passes. Still undetermined after expansion
+		// means qpdf left object streams in place, which is the same
+		// fail-closed case.
+		return $this->assessBody($expanded, true) === PdfVerdict::Safe ? '' : Labels::LABEL_VALIDATION_FILE_PDF_UNSAFE;
 	}
 
 	/**
 	 * Assess a body for dangerous keys not covered by the Content
 	 * Credentials exemption.
 	 *
-	 * Three outcomes, because a raw body cannot settle the question alone:
-	 *
-	 * - `true`  — unsafe. Reject.
-	 * - `false` — safe.
-	 * - `null`  — undetermined. Only the qpdf-expanded form can decide, and
-	 *             the caller rejects when that is unavailable.
-	 *
 	 * @param string $body     PDF bytes.
 	 * @param bool   $expanded Whether these bytes came from qpdf.
-	 *
-	 * @return bool|null True when unsafe, false when safe, null when undetermined.
 	 */
-	private function assessBody(string $body, bool $expanded): ?bool
+	private function assessBody(string $body, bool $expanded): PdfVerdict
 	{
 		$matched = $this->getMatchedKeys($body);
 
 		if ($matched === []) {
-			return false;
+			return PdfVerdict::Safe;
 		}
 
 		// Any key outside the embedded-file pair is unsafe on sight, and
 		// expanding object streams cannot make it go away.
 		if (\array_diff($matched, ['/EmbeddedFile', '/EmbeddedFiles']) !== []) {
-			return true;
+			return PdfVerdict::Unsafe;
 		}
 
 		if (!$this->c2paExemptionEnabled()) {
-			return true;
+			return PdfVerdict::Unsafe;
 		}
 
 		// The exemption is granted on qpdf output only. A raw body resolves
@@ -111,7 +98,7 @@ final class PdfScanner implements FileSecurityScannerInterface
 		// reader extracts the other one. qpdf resolves through the xref and
 		// writes each object once, which removes the gap between the two.
 		if (!$expanded) {
-			return null;
+			return PdfVerdict::Undetermined;
 		}
 
 		$verifier = new C2paManifestVerifier();
@@ -120,10 +107,10 @@ final class PdfScanner implements FileSecurityScannerInterface
 		// It stays because the exemption must never vouch for bytes it cannot
 		// see, whatever qpdf did.
 		if ($verifier->containsObjectStreams($body)) {
-			return null;
+			return PdfVerdict::Undetermined;
 		}
 
-		return !$verifier->allEmbeddedFilesAreC2paManifests($body);
+		return $verifier->allEmbeddedFilesAreC2paManifests($body) ? PdfVerdict::Safe : PdfVerdict::Unsafe;
 	}
 
 	/**

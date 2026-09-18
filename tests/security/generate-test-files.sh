@@ -9,6 +9,10 @@
 
 set -euo pipefail
 
+# Resolved before the cd below, because the C2PA builders are shared with the
+# PHP harnesses and have to be reachable from inside the output directory.
+FIXTURES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/c2pa-fixtures.php"
+
 OUT="${1:-test-files}"
 mkdir -p "$OUT"
 cd "$OUT"
@@ -209,31 +213,12 @@ EOF
 # byte of slack is a reject, which is the whole point of the check.
 # ---------------------------------------------------------------------------
 
-# Emits a complete, well-formed C2PA manifest store on stdout.
+# Emits a complete, well-formed C2PA manifest store on stdout. The box builders
+# live in c2pa-fixtures.php, shared with verify-c2pa.php and
+# verify-pdf-scanner.php, so a fixture can never drift from what the harnesses
+# assert against.
 c2pa_payload() {
-  python3 - <<'C2PA_PY'
-import sys
-
-STORE_UUID = bytes.fromhex('6332706100110010800000aa00389b71')
-MANIFEST_UUID = bytes.fromhex('63326d6100110010800000aa00389b71')
-
-
-def box(box_type, contents):
-    return (len(contents) + 8).to_bytes(4, 'big') + box_type + contents
-
-
-def jumd(uuid, label):
-    return box(b'jumd', uuid + b'\x03' + label + b'\x00')
-
-
-def superbox(uuid, label, contents):
-    return box(b'jumb', jumd(uuid, label) + contents)
-
-
-claim = box(b'c2cl', b'{"claim":"structure-only-test-fixture"}')
-manifest = superbox(MANIFEST_UUID, b'urn:uuid:test-fixture', claim)
-sys.stdout.buffer.write(superbox(STORE_UUID, b'c2pa', manifest))
-C2PA_PY
+  php -r 'require $argv[1]; echo C2paFixtures::store();' "$FIXTURES"
 }
 
 C2PA_LEN=$(c2pa_payload | wc -c | tr -d ' ')
@@ -271,14 +256,8 @@ c2pa_tail() {
 # REJECTED. The header alone satisfies a shallow "does this start with a C2PA
 # superbox" check, while unzip ignores the prefix and extracts the member
 # regardless, so only tiling the whole payload catches it.
-python3 - <<'PREFIX_PY' > c2pa-prefixed.bin
-import sys
-
-STORE_UUID = bytes.fromhex('6332706100110010800000aa00389b71')
-payload = open('archive-with-exe.zip', 'rb').read()
-blob = b'jumb' + (30).to_bytes(4, 'big') + b'jumd' + STORE_UUID + payload
-sys.stdout.buffer.write((len(blob) + 4).to_bytes(4, 'big') + blob)
-PREFIX_PY
+php -r 'require $argv[1]; echo C2paFixtures::prefixedBlob(file_get_contents($argv[2]));' \
+  "$FIXTURES" archive-with-exe.zip > c2pa-prefixed.bin
 
 PREFIXED_LEN=$(wc -c < c2pa-prefixed.bin | tr -d ' ')
 
@@ -319,6 +298,79 @@ rm -f c2pa-prefixed.bin
   printf '8 0 obj << /S /JavaScript /JS (app.alert\050 1 \051) >> endobj\n'
   c2pa_tail
 } > pdf-c2pa-plus-js.pdf
+
+# ---------------------------------------------------------------------------
+# 13. PDF — dangerous key inside a compressed object stream, in a file qpdf
+# warns about. EXPECTED TO BE REJECTED.
+#
+# /JavaScript is invisible to the raw byte scan because it lives inside a
+# FlateDecode'd /ObjStm, so only the qpdf expansion can see it. The stream at
+# object 7 carries a deliberately wrong /Length, which makes qpdf recover the
+# real length and exit 3 — "output produced, with warnings" — rather than 0.
+# Treating exit 3 as failure discards that expansion and accepts this file.
+#
+# The cross-reference has to stay a valid xref *stream*: a classic xref table
+# cannot address objects inside an /ObjStm, and damaging startxref instead
+# makes qpdf reconstruct the table, which drops those objects entirely and
+# would let the fixture pass for the wrong reason.
+# Expected label: validationFilePdfUnsafe
+# ---------------------------------------------------------------------------
+python3 - <<'OBJSTM_PY'
+import zlib
+
+# Objects 4 and 5 are stored inside the compressed object stream.
+inner = [
+    (4, b'<< /S /JavaScript /JS (app.alert\x28 1 \x29) >>'),
+    (5, b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'),
+]
+
+pairs, body = [], b''
+for num, data in inner:
+    pairs.append(b'%d %d' % (num, len(body)))
+    body += data + b' '
+
+first = b' '.join(pairs) + b'\n'
+objstm = zlib.compress(first + body)
+
+out = b'%PDF-1.5\n'
+offsets = {}
+
+
+def add(num, data):
+    global out
+    offsets[num] = len(out)
+    out += b'%d 0 obj ' % num + data + b' endobj\n'
+
+
+add(1, b'<< /Type /Catalog /Pages 2 0 R /OpenAction 4 0 R >>')
+add(2, b'<< /Type /Pages /Kids [3 0 R] /Count 1 >>')
+add(3, b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R'
+       b' /Resources << /Font << /F1 5 0 R >> >> >>')
+add(6, b'<< /Type /ObjStm /N %d /First %d /Length %d /Filter /FlateDecode >>\nstream\n'
+       % (len(inner), len(first), len(objstm)) + objstm + b'\nendstream')
+
+# Wrong /Length: qpdf scans for endstream, recovers, and warns.
+content = b'BT /F1 12 Tf 72 720 Td (hello) Tj ET'
+add(7, b'<< /Length 5 >>\nstream\n' + content + b'\nendstream')
+
+xref_offset = len(out)
+rows = [bytes([0]) + (0).to_bytes(2, 'big') + (65535).to_bytes(2, 'big')]
+for n in range(1, 9):
+    if n in (4, 5):
+        # Type 2: lives in object stream 6, at this index.
+        rows.append(bytes([2]) + (6).to_bytes(2, 'big') + (n - 4).to_bytes(2, 'big'))
+    else:
+        at = xref_offset if n == 8 else offsets[n]
+        rows.append(bytes([1]) + at.to_bytes(2, 'big') + (0).to_bytes(2, 'big'))
+
+xref = zlib.compress(b''.join(rows))
+out += (b'8 0 obj << /Type /XRef /Size 9 /W [1 2 2] /Root 1 0 R /Filter /FlateDecode'
+        b' /Length %d >>\nstream\n' % len(xref)) + xref + b'\nendstream endobj\n'
+out += b'startxref\n%d\n%%%%EOF\n' % xref_offset
+
+assert b'/JavaScript' not in out, 'the key must not be visible to the raw scan'
+open('pdf-objstm-qpdf-warning.pdf', 'wb').write(out)
+OBJSTM_PY
 
 echo
 echo "Done. Files generated in: $(pwd)"

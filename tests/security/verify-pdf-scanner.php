@@ -45,8 +45,10 @@ namespace {
 	require __DIR__ . '/../../src/Validation/FileSecurity/FileSecurityScannerInterface.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/FileSecurityDiagnostics.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/PdfTokens.php';
+	require __DIR__ . '/../../src/Validation/FileSecurity/PdfVerdict.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/C2paManifestVerifier.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/PdfScanner.php';
+	require __DIR__ . '/c2pa-fixtures.php';
 
 	use EightshiftForms\Labels\Labels;
 	use EightshiftForms\Validation\FileSecurity\FileSecurityDiagnostics;
@@ -145,6 +147,43 @@ namespace {
 	// sitting next to /OpenAction and /JavaScript is still an unsafe PDF.
 	$checkFixture('manifest plus JavaScript rejects', 'pdf-c2pa-plus-js.pdf', $allowC2pa, $unsafe);
 
+	// Opting in takes a boolean. c2paExemptionEnabled() compares with === true so
+	// that a filter wired to a truthy non-boolean — an option row read back as 1,
+	// a 'yes' from a settings screen — fails closed instead of quietly switching
+	// the exemption on for a site that never asked for it.
+	$checkFixture(
+		'truthy non-boolean filter value does not enable the exemption',
+		'pdf-c2pa-valid.pdf',
+		['es_forms_validation_fileSecurityPdfAllowC2pa' => 1],
+		$unsafe
+	);
+
+	echo "\n--- qpdf exit codes ---\n";
+	// qpdf exits 3 when it produced usable output but had something to say about
+	// the input — a recovered stream length, a reconstructed xref. Real PDFs hit
+	// that constantly. Treating 3 as failure discards the expansion, which leaves
+	// whatever is inside a compressed object stream unexamined: this fixture hides
+	// /JavaScript in one, so it is accepted unless exit 3 is honoured.
+	if ($hasQpdf) {
+		$checkFixture(
+			'dangerous key in an object stream rejects when qpdf exits 3',
+			'pdf-objstm-qpdf-warning.pdf',
+			[],
+			$unsafe
+		);
+
+		// Same file, qpdf switched off: proof the rejection above came from the
+		// expansion and not from something the raw scan could already see.
+		$checkFixture(
+			'the same file is invisible to the raw scan without qpdf',
+			'pdf-objstm-qpdf-warning.pdf',
+			$noQpdf,
+			''
+		);
+	} else {
+		echo "SKIP  qpdf exit 3 handling (qpdf not installed)\n";
+	}
+
 	echo "\n--- exemption needs qpdf ---\n";
 	// The verifier resolves `2 0 R` by reading the body top to bottom; a PDF
 	// reader resolves it through the xref. Only qpdf output closes that gap, so
@@ -156,13 +195,7 @@ namespace {
 	// reader extracts; a top-to-bottom read finds the manifest appended after
 	// it. Accepting this file was the bug the qpdf requirement above fixes.
 	$shadow = (static function (): string {
-		$box = static fn(string $type, string $contents): string => pack('N', strlen($contents) + 8) . $type . $contents;
-		$storeUuid = "\x63\x32\x70\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71";
-		$manifestUuid = "\x63\x32\x6d\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71";
-		$jumd = static fn(string $uuid, string $label): string => $box('jumd', $uuid . "\x03" . $label . "\x00");
-		$superbox = static fn(string $uuid, string $label, string $contents): string
-			=> $box('jumb', $jumd($uuid, $label) . $contents);
-		$manifest = $superbox($storeUuid, 'c2pa', $superbox($manifestUuid, 'urn:uuid:test', $box('c2cl', '{"claim":"x"}')));
+		$manifest = \C2paFixtures::store();
 		$zip = "PK\x03\x04" . str_repeat("\x41", 200);
 
 		$body = "%PDF-1.4\n";

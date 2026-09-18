@@ -15,6 +15,7 @@ declare(strict_types=1);
 require __DIR__ . '/../../src/Config/Config.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/PdfTokens.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/C2paManifestVerifier.php';
+require __DIR__ . '/c2pa-fixtures.php';
 
 use EightshiftForms\Validation\FileSecurity\C2paManifestVerifier;
 
@@ -34,26 +35,15 @@ $check = static function (string $label, string $body, bool $expected) use ($ver
 	$failures++;
 };
 
-// Registered C2PA store and manifest content-type UUIDs.
-$storeUuid = "\x63\x32\x70\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71";
-$manifestUuid = "\x63\x32\x6d\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71";
-
-/** A JUMBF box: BE32 length covering the header, 4-byte type, contents. */
-$box = static fn(string $type, string $contents): string => pack('N', strlen($contents) + 8) . $type . $contents;
-
-/** A JUMBF description box: content-type UUID, toggles, null-terminated label. */
-$jumd = static fn(string $uuid, string $label): string => $box('jumd', $uuid . "\x03" . $label . "\x00");
-
-/** A JUMBF superbox: its description box followed by content boxes. */
-$superbox = static fn(string $uuid, string $label, string $contents): string
-	=> $box('jumb', $jumd($uuid, $label) . $contents);
-
-/** One C2PA manifest superbox, holding a single opaque claim leaf. */
-$manifestBox = static fn(string $label = 'urn:uuid:test'): string
-	=> $superbox($manifestUuid, $label, $box('c2cl', '{"claim":"structure-only-test-fixture"}'));
-
-/** A complete C2PA manifest store, the payload a real /EF stream carries. */
-$manifest = static fn(string $extra = ''): string => $superbox($storeUuid, 'c2pa', $manifestBox() . $extra);
+// Box builders live in c2pa-fixtures.php so this harness, verify-pdf-scanner.php
+// and generate-test-files.sh cannot drift on what a manifest is shaped like.
+$storeUuid = C2paFixtures::STORE_UUID;
+$manifestUuid = C2paFixtures::MANIFEST_UUID;
+$box = C2paFixtures::box(...);
+$jumd = C2paFixtures::jumd(...);
+$superbox = C2paFixtures::superbox(...);
+$manifestBox = C2paFixtures::manifestBox(...);
+$manifest = C2paFixtures::store(...);
 
 /** Wrap a payload in a minimal PDF with a direct stream /Length. */
 $wrapDirect = static fn(string $payload): string => sprintf(
@@ -133,8 +123,7 @@ if (!is_readable($zipPath)) {
 	echo "SKIP  archive-with-exe.zip (not generated — run ./generate-test-files.sh first)\n";
 } else {
 	$zip = (string) file_get_contents($zipPath);
-	$header = 'jumb' . pack('N', 30) . 'jumd' . $storeUuid;
-	$check('JUMBF header glued in front of a real ZIP', $wrapDirect(pack('N', strlen($header) + 4 + strlen($zip)) . $header . $zip), false);
+	$check('JUMBF header glued in front of a real ZIP', $wrapDirect(C2paFixtures::prefixedBlob($zip)), false);
 	$check('real ZIP parked inside a leaf box at store level', $wrapDirect($superbox($storeUuid, 'c2pa', $box('c2cl', $zip))), false);
 }
 
