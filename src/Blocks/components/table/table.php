@@ -19,6 +19,7 @@ if (!$tableContent) {
 $classes = Helpers::clsx([
 	'esf:relative',
 	'esf:overflow-auto',
+	'esf:max-h-[70vh]',
 	$additionalClass,
 ]);
 ?>
@@ -29,7 +30,7 @@ $classes = Helpers::clsx([
 			<thead class="esf:bg-zinc-100">
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
-						<th class="esf:border-r esf:border-b esf:border-zinc-200 esf:p-8 esf:text-left esf:last:border-r-0">
+						<th class="esf:sticky esf:top-0 esf:z-10 esf:bg-zinc-100 esf:border-r esf:border-b esf:border-zinc-200 esf:p-8 esf:text-left esf:last:border-r-0">
 							<?php
 							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 							?>
