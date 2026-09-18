@@ -188,6 +188,55 @@ $check('/EF pointing at an object that carries no stream', sprintf(
 ), false);
 $check('/EF present but object stream in document', "%PDF-1.4\n/ObjStm\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n", false);
 
+echo "\n--- related files ---\n";
+// `/RF` is the second way a file specification names an embedded stream, and
+// walking only `/EF` let a raw payload beside a genuine manifest out
+// unexamined. qpdf keeps an `/RF` target through `--qdf`, so a reader that
+// honours related files gets the bytes unwrapped.
+$related = static fn(string $rf, string $extra): string => "%PDF-1.4\n"
+	. '1 0 obj << /Type /FileSpec /EF << /F 2 0 R >> ' . $rf . " >> endobj\n"
+	. '2 0 obj << /Type /EmbeddedFile /Length ' . strlen($manifest()) . " >>\nstream\n" . $manifest() . "\nendstream endobj\n"
+	. $extra;
+
+$zip = "PK\x03\x04" . str_repeat('B', 60);
+
+$check('/RF naming a raw payload', $related(
+	'/RF << /F [ (evil.zip) 7 0 R ] >>',
+	'7 0 obj << /Type /EmbeddedFile /Length ' . strlen($zip) . " >>\nstream\n" . $zip . "\nendstream endobj\n"
+), false);
+
+// /Type is optional on an embedded file stream, so a check keyed on it alone
+// would miss this. It is why /RF rejects on sight rather than being resolved.
+$check('/RF naming a raw payload with /Type omitted', $related(
+	'/RF << /F [ (evil.zip) 7 0 R ] >>',
+	'7 0 obj << /Length ' . strlen($zip) . " >>\nstream\n" . $zip . "\nendstream endobj\n"
+), false);
+
+// Rejected on the shape, not on the contents: nothing reads far enough to know
+// this one is harmless, and a genuine manifest never carries /RF anyway.
+$check('/RF naming a second genuine manifest', $related(
+	'/RF << /F [ (b.c2pa) 7 0 R ] >>',
+	'7 0 obj << /Type /EmbeddedFile /Length ' . strlen($manifest()) . " >>\nstream\n" . $manifest() . "\nendstream endobj\n"
+), false);
+
+$check('/RF written as an indirect reference', $related(
+	'/RF 8 0 R',
+	"8 0 obj << /F [ (evil.zip) 7 0 R ] >> endobj\n"
+	. '7 0 obj << /Type /EmbeddedFile /Length ' . strlen($zip) . " >>\nstream\n" . $zip . "\nendstream endobj\n"
+), false);
+
+// The backstop, reached by no /EF at all. qpdf drops a genuinely unreferenced
+// object, so this shape does not survive expansion — the verifier still has to
+// fail closed on it, because that is what catches a path not thought of here.
+$check('embedded file stream the /EF walk never reached', $related(
+	'',
+	'9 0 obj << /Type /EmbeddedFile /Length ' . strlen($zip) . " >>\nstream\n" . $zip . "\nendstream endobj\n"
+), false);
+
+// The other side of that backstop: the manifest's own stream says
+// /Type /EmbeddedFile and must not trip it.
+$check('verified manifest declaring /Type /EmbeddedFile', $related('', ''), true);
+
 echo "\n--- reference resolution ---\n";
 // PDF lets any value be written as an indirect reference, and qpdf keeps one
 // indirect. Reading only the direct `/EF << ... >>` shape left whatever the

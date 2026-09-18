@@ -104,6 +104,8 @@ final class C2paManifestVerifier
 			return false;
 		}
 
+		$verified = [];
+
 		foreach ($references as [$number, $generation]) {
 			$payload = $this->resolveStream($body, $objects, $offsets, $number, $generation);
 
@@ -112,6 +114,42 @@ final class C2paManifestVerifier
 			}
 
 			if (!$this->isC2paManifest($payload)) {
+				return false;
+			}
+
+			$verified[$number . ' ' . $generation] = true;
+		}
+
+		return $this->everyEmbeddedFileStreamWasVerified($objects, $verified);
+	}
+
+	/**
+	 * Is every stream that announces itself as an embedded file one the walk
+	 * above verified?
+	 *
+	 * The backstop behind the `/EF` walk and the `/RF` rejection: it catches
+	 * the object at the end of a path nobody here thought of. Only a
+	 * backstop, because `/Type` is optional on an embedded file stream and a
+	 * payload that omits it is invisible to it — which is why `/RF` is
+	 * rejected on sight rather than left to this.
+	 *
+	 * `/EmbeddedFiles` does not match: PdfTokens requires a delimiter after
+	 * the token, and `s` is not one.
+	 *
+	 * @param array<string, array{dict: string, region: string, masked: bool, stream: int|null}> $objects  Parsed objects.
+	 * @param array<string, bool>                                                                $verified Keys of the streams already verified.
+	 */
+	private function everyEmbeddedFileStreamWasVerified(array $objects, array $verified): bool
+	{
+		foreach ($objects as $key => $object) {
+			if ($object['stream'] === null || isset($verified[$key])) {
+				continue;
+			}
+
+			// Whole dictionary, strings and sub-dictionaries included, as the
+			// /Filter check reads it: a coincidence rejects an upload, a
+			// blind spot passes one.
+			if (PdfTokens::contains($object['dict'], '/EmbeddedFile')) {
 				return false;
 			}
 		}
@@ -148,6 +186,9 @@ final class C2paManifestVerifier
 	 * not understand would leave the payload behind it unexamined while a
 	 * reader still extracts it.
 	 *
+	 * `/EF` is not the only way a file specification names an embedded
+	 * stream, so `/RF` rejects the body outright. See below.
+	 *
 	 * Only the structural part of an object is searched: a dictionary object
 	 * contributes its own parsed dictionary, and stream payload bytes are
 	 * never part of a region. Without that, the binary leaves of a genuine
@@ -169,6 +210,18 @@ final class C2paManifestVerifier
 			// one cannot inject a reference. Only dictionaries are masked;
 			// everything else is small print between objects.
 			$haystack = $object['masked'] ? $this->mask($region, false) : $region;
+
+			// `/RF` (Related Files, PDF 32000-1 §7.11.4.3) sits beside `/EF`
+			// in the same file specification and names embedded streams of
+			// its own. qpdf follows it — an `/RF` target survives `--qdf`
+			// where a genuinely unreferenced object is dropped — so walking
+			// `/EF` alone let a raw payload ride along beside a real
+			// manifest. Rejected rather than resolved: a real manifest never
+			// carries one, so reading the shape would buy an upload nothing.
+			if (PdfTokens::contains($haystack, '/RF')) {
+				return [];
+			}
+
 			$position = 0;
 
 			while (\preg_match('/\/EF(?=[\s\/<\[(%])/', $haystack, $match, \PREG_OFFSET_CAPTURE, $position) === 1) {
