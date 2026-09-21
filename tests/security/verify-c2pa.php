@@ -17,6 +17,7 @@ require __DIR__ . '/../../src/Validation/FileSecurity/PdfTokens.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/C2paManifestVerifier.php';
 require __DIR__ . '/c2pa-fixtures.php';
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Validation\FileSecurity\C2paManifestVerifier;
 
 $dir = $argv[1] ?? __DIR__ . '/test-files';
@@ -312,6 +313,35 @@ $check('second definition planted in another stream payload', sprintf(
 ), false);
 
 echo "\n--- cost ---\n";
+
+/**
+ * Assert a verdict and that reaching it stayed inside a time budget.
+ *
+ * Wall clock is a blunt instrument, so the budgets are set an order of
+ * magnitude above what the fixed code needs — they catch a cost curve that
+ * turned super-linear again, not a slow machine.
+ */
+$timed = static function (string $label, string $body, bool $expected, float $budget) use ($verifier, &$failures): void {
+	$started = microtime(true);
+	$verdict = $verifier->allEmbeddedFilesAreC2paManifests($body);
+	$elapsed = microtime(true) - $started;
+
+	if ($verdict === $expected && $elapsed < $budget) {
+		printf("PASS  %s (%.2fs)\n", $label, $elapsed);
+		return;
+	}
+
+	printf(
+		"FAIL  %s → %s in %.2fs (want %s under %.2fs)\n",
+		$label,
+		var_export($verdict, true),
+		$elapsed,
+		var_export($expected, true),
+		$budget
+	);
+	$failures++;
+};
+
 // Guard against the object lookup going quadratic again. Resolving each
 // reference used to rescan the whole body, so cost grew with
 // (references x body size) and a large upload burned CPU for tens of seconds.
@@ -331,16 +361,68 @@ for ($i = 1; $i <= 500; $i++) {
 	$many .= sprintf("%d 0 obj\n  %d\nendobj\n", 2000 + $i, strlen($payload));
 }
 
-$started = microtime(true);
-$verdict = $verifier->allEmbeddedFilesAreC2paManifests($many);
-$elapsed = microtime(true) - $started;
+$timed('500 references over a 4 MB body', $many, true, 0.5);
 
-if ($verdict === true && $elapsed < 0.5) {
-	printf("PASS  500 references over a 4 MB body in %.2fs\n", $elapsed);
-} else {
-	printf("FAIL  500 references over a 4 MB body → %s in %.2fs (want true under 0.50s)\n", var_export($verdict, true), $elapsed);
-	$failures++;
+// Object discovery reads the raw bytes, so `N 0 obj <<` planted inside an
+// opaque payload becomes an object like any other. While the dictionary walk
+// ran to the end of the body instead of to the next definition, each one
+// scanned whatever was left of the file: 4000 of them inside an otherwise
+// ordinary 70 KB body cost 21 seconds of CPU, and doubling the count
+// quadrupled the time.
+$fakeDefinitions = '';
+
+for ($i = 0; $i < 4000; $i++) {
+	$fakeDefinitions .= sprintf("%d 0 obj <<\n", 100000 + $i);
 }
+
+// Closing brackets for all of them, so every walk ends balanced. Unbalanced
+// would reject on the first one and never show the cost.
+$fakeDefinitions .= str_repeat('>>', 4000);
+
+$timed('fake object definitions inside a stream payload', sprintf(
+	"%%PDF-1.4\n1 0 obj << /Type /FileSpec /EF << /F 2 0 R >> >> endobj\n"
+	. "2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n",
+	strlen($fakeDefinitions),
+	$fakeDefinitions
+), false, 0.5);
+
+// Verification is a property of the stream, not of the references to it. One
+// manifest behind 2000 `/EF` entries used to be resolved, sliced and parsed
+// 2000 times — a multiplier an attacker bought 12 bytes at a time. The store
+// is padded with manifest superboxes rather than one long label because the
+// box walk is what costs: bytes alone are a memcpy and would hide the bug.
+$padding = '';
+
+for ($i = 0; $i < 1500; $i++) {
+	$padding .= $manifestBox('urn:uuid:pad-' . $i);
+}
+
+$shared = $manifest($padding);
+$repeated = "%PDF-1.4\n";
+
+for ($i = 1; $i <= 2000; $i++) {
+	$repeated .= sprintf("%d 0 obj << /Type /FileSpec /EF << /F 2 0 R >> >> endobj\n", 10 + $i);
+}
+
+$repeated .= sprintf("2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n", strlen($shared), $shared);
+
+$timed('2000 references to one 1500-box manifest', $repeated, true, 0.5);
+
+echo "\n--- size cap ---\n";
+// FILE_UPLOAD_PDF_C2PA_MAX_BYTES bounds how much opaque data the exemption can
+// carry. Both sides of the boundary are checked: without the upper one the cap
+// is decorative, without the lower one a cap set too tight would disable the
+// exemption on real files and no test would say so.
+$capBase = strlen($manifest($manifestBox('')));
+$cap = Config::FILE_UPLOAD_PDF_C2PA_MAX_BYTES;
+
+$underCap = $manifest($manifestBox(str_repeat('a', $cap - $capBase - 1)));
+$overCap = $manifest($manifestBox(str_repeat('a', $cap - $capBase + 1)));
+
+printf("      cap %d bytes, payloads %d and %d\n", $cap, strlen($underCap), strlen($overCap));
+
+$check('well-formed manifest one byte under the cap', $wrapDirect($underCap), true);
+$check('well-formed manifest one byte over the cap', $wrapDirect($overCap), false);
 
 echo "\n--- live qpdf round trip ---\n";
 $qpdf = trim((string) @shell_exec('command -v qpdf 2>/dev/null'));

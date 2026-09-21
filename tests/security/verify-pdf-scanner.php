@@ -158,6 +158,43 @@ namespace {
 		$unsafe
 	);
 
+	echo "\n--- dangerous key list is filterable ---\n";
+	// The list is the whole basis of the verdict, so a filter that is ignored
+	// would be silent: a site that added a key would believe it was enforced,
+	// and one that removed a key would keep rejecting files it meant to accept.
+	// Both directions are checked, against a key each fixture is known to carry.
+	$checkFixture(
+		'a key added by the filter rejects a file that was accepted',
+		'clean.pdf',
+		['es_forms_validation_fileSecurityPdfDangerousKeys' => ['/Catalog']],
+		$unsafe
+	);
+
+	$checkFixture(
+		'a key removed by the filter accepts a file that was rejected',
+		'pdf-javascript.pdf',
+		['es_forms_validation_fileSecurityPdfDangerousKeys' => ['/Launch']],
+		''
+	);
+
+	// A filter wired to something that is not a list cannot be applied, and
+	// falling back to the shipped list is the only safe reading of it.
+	$checkFixture(
+		'a filter return that is not a list falls back to the shipped keys',
+		'pdf-javascript.pdf',
+		['es_forms_validation_fileSecurityPdfDangerousKeys' => '/Launch'],
+		$unsafe
+	);
+
+	// An empty list disables the scan, which is a site's call to make, but it
+	// must be the list doing it and not a default quietly reasserting itself.
+	$checkFixture(
+		'an empty list accepts what the shipped keys reject',
+		'pdf-javascript.pdf',
+		['es_forms_validation_fileSecurityPdfDangerousKeys' => []],
+		''
+	);
+
 	echo "\n--- qpdf exit codes ---\n";
 	// qpdf exits 3 when it produced usable output but had something to say about
 	// the input — a recovered stream length, a reconstructed xref. Real PDFs hit

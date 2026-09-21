@@ -107,6 +107,18 @@ final class C2paManifestVerifier
 		$verified = [];
 
 		foreach ($references as [$number, $generation]) {
+			$key = $number . ' ' . $generation;
+
+			// Cost has to scale with the streams, not with the references to
+			// them. A body may point thousands of `/EF` entries at one large
+			// manifest, and re-slicing and re-parsing the same payload for
+			// each is work an attacker gets for the price of a 12-byte
+			// reference. The verdict is a property of the stream, so the
+			// first answer is the only one there is.
+			if (isset($verified[$key])) {
+				continue;
+			}
+
 			$payload = $this->resolveStream($body, $objects, $offsets, $number, $generation);
 
 			if ($payload === null) {
@@ -117,7 +129,7 @@ final class C2paManifestVerifier
 				return false;
 			}
 
-			$verified[$number . ' ' . $generation] = true;
+			$verified[$key] = true;
 		}
 
 		return $this->everyEmbeddedFileStreamWasVerified($objects, $verified);
@@ -261,7 +273,7 @@ final class C2paManifestVerifier
 	private function readEmbeddedFileDictionary(array $objects, string $region, int $offset): ?string
 	{
 		if (\substr($region, $offset, 2) === '<<') {
-			$read = $this->readDictionary($region, $offset);
+			$read = $this->readDictionary($region, $offset, \strlen($region));
 
 			return $read === null ? null : $read[0];
 		}
@@ -411,7 +423,7 @@ final class C2paManifestVerifier
 			$region = \substr($body, $start, \max(0, $next - $start));
 
 			if (\substr($body, $cursor, 2) === '<<') {
-				$read = $this->readDictionary($body, $cursor);
+				$read = $this->readDictionary($body, $cursor, $next);
 
 				if ($read === null) {
 					return null;
@@ -466,14 +478,30 @@ final class C2paManifestVerifier
 	/**
 	 * Read a `<< ... >>` dictionary with balanced brackets.
 	 *
+	 * The walk stops at `$limit`, never at the end of the body. Callers pass
+	 * the offset of the next object definition, which a dictionary cannot
+	 * legally span. Without that bound the cost is quadratic: object
+	 * discovery reads the raw bytes, so `N 0 obj <<` sequences planted inside
+	 * an opaque stream payload each become an object whose walk runs to the
+	 * end of the file. A 70 KB body shaped that way took 21 seconds of CPU.
+	 * Bounded, the regions are disjoint and the total walk is one pass.
+	 *
+	 * A dictionary that reaches the limit unbalanced rejects the body, which
+	 * also rejects the rare legitimate file spelling `N G obj` inside a
+	 * string value. That costs such a file its exemption and nothing else —
+	 * it is rejected exactly as it was before the exemption existed — and it
+	 * matches how a planted definition is already treated in
+	 * mapObjectOffsets().
+	 *
 	 * @param string $body   Bytes to read from.
 	 * @param int    $offset Offset of the opening `<<`.
+	 * @param int    $limit  Offset the walk may not read past.
 	 *
 	 * @return array{0: string, 1: int}|null Dictionary text and the offset just past it, or null when unbalanced.
 	 */
-	private function readDictionary(string $body, int $offset): ?array
+	private function readDictionary(string $body, int $offset, int $limit): ?array
 	{
-		$total = \strlen($body);
+		$total = \min(\strlen($body), $limit);
 		$depth = 0;
 		$cursor = $offset;
 
@@ -481,12 +509,12 @@ final class C2paManifestVerifier
 			$byte = $body[$cursor];
 
 			if ($byte === '(') {
-				$cursor = $this->skipLiteralString($body, $cursor);
+				$cursor = $this->skipLiteralString($body, $cursor, $total);
 				continue;
 			}
 
 			if ($byte === '%') {
-				$cursor += \strcspn($body, "\r\n", $cursor);
+				$cursor += \strcspn($body, "\r\n", $cursor, $total - $cursor);
 				continue;
 			}
 
@@ -497,13 +525,15 @@ final class C2paManifestVerifier
 					continue;
 				}
 
-				$end = \strpos($body, '>', $cursor);
+				// Bounded by $total, so an unterminated hex string costs the
+				// rest of this region rather than the rest of the file.
+				$span = \strcspn($body, '>', $cursor, $total - $cursor);
 
-				if ($end === false) {
+				if ($cursor + $span >= $total) {
 					return null;
 				}
 
-				$cursor = $end + 1;
+				$cursor += $span + 1;
 				continue;
 			}
 
@@ -528,12 +558,13 @@ final class C2paManifestVerifier
 	 * Offset just past a literal `( ... )` string, honouring escapes and
 	 * balanced inner parentheses.
 	 *
-	 * @param string $body   Bytes to read from.
-	 * @param int    $offset Offset of the opening parenthesis.
+	 * @param string   $body   Bytes to read from.
+	 * @param int      $offset Offset of the opening parenthesis.
+	 * @param int|null $limit  Offset the scan may not read past, or null for the whole string.
 	 */
-	private function skipLiteralString(string $body, int $offset): int
+	private function skipLiteralString(string $body, int $offset, ?int $limit = null): int
 	{
-		$total = \strlen($body);
+		$total = $limit === null ? \strlen($body) : \min(\strlen($body), $limit);
 		$depth = 0;
 		$cursor = $offset;
 
