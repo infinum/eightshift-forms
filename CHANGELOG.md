@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.5.0]
+
+### Added
+
+- Added sticky headers to admin tables so column headings remain visible while scrolling long tables.
+- Added `fileSecurityPdfAllowC2pa` filter. When enabled, the PDF scanner accepts files whose only dangerous key is an embedded C2PA "Content Credentials" provenance manifest, verified by inspecting the JUMBF payload bytes rather than trusting the PDF's own labels. Disabled by default. Adobe, Canva and OpenAI attach these manifests automatically, which previously caused legitimate uploads to be rejected. The exemption requires qpdf to be installed: only a qpdf-expanded body resolves object references the way a PDF reader does, and without it the scanner cannot tell which bytes a reader would actually extract.
+- Added `fileSecurityPdfDangerousKeys` filter to customise the list of PDF dictionary keys that cause rejection.
+
+### Changed
+
+- The PDF scanner now keeps qpdf's output when qpdf exits with warnings instead of discarding it. qpdf warns about a large share of real-world PDFs, including PDFs with reconstructed cross-reference tables or repaired page trees, while still writing a faithful expansion. Discarding that output left compressed object streams unexamined.
+
 ## [10.4.1]
 
 ### Fixed
@@ -2072,6 +2084,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.5.0]: https://github.com/infinum/eightshift-forms/compare/10.4.1...10.5.0
 [10.4.1]: https://github.com/infinum/eightshift-forms/compare/10.4.0...10.4.1
 [10.4.0]: https://github.com/infinum/eightshift-forms/compare/10.3.0...10.4.0
 [10.3.0]: https://github.com/infinum/eightshift-forms/compare/10.2.0...10.3.0
