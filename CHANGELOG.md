@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.6.0]
+
+### Added
+
+- Added `fileSecurityPdfAllowStructuredXml` filter. When enabled, the PDF scanner accepts files whose only dangerous key is an embedded XML attachment matching an allowlist: the file specification name, root element and namespace must all match, the XML must be well-formed UTF-8 and it must contain no DTD. Disabled by default. The allowlist currently covers the Europass CV formats, `attachment.xml` (2020 onwards) and `Europass-XML-Attachment.xml` (2013–2020), which previously caused legitimate CV uploads to be rejected. Like the C2PA exemption, it requires qpdf, and it also needs the `xmlreader` PHP extension, which is now listed in the file security diagnostics.
+
+### Changed
+
+- The PDF embedded-file exemptions now reject a PDF where one embedded stream is reached under two different file names. Otherwise a validator could check a stream under one name while a PDF reader saves it under another. This applies whether the C2PA exemption, the structured XML exemption or both are enabled. No known C2PA signer writes files this way.
+
 ## [10.5.0]
 
 ### Added
@@ -2084,6 +2094,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.6.0]: https://github.com/infinum/eightshift-forms/compare/10.5.0...10.6.0
 [10.5.0]: https://github.com/infinum/eightshift-forms/compare/10.4.1...10.5.0
 [10.4.1]: https://github.com/infinum/eightshift-forms/compare/10.4.0...10.4.1
 [10.4.0]: https://github.com/infinum/eightshift-forms/compare/10.3.0...10.4.0
