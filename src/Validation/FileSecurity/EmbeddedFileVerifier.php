@@ -102,13 +102,9 @@ final readonly class EmbeddedFileVerifier
 		foreach ($references as [$number, $generation, $name]) {
 			$key = $number . ' ' . $generation;
 
-			// One stream, one name. A validator that reads the name has to see
-			// the name a reader will save the stream under, and a stream two
-			// file specifications name differently is verified under one and
-			// extracted under the other. Applied whichever validators are
-			// enabled, so that adding a name-reading validator never changes
-			// what the structure pass accepts. No signer writes one stream
-			// under two names, so a name-blind validator loses nothing real.
+			// One stream, one name: otherwise a stream is verified under one
+			// name and extracted under another. Enforced for every validator,
+			// so enabling a name-reading one never changes the structure pass.
 			if (\array_key_exists($key, $names) && $names[$key] !== $name) {
 				return false;
 			}
@@ -119,8 +115,7 @@ final readonly class EmbeddedFileVerifier
 			// them. A body may point thousands of `/EF` entries at one large
 			// payload, and re-slicing and re-parsing it for each is work an
 			// attacker gets for the price of a 12-byte reference. With the name
-			// pinned above, the verdict is a property of the stream, so the
-			// first answer is the only one there is.
+			// pinned above, the verdict is a property of the stream.
 			if (isset($verified[$key])) {
 				continue;
 			}
@@ -220,9 +215,7 @@ final readonly class EmbeddedFileVerifier
 	 * reader still extracts it.
 	 *
 	 * The name comes from the file specification that holds the `/EF`: the
-	 * innermost dictionary around it, which is the object itself for the
-	 * usual `N 0 obj << /Type /Filespec ... >>` and an inline dictionary for
-	 * one written straight into an `/AF` array.
+	 * innermost dictionary around it.
 	 *
 	 * `/EF` is not the only way a file specification names an embedded
 	 * stream, so `/RF` rejects the body outright. See below.
@@ -255,8 +248,7 @@ final readonly class EmbeddedFileVerifier
 			// where a genuinely unreferenced object is dropped — so walking
 			// `/EF` alone let a raw payload ride along beside a real
 			// manifest. Rejected rather than resolved: no exempted payload
-			// type carries one, so reading the shape would buy an upload
-			// nothing.
+			// type carries one.
 			if (PdfTokens::contains($haystack, '/RF')) {
 				return [];
 			}
@@ -265,7 +257,6 @@ final readonly class EmbeddedFileVerifier
 				return [];
 			}
 
-			// A region without an `/EF` pays nothing for the owner lookup.
 			if ($matches[0] === []) {
 				continue;
 			}
@@ -297,8 +288,7 @@ final readonly class EmbeddedFileVerifier
 
 				$ownerStart = $owners[$keyOffset];
 
-				// A dictionary holding many `/EF` keys is read once, not once
-				// per key, so the cost stays linear in the region.
+				// Read each owner once, so many `/EF` keys stay linear.
 				if (!\array_key_exists($ownerStart, $ownerNames)) {
 					$owner = $this->readDictionary($region, $ownerStart, \strlen($region));
 
@@ -384,13 +374,10 @@ final readonly class EmbeddedFileVerifier
 	 * Read from the outer entries only, so an `/F` inside `/EF << /F 2 0 R >>`
 	 * — a reference, not a name — is never mistaken for one.
 	 *
-	 * Null means "no name a validator can rely on": none given (both keys are
-	 * optional, and a C2PA signer may write neither), a key given twice, a
-	 * value that is not printable ASCII, or `/F` and `/UF` disagreeing —
-	 * readers prefer `/UF` and fall back to `/F`, so which one a validator
-	 * was shown must not matter. Null rather than a rejection, because only a
-	 * validator knows whether it needs a name. One that does refuses null;
-	 * one that ignores the name must not lose a file over it.
+	 * Null when there is no name to rely on: none given, a key given twice, a
+	 * value that is not printable ASCII, or `/F` and `/UF` disagreeing (readers
+	 * may use either). Null rather than a rejection, because only a validator
+	 * knows whether it needs a name.
 	 *
 	 * @param string $dictionary File specification dictionary, brackets included.
 	 *

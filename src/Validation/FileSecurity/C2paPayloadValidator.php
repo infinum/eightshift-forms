@@ -5,16 +5,11 @@
  * provenance manifest, by inspecting the payload bytes rather than trusting
  * the `/AFRelationship` or `/Subtype` labels, which are attacker-controlled.
  *
- * Structure only — this makes no claim about the authenticity of the
- * manifest's signature, and structure alone cannot prove a payload is
- * harmless. A genuine manifest legitimately carries opaque binary leaves
- * (CBOR claims, thumbnails), so bytes that also parse as some other format
- * can always be nested in one. What this class does is force the payload to
- * be a complete, exactly-tiled JUMBF tree of the shape C2PA specifies, which
- * rules out the cheap attack — a short header glued in front of an otherwise
- * untouched archive or installer — and bounds the rest with the size cap in
- * Config. Treat the exemption as "this is shaped like Content Credentials",
- * not as "this is safe".
+ * The manifest's signature is not checked, and its binary leaves (CBOR
+ * claims, thumbnails) are not interpreted. Requiring a complete,
+ * exactly-tiled JUMBF tree rules out the cheap attack — a short header glued
+ * in front of an untouched archive or installer — and the size cap in Config
+ * bounds the rest.
  *
  * @package EightshiftForms\Validation\FileSecurity
  */

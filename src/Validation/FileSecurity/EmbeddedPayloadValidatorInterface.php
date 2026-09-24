@@ -18,6 +18,10 @@ namespace EightshiftForms\Validation\FileSecurity;
  * the way a reader would and hands each payload here. A validator judges only
  * the bytes and the name it is given, and must fail closed on anything it
  * does not recognise.
+ *
+ * Acceptance is structural only. A validator proves a payload is shaped like
+ * the format it names, never that its contents are harmless — every exempted
+ * format can carry opaque data that is not inspected.
  */
 interface EmbeddedPayloadValidatorInterface
 {

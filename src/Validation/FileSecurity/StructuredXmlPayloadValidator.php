@@ -11,11 +11,8 @@
  * do — XML formats exist that Windows executes on open — and neither would a
  * valid root tag with arbitrary bytes behind it.
  *
- * Structure only. Europass documents may carry base64 data (a photo; in the
- * legacy format, whole attached certificates) as text inside the XML. That is
- * inert — no reader extracts or opens it — but it is not inspected either.
- * Treat the exemption as "this is shaped like a Europass CV", not as "this is
- * safe".
+ * Base64 data inside the XML (a photo; in the legacy format, attached
+ * certificates) is inert, since no reader extracts it, and is not inspected.
  *
  * @package EightshiftForms\Validation\FileSecurity
  */
@@ -72,11 +69,9 @@ final class StructuredXmlPayloadValidator implements EmbeddedPayloadValidatorInt
 			return false;
 		}
 
-		// No DTD means no entities: no external fetch, no expansion bomb. The
-		// search is on raw bytes rather than on parsed structure, so the parser
-		// never sees one at all. A document spelling either inside CDATA or a
-		// comment is rejected with them, which costs that file its exemption
-		// and nothing more.
+		// No DTD means no entities: no external fetch, no expansion bomb.
+		// Searched on raw bytes so the parser never sees one; a match inside
+		// CDATA or a comment only costs that file its exemption.
 		if (\stripos($payload, '<!DOCTYPE') !== false || \stripos($payload, '<!ENTITY') !== false) {
 			return false;
 		}
@@ -90,9 +85,8 @@ final class StructuredXmlPayloadValidator implements EmbeddedPayloadValidatorInt
 	 * Is this valid UTF-8 with no control bytes XML text would not carry?
 	 *
 	 * Tab, line feed and carriage return are the only C0 bytes XML 1.0
-	 * allows, and DEL has no business in a CV. Rejecting the rest here, before
-	 * the parse, is what keeps executable and archive payloads — `MZ\x90\x00`,
-	 * `PK\x03\x04` — from getting as far as libxml under an allowlisted name.
+	 * allows. Rejecting the rest keeps executable and archive payloads
+	 * (`MZ\x90\x00`, `PK\x03\x04`) from reaching libxml at all.
 	 *
 	 * @param string $payload Embedded file bytes.
 	 */
@@ -109,15 +103,11 @@ final class StructuredXmlPayloadValidator implements EmbeddedPayloadValidatorInt
 	 * Parse the whole document and return its root element's local name and
 	 * namespace URI.
 	 *
-	 * The whole document, not just the root tag: XML allows nothing but
-	 * comments, processing instructions and whitespace after the root
-	 * element closes, so a complete parse is what rules out a valid root
+	 * A complete parse, not just the root tag, is what rules out a valid root
 	 * with a payload appended behind it.
 	 *
 	 * `LIBXML_NONET` forbids network access. `LIBXML_NOENT`, `LIBXML_DTDLOAD`,
-	 * `LIBXML_DTDATTR` and `LIBXML_PARSEHUGE` are never set: entity
-	 * substitution, DTD loading and lifting libxml's own size and depth
-	 * limits are exactly what this must not do.
+	 * `LIBXML_DTDATTR` and `LIBXML_PARSEHUGE` must never be added.
 	 *
 	 * @param string $payload Embedded file bytes.
 	 *
