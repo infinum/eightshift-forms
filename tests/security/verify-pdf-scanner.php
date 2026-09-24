@@ -48,6 +48,7 @@ namespace {
 	require __DIR__ . '/../../src/Validation/FileSecurity/PdfVerdict.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedPayloadValidatorInterface.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/C2paPayloadValidator.php';
+	require __DIR__ . '/../../src/Validation/FileSecurity/StructuredXmlPayloadValidator.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedFileVerifier.php';
 	require __DIR__ . '/../../src/Validation/FileSecurity/PdfScanner.php';
 	require __DIR__ . '/c2pa-fixtures.php';

@@ -119,6 +119,8 @@ final class PdfScanner implements FileSecurityScannerInterface
 	 * The embedded-file exemptions this site has opted in to.
 	 *
 	 * - `fileSecurityPdfAllowC2pa` — C2PA "Content Credentials" manifests.
+	 * - `fileSecurityPdfAllowStructuredXml` — allowlisted XML documents such
+	 *   as the one the Europass CV builder attaches.
 	 *
 	 * @return array<int, EmbeddedPayloadValidatorInterface> Enabled validators, empty when none is.
 	 */
@@ -128,6 +130,10 @@ final class PdfScanner implements FileSecurityScannerInterface
 
 		if ($this->exemptionEnabled('fileSecurityPdfAllowC2pa')) {
 			$validators[] = new C2paPayloadValidator();
+		}
+
+		if ($this->exemptionEnabled('fileSecurityPdfAllowStructuredXml')) {
+			$validators[] = new StructuredXmlPayloadValidator();
 		}
 
 		return $validators;

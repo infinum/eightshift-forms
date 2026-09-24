@@ -285,6 +285,14 @@ class Config
 	 * `fileSecurityPdfAllowC2pa` filter, and applies only where qpdf is
 	 * available to expand the body first.
 	 *
+	 * The same holds for StructuredXmlPayloadValidator: an embedded file named
+	 * in FILE_UPLOAD_PDF_STRUCTURED_XML_ALLOWLIST whose payload parses as the
+	 * XML document that name stands for — the machine-readable copy the
+	 * Europass CV builder attaches to every CV it exports. Opt-in via the
+	 * `fileSecurityPdfAllowStructuredXml` filter, qpdf required. Every embedded
+	 * file must pass one enabled exemption, so enabling both never lets an
+	 * attachment through that neither would accept on its own.
+	 *
 	 * @var array<int, string>
 	 */
 	public const FILE_UPLOAD_PDF_DANGEROUS_KEYS = [
@@ -307,6 +315,37 @@ class Config
 	 * @var int
 	 */
 	public const FILE_UPLOAD_PDF_C2PA_MAX_BYTES = 2097152; // 2 MB.
+
+	/**
+	 * Embedded XML documents the PDF scanner will accept under the structured
+	 * XML exemption, keyed by the exact, case-sensitive file specification
+	 * name, each mapped to the root element's local name and namespace URI the
+	 * payload must carry.
+	 *
+	 * - `attachment.xml` — Europass CV (2020 onwards), HR-XML based `Candidate`.
+	 * - `Europass-XML-Attachment.xml` — Europass CV (2013–2020), `SkillsPassport`.
+	 *
+	 * A new entry needs a real sample to verify against. Published
+	 * descriptions of these formats have already been found not to match what
+	 * the generators write.
+	 *
+	 * @var array<string, array{0: string, 1: string}>
+	 */
+	public const FILE_UPLOAD_PDF_STRUCTURED_XML_ALLOWLIST = [
+		'attachment.xml' => ['Candidate', 'http://www.europass.eu/1.0'],
+		'Europass-XML-Attachment.xml' => ['SkillsPassport', 'http://europass.cedefop.europa.eu/Europass'],
+	];
+
+	/**
+	 * Maximum size (bytes) of an embedded XML document that the PDF scanner
+	 * will accept under the structured XML exemption. A Europass CV runs
+	 * 20–100 KB, and one carrying a photo and a few base64-encoded
+	 * certificates stays well under this; the cap bounds parse cost and how
+	 * much opaque data the exemption can carry.
+	 *
+	 * @var int
+	 */
+	public const FILE_UPLOAD_PDF_STRUCTURED_XML_MAX_BYTES = 5242880; // 5 MB.
 
 	/**
 	 * Maximum uncompressed size (bytes) the archive scanner will accept across
