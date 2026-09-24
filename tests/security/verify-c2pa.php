@@ -15,6 +15,7 @@ declare(strict_types=1);
 // checkout with no vendor/ present. Config has no dependencies of its own.
 require __DIR__ . '/../../src/Config/Config.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/PdfTokens.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/PdfStrings.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedPayloadValidatorInterface.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/C2paPayloadValidator.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedFileVerifier.php';
@@ -173,6 +174,23 @@ $strayPercent = sprintf(
 	$manifest()
 );
 $check('stray % inside a preceding binary stream', $strayPercent, true);
+
+echo "\n--- file specification names ---\n";
+// The C2PA validator ignores the name, so no name the verifier cannot use may
+// cost a manifest its exemption. Readable, absent, non-ASCII, mismatched and
+// empty names must all verify the same.
+$named = static fn(string $names): string => sprintf(
+	"%%PDF-1.4\n1 0 obj << /Type /FileSpec %s /EF << /F 2 0 R >> >> endobj\n2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n",
+	$names,
+	strlen($manifest()),
+	$manifest()
+);
+$utf16Name = '<FEFF' . strtoupper(bin2hex(mb_convert_encoding('manifesté.c2pa', 'UTF-16BE', 'UTF-8'))) . '>';
+$check('no /F or /UF', $named(''), true);
+$check('ASCII /F', $named('/F (manifest.c2pa)'), true);
+$check('non-ASCII UTF-16BE /UF', $named('/UF ' . $utf16Name), true);
+$check('ASCII /F fallback beside a non-ASCII /UF', $named('/F (manifest_.c2pa) /UF ' . $utf16Name), true);
+$check('empty /F', $named('/F ()'), true);
 
 echo "\n--- scope ---\n";
 $mixed = "%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"

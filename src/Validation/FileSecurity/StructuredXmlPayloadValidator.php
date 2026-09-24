@@ -83,7 +83,7 @@ final class StructuredXmlPayloadValidator implements EmbeddedPayloadValidatorInt
 
 		$root = $this->parseRoot($payload);
 
-		return $root !== null && $root[0] === $expected[0] && $root[1] === $expected[1];
+		return $root !== null && $root['root'] === $expected['root'] && $root['namespace'] === $expected['namespace'];
 	}
 
 	/**
@@ -121,7 +121,7 @@ final class StructuredXmlPayloadValidator implements EmbeddedPayloadValidatorInt
 	 *
 	 * @param string $payload Embedded file bytes.
 	 *
-	 * @return array{0: string, 1: string}|null Local name and namespace URI, or null when the document does not parse.
+	 * @return array{root: string, namespace: string}|null Root local name and namespace URI, or null when the document does not parse.
 	 */
 	private function parseRoot(string $payload): ?array
 	{
@@ -144,7 +144,7 @@ final class StructuredXmlPayloadValidator implements EmbeddedPayloadValidatorInt
 
 			while ($reader->read()) {
 				if ($root === null && $reader->nodeType === XMLReader::ELEMENT) {
-					$root = [(string) $reader->localName, (string) $reader->namespaceURI];
+					$root = ['root' => (string) $reader->localName, 'namespace' => (string) $reader->namespaceURI];
 				}
 			}
 

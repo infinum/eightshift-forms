@@ -329,11 +329,11 @@ class Config
 	 * descriptions of these formats have already been found not to match what
 	 * the generators write.
 	 *
-	 * @var array<string, array{0: string, 1: string}>
+	 * @var array<string, array{root: string, namespace: string}>
 	 */
 	public const FILE_UPLOAD_PDF_STRUCTURED_XML_ALLOWLIST = [
-		'attachment.xml' => ['Candidate', 'http://www.europass.eu/1.0'],
-		'Europass-XML-Attachment.xml' => ['SkillsPassport', 'http://europass.cedefop.europa.eu/Europass'],
+		'attachment.xml' => ['root' => 'Candidate', 'namespace' => 'http://www.europass.eu/1.0'],
+		'Europass-XML-Attachment.xml' => ['root' => 'SkillsPassport', 'namespace' => 'http://europass.cedefop.europa.eu/Europass'],
 	];
 
 	/**

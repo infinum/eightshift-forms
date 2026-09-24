@@ -58,7 +58,7 @@ final readonly class EmbeddedFileVerifier
 	 * Is every embedded file in this body accepted by at least one validator?
 	 *
 	 * Fails closed: any parse ambiguity, unresolvable reference, filtered
-	 * stream, indirect length, unreadable file name or unaccepted payload
+	 * stream, indirect length, unreadable file specification or unaccepted payload
 	 * returns false.
 	 *
 	 * Expects qpdf-expanded bytes. See mapObjectOffsets() for why a raw body
@@ -232,7 +232,7 @@ final readonly class EmbeddedFileVerifier
 	 *
 	 * @param array<string, array{dict: string, region: string, masked: bool, stream: int|null}> $objects Parsed objects.
 	 *
-	 * @return array<int, array{0: int, 1: int, 2: string|null}> Reference triples, empty when any `/EF` or its name cannot be read.
+	 * @return array<int, array{0: int, 1: int, 2: string|null}> Reference triples, empty when any `/EF` or its owner cannot be read.
 	 */
 	private function collectEmbeddedFileReferences(array $objects): array
 	{
@@ -281,26 +281,11 @@ final readonly class EmbeddedFileVerifier
 					return [];
 				}
 
-				// The owning file specification is the innermost dictionary
-				// still open at the `/EF`. Bracket offsets are found on the
-				// first `/EF` only, so a region without one pays nothing, and
-				// the walk resumes where the previous `/EF` left it, so a
-				// region with many pays for one pass. Strings and comments
-				// are blanked first, so a `<<` spelled inside one is not a
-				// bracket.
+				// Bracket offsets are found on the first `/EF` only, so a region
+				// without one pays nothing. Strings and comments are blanked
+				// first, so a `<<` spelled inside one is not a bracket.
 				$brackets ??= $this->bracketOffsets($this->mask($region, false));
-
-				while (isset($brackets[$bracket]) && $brackets[$bracket][1] < $keyOffset) {
-					if ($brackets[$bracket][0] === '<<') {
-						$open[] = $brackets[$bracket][1];
-					} else {
-						\array_pop($open);
-					}
-
-					$bracket++;
-				}
-
-				$ownerStart = $open === [] ? null : $open[\array_key_last($open)];
+				$ownerStart = $this->innermostOpenDictionary($brackets, $bracket, $open, $keyOffset);
 
 				if ($ownerStart === null) {
 					return [];
@@ -315,13 +300,7 @@ final readonly class EmbeddedFileVerifier
 						return [];
 					}
 
-					$name = $this->fileSpecName($owner[0]);
-
-					if ($name === false) {
-						return [];
-					}
-
-					$ownerNames[$ownerStart] = $name;
+					$ownerNames[$ownerStart] = $this->fileSpecName($owner[0]);
 				}
 
 				foreach ($entries as [$number, $generation]) {
@@ -331,6 +310,36 @@ final readonly class EmbeddedFileVerifier
 		}
 
 		return $references;
+	}
+
+	/**
+	 * Offset of the innermost dictionary still open at an offset — for an
+	 * `/EF` key, the file specification that owns it.
+	 *
+	 * Walks forward from where the previous call stopped, so a region with
+	 * many `/EF` keys pays for one pass over its brackets. Offsets must
+	 * therefore arrive in ascending order.
+	 *
+	 * @param array<int, array{0: string, 1: int}> $brackets Bracket offsets, from bracketOffsets().
+	 * @param int                                  $next     Index of the first bracket not yet walked; advanced in place.
+	 * @param array<int, int>                      $open     Offsets of the dictionaries open so far; updated in place.
+	 * @param int                                  $offset   Offset to resolve.
+	 *
+	 * @return int|null Offset of the dictionary's `<<`, or null when none is open.
+	 */
+	private function innermostOpenDictionary(array $brackets, int &$next, array &$open, int $offset): ?int
+	{
+		while (isset($brackets[$next]) && $brackets[$next][1] < $offset) {
+			if ($brackets[$next][0] === '<<') {
+				$open[] = $brackets[$next][1];
+			} else {
+				\array_pop($open);
+			}
+
+			$next++;
+		}
+
+		return $open === [] ? null : $open[\array_key_last($open)];
 	}
 
 	/**
@@ -356,20 +365,21 @@ final readonly class EmbeddedFileVerifier
 	 * The name a file specification gives its embedded file.
 	 *
 	 * Read from the outer entries only, so an `/F` inside `/EF << /F 2 0 R >>`
-	 * — a reference, not a name — is never mistaken for one. Both `/F` and
-	 * `/UF` are optional, and a C2PA signer may write neither, so an absent
-	 * name is null rather than a rejection: it is up to each validator whether
-	 * it needs one. A name that is present but unreadable is different. It is
-	 * structure this class cannot place, and that always rejects.
+	 * — a reference, not a name — is never mistaken for one.
 	 *
-	 * When both keys are present they must agree. Readers prefer `/UF` and
-	 * fall back to `/F`, and which one a validator was shown must not matter.
+	 * Null means "no name a validator can rely on": none given (both keys are
+	 * optional, and a C2PA signer may write neither), a key given twice, a
+	 * value that is not printable ASCII, or `/F` and `/UF` disagreeing —
+	 * readers prefer `/UF` and fall back to `/F`, so which one a validator
+	 * was shown must not matter. Null rather than a rejection, because only a
+	 * validator knows whether it needs a name. One that does refuses null;
+	 * one that ignores the name must not lose a file over it.
 	 *
 	 * @param string $dictionary File specification dictionary, brackets included.
 	 *
-	 * @return string|null|false The name, null when none is given, false when one cannot be read.
+	 * @return string|null The name, or null when there is none to rely on.
 	 */
-	private function fileSpecName(string $dictionary): string|null|false
+	private function fileSpecName(string $dictionary): ?string
 	{
 		$outer = $this->mask($dictionary, true);
 		$found = [];
@@ -378,7 +388,7 @@ final readonly class EmbeddedFileVerifier
 			$count = \preg_match_all('/' . \preg_quote($key, '/') . '(?=[\s\/<\[(%])/', $outer, $matches, \PREG_OFFSET_CAPTURE);
 
 			if ($count === false || $count > 1) {
-				return false;
+				return null;
 			}
 
 			if ($count === 0) {
@@ -388,136 +398,17 @@ final readonly class EmbeddedFileVerifier
 			$start = (int) $matches[0][0][1] + \strlen($key);
 			$start += \strspn($dictionary, " \t\r\n\0\x0c", $start);
 
-			$value = $this->readNameString($dictionary, $start);
+			$value = PdfStrings::readAsciiText($dictionary, $start);
 
 			if ($value === null) {
-				return false;
+				return null;
 			}
 
 			$found[] = $value;
 		}
 
-		if ($found === []) {
-			return null;
-		}
-
-		if (\count(\array_unique($found)) !== 1) {
-			return false;
-		}
-
-		return $found[0];
-	}
-
-	/**
-	 * Read a literal or hex string at an offset and decode it to a printable
-	 * ASCII file name.
-	 *
-	 * A UTF-16BE (`FE FF`) or UTF-8 (`EF BB BF`) byte-order mark is honoured,
-	 * since `/UF` is a text string and producers write it either way. Every
-	 * character must still be printable ASCII: an exempted name is compared
-	 * byte for byte, and there is no legitimate reason for one to need
-	 * anything else.
-	 *
-	 * @param string $dictionary Dictionary text.
-	 * @param int    $offset     First byte of the value.
-	 *
-	 * @return string|null Decoded name, or null when the value is not a readable string.
-	 */
-	private function readNameString(string $dictionary, int $offset): ?string
-	{
-		$first = \substr($dictionary, $offset, 1);
-
-		if ($first === '(') {
-			$end = $this->skipLiteralString($dictionary, $offset);
-
-			if (\substr($dictionary, $end - 1, 1) !== ')') {
-				return null;
-			}
-
-			$bytes = $this->decodeLiteralString(\substr($dictionary, $offset + 1, $end - $offset - 2));
-		} elseif ($first === '<' && \substr($dictionary, $offset, 2) !== '<<') {
-			$close = \strpos($dictionary, '>', $offset);
-
-			if ($close === false) {
-				return null;
-			}
-
-			$hex = (string) \preg_replace('/[\s\0]+/', '', \substr($dictionary, $offset + 1, $close - $offset - 1));
-
-			if ($hex === '' || \preg_match('/^[0-9A-Fa-f]+$/', $hex) !== 1) {
-				return null;
-			}
-
-			// PDF 32000-1 §7.3.4.3: an odd final digit is followed by an implied 0.
-			$bytes = (string) \hex2bin(\strlen($hex) % 2 === 1 ? $hex . '0' : $hex);
-		} else {
-			return null;
-		}
-
-		if (\str_starts_with($bytes, "\xFE\xFF")) {
-			$bytes = \substr($bytes, 2);
-
-			if (\strlen($bytes) % 2 !== 0 || \preg_match('/^(?:\x00[\x20-\x7E])+$/', $bytes) !== 1) {
-				return null;
-			}
-
-			$bytes = (string) \preg_replace('/\x00(.)/s', '$1', $bytes);
-		} elseif (\str_starts_with($bytes, "\xEF\xBB\xBF")) {
-			$bytes = \substr($bytes, 3);
-		}
-
-		return \preg_match('/^[\x20-\x7E]+$/', $bytes) === 1 ? $bytes : null;
-	}
-
-	/**
-	 * Decode the escapes in a literal string's contents (PDF 32000-1 §7.3.4.2).
-	 *
-	 * @param string $contents Bytes between the outer parentheses.
-	 */
-	private function decodeLiteralString(string $contents): string
-	{
-		$escapes = ['n' => "\n", 'r' => "\r", 't' => "\t", 'b' => "\x08", 'f' => "\x0c", '(' => '(', ')' => ')', '\\' => '\\'];
-		$total = \strlen($contents);
-		$decoded = '';
-		$cursor = 0;
-
-		while ($cursor < $total) {
-			$byte = $contents[$cursor];
-
-			if ($byte !== '\\') {
-				$decoded .= $byte;
-				$cursor++;
-				continue;
-			}
-
-			$next = $contents[$cursor + 1] ?? '';
-
-			if (isset($escapes[$next])) {
-				$decoded .= $escapes[$next];
-				$cursor += 2;
-				continue;
-			}
-
-			if (\preg_match('/^[0-7]{1,3}/', \substr($contents, $cursor + 1, 3), $octal) === 1) {
-				$decoded .= \chr(((int) \octdec($octal[0])) & 0xFF);
-				$cursor += 1 + \strlen($octal[0]);
-				continue;
-			}
-
-			// A backslash before an end of line continues the string onto the
-			// next line and contributes nothing.
-			if ($next === "\r" || $next === "\n") {
-				$cursor += \substr($contents, $cursor + 1, 2) === "\r\n" ? 3 : 2;
-				continue;
-			}
-
-			// Any other escaped byte stands for itself; a lone trailing
-			// backslash is dropped.
-			$decoded .= $next;
-			$cursor += 2;
-		}
-
-		return $decoded;
+		// None found, or two that disagree.
+		return \count(\array_unique($found)) === 1 ? $found[0] : null;
 	}
 
 	/**
@@ -768,7 +659,7 @@ final readonly class EmbeddedFileVerifier
 			$byte = $body[$cursor];
 
 			if ($byte === '(') {
-				$cursor = $this->skipLiteralString($body, $cursor, $total);
+				$cursor = PdfStrings::skipLiteral($body, $cursor, $total);
 				continue;
 			}
 
@@ -814,44 +705,6 @@ final readonly class EmbeddedFileVerifier
 	}
 
 	/**
-	 * Offset just past a literal `( ... )` string, honouring escapes and
-	 * balanced inner parentheses.
-	 *
-	 * @param string   $body   Bytes to read from.
-	 * @param int      $offset Offset of the opening parenthesis.
-	 * @param int|null $limit  Offset the scan may not read past, or null for the whole string.
-	 */
-	private function skipLiteralString(string $body, int $offset, ?int $limit = null): int
-	{
-		$total = $limit === null ? \strlen($body) : \min(\strlen($body), $limit);
-		$depth = 0;
-		$cursor = $offset;
-
-		while ($cursor < $total) {
-			$byte = $body[$cursor];
-
-			if ($byte === '\\') {
-				$cursor += 2;
-				continue;
-			}
-
-			if ($byte === '(') {
-				$depth++;
-			} elseif ($byte === ')') {
-				$depth--;
-
-				if ($depth === 0) {
-					return $cursor + 1;
-				}
-			}
-
-			$cursor++;
-		}
-
-		return $total;
-	}
-
-	/**
 	 * Blank out the parts of a dictionary that are not the structure being
 	 * read, keeping every byte offset intact so slices still line up.
 	 *
@@ -875,7 +728,7 @@ final readonly class EmbeddedFileVerifier
 			$end = null;
 
 			if ($byte === '(') {
-				$end = $this->skipLiteralString($text, $cursor);
+				$end = PdfStrings::skipLiteral($text, $cursor);
 			} elseif ($byte === '%') {
 				$end = $cursor + \strcspn($text, "\r\n", $cursor);
 			} elseif ($byte === '<' && \substr($text, $cursor, 2) !== '<<') {
