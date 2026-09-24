@@ -67,8 +67,8 @@ final class PdfScanner implements FileSecurityScannerInterface
 	}
 
 	/**
-	 * Assess a body for dangerous keys not covered by the Content
-	 * Credentials exemption.
+	 * Assess a body for dangerous keys not covered by the embedded-file
+	 * exemptions.
 	 *
 	 * @param string $body     PDF bytes.
 	 * @param bool   $expanded Whether these bytes came from qpdf.
@@ -87,21 +87,23 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return PdfVerdict::Unsafe;
 		}
 
-		if (!$this->c2paExemptionEnabled()) {
+		$validators = $this->enabledPayloadValidators();
+
+		if ($validators === []) {
 			return PdfVerdict::Unsafe;
 		}
 
 		// The exemption is granted on qpdf output only. A raw body resolves
 		// `2 0 R` by reading the file top to bottom; a PDF reader resolves it
 		// through the xref table. An attacker controls both, so a body can
-		// define an object twice and show the verifier the manifest while the
-		// reader extracts the other one. qpdf resolves through the xref and
+		// define an object twice and show the verifier an acceptable payload
+		// while the reader extracts the other one. qpdf resolves through the xref and
 		// writes each object once, which removes the gap between the two.
 		if (!$expanded) {
 			return PdfVerdict::Undetermined;
 		}
 
-		$verifier = new C2paManifestVerifier();
+		$verifier = new EmbeddedFileVerifier($validators);
 
 		// qpdf was asked to disable object streams, so this should not fire.
 		// It stays because the exemption must never vouch for bytes it cannot
@@ -110,19 +112,39 @@ final class PdfScanner implements FileSecurityScannerInterface
 			return PdfVerdict::Undetermined;
 		}
 
-		return $verifier->allEmbeddedFilesAreC2paManifests($body) ? PdfVerdict::Safe : PdfVerdict::Unsafe;
+		return $verifier->allEmbeddedFilesAccepted($body) ? PdfVerdict::Safe : PdfVerdict::Unsafe;
 	}
 
 	/**
-	 * Has this site opted in to the Content Credentials exemption?
+	 * The embedded-file exemptions this site has opted in to.
+	 *
+	 * - `fileSecurityPdfAllowC2pa` — C2PA "Content Credentials" manifests.
+	 *
+	 * @return array<int, EmbeddedPayloadValidatorInterface> Enabled validators, empty when none is.
+	 */
+	private function enabledPayloadValidators(): array
+	{
+		$validators = [];
+
+		if ($this->exemptionEnabled('fileSecurityPdfAllowC2pa')) {
+			$validators[] = new C2paPayloadValidator();
+		}
+
+		return $validators;
+	}
+
+	/**
+	 * Has this site opted in to an exemption?
 	 *
 	 * Off unless a site explicitly enables it. Compared with `=== true` so a
 	 * truthy non-boolean filter return — `1`, `'yes'` — fails closed rather
 	 * than quietly switching the exemption on.
+	 *
+	 * @param string $filter Filter name under `validation`.
 	 */
-	private function c2paExemptionEnabled(): bool
+	private function exemptionEnabled(string $filter): bool
 	{
-		$allow = \apply_filters(HooksHelpers::getFilterName(['validation', 'fileSecurityPdfAllowC2pa']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+		$allow = \apply_filters(HooksHelpers::getFilterName(['validation', $filter]), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 
 		return $allow === true;
 	}
@@ -144,7 +166,7 @@ final class PdfScanner implements FileSecurityScannerInterface
 	/**
 	 * Which dangerous PDF keys does this body contain?
 	 *
-	 * Presence is decided by PdfTokens so this and C2paManifestVerifier cannot
+	 * Presence is decided by PdfTokens so this and EmbeddedFileVerifier cannot
 	 * drift apart on what "present" means.
 	 *
 	 * @param string $haystack PDF bytes (raw or qpdf-expanded).
@@ -210,8 +232,8 @@ final class PdfScanner implements FileSecurityScannerInterface
 			// reconstructed, a repaired page tree. Real PDFs hit that
 			// constantly, and the expansion is still faithful, so treating 3
 			// as failure would leave object streams unexamined on a large
-			// share of uploads and withhold the Content Credentials exemption
-			// from files that deserve it. Exit 2 is errors, where the output
+			// share of uploads and withhold the embedded-file exemptions from
+			// files that deserve them. Exit 2 is errors, where the output
 			// cannot be trusted.
 			[0, 3]
 		);

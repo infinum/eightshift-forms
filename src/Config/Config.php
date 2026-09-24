@@ -278,7 +278,7 @@ class Config
 	 *                                   `/EmbeddedFile`.
 	 *
 	 * `/EmbeddedFile` and `/EmbeddedFiles` stay on this list, but see
-	 * C2paManifestVerifier: a PDF whose only match is an embedded file that
+	 * C2paPayloadValidator: a PDF whose only match is an embedded file that
 	 * verifies as a C2PA provenance manifest can be exempted, because Adobe,
 	 * Canva and OpenAI attach those by default and they carry no executable
 	 * content. That exemption is opt-in via the

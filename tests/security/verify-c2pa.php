@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Dependency-free harness for C2paManifestVerifier. The project has no PHP
- * test framework, so this asserts the verifier's behaviour directly.
+ * Dependency-free harness for EmbeddedFileVerifier with the C2PA payload
+ * validator. The project has no PHP test framework, so this asserts the
+ * verifier's behaviour directly.
  *
  * Usage: php tests/security/verify-c2pa.php [fixture_dir]
  *        defaults to tests/security/test-files
@@ -14,18 +15,21 @@ declare(strict_types=1);
 // checkout with no vendor/ present. Config has no dependencies of its own.
 require __DIR__ . '/../../src/Config/Config.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/PdfTokens.php';
-require __DIR__ . '/../../src/Validation/FileSecurity/C2paManifestVerifier.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedPayloadValidatorInterface.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/C2paPayloadValidator.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedFileVerifier.php';
 require __DIR__ . '/c2pa-fixtures.php';
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Validation\FileSecurity\C2paManifestVerifier;
+use EightshiftForms\Validation\FileSecurity\C2paPayloadValidator;
+use EightshiftForms\Validation\FileSecurity\EmbeddedFileVerifier;
 
 $dir = $argv[1] ?? __DIR__ . '/test-files';
-$verifier = new C2paManifestVerifier();
+$verifier = new EmbeddedFileVerifier([new C2paPayloadValidator()]);
 $failures = 0;
 
 $check = static function (string $label, string $body, bool $expected) use ($verifier, &$failures): void {
-	$actual = $verifier->allEmbeddedFilesAreC2paManifests($body);
+	$actual = $verifier->allEmbeddedFilesAccepted($body);
 
 	if ($actual === $expected) {
 		printf("PASS  %s\n", $label);
@@ -323,7 +327,7 @@ echo "\n--- cost ---\n";
  */
 $timed = static function (string $label, string $body, bool $expected, float $budget) use ($verifier, &$failures): void {
 	$started = microtime(true);
-	$verdict = $verifier->allEmbeddedFilesAreC2paManifests($body);
+	$verdict = $verifier->allEmbeddedFilesAccepted($body);
 	$elapsed = microtime(true) - $started;
 
 	if ($verdict === $expected && $elapsed < $budget) {
