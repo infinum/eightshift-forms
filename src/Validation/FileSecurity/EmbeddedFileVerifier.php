@@ -105,7 +105,10 @@ final readonly class EmbeddedFileVerifier
 			// One stream, one name. A validator that reads the name has to see
 			// the name a reader will save the stream under, and a stream two
 			// file specifications name differently is verified under one and
-			// extracted under the other.
+			// extracted under the other. Applied whichever validators are
+			// enabled, so that adding a name-reading validator never changes
+			// what the structure pass accepts. No signer writes one stream
+			// under two names, so a name-blind validator loses nothing real.
 			if (\array_key_exists($key, $names) && $names[$key] !== $name) {
 				return false;
 			}
@@ -258,14 +261,25 @@ final readonly class EmbeddedFileVerifier
 				return [];
 			}
 
-			$position = 0;
-			$brackets = null;
-			$bracket = 0;
-			$open = [];
+			if (\preg_match_all('/\/EF(?=[\s\/<\[(%])/', $haystack, $matches, \PREG_OFFSET_CAPTURE) === false) {
+				return [];
+			}
+
+			// A region without an `/EF` pays nothing for the owner lookup.
+			if ($matches[0] === []) {
+				continue;
+			}
+
+			$keyOffsets = \array_map(static fn(array $match): int => (int) $match[1], $matches[0]);
+			$owners = $this->owningDictionaryOffsets($region, $keyOffsets);
+
+			if ($owners === null) {
+				return [];
+			}
+
 			$ownerNames = [];
 
-			while (\preg_match('/\/EF(?=[\s\/<\[(%])/', $haystack, $match, \PREG_OFFSET_CAPTURE, $position) === 1) {
-				$keyOffset = (int) $match[0][1];
+			foreach ($keyOffsets as $keyOffset) {
 				$position = $keyOffset + 3;
 				$offset = $position + \strspn($region, " \t\r\n\0\x0c", $position);
 
@@ -281,15 +295,7 @@ final readonly class EmbeddedFileVerifier
 					return [];
 				}
 
-				// Bracket offsets are found on the first `/EF` only, so a region
-				// without one pays nothing. Strings and comments are blanked
-				// first, so a `<<` spelled inside one is not a bracket.
-				$brackets ??= $this->bracketOffsets($this->mask($region, false));
-				$ownerStart = $this->innermostOpenDictionary($brackets, $bracket, $open, $keyOffset);
-
-				if ($ownerStart === null) {
-					return [];
-				}
+				$ownerStart = $owners[$keyOffset];
 
 				// A dictionary holding many `/EF` keys is read once, not once
 				// per key, so the cost stays linear in the region.
@@ -313,33 +319,44 @@ final readonly class EmbeddedFileVerifier
 	}
 
 	/**
-	 * Offset of the innermost dictionary still open at an offset — for an
+	 * Offset of the innermost dictionary open at each key offset — for an
 	 * `/EF` key, the file specification that owns it.
 	 *
-	 * Walks forward from where the previous call stopped, so a region with
-	 * many `/EF` keys pays for one pass over its brackets. Offsets must
-	 * therefore arrive in ascending order.
+	 * One forward pass over the brackets serves every key, so a region with
+	 * many `/EF` keys stays linear. Strings and comments are blanked first,
+	 * so a `<<` spelled inside one is not a bracket.
 	 *
-	 * @param array<int, array{0: string, 1: int}> $brackets Bracket offsets, from bracketOffsets().
-	 * @param int                                  $next     Index of the first bracket not yet walked; advanced in place.
-	 * @param array<int, int>                      $open     Offsets of the dictionaries open so far; updated in place.
-	 * @param int                                  $offset   Offset to resolve.
+	 * @param string          $region     Object region.
+	 * @param array<int, int> $keyOffsets Key offsets, in ascending order.
 	 *
-	 * @return int|null Offset of the dictionary's `<<`, or null when none is open.
+	 * @return array<int, int>|null Offset of the owning `<<` keyed by key offset, or null when a key sits in no dictionary.
 	 */
-	private function innermostOpenDictionary(array $brackets, int &$next, array &$open, int $offset): ?int
+	private function owningDictionaryOffsets(string $region, array $keyOffsets): ?array
 	{
-		while (isset($brackets[$next]) && $brackets[$next][1] < $offset) {
-			if ($brackets[$next][0] === '<<') {
-				$open[] = $brackets[$next][1];
-			} else {
-				\array_pop($open);
+		$brackets = $this->bracketOffsets($this->mask($region, false));
+		$next = 0;
+		$open = [];
+		$owners = [];
+
+		foreach ($keyOffsets as $keyOffset) {
+			while (isset($brackets[$next]) && $brackets[$next][1] < $keyOffset) {
+				if ($brackets[$next][0] === '<<') {
+					$open[] = $brackets[$next][1];
+				} else {
+					\array_pop($open);
+				}
+
+				$next++;
 			}
 
-			$next++;
+			if ($open === []) {
+				return null;
+			}
+
+			$owners[$keyOffset] = $open[\array_key_last($open)];
 		}
 
-		return $open === [] ? null : $open[\array_key_last($open)];
+		return $owners;
 	}
 
 	/**

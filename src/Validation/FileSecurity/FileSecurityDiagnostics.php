@@ -84,7 +84,7 @@ final class FileSecurityDiagnostics
 			],
 			[
 				'title' => 'xmlreader',
-				'subtitle' => \__('XMLReader extension is required for the structured XML (Europass) PDF exemption.', 'eightshift-forms'),
+				'subtitle' => \__('XMLReader optional extension, required only when the structured XML (Europass) PDF exemption is enabled.', 'eightshift-forms'),
 				'status' => \extension_loaded('xmlreader'),
 			],
 			[

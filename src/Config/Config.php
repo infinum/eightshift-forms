@@ -277,21 +277,11 @@ class Config
 	 *                                   payload itself is caught by
 	 *                                   `/EmbeddedFile`.
 	 *
-	 * `/EmbeddedFile` and `/EmbeddedFiles` stay on this list, but see
-	 * C2paPayloadValidator: a PDF whose only match is an embedded file that
-	 * verifies as a C2PA provenance manifest can be exempted, because Adobe,
-	 * Canva and OpenAI attach those by default and they carry no executable
-	 * content. That exemption is opt-in via the
-	 * `fileSecurityPdfAllowC2pa` filter, and applies only where qpdf is
-	 * available to expand the body first.
-	 *
-	 * The same holds for StructuredXmlPayloadValidator: an embedded file named
-	 * in FILE_UPLOAD_PDF_STRUCTURED_XML_ALLOWLIST whose payload parses as the
-	 * XML document that name stands for — the machine-readable copy the
-	 * Europass CV builder attaches to every CV it exports. Opt-in via the
-	 * `fileSecurityPdfAllowStructuredXml` filter, qpdf required. Every embedded
-	 * file must pass one enabled exemption, so enabling both never lets an
-	 * attachment through that neither would accept on its own.
+	 * `/EmbeddedFile` and `/EmbeddedFiles` stay on this list. A PDF whose only
+	 * match is embedded files can still be exempted, opt-in and only where
+	 * qpdf is available — see EmbeddedFileVerifier and its validators,
+	 * C2paPayloadValidator (`fileSecurityPdfAllowC2pa`) and
+	 * StructuredXmlPayloadValidator (`fileSecurityPdfAllowStructuredXml`).
 	 *
 	 * @var array<int, string>
 	 */
