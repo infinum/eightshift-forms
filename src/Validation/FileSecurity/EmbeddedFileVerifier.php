@@ -270,6 +270,12 @@ final readonly class EmbeddedFileVerifier
 
 			$ownerNames = [];
 
+			// Owners nest, so each level re-reads the ones inside it: a body
+			// with an `/EF` at every level cost depth x region. Capped at twice
+			// the region, past which owners go unnamed. A validator that needs
+			// a name then rejects, as it would any name it cannot rely on.
+			$nameBudget = 2 * \strlen($region);
+
 			foreach ($keyOffsets as $keyOffset) {
 				$position = $keyOffset + 3;
 				$offset = $position + \strspn($region, " \t\r\n\0\x0c", $position);
@@ -290,13 +296,20 @@ final readonly class EmbeddedFileVerifier
 
 				// Read each owner once, so many `/EF` keys stay linear.
 				if (!\array_key_exists($ownerStart, $ownerNames)) {
-					$owner = $this->readDictionary($region, $ownerStart, \strlen($region));
+					$limit = \min(\strlen($region), $ownerStart + $nameBudget);
+					$owner = $this->readDictionary($region, $ownerStart, $limit);
 
-					if ($owner === null) {
+					if ($owner === null && $limit === \strlen($region)) {
 						return [];
 					}
 
-					$ownerNames[$ownerStart] = $this->fileSpecName($owner[0]);
+					if ($owner === null) {
+						$nameBudget = 0;
+						$ownerNames[$ownerStart] = null;
+					} else {
+						$nameBudget -= \strlen($owner[0]);
+						$ownerNames[$ownerStart] = $this->fileSpecName($owner[0]);
+					}
 				}
 
 				foreach ($entries as [$number, $generation]) {

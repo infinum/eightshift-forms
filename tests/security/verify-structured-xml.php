@@ -238,6 +238,22 @@ namespace {
 		"/AF [{$inline}] "
 	), true, 0.5);
 
+	// 100 Filespecs nested inside one another, each with its own /EF, around
+	// ~1 MB of padding. Naming every owner re-read the levels inside it, so
+	// cost grew with depth x region; past the cap owners go unnamed, and the
+	// structured XML validator rejects an unnamed document.
+	$nested = '<< /Type /Filespec /F (attachment.xml) /EF << /F 7 0 R >> /Pad (' . str_repeat('a', 1000000) . ') >>';
+
+	for ($i = 0; $i < 100; $i++) {
+		$nested = "<< /Type /Filespec /F (attachment.xml) /EF << /F 7 0 R >> /Next {$nested} >>";
+	}
+
+	$timed('100 nested Filespecs around 1 MB', StructuredXmlFixtures::pdf(
+		[7 => StructuredXmlFixtures::stream($europass())],
+		'',
+		"/AF [{$nested}] "
+	), false, 1.0);
+
 	// One large document behind many references is parsed once.
 	$large = $europass('<Note>' . str_repeat('a', 4 * 1024 * 1024) . '</Note>');
 	$many = [];
