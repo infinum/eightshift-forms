@@ -1,8 +1,8 @@
 <?php
 
 /**
- * PDF string reading shared by the scanners that read a PDF body as raw
- * bytes: where a literal string ends, and what a string value decodes to.
+ * PDF string reading for code that parses a PDF body as raw bytes: where a
+ * literal string ends, and what a string value decodes to.
  *
  * @package EightshiftForms\Validation\FileSecurity
  */

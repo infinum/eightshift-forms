@@ -273,7 +273,9 @@ final readonly class EmbeddedFileVerifier
 			// Owners nest, so each level re-reads the ones inside it: a body
 			// with an `/EF` at every level cost depth x region. Capped at twice
 			// the region, past which owners go unnamed. A validator that needs
-			// a name then rejects, as it would any name it cannot rely on.
+			// a name then rejects, as it would any name it cannot rely on, and
+			// a stream also reached from a named owner fails the one-stream,
+			// one-name rule whatever the validators.
 			$nameBudget = 2 * \strlen($region);
 
 			foreach ($keyOffsets as $keyOffset) {
