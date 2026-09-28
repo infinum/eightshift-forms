@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Dependency-free harness for C2paManifestVerifier. The project has no PHP
- * test framework, so this asserts the verifier's behaviour directly.
+ * Dependency-free harness for EmbeddedFileVerifier with the C2PA payload
+ * validator. The project has no PHP test framework, so this asserts the
+ * verifier's behaviour directly.
  *
  * Usage: php tests/security/verify-c2pa.php [fixture_dir]
  *        defaults to tests/security/test-files
@@ -14,18 +15,22 @@ declare(strict_types=1);
 // checkout with no vendor/ present. Config has no dependencies of its own.
 require __DIR__ . '/../../src/Config/Config.php';
 require __DIR__ . '/../../src/Validation/FileSecurity/PdfTokens.php';
-require __DIR__ . '/../../src/Validation/FileSecurity/C2paManifestVerifier.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/PdfStrings.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedPayloadValidatorInterface.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/C2paPayloadValidator.php';
+require __DIR__ . '/../../src/Validation/FileSecurity/EmbeddedFileVerifier.php';
 require __DIR__ . '/c2pa-fixtures.php';
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Validation\FileSecurity\C2paManifestVerifier;
+use EightshiftForms\Validation\FileSecurity\C2paPayloadValidator;
+use EightshiftForms\Validation\FileSecurity\EmbeddedFileVerifier;
 
 $dir = $argv[1] ?? __DIR__ . '/test-files';
-$verifier = new C2paManifestVerifier();
+$verifier = new EmbeddedFileVerifier([new C2paPayloadValidator()]);
 $failures = 0;
 
 $check = static function (string $label, string $body, bool $expected) use ($verifier, &$failures): void {
-	$actual = $verifier->allEmbeddedFilesAreC2paManifests($body);
+	$actual = $verifier->allEmbeddedFilesAccepted($body);
 
 	if ($actual === $expected) {
 		printf("PASS  %s\n", $label);
@@ -169,6 +174,34 @@ $strayPercent = sprintf(
 	$manifest()
 );
 $check('stray % inside a preceding binary stream', $strayPercent, true);
+
+echo "\n--- file specification names ---\n";
+// The C2PA validator ignores the name, so no name the verifier cannot use may
+// cost a manifest its exemption. Readable, absent, non-ASCII, mismatched and
+// empty names must all verify the same. The one exception is structural: a
+// stream reached under two different names rejects, whatever the validators.
+$named = static fn(string $names): string => sprintf(
+	"%%PDF-1.4\n1 0 obj << /Type /FileSpec %s /EF << /F 2 0 R >> >> endobj\n2 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n",
+	$names,
+	strlen($manifest()),
+	$manifest()
+);
+$utf16Name = '<FEFF' . strtoupper(bin2hex(mb_convert_encoding('manifesté.c2pa', 'UTF-16BE', 'UTF-8'))) . '>';
+$check('no /F or /UF', $named(''), true);
+$check('ASCII /F', $named('/F (manifest.c2pa)'), true);
+$check('non-ASCII UTF-16BE /UF', $named('/UF ' . $utf16Name), true);
+$check('ASCII /F fallback beside a non-ASCII /UF', $named('/F (manifest_.c2pa) /UF ' . $utf16Name), true);
+$check('empty /F', $named('/F ()'), true);
+
+$twoFileSpecs = static fn(string $first, string $second): string => sprintf(
+	"%%PDF-1.4\n1 0 obj << /Type /FileSpec /F (%s) /EF << /F 3 0 R >> >> endobj\n2 0 obj << /Type /FileSpec /F (%s) /EF << /F 3 0 R >> >> endobj\n3 0 obj << /Length %d >>\nstream\n%s\nendstream endobj\n",
+	$first,
+	$second,
+	strlen($manifest()),
+	$manifest()
+);
+$check('one stream reached under one name twice', $twoFileSpecs('manifest.c2pa', 'manifest.c2pa'), true);
+$check('one stream reached under two names', $twoFileSpecs('manifest.c2pa', 'other.c2pa'), false);
 
 echo "\n--- scope ---\n";
 $mixed = "%PDF-1.4\n1 0 obj << /EF << /F 2 0 R >> >> endobj\n"
@@ -323,7 +356,7 @@ echo "\n--- cost ---\n";
  */
 $timed = static function (string $label, string $body, bool $expected, float $budget) use ($verifier, &$failures): void {
 	$started = microtime(true);
-	$verdict = $verifier->allEmbeddedFilesAreC2paManifests($body);
+	$verdict = $verifier->allEmbeddedFilesAccepted($body);
 	$elapsed = microtime(true) - $started;
 
 	if ($verdict === $expected && $elapsed < $budget) {

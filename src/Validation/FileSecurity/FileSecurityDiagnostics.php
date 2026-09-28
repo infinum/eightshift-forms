@@ -83,6 +83,11 @@ final class FileSecurityDiagnostics
 				'status' => \extension_loaded('dom'),
 			],
 			[
+				'title' => 'xmlreader',
+				'subtitle' => \__('XMLReader optional extension, required only when the structured XML (Europass) PDF exemption is enabled.', 'eightshift-forms'),
+				'status' => \extension_loaded('xmlreader'),
+			],
+			[
 				'title' => 'gd or imagick',
 				'subtitle' => \__('GD or Imagick extension is required for image processing.', 'eightshift-forms'),
 				'status' => \extension_loaded('gd') || \extension_loaded('imagick'),

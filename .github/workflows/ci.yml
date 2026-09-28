@@ -21,6 +21,39 @@ jobs:
           PROJECT_PATH: '.'
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
 
+  security:
+    name: File security harnesses
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: dom, xmlreader, mbstring
+          coverage: none
+
+      - name: Install qpdf
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qpdf
+
+      - name: Generate fixtures
+        run: bash tests/security/generate-test-files.sh tests/security/test-files
+
+      # The harnesses skip, not fail, when qpdf or a fixture is missing, so any
+      # SKIP here means the job did not test what it claims to.
+      - name: Run harnesses
+        run: |
+          set -o pipefail
+          for harness in verify-c2pa verify-structured-xml verify-pdf-scanner; do
+            php "tests/security/${harness}.php" | tee -a harness-output.txt
+          done
+          if grep -q '^SKIP' harness-output.txt; then
+            echo "::error::A security harness skipped checks; see the output above."
+            exit 1
+          fi
+
   node:
     name: Run Node checks
     runs-on: ubuntu-latest

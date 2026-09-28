@@ -277,13 +277,11 @@ class Config
 	 *                                   payload itself is caught by
 	 *                                   `/EmbeddedFile`.
 	 *
-	 * `/EmbeddedFile` and `/EmbeddedFiles` stay on this list, but see
-	 * C2paManifestVerifier: a PDF whose only match is an embedded file that
-	 * verifies as a C2PA provenance manifest can be exempted, because Adobe,
-	 * Canva and OpenAI attach those by default and they carry no executable
-	 * content. That exemption is opt-in via the
-	 * `fileSecurityPdfAllowC2pa` filter, and applies only where qpdf is
-	 * available to expand the body first.
+	 * `/EmbeddedFile` and `/EmbeddedFiles` stay on this list. A PDF whose only
+	 * match is embedded files can still be exempted, opt-in and only where
+	 * qpdf is available — see EmbeddedFileVerifier and its validators,
+	 * C2paPayloadValidator (`fileSecurityPdfAllowC2pa`) and
+	 * StructuredXmlPayloadValidator (`fileSecurityPdfAllowStructuredXml`).
 	 *
 	 * @var array<int, string>
 	 */
@@ -307,6 +305,37 @@ class Config
 	 * @var int
 	 */
 	public const FILE_UPLOAD_PDF_C2PA_MAX_BYTES = 2097152; // 2 MB.
+
+	/**
+	 * Embedded XML documents the PDF scanner will accept under the structured
+	 * XML exemption, keyed by the exact, case-sensitive file specification
+	 * name, each mapped to the root element's local name and namespace URI the
+	 * payload must carry.
+	 *
+	 * - `attachment.xml` — Europass CV (2020 onwards), HR-XML based `Candidate`.
+	 * - `Europass-XML-Attachment.xml` — Europass CV (2013–2020), `SkillsPassport`.
+	 *
+	 * A new entry needs a real sample to verify against. Published
+	 * descriptions of these formats have already been found not to match what
+	 * the generators write.
+	 *
+	 * @var array<string, array{root: string, namespace: string}>
+	 */
+	public const FILE_UPLOAD_PDF_STRUCTURED_XML_ALLOWLIST = [
+		'attachment.xml' => ['root' => 'Candidate', 'namespace' => 'http://www.europass.eu/1.0'],
+		'Europass-XML-Attachment.xml' => ['root' => 'SkillsPassport', 'namespace' => 'http://europass.cedefop.europa.eu/Europass'],
+	];
+
+	/**
+	 * Maximum size (bytes) of an embedded XML document that the PDF scanner
+	 * will accept under the structured XML exemption. A Europass CV runs
+	 * 20–100 KB, and one carrying a photo and a few base64-encoded
+	 * certificates stays well under this; the cap bounds parse cost and how
+	 * much opaque data the exemption can carry.
+	 *
+	 * @var int
+	 */
+	public const FILE_UPLOAD_PDF_STRUCTURED_XML_MAX_BYTES = 5242880; // 5 MB.
 
 	/**
 	 * Maximum uncompressed size (bytes) the archive scanner will accept across

@@ -1,21 +1,16 @@
 <?php
 
 /**
- * Verifies that every embedded file in a PDF body is a C2PA (Content
- * Credentials) provenance manifest, by inspecting the payload bytes rather
- * than trusting the `/AFRelationship` or `/Subtype` labels, which are
- * attacker-controlled.
+ * Verifies that every embedded file in a PDF body is one the enabled payload
+ * validators accept, resolving each embedded stream the way a PDF reader
+ * would rather than trusting the `/AFRelationship` or `/Subtype` labels,
+ * which are attacker-controlled.
  *
- * Structure only — this makes no claim about the authenticity of the
- * manifest's signature, and structure alone cannot prove a payload is
- * harmless. A genuine manifest legitimately carries opaque binary leaves
- * (CBOR claims, thumbnails), so bytes that also parse as some other format
- * can always be nested in one. What this class does is force the payload to
- * be a complete, exactly-tiled JUMBF tree of the shape C2PA specifies, which
- * rules out the cheap attack — a short header glued in front of an otherwise
- * untouched archive or installer — and bounds the rest with the size cap in
- * Config. Treat the exemption as "this is shaped like Content Credentials",
- * not as "this is safe".
+ * This class owns the structure — which streams a reader would extract, and
+ * under which name. The payload validators own the judgement of the bytes.
+ * Every embedded stream must satisfy at least one of them, so enabling a
+ * second validator widens what one attachment may be, never how many
+ * attachments escape inspection.
  *
  * @package EightshiftForms\Validation\FileSecurity
  */
@@ -24,62 +19,59 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation\FileSecurity;
 
-use EightshiftForms\Config\Config;
-
 /**
- * Structural verifier for embedded C2PA manifests.
+ * Structural verifier for embedded files.
  */
-final class C2paManifestVerifier
+final readonly class EmbeddedFileVerifier
 {
 	/**
-	 * JUMBF superbox type (ISO/IEC 19566-5).
+	 * Payload validators, any one of which may accept a stream.
+	 *
+	 * @var array<int, EmbeddedPayloadValidatorInterface>
 	 */
-	private const string JUMBF_SUPERBOX_TYPE = 'jumb';
+	private array $validators;
 
 	/**
-	 * JUMBF description box type.
+	 * Largest payload any validator accepts. Streams above it are rejected
+	 * before they are sliced.
+	 *
+	 * @var int
 	 */
-	private const string JUMBF_DESCRIPTION_TYPE = 'jumd';
+	private int $maxBytes;
 
 	/**
-	 * Registered C2PA content-type UUID, 63327061-0011-0010-8000-00AA00389B71.
+	 * Create a new instance.
+	 *
+	 * @param array<int, EmbeddedPayloadValidatorInterface> $validators Payload validators. Empty accepts nothing.
 	 */
-	private const string C2PA_CONTENT_TYPE_UUID = "\x63\x32\x70\x61\x00\x11\x00\x10\x80\x00\x00\xaa\x00\x38\x9b\x71";
+	public function __construct(array $validators)
+	{
+		$this->validators = \array_values($validators);
+		$this->maxBytes = \array_reduce(
+			$this->validators,
+			static fn(int $carry, EmbeddedPayloadValidatorInterface $validator): int => \max($carry, $validator->maxBytes()),
+			0
+		);
+	}
 
 	/**
-	 * Bytes in a box header: LBox (4) plus TBox (4).
-	 */
-	private const int BOX_HEADER_LENGTH = 8;
-
-	/**
-	 * Smallest legal JUMBF description box: header, type UUID, toggles byte.
-	 */
-	private const int JUMBF_MIN_DESCRIPTION_LENGTH = 25;
-
-	/**
-	 * Smallest payload that could hold a superbox wrapping a description box.
-	 */
-	private const int JUMBF_MIN_LENGTH = self::BOX_HEADER_LENGTH + self::JUMBF_MIN_DESCRIPTION_LENGTH;
-
-	/**
-	 * How deep the box walk recurses before giving up. Real manifests nest
-	 * three or four levels; anything deeper is a malformed or hostile file.
-	 */
-	private const int JUMBF_MAX_DEPTH = 8;
-
-	/**
-	 * Does every embedded file in this body verify as a C2PA manifest?
+	 * Is every embedded file in this body accepted by at least one validator?
 	 *
 	 * Fails closed: any parse ambiguity, unresolvable reference, filtered
-	 * stream, indirect length or non-JUMBF payload returns false.
+	 * stream, indirect length, unreadable file specification or unaccepted payload
+	 * returns false.
 	 *
 	 * Expects qpdf-expanded bytes. See mapObjectOffsets() for why a raw body
 	 * cannot be resolved safely here.
 	 *
 	 * @param string $body qpdf-expanded PDF bytes.
 	 */
-	public function allEmbeddedFilesAreC2paManifests(string $body): bool
+	public function allEmbeddedFilesAccepted(string $body): bool
 	{
+		if ($this->validators === []) {
+			return false;
+		}
+
 		// Objects hidden in compressed object streams are invisible to this
 		// pass, so their contents cannot be vouched for.
 		if ($this->containsObjectStreams($body)) {
@@ -105,16 +97,25 @@ final class C2paManifestVerifier
 		}
 
 		$verified = [];
+		$names = [];
 
-		foreach ($references as [$number, $generation]) {
+		foreach ($references as [$number, $generation, $name]) {
 			$key = $number . ' ' . $generation;
+
+			// One stream, one name: otherwise a stream is verified under one
+			// name and extracted under another. Enforced for every validator,
+			// so enabling a name-reading one never changes the structure pass.
+			if (\array_key_exists($key, $names) && $names[$key] !== $name) {
+				return false;
+			}
+
+			$names[$key] = $name;
 
 			// Cost has to scale with the streams, not with the references to
 			// them. A body may point thousands of `/EF` entries at one large
-			// manifest, and re-slicing and re-parsing the same payload for
-			// each is work an attacker gets for the price of a 12-byte
-			// reference. The verdict is a property of the stream, so the
-			// first answer is the only one there is.
+			// payload, and re-slicing and re-parsing it for each is work an
+			// attacker gets for the price of a 12-byte reference. With the name
+			// pinned above, the verdict is a property of the stream.
 			if (isset($verified[$key])) {
 				continue;
 			}
@@ -125,7 +126,7 @@ final class C2paManifestVerifier
 				return false;
 			}
 
-			if (!$this->isC2paManifest($payload)) {
+			if (!$this->isAccepted($payload, $name)) {
 				return false;
 			}
 
@@ -133,6 +134,38 @@ final class C2paManifestVerifier
 		}
 
 		return $this->everyEmbeddedFileStreamWasVerified($objects, $verified);
+	}
+
+	/**
+	 * Does this body carry compressed object streams?
+	 *
+	 * Objects inside an `/ObjStm` are invisible to a raw-bytes read, so
+	 * nothing this class concludes about embedded files can be trusted while
+	 * one is present. Exposed so the scanner can tell "undetermined, expand
+	 * and scan again" apart from "verified as not acceptable" — a C2PA
+	 * signer appends its manifest as an uncompressed incremental update over
+	 * a body that commonly does use object streams, which puts both shapes
+	 * in the same file.
+	 *
+	 * @param string $body PDF bytes.
+	 */
+	public function containsObjectStreams(string $body): bool
+	{
+		return PdfTokens::contains($body, '/ObjStm');
+	}
+
+	/**
+	 * Does any validator accept this payload under this name?
+	 *
+	 * @param string      $payload Embedded file bytes.
+	 * @param string|null $name    File specification name, or null.
+	 */
+	private function isAccepted(string $payload, ?string $name): bool
+	{
+		return \array_any(
+			$this->validators,
+			static fn(EmbeddedPayloadValidatorInterface $validator): bool => $validator->accepts($payload, $name)
+		);
 	}
 
 	/**
@@ -170,25 +203,8 @@ final class C2paManifestVerifier
 	}
 
 	/**
-	 * Does this body carry compressed object streams?
-	 *
-	 * Objects inside an `/ObjStm` are invisible to a raw-bytes read, so
-	 * nothing this class concludes about embedded files can be trusted while
-	 * one is present. Exposed so the scanner can tell "undetermined, expand
-	 * and scan again" apart from "verified as not a manifest" — a C2PA
-	 * signer appends its manifest as an uncompressed incremental update over
-	 * a body that commonly does use object streams, which puts both shapes
-	 * in the same file.
-	 *
-	 * @param string $body PDF bytes.
-	 */
-	public function containsObjectStreams(string $body): bool
-	{
-		return PdfTokens::contains($body, '/ObjStm');
-	}
-
-	/**
-	 * Collect `[objectNumber, generation]` pairs from every `/EF` in the body.
+	 * Collect `[objectNumber, generation, name]` triples from every `/EF` in
+	 * the body.
 	 *
 	 * An `/EF` value is a dictionary, and PDF lets any value be written as an
 	 * indirect reference, so `/EF 7 0 R` is as ordinary as `/EF << /F 7 0 R >>`
@@ -197,6 +213,9 @@ final class C2paManifestVerifier
 	 * `/EF` that is neither rejects the file. Skipping a shape this class does
 	 * not understand would leave the payload behind it unexamined while a
 	 * reader still extracts it.
+	 *
+	 * The name comes from the file specification that holds the `/EF`: the
+	 * innermost dictionary around it.
 	 *
 	 * `/EF` is not the only way a file specification names an embedded
 	 * stream, so `/RF` rejects the body outright. See below.
@@ -209,7 +228,7 @@ final class C2paManifestVerifier
 	 *
 	 * @param array<string, array{dict: string, region: string, masked: bool, stream: int|null}> $objects Parsed objects.
 	 *
-	 * @return array<int, array{0: int, 1: int}> Reference pairs, empty when any `/EF` cannot be read.
+	 * @return array<int, array{0: int, 1: int, 2: string|null}> Reference triples, empty when any `/EF` or its owner cannot be read.
 	 */
 	private function collectEmbeddedFileReferences(array $objects): array
 	{
@@ -228,16 +247,39 @@ final class C2paManifestVerifier
 			// its own. qpdf follows it — an `/RF` target survives `--qdf`
 			// where a genuinely unreferenced object is dropped — so walking
 			// `/EF` alone let a raw payload ride along beside a real
-			// manifest. Rejected rather than resolved: a real manifest never
-			// carries one, so reading the shape would buy an upload nothing.
+			// manifest. Rejected rather than resolved: no exempted payload
+			// type carries one.
 			if (PdfTokens::contains($haystack, '/RF')) {
 				return [];
 			}
 
-			$position = 0;
+			if (\preg_match_all('/\/EF(?=[\s\/<\[(%])/', $haystack, $matches, \PREG_OFFSET_CAPTURE) === false) {
+				return [];
+			}
 
-			while (\preg_match('/\/EF(?=[\s\/<\[(%])/', $haystack, $match, \PREG_OFFSET_CAPTURE, $position) === 1) {
-				$position = (int) $match[0][1] + 3;
+			if ($matches[0] === []) {
+				continue;
+			}
+
+			$keyOffsets = \array_map(static fn(array $match): int => (int) $match[1], $matches[0]);
+			$owners = $this->owningDictionaryOffsets($region, $keyOffsets);
+
+			if ($owners === null) {
+				return [];
+			}
+
+			$ownerNames = [];
+
+			// Owners nest, so each level re-reads the ones inside it: a body
+			// with an `/EF` at every level cost depth x region. Capped at twice
+			// the region, past which owners go unnamed. A validator that needs
+			// a name then rejects, as it would any name it cannot rely on, and
+			// a stream also reached from a named owner fails the one-stream,
+			// one-name rule whatever the validators.
+			$nameBudget = 2 * \strlen($region);
+
+			foreach ($keyOffsets as $keyOffset) {
+				$position = $keyOffset + 3;
 				$offset = $position + \strspn($region, " \t\r\n\0\x0c", $position);
 
 				$dictionary = $this->readEmbeddedFileDictionary($objects, $region, $offset);
@@ -252,13 +294,140 @@ final class C2paManifestVerifier
 					return [];
 				}
 
-				foreach ($entries as $entry) {
-					$references[] = $entry;
+				$ownerStart = $owners[$keyOffset];
+
+				// Read each owner once, so many `/EF` keys stay linear.
+				if (!\array_key_exists($ownerStart, $ownerNames)) {
+					$limit = \min(\strlen($region), $ownerStart + $nameBudget);
+					$owner = $this->readDictionary($region, $ownerStart, $limit);
+
+					if ($owner === null && $limit === \strlen($region)) {
+						return [];
+					}
+
+					if ($owner === null) {
+						$nameBudget = 0;
+						$ownerNames[$ownerStart] = null;
+					} else {
+						$nameBudget -= \strlen($owner[0]);
+						$ownerNames[$ownerStart] = $this->fileSpecName($owner[0]);
+					}
+				}
+
+				foreach ($entries as [$number, $generation]) {
+					$references[] = [$number, $generation, $ownerNames[$ownerStart]];
 				}
 			}
 		}
 
 		return $references;
+	}
+
+	/**
+	 * Offset of the innermost dictionary open at each key offset — for an
+	 * `/EF` key, the file specification that owns it.
+	 *
+	 * One forward pass over the brackets serves every key, so a region with
+	 * many `/EF` keys stays linear. Strings and comments are blanked first,
+	 * so a `<<` spelled inside one is not a bracket.
+	 *
+	 * @param string          $region     Object region.
+	 * @param array<int, int> $keyOffsets Key offsets, in ascending order.
+	 *
+	 * @return array<int, int>|null Offset of the owning `<<` keyed by key offset, or null when a key sits in no dictionary.
+	 */
+	private function owningDictionaryOffsets(string $region, array $keyOffsets): ?array
+	{
+		$brackets = $this->bracketOffsets($this->mask($region, false));
+		$next = 0;
+		$open = [];
+		$owners = [];
+
+		foreach ($keyOffsets as $keyOffset) {
+			while (isset($brackets[$next]) && $brackets[$next][1] < $keyOffset) {
+				if ($brackets[$next][0] === '<<') {
+					$open[] = $brackets[$next][1];
+				} else {
+					\array_pop($open);
+				}
+
+				$next++;
+			}
+
+			if ($open === []) {
+				return null;
+			}
+
+			$owners[$keyOffset] = $open[\array_key_last($open)];
+		}
+
+		return $owners;
+	}
+
+	/**
+	 * Offsets of every `<<` and `>>` in already-masked text, in order.
+	 *
+	 * @param string $masked Text with strings, hex strings and comments blanked.
+	 *
+	 * @return array<int, array{0: string, 1: int}> Bracket and its offset.
+	 */
+	private function bracketOffsets(string $masked): array
+	{
+		if (\preg_match_all('/<<|>>/', $masked, $matches, \PREG_OFFSET_CAPTURE) === false) {
+			return [];
+		}
+
+		return \array_map(
+			static fn(array $match): array => [(string) $match[0], (int) $match[1]],
+			$matches[0]
+		);
+	}
+
+	/**
+	 * The name a file specification gives its embedded file.
+	 *
+	 * Read from the outer entries only, so an `/F` inside `/EF << /F 2 0 R >>`
+	 * — a reference, not a name — is never mistaken for one.
+	 *
+	 * Null when there is no name to rely on: none given, a key given twice, a
+	 * value that is not printable ASCII, or `/F` and `/UF` disagreeing (readers
+	 * may use either). Null rather than a rejection, because only a validator
+	 * knows whether it needs a name.
+	 *
+	 * @param string $dictionary File specification dictionary, brackets included.
+	 *
+	 * @return string|null The name, or null when there is none to rely on.
+	 */
+	private function fileSpecName(string $dictionary): ?string
+	{
+		$outer = $this->mask($dictionary, true);
+		$found = [];
+
+		foreach (['/F', '/UF'] as $key) {
+			$count = \preg_match_all('/' . \preg_quote($key, '/') . '(?=[\s\/<\[(%])/', $outer, $matches, \PREG_OFFSET_CAPTURE);
+
+			if ($count === false || $count > 1) {
+				return null;
+			}
+
+			if ($count === 0) {
+				continue;
+			}
+
+			$start = (int) $matches[0][0][1] + \strlen($key);
+			$start += \strspn($dictionary, " \t\r\n\0\x0c", $start);
+
+			$value = PdfStrings::readAsciiText($dictionary, $start);
+
+			if ($value === null) {
+				return null;
+			}
+
+			$found[] = $value;
+		}
+
+		// None found, or two that disagree.
+		return \count(\array_unique($found)) === 1 ? $found[0] : null;
 	}
 
 	/**
@@ -509,7 +678,7 @@ final class C2paManifestVerifier
 			$byte = $body[$cursor];
 
 			if ($byte === '(') {
-				$cursor = $this->skipLiteralString($body, $cursor, $total);
+				$cursor = PdfStrings::skipLiteral($body, $cursor, $total);
 				continue;
 			}
 
@@ -555,44 +724,6 @@ final class C2paManifestVerifier
 	}
 
 	/**
-	 * Offset just past a literal `( ... )` string, honouring escapes and
-	 * balanced inner parentheses.
-	 *
-	 * @param string   $body   Bytes to read from.
-	 * @param int      $offset Offset of the opening parenthesis.
-	 * @param int|null $limit  Offset the scan may not read past, or null for the whole string.
-	 */
-	private function skipLiteralString(string $body, int $offset, ?int $limit = null): int
-	{
-		$total = $limit === null ? \strlen($body) : \min(\strlen($body), $limit);
-		$depth = 0;
-		$cursor = $offset;
-
-		while ($cursor < $total) {
-			$byte = $body[$cursor];
-
-			if ($byte === '\\') {
-				$cursor += 2;
-				continue;
-			}
-
-			if ($byte === '(') {
-				$depth++;
-			} elseif ($byte === ')') {
-				$depth--;
-
-				if ($depth === 0) {
-					return $cursor + 1;
-				}
-			}
-
-			$cursor++;
-		}
-
-		return $total;
-	}
-
-	/**
 	 * Blank out the parts of a dictionary that are not the structure being
 	 * read, keeping every byte offset intact so slices still line up.
 	 *
@@ -616,7 +747,7 @@ final class C2paManifestVerifier
 			$end = null;
 
 			if ($byte === '(') {
-				$end = $this->skipLiteralString($text, $cursor);
+				$end = PdfStrings::skipLiteral($text, $cursor);
 			} elseif ($byte === '%') {
 				$end = $cursor + \strcspn($text, "\r\n", $cursor);
 			} elseif ($byte === '<' && \substr($text, $cursor, 2) !== '<<') {
@@ -678,9 +809,11 @@ final class C2paManifestVerifier
 			return null;
 		}
 
-		// A filtered stream is not the raw JUMBF this check expects. Read from
-		// the whole dictionary, sub-dictionaries included, so a /Filter this
-		// class cannot place is a rejection rather than a guess.
+		// qpdf --qdf decodes every stream it can, so a /Filter still present
+		// is one qpdf could not undo, and the bytes here are not the bytes a
+		// reader extracts. Read from the whole dictionary, sub-dictionaries
+		// included, so a /Filter this class cannot place is a rejection rather
+		// than a guess.
 		if (PdfTokens::contains($object['dict'], '/Filter')) {
 			return null;
 		}
@@ -690,7 +823,7 @@ final class C2paManifestVerifier
 		// value can spell one anywhere, so both are blanked before the read.
 		$length = $this->resolveLength($body, $offsets, $this->mask($object['dict'], true));
 
-		if ($length === null || $length <= 0 || $length > Config::FILE_UPLOAD_PDF_C2PA_MAX_BYTES) {
+		if ($length === null || $length <= 0 || $length > $this->maxBytes) {
 			return null;
 		}
 
@@ -702,8 +835,8 @@ final class C2paManifestVerifier
 		}
 
 		// The length has to be the one that ends the stream. Without this, a
-		// shorter length verifies a prefix of the payload as a complete,
-		// exactly-tiled manifest while a reader extracts that prefix plus
+		// shorter length verifies a prefix of the payload as a complete
+		// manifest or document while a reader extracts that prefix plus
 		// whatever was appended behind it.
 		$tail = $start + $length;
 		$tail += \strspn($body, " \t\r\n\0\x0c", $tail);
@@ -717,8 +850,9 @@ final class C2paManifestVerifier
 	 *
 	 * The qpdf `--qdf` mode always writes the indirect form, so rejecting it
 	 * would disable the exemption on exactly the hosts where verification is
-	 * most reliable. A dishonest length is harmless — isC2paManifest() requires
-	 * the JUMBF tree to tile the sliced payload exactly.
+	 * most reliable. A dishonest length is harmless — resolveStream() requires
+	 * it to end exactly at `endstream`, and each validator requires the sliced
+	 * payload to be complete.
 	 *
 	 * @param string             $body       PDF bytes, needed to resolve an indirect length.
 	 * @param array<string, int> $offsets    Object offset map.
@@ -756,142 +890,5 @@ final class C2paManifestVerifier
 		}
 
 		return (int) $value[1];
-	}
-
-	/**
-	 * Is this payload a complete C2PA manifest store?
-	 *
-	 * The payload must be exactly one JUMBF superbox whose declared length
-	 * accounts for every byte, carrying the registered C2PA content-type UUID,
-	 * whose children tile it with no slack. Trailing or interstitial bytes that
-	 * no box claims are what a smuggled payload needs, so any slack rejects.
-	 *
-	 * @param string $payload Embedded file bytes.
-	 */
-	private function isC2paManifest(string $payload): bool
-	{
-		$length = \strlen($payload);
-
-		if ($length < self::JUMBF_MIN_LENGTH || $length > Config::FILE_UPLOAD_PDF_C2PA_MAX_BYTES) {
-			return false;
-		}
-
-		$header = $this->readBoxHeader($payload, 0, $length);
-
-		if ($header === null || $header[0] !== $length || $header[1] !== self::JUMBF_SUPERBOX_TYPE) {
-			return false;
-		}
-
-		return $this->superboxIsWellFormed($payload, self::BOX_HEADER_LENGTH, $length, self::C2PA_CONTENT_TYPE_UUID, 0);
-	}
-
-	/**
-	 * Read a box header, refusing any box that does not fit the range it sits in.
-	 *
-	 * LBox 0 ("this box runs to the end of the file") and LBox 1 ("a 64-bit
-	 * length follows") are legal ISO BMFF, but both hand a box's extent to
-	 * something other than its own length field, and neither is reachable below
-	 * the size cap in Config. Both fall under the minimum and are rejected.
-	 *
-	 * @param string $payload Embedded file bytes.
-	 * @param int    $offset  Byte offset of the box.
-	 * @param int    $end     Exclusive upper bound the box must fit inside.
-	 *
-	 * @return array{0: int, 1: string}|null Box length and type, or null when unreadable.
-	 */
-	private function readBoxHeader(string $payload, int $offset, int $end): ?array
-	{
-		if ($end - $offset < self::BOX_HEADER_LENGTH) {
-			return null;
-		}
-
-		$lbox = \unpack('N', \substr($payload, $offset, 4));
-
-		if ($lbox === false) {
-			return null;
-		}
-
-		$boxLength = $lbox[1];
-
-		if ($boxLength < self::BOX_HEADER_LENGTH || $boxLength > $end - $offset) {
-			return null;
-		}
-
-		return [$boxLength, \substr($payload, $offset + 4, 4)];
-	}
-
-	/**
-	 * Is this range a JUMBF superbox body — a description box followed by
-	 * content boxes that tile the rest of the range exactly?
-	 *
-	 * @param string      $payload      Embedded file bytes.
-	 * @param int         $start        First byte of the superbox body, past its own header.
-	 * @param int         $end          Exclusive end of the superbox body.
-	 * @param string|null $expectedUuid Content-type UUID the description must carry, or null for any.
-	 * @param int         $depth        Current recursion depth.
-	 */
-	private function superboxIsWellFormed(string $payload, int $start, int $end, ?string $expectedUuid, int $depth): bool
-	{
-		if ($depth > self::JUMBF_MAX_DEPTH) {
-			return false;
-		}
-
-		$description = $this->readBoxHeader($payload, $start, $end);
-
-		if ($description === null || $description[1] !== self::JUMBF_DESCRIPTION_TYPE) {
-			return false;
-		}
-
-		if ($description[0] < self::JUMBF_MIN_DESCRIPTION_LENGTH) {
-			return false;
-		}
-
-		if (
-			$expectedUuid !== null
-			&& \substr($payload, $start + self::BOX_HEADER_LENGTH, \strlen($expectedUuid)) !== $expectedUuid
-		) {
-			return false;
-		}
-
-		$offset = $start + $description[0];
-
-		// A superbox holding nothing but its own description describes nothing.
-		if ($offset >= $end) {
-			return false;
-		}
-
-		while ($offset < $end) {
-			$box = $this->readBoxHeader($payload, $offset, $end);
-
-			if ($box === null) {
-				return false;
-			}
-
-			// The store's own children are manifest superboxes. Below that,
-			// leaf boxes hold claim, signature and assertion data this class
-			// does not interpret, so they only have to tile.
-			if ($depth === 0 && $box[1] !== self::JUMBF_SUPERBOX_TYPE) {
-				return false;
-			}
-
-			if (
-				$box[1] === self::JUMBF_SUPERBOX_TYPE
-				&& !$this->superboxIsWellFormed(
-					$payload,
-					$offset + self::BOX_HEADER_LENGTH,
-					$offset + $box[0],
-					null,
-					$depth + 1
-				)
-			) {
-				return false;
-			}
-
-			$offset += $box[0];
-		}
-
-		// Exact by construction: readBoxHeader caps every box at the bytes left
-		// in the range, so the walk lands on $end or has already returned false.
-		return true;
 	}
 }

@@ -341,6 +341,7 @@ final class Filters
 				'fileSecurityPdfUseQpdf',
 				'fileSecurityPdfDangerousKeys',
 				'fileSecurityPdfAllowC2pa',
+				'fileSecurityPdfAllowStructuredXml',
 			],
 			'encryption' => [
 				'secretKey',
