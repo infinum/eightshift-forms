@@ -45,6 +45,7 @@ export const ResultOutputOptions = ({ attributes, setAttributes }) => {
 
 			<AsyncSelect
 				label={__('Connected Form', 'eightshift-forms')}
+				help={__('Required if the form is on the same page as this block. Optional if this block is on a different page than the form, for example on the success redirect page.', 'eightshift-forms')}
 				value={Object.keys(resultOutputFormPostIdRaw ?? {}).length ? resultOutputFormPostIdRaw : { id: resultOutputFormPostId }}
 				fetchFunction={fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
 					noCache: true,
