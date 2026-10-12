@@ -29,6 +29,7 @@ class PublishPressCapabilities implements ServiceInterface
 	public function register(): void
 	{
 		\add_filter('cme_plugin_capabilities', $this->addPluginCapabilities(...));
+		\add_filter('cme_capability_descriptions', $this->addCapabilityDescriptions(...));
 	}
 
 	/**
@@ -45,5 +46,46 @@ class PublishPressCapabilities implements ServiceInterface
 		$pluginCaps[self::TAB_TITLE] = Config::CAPS;
 
 		return $pluginCaps;
+	}
+
+	/**
+	 * Add capability descriptions. PublishPress outputs them unescaped.
+	 *
+	 * @param array<string, string> $descriptions Descriptions keyed by capability.
+	 *
+	 * @return array<string, string>
+	 */
+	public function addCapabilityDescriptions(array $descriptions): array
+	{
+		$formsDescriptions = [
+			Config::CAP_LISTING => \__('View the forms admin menu and forms listing', 'eightshift-forms'),
+			Config::CAP_SETTINGS => \__('Manage individual form settings', 'eightshift-forms'),
+			Config::CAP_SETTINGS_GLOBAL => \__('Manage global forms settings and integrations', 'eightshift-forms'),
+			Config::CAP_RESULTS => \__('View the result outputs listing', 'eightshift-forms'),
+			Config::CAP_FORM => \__('Base capability for the forms post type', 'eightshift-forms'),
+			Config::CAP_FORM_EDIT => \__('Edit a form', 'eightshift-forms'),
+			Config::CAP_FORM_READ => \__('Read a form', 'eightshift-forms'),
+			Config::CAP_FORM_DELETE => \__('Delete a form', 'eightshift-forms'),
+			Config::CAP_FORM_EDIT_MULTIPLE => \__('Edit forms', 'eightshift-forms'),
+			Config::CAP_FORM_EDIT_OTHERS => \__('Edit forms created by other users', 'eightshift-forms'),
+			Config::CAP_FORM_DELETE_MULTIPLE => \__('Delete forms', 'eightshift-forms'),
+			Config::CAP_FORM_PUBLISH => \__('Publish forms', 'eightshift-forms'),
+			Config::CAP_FORM_READ_PRIVATE => \__('Read private forms', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT => \__('Base capability for the result outputs post type', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_EDIT => \__('Edit a result output', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_READ => \__('Read a result output', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_DELETE => \__('Delete a result output', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_EDIT_MULTIPLE => \__('Edit result outputs', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_EDIT_OTHERS => \__('Edit result outputs created by other users', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_DELETE_MULTIPLE => \__('Delete result outputs', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_PUBLISH => \__('Publish result outputs', 'eightshift-forms'),
+			Config::CAP_FORM_RESULT_READ_PRIVATE => \__('Read private result outputs', 'eightshift-forms'),
+		];
+
+		foreach ($formsDescriptions as $cap => $description) {
+			$descriptions[$cap] = \esc_html($description);
+		}
+
+		return $descriptions;
 	}
 }

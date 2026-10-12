@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- Added an "Eightshift Forms" tab to the PublishPress Capabilities role editor, listing all plugin capabilities.
+- Added an "Eightshift Forms" tab to the PublishPress Capabilities role editor, listing all plugin capabilities with their descriptions.
 
 ## [10.6.0]
 
