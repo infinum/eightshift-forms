@@ -28,6 +28,21 @@ class PublishPressCapabilities implements ServiceInterface
 	 */
 	public function register(): void
 	{
+		\add_action('admin_init', $this->registerPublishPressHooks(...));
+	}
+
+	/**
+	 * Register PublishPress Capabilities filters when the plugin is active.
+	 *
+	 * PublishPress defines its version constant on `plugins_loaded`, so the check runs on `admin_init`.
+	 * Its role editor only applies these filters in wp-admin.
+	 */
+	public function registerPublishPressHooks(): void
+	{
+		if (!\defined('PUBLISHPRESS_CAPS_VERSION')) {
+			return;
+		}
+
 		\add_filter('cme_plugin_capabilities', $this->addPluginCapabilities(...));
 		\add_filter('cme_capability_descriptions', $this->addCapabilityDescriptions(...));
 	}
