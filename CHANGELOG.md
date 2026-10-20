@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [10.6.1]
+## [10.7.0]
 
 ### Added
 
@@ -2104,7 +2104,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[10.6.1]: https://github.com/infinum/eightshift-forms/compare/10.6.0...10.6.1
+[10.7.0]: https://github.com/infinum/eightshift-forms/compare/10.6.0...10.7.0
 [10.6.0]: https://github.com/infinum/eightshift-forms/compare/10.5.0...10.6.0
 [10.5.0]: https://github.com/infinum/eightshift-forms/compare/10.4.1...10.5.0
 [10.4.1]: https://github.com/infinum/eightshift-forms/compare/10.4.0...10.4.1
