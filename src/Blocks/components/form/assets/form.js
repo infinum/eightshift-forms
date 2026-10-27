@@ -1328,6 +1328,9 @@ export class Form {
 		const twSelectorsData = JSON.parse(input.getAttribute(state.getStateAttribute('tailwindSelectorsData'))) ?? [];
 
 		import('flatpickr').then((flatpickr) => {
+			// eslint-disable-next-line no-underscore-dangle -- Flatpickr exposes its positioning API through these properties.
+			const repositionCalendar = () => input._flatpickr?._positionCalendar();
+
 			flatpickr.default(input, {
 				enableTime: state.getStateElementTypeField(name, formId) === 'dateTime',
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
@@ -1357,11 +1360,17 @@ export class Form {
 					utils.setActiveState(formId, name);
 
 					if (!state.getStateSettingsDisableScrollToFieldOnFocus()) {
+						// Flatpickr chooses above/below before our smooth focus scroll finishes.
+						document.addEventListener('scroll', repositionCalendar, true);
 						utils.scrollAction(field);
 					}
 				},
 				onClose: function () {
+					document.removeEventListener('scroll', repositionCalendar, true);
 					utils.unsetActiveState(formId, name);
+				},
+				onDestroy: function () {
+					document.removeEventListener('scroll', repositionCalendar, true);
 				},
 				onChange: function (selectedDates, dateStr) {
 					utils.setManualDateValue(formId, name, dateStr, false, false);
