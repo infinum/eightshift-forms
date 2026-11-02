@@ -86,11 +86,41 @@ export class Export {
 
 	downloadCSVFromJson(arrayOfJson) {
 		const replacer = (key, value) => (value === null ? '' : value);
-		const header = Object.keys(arrayOfJson[0]);
-		let csv = arrayOfJson.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(','));
+		const header = this.getCSVHeader(arrayOfJson);
+		let csv = arrayOfJson.map((row) => header.map((fieldName) => (Object.hasOwn(row, fieldName) ? JSON.stringify(row[fieldName], replacer) : '""')).join(','));
 		csv.unshift(header.join(','));
 
 		return csv.join('\r\n');
+	}
+
+	/**
+	 * Build the CSV header from the keys of all rows, not just the first one.
+	 *
+	 * Empty optional fields are not stored, so rows can have different keys.
+	 * A key missing from earlier rows is inserted right after its preceding key in the row where it first appears,
+	 * keeping the original field order. Keys that no row has are never added.
+	 *
+	 * @param {Array<Object>} arrayOfJson Rows to export.
+	 *
+	 * @returns {Array<string>} Ordered list of unique column names.
+	 */
+	getCSVHeader(arrayOfJson) {
+		const header = [];
+
+		arrayOfJson.forEach((row) => {
+			let previousKey = null;
+
+			Object.keys(row).forEach((key) => {
+				if (!header.includes(key)) {
+					const insertAt = previousKey === null ? 0 : header.indexOf(previousKey) + 1;
+					header.splice(insertAt, 0, key);
+				}
+
+				previousKey = key;
+			});
+		});
+
+		return header;
 	}
 
 	createDownloadLink(filename, csv) {
