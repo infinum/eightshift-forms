@@ -4,16 +4,6 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [Unreleased]
-
-### Fixed
-
-- CSV export of entries now includes every field that has a value in at least one selected entry. Previously, columns for optional fields left empty in the first exported entry were dropped for all entries.
-- CSV export cells are now quoted per RFC 4180, so values or field names containing quotes, commas or line breaks no longer shift cells into the wrong columns.
-- CSV export now prefixes cells starting with `=`, `+`, `-`, `@`, tab or carriage return with `'`, so submitted values are not run as formulas when the file is opened in a spreadsheet. Plain numbers such as `-1` are left unchanged.
-- Large CSV exports no longer fail silently, as the file is now downloaded as a Blob instead of a `data:` URI.
-- Improved CSV export performance for entries with many distinct fields.
-
 ## [10.7.1]
 
 ### Fixed
@@ -2120,7 +2110,6 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[Unreleased]: https://github.com/infinum/eightshift-forms/compare/10.7.1...HEAD
 [10.7.1]: https://github.com/infinum/eightshift-forms/compare/10.7.0...10.7.1
 [10.7.0]: https://github.com/infinum/eightshift-forms/compare/10.6.0...10.7.0
 [10.6.0]: https://github.com/infinum/eightshift-forms/compare/10.5.0...10.6.0
