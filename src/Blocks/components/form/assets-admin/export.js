@@ -99,6 +99,10 @@ export class Export {
 	 * so commas, quotes and line breaks stay inside their cell.
 	 * Null and undefined become empty cells, and nested arrays/objects are written as JSON.
 	 *
+	 * Entry data is user-submitted, so cells that a spreadsheet would evaluate as a formula
+	 * (starting with =, +, -, @, tab or carriage return) are prefixed with a single quote (OWASP CSV injection guidance).
+	 * Plain numbers such as -1 or +38591 are left as they are, because they cannot run a formula.
+	 *
 	 * @param {*} value Cell value.
 	 *
 	 * @returns {string} Quoted CSV cell.
@@ -110,7 +114,13 @@ export class Export {
 			output = JSON.stringify(output);
 		}
 
-		return `"${String(output).replaceAll('"', '""')}"`;
+		output = String(output);
+
+		if (/^[=+\-@\t\r]/.test(output) && !/^[+-]?\d+(\.\d+)?$/.test(output)) {
+			output = `'${output}`;
+		}
+
+		return `"${output.replaceAll('"', '""')}"`;
 	}
 
 	/**
