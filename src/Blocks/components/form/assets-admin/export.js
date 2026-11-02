@@ -127,8 +127,11 @@ export class Export {
 	 * Build the CSV header from the keys of all rows, not just the first one.
 	 *
 	 * Empty optional fields are not stored, so rows can have different keys.
-	 * A key missing from earlier rows is inserted right after its preceding key in the row where it first appears,
-	 * keeping the original field order. A new key with no preceding key in its row is appended to the end.
+	 * The column order is a best-effort guess from the rows, as they do not carry the form's field order:
+	 * a key missing from earlier rows is inserted right after its preceding key in the row where it first appears,
+	 * and a new key with no preceding key in its row is appended to the end.
+	 * When different rows add keys into the same gap (e.g. each entry filled a different optional field
+	 * between the same two fields), those keys end up in reverse order of appearance, not form order.
 	 * A field that is empty in every exported row gets no column.
 	 *
 	 * Columns are kept in a linked list (key => next key), so every insert is O(1)
