@@ -85,12 +85,32 @@ export class Export {
 	}
 
 	downloadCSVFromJson(arrayOfJson) {
-		const replacer = (key, value) => (value === null ? '' : value);
 		const header = this.getCSVHeader(arrayOfJson);
-		let csv = arrayOfJson.map((row) => header.map((fieldName) => (Object.prototype.hasOwnProperty.call(row, fieldName) ? JSON.stringify(row[fieldName], replacer) : '""')).join(','));
-		csv.unshift(header.join(','));
+		const csv = arrayOfJson.map((row) => header.map((fieldName) => this.formatCSVCell(Object.prototype.hasOwnProperty.call(row, fieldName) ? row[fieldName] : '')).join(','));
+		csv.unshift(header.map((fieldName) => this.formatCSVCell(fieldName)).join(','));
 
 		return csv.join('\r\n');
+	}
+
+	/**
+	 * Format a single value as an RFC 4180 CSV cell.
+	 *
+	 * Every cell is wrapped in double quotes and inner double quotes are doubled,
+	 * so commas, quotes and line breaks stay inside their cell.
+	 * Null and undefined become empty cells, and nested arrays/objects are written as JSON.
+	 *
+	 * @param {*} value Cell value.
+	 *
+	 * @returns {string} Quoted CSV cell.
+	 */
+	formatCSVCell(value) {
+		let output = value ?? '';
+
+		if (typeof output === 'object') {
+			output = JSON.stringify(output);
+		}
+
+		return `"${String(output).replaceAll('"', '""')}"`;
 	}
 
 	/**
