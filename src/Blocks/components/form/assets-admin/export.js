@@ -100,25 +100,40 @@ export class Export {
 	 * A key missing from earlier rows is inserted right after its preceding key in the row where it first appears,
 	 * keeping the original field order. Keys that no row has are never added.
 	 *
+	 * Columns are kept in a linked list (key => next key), so every insert is O(1)
+	 * and the whole build stays linear in the number of keys, even for entries with many distinct fields.
+	 *
 	 * @param {Array<Object>} arrayOfJson Rows to export.
 	 *
 	 * @returns {Array<string>} Ordered list of unique column names.
 	 */
 	getCSVHeader(arrayOfJson) {
-		const header = [];
+		const nextKey = new Map();
+		let firstKey = null;
 
 		arrayOfJson.forEach((row) => {
 			let previousKey = null;
 
 			Object.keys(row).forEach((key) => {
-				if (!header.includes(key)) {
-					const insertAt = previousKey === null ? 0 : header.indexOf(previousKey) + 1;
-					header.splice(insertAt, 0, key);
+				if (!nextKey.has(key)) {
+					if (previousKey === null) {
+						nextKey.set(key, firstKey);
+						firstKey = key;
+					} else {
+						nextKey.set(key, nextKey.get(previousKey));
+						nextKey.set(previousKey, key);
+					}
 				}
 
 				previousKey = key;
 			});
 		});
+
+		const header = [];
+
+		for (let key = firstKey; key !== null; key = nextKey.get(key)) {
+			header.push(key);
+		}
 
 		return header;
 	}
