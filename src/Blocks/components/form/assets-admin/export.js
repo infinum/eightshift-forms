@@ -179,13 +179,35 @@ export class Export {
 		return header;
 	}
 
+	/**
+	 * Trigger a browser download of the CSV content.
+	 *
+	 * The content is passed as a Blob object URL instead of a data: URI,
+	 * because data: URIs are length-limited (about 2 MB in Chrome) and a large export would silently fail to download.
+	 * The UTF-8 BOM is kept so Excel detects the encoding.
+	 *
+	 * @param {string} filename Download file name.
+	 * @param {string} csv CSV content.
+	 *
+	 * @returns {void}
+	 */
 	createDownloadLink(filename, csv) {
-		let link = document.createElement('a');
-		link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
+		const blob = new Blob(['﻿', csv], { type: 'text/csv;charset=utf-8' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+
+		link.setAttribute('href', url);
 		link.setAttribute('download', filename);
 		link.style.visibility = 'hidden';
 		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+
+		try {
+			link.click();
+		} finally {
+			document.body.removeChild(link);
+
+			// Revoke on the next tick, as revoking synchronously can cancel the download in some browsers.
+			setTimeout(() => URL.revokeObjectURL(url), 0);
+		}
 	}
 }
