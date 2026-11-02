@@ -86,7 +86,7 @@ export class Export {
 
 	downloadCSVFromJson(arrayOfJson) {
 		const header = this.getCSVHeader(arrayOfJson);
-		const csv = arrayOfJson.map((row) => header.map((fieldName) => this.formatCSVCell(Object.prototype.hasOwnProperty.call(row, fieldName) ? row[fieldName] : '')).join(','));
+		const csv = arrayOfJson.map((row) => header.map((fieldName) => this.formatCSVCell(Object.hasOwn(row, fieldName) ? row[fieldName] : '')).join(','));
 		csv.unshift(header.map((fieldName) => this.formatCSVCell(fieldName)).join(','));
 
 		return csv.join('\r\n');
