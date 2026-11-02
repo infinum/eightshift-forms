@@ -863,9 +863,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							$entryValue = "<a href='{$entryValue}' target='_blank' rel='noopener noreferrer'>{$entryValue}</a>";
 						}
 
-						if (!isset($tableHead[$entryKey])) {
-							$tableHead[$entryKey] = \ucfirst((string) $entryKey);
-						}
+						$tableHead[$entryKey] ??= \ucfirst((string) $entryKey);
 						$tableContent[$itemId][$entryKey] = $entryValue;
 					}
 

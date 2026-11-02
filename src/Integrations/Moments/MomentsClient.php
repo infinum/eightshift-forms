@@ -197,7 +197,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 
 		if ($matchesReq !== []) {
 			$key = $matchesReq[0][2] ?: '';
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_REQUIRED;
 			}
 		}
@@ -208,7 +208,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesEmail !== []) {
 			$key = $matchesEmail[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_EMAIL;
 			}
 		}
@@ -219,7 +219,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesPhone !== []) {
 			$key = $matchesPhone[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
@@ -230,7 +230,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesPhonePrefix !== []) {
 			$key = $matchesPhonePrefix[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
@@ -241,7 +241,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesPhoneIsNumeric !== []) {
 			$key = $matchesPhoneIsNumeric[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_PHONE;
 			}
 		}
@@ -252,7 +252,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesPhoneLength !== []) {
 			$key = $matchesPhoneLength[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_MOMENTS_INVALID_PHONE_LENGTH;
 			}
 		}
@@ -263,7 +263,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesDate !== []) {
 			$key = $matchesDate[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_DATE_TIME;
 			}
 		}
@@ -274,7 +274,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesDate !== []) {
 			$key = $matchesDate[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_DATE;
 			}
 		}
@@ -285,7 +285,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesDateNoFuture !== []) {
 			$key = $matchesDateNoFuture[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_DATE_NO_FUTURE;
 			}
 		}
@@ -296,7 +296,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesCountry !== []) {
 			$key = $matchesCountry[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_INVALID;
 			}
 		}
@@ -307,7 +307,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if ($matchesForbiddenCharacters !== []) {
 			$key = $matchesForbiddenCharacters[0][1] ?: '';
 
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$output[$key] = Labels::LABEL_VALIDATION_MOMENTS_INVALID_SPECIAL_CHARACTERS;
 			}
 		}

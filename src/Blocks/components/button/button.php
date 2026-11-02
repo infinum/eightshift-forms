@@ -25,8 +25,6 @@ if (!$buttonLabel) {
 	return;
 }
 
-$outputTag = '';
-
 if ($buttonUrl) {
 	$outputTag = 'a';
 	$buttonAttrs['href'] = $buttonUrl;
