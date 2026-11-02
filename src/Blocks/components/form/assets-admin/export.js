@@ -98,7 +98,8 @@ export class Export {
 	 *
 	 * Empty optional fields are not stored, so rows can have different keys.
 	 * A key missing from earlier rows is inserted right after its preceding key in the row where it first appears,
-	 * keeping the original field order. Keys that no row has are never added.
+	 * keeping the original field order. A new key with no preceding key in its row is appended to the end.
+	 * A field that is empty in every exported row gets no column.
 	 *
 	 * Columns are kept in a linked list (key => next key), so every insert is O(1)
 	 * and the whole build stays linear in the number of keys, even for entries with many distinct fields.
@@ -110,18 +111,25 @@ export class Export {
 	getCSVHeader(arrayOfJson) {
 		const nextKey = new Map();
 		let firstKey = null;
+		let lastKey = null;
 
 		arrayOfJson.forEach((row) => {
 			let previousKey = null;
 
 			Object.keys(row).forEach((key) => {
 				if (!nextKey.has(key)) {
-					if (previousKey === null) {
-						nextKey.set(key, firstKey);
+					const afterKey = previousKey ?? lastKey;
+
+					if (afterKey === null) {
+						nextKey.set(key, null);
 						firstKey = key;
 					} else {
-						nextKey.set(key, nextKey.get(previousKey));
-						nextKey.set(previousKey, key);
+						nextKey.set(key, nextKey.get(afterKey));
+						nextKey.set(afterKey, key);
+					}
+
+					if (afterKey === lastKey) {
+						lastKey = key;
 					}
 				}
 
