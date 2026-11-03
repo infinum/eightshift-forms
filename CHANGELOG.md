@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.7.2]
+
+### Fixed
+
+- Fixed the entries CSV export dropping columns for fields that were empty in the first exported entry. The header now includes every field present in any selected entry, and missing values are written as empty cells.
+- Fixed CSV export escaping: cells are quoted and inner quotes doubled per RFC 4180 instead of using `JSON.stringify`, and line breaks inside values are kept.
+- Fixed large CSV exports failing silently by downloading through a `Blob` instead of a `data:` URI.
+- Fixed formula injection in the entries CSV export: cells starting with `=`, `+`, `-`, `@`, tab or carriage return are prefixed with `'`. Plain numbers such as `-1` are left unchanged; values like `+385 91 123 4567` now show a leading `'`.
+
+### Updated
+
+- Updated `eightshift-libs` dependency from `^13.4.0` to `^13.6.0`.
+- Updated dependencies, including `dropzone` 6.3.5 (stable, previously 6.0.0-beta.2).
+
 ## [10.7.1]
 
 ### Fixed
@@ -2110,6 +2124,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.7.2]: https://github.com/infinum/eightshift-forms/compare/10.7.1...10.7.2
 [10.7.1]: https://github.com/infinum/eightshift-forms/compare/10.7.0...10.7.1
 [10.7.0]: https://github.com/infinum/eightshift-forms/compare/10.6.0...10.7.0
 [10.6.0]: https://github.com/infinum/eightshift-forms/compare/10.5.0...10.6.0
