@@ -546,8 +546,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 									],
 									...\array_map(
 										function (array $item) use ($params, $mapParams): array {
-											$options = [];
-
 											if ($item['type'] === 'internal-select') {
 												$options = \array_map(
 													static fn($option): array => [
