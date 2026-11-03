@@ -1,6 +1,6 @@
 /* stylelint-disable at-rule-no-unknown, selector-max-specificity, custom-property-empty-line-before, custom-property-pattern, nesting-selector-no-missing-scoping-root, no-invalid-position-declaration, declaration-block-no-duplicate-properties */
 
-@source '/src/*.{html,js,php,json,css}';
+@source './src/**/*.{html,js,php,json,css}';
 @source inline('esf:col-end-span-{1..20}');
 
 @theme {
