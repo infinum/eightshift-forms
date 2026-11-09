@@ -85,21 +85,129 @@ export class Export {
 	}
 
 	downloadCSVFromJson(arrayOfJson) {
-		const replacer = (key, value) => (value === null ? '' : value);
-		const header = Object.keys(arrayOfJson[0]);
-		let csv = arrayOfJson.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(','));
-		csv.unshift(header.join(','));
+		const header = this.getCSVHeader(arrayOfJson);
+		const csv = arrayOfJson.map((row) => header.map((fieldName) => this.formatCSVCell(Object.hasOwn(row, fieldName) ? row[fieldName] : '')).join(','));
+		csv.unshift(header.map((fieldName) => this.formatCSVCell(fieldName)).join(','));
 
 		return csv.join('\r\n');
 	}
 
+	/**
+	 * Format a single value as an RFC 4180 CSV cell.
+	 *
+	 * Every cell is wrapped in double quotes and inner double quotes are doubled,
+	 * so commas, quotes and line breaks stay inside their cell.
+	 * Null and undefined become empty cells, and nested arrays/objects are written as JSON.
+	 *
+	 * Entry data is user-submitted, so cells that a spreadsheet would evaluate as a formula
+	 * (starting with =, +, -, @, tab or carriage return) are prefixed with a single quote (OWASP CSV injection guidance).
+	 * Plain numbers such as -1 or +38591 are left as they are, because they cannot run a formula.
+	 *
+	 * @param {*} value Cell value.
+	 *
+	 * @returns {string} Quoted CSV cell.
+	 */
+	formatCSVCell(value) {
+		let output = value ?? '';
+
+		if (typeof output === 'object') {
+			output = JSON.stringify(output);
+		}
+
+		output = String(output);
+
+		if (/^[=+\-@\t\r]/.test(output) && !/^[+-]?\d+(\.\d+)?$/.test(output)) {
+			output = `'${output}`;
+		}
+
+		return `"${output.replaceAll('"', '""')}"`;
+	}
+
+	/**
+	 * Build the CSV header from the keys of all rows, not just the first one.
+	 *
+	 * Empty optional fields are not stored, so rows can have different keys.
+	 * The column order is a best-effort guess from the rows, as they do not carry the form's field order:
+	 * a key missing from earlier rows is inserted right after its preceding key in the row where it first appears,
+	 * and a new key with no preceding key in its row is appended to the end.
+	 * When different rows add keys into the same gap (e.g. each entry filled a different optional field
+	 * between the same two fields), those keys end up in reverse order of appearance, not form order.
+	 * A field that is empty in every exported row gets no column.
+	 *
+	 * Columns are kept in a linked list (key => next key), so every insert is O(1)
+	 * and the whole build stays linear in the number of keys, even for entries with many distinct fields.
+	 *
+	 * @param {Array<Object>} arrayOfJson Rows to export.
+	 *
+	 * @returns {Array<string>} Ordered list of unique column names.
+	 */
+	getCSVHeader(arrayOfJson) {
+		const nextKey = new Map();
+		let firstKey = null;
+		let lastKey = null;
+
+		arrayOfJson.forEach((row) => {
+			let previousKey = null;
+
+			Object.keys(row).forEach((key) => {
+				if (!nextKey.has(key)) {
+					const afterKey = previousKey ?? lastKey;
+
+					if (afterKey === null) {
+						nextKey.set(key, null);
+						firstKey = key;
+					} else {
+						nextKey.set(key, nextKey.get(afterKey));
+						nextKey.set(afterKey, key);
+					}
+
+					if (afterKey === lastKey) {
+						lastKey = key;
+					}
+				}
+
+				previousKey = key;
+			});
+		});
+
+		const header = [];
+
+		for (let key = firstKey; key !== null; key = nextKey.get(key)) {
+			header.push(key);
+		}
+
+		return header;
+	}
+
+	/**
+	 * Trigger a browser download of the CSV content.
+	 *
+	 * The content is passed as a Blob object URL instead of a data: URI,
+	 * because data: URIs are length-limited (about 2 MB in Chrome) and a large export would silently fail to download.
+	 * The UTF-8 BOM is kept so Excel detects the encoding.
+	 *
+	 * @param {string} filename Download file name.
+	 * @param {string} csv CSV content.
+	 *
+	 * @returns {void}
+	 */
 	createDownloadLink(filename, csv) {
-		let link = document.createElement('a');
-		link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
+		const blob = new Blob(['﻿', csv], { type: 'text/csv;charset=utf-8' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+
+		link.setAttribute('href', url);
 		link.setAttribute('download', filename);
 		link.style.visibility = 'hidden';
 		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+
+		try {
+			link.click();
+		} finally {
+			document.body.removeChild(link);
+
+			// Revoke on the next tick, as revoking synchronously can cancel the download in some browsers.
+			setTimeout(() => URL.revokeObjectURL(url), 0);
+		}
 	}
 }

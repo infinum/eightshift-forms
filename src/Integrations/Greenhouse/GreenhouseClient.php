@@ -242,7 +242,7 @@ class GreenhouseClient implements ClientInterface
 
 		if ($matchesReq !== []) {
 			$key = $matchesReq[0][2] ?: '';
-			if ($key !== '' && $key !== '0') {
+			if ($key !== '') {
 				$keys = \explode(',', $key);
 
 				foreach ($keys as $inner) {
