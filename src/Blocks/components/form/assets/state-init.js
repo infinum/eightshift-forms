@@ -103,6 +103,8 @@ export const StateEnum = {
 	CAPTCHA_IS_ENTERPRISE: 'isEnterprise',
 	CAPTCHA_SUBMIT_ACTION: 'submitAction',
 	CAPTCHA_INIT_ACTION: 'initAction',
+	CAPTCHA_SCRIPT_URL: 'scriptUrl',
+	CAPTCHA_LAZY_LOAD: 'lazyLoad',
 	CAPTCHA_LOAD_ON_INIT: 'loadOnInit',
 	CAPTCHA_HIDE_BADGE: 'hideBadge',
 	CAPTCHA_ENDPOINT: 'endpoint',
@@ -278,6 +280,8 @@ export function setStateInitial() {
 			default:
 				setState([StateEnum.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), StateEnum.CAPTCHA);
 				setState([StateEnum.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_SCRIPT_URL], captcha.scriptUrl, StateEnum.CAPTCHA);
+				setState([StateEnum.CAPTCHA_LAZY_LOAD], Boolean(captcha.lazyLoad), StateEnum.CAPTCHA);
 				setState([StateEnum.CAPTCHA_INIT_ACTION], captcha.initAction, StateEnum.CAPTCHA);
 				setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
 				break;

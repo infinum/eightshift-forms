@@ -1,4 +1,4 @@
-/* global grecaptcha */
+import { loadRecaptcha, preloadRecaptcha } from './recaptcha-loader';
 
 import { cookies } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 import { debounce } from '@eightshift/ui-components/utilities';
@@ -176,6 +176,10 @@ export class Form {
 	initOnlyFormsInner(formId) {
 		// Set state initial data for form.
 		setStateFormInitial(formId);
+
+		if (this.state.getStateCaptchaIsUsed() && this.state.getStateCaptchaType() !== StateEnum.CAPTCHA_TYPE_FRIENDLY) {
+			preloadRecaptcha(this.state, this.state.getStateFormElement(formId));
+		}
 
 		// Init all form elements.
 		this.initOne(formId);
@@ -617,43 +621,42 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	executeEnterpriseCaptcha(actionName, siteKey, formId, retry, filter = {}) {
-		grecaptcha?.enterprise?.ready(async () => {
-			try {
-				const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
+	async executeEnterpriseCaptcha(actionName, siteKey, formId, retry, filter = {}) {
+		try {
+			const api = await loadRecaptcha(this.state);
+			const token = await api.execute(siteKey, { action: actionName });
 
-				this.setFormDataCaptcha({
-					token,
-					isEnterprise: true,
-					action: actionName,
-					isRetry: retry,
-				});
+			this.setFormDataCaptcha({
+				token,
+				isEnterprise: true,
+				action: actionName,
+				isRetry: retry,
+			});
 
-				const response = await this.formSubmit(formId, filter);
+			const response = await this.formSubmit(formId, filter);
 
-				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
-					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
-				}
-			} catch ({ name, message }) {
-				if (name === 'AbortError') {
-					return;
-				}
-
-				if (message?.includes('reCAPTCHA Timeout') && retry === false) {
-					this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
-
-					return;
-				}
-
-				if (message?.includes('reCAPTCHA Timeout')) {
-					this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message);
-
-					return;
-				}
-
-				throw new Error(this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message));
+			if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
+				this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 			}
-		});
+		} catch ({ name, message }) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			if (message?.includes('reCAPTCHA Timeout') && retry === false) {
+				this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
+
+				return;
+			}
+
+			if (message?.includes('reCAPTCHA Timeout')) {
+				this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message);
+
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'executeEnterpriseCaptcha', name, message));
+		}
 	}
 
 	/**
@@ -667,43 +670,42 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	executeFreeCaptcha(actionName, siteKey, formId, retry, filter = {}) {
-		grecaptcha?.ready(async () => {
-			try {
-				const token = await grecaptcha?.execute(siteKey, { action: actionName });
+	async executeFreeCaptcha(actionName, siteKey, formId, retry, filter = {}) {
+		try {
+			const api = await loadRecaptcha(this.state);
+			const token = await api.execute(siteKey, { action: actionName });
 
-				this.setFormDataCaptcha({
-					token,
-					isEnterprise: false,
-					action: actionName,
-					isRetry: retry,
-				});
+			this.setFormDataCaptcha({
+				token,
+				isEnterprise: false,
+				action: actionName,
+				isRetry: retry,
+			});
 
-				const response = await this.formSubmit(formId, filter);
+			const response = await this.formSubmit(formId, filter);
 
-				if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
-					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
-				}
-			} catch ({ name, message }) {
-				if (name === 'AbortError') {
-					return;
-				}
-
-				if (message?.includes('reCAPTCHA Timeout') && retry === false) {
-					this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
-
-					return;
-				}
-
-				if (message?.includes('reCAPTCHA Timeout')) {
-					this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message);
-
-					return;
-				}
-
-				throw new Error(this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message));
+			if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
+				this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 			}
-		});
+		} catch ({ name, message }) {
+			if (name === 'AbortError') {
+				return;
+			}
+
+			if (message?.includes('reCAPTCHA Timeout') && retry === false) {
+				this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
+
+				return;
+			}
+
+			if (message?.includes('reCAPTCHA Timeout')) {
+				this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message);
+
+				return;
+			}
+
+			throw new Error(this.utils.formSubmitResponseError(formId, 'executeFreeCaptcha', name, message));
+		}
 	}
 
 	////////////////////////////////////////////////////////////////

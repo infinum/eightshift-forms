@@ -340,7 +340,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY),
 					'submitAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 					'initAction' => SettingsHelpers::getOptionValue(SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsRecaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-					'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+					'loadOnInit' => EnqueueRecaptcha::shouldLoadSiteWide(),
+					'scriptUrl' => EnqueueRecaptcha::getScriptUrl(),
+					'lazyLoad' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LAZY_LOAD_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LAZY_LOAD_KEY),
 					'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 				],
 			};
@@ -383,7 +385,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				}
 				break;
 			default:
-				if (\apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+				if (EnqueueRecaptcha::shouldLoadSiteWide() && \apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 					$output[] = "{$this->getAssetsPrefix()}-" . EnqueueRecaptcha::CAPTCHA_ENQUEUE_HANDLE;
 				}
 				break;

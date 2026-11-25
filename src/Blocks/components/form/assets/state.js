@@ -424,6 +424,12 @@ export class State {
 	getStateCaptchaInitAction = () => {
 		return getState([StateEnum.CAPTCHA_INIT_ACTION], StateEnum.CAPTCHA);
 	};
+	getStateCaptchaScriptUrl = () => {
+		return getState([StateEnum.CAPTCHA_SCRIPT_URL], StateEnum.CAPTCHA);
+	};
+	getStateCaptchaLazyLoad = () => {
+		return getState([StateEnum.CAPTCHA_LAZY_LOAD], StateEnum.CAPTCHA);
+	};
 	getStateCaptchaLoadOnInit = () => {
 		return getState([StateEnum.CAPTCHA_LOAD_ON_INIT], StateEnum.CAPTCHA);
 	};

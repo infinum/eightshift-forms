@@ -67,30 +67,42 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 		$isSettingsGlobalValid = \apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 		// Bailout if settings are not ok.
-		if (!$isSettingsGlobalValid) {
+		if (!$isSettingsGlobalValid || !self::shouldLoadSiteWide()) {
 			return;
 		}
 
 		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
 
-		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-
-		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
-
-		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
-
-		if ($isEnterprise) {
-			$url = "https://www.google.com/recaptcha/enterprise.js?render={$siteKey}";
-		}
-
 		\wp_register_script(
 			$handle,
-			$url,
+			self::getScriptUrl(),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
 		\wp_enqueue_script($handle);
+	}
+
+	/** Whether reCAPTCHA should run on pages without forms. */
+	public static function shouldLoadSiteWide(): bool
+	{
+		return SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY);
+	}
+
+	/** Get the configured reCAPTCHA API URL. */
+	public static function getScriptUrl(): string
+	{
+		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsRecaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+
+		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsRecaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+
+		$siteKey = \rawurlencode($siteKey);
+
+		if ($isEnterprise) {
+			return "https://www.google.com/recaptcha/enterprise.js?render={$siteKey}";
+		}
+
+		return "https://www.google.com/recaptcha/api.js?render={$siteKey}";
 	}
 
 	/**

@@ -80,6 +80,9 @@ class SettingsRecaptcha implements ServiceInterface
 	 */
 	public const SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY = 'captcha-load-on-init';
 
+	/** Whether to defer form-page reCAPTCHA until needed. */
+	public const SETTINGS_CAPTCHA_LAZY_LOAD_KEY = 'captcha-lazy-load';
+
 	/**
 	 * Google reCaptcha init action key.
 	 */
@@ -266,6 +269,23 @@ class SettingsRecaptcha implements ServiceInterface
 									'checkboxIsChecked' => $isInit,
 									'checkboxValue' => self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY,
 									'checkboxHelp' => \__('By default, Captcha is only loaded on pages that contain forms. However, with this option, you can load Captcha on every page.', 'eightshift-forms'),
+									'checkboxSingleSubmit' => true,
+									'checkboxAsToggle' => true,
+									'checkboxAsToggleSize' => 'medium',
+								],
+							],
+						],
+						[
+							'component' => 'checkboxes',
+							'checkboxesFieldHideLabel' => true,
+							'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_LAZY_LOAD_KEY),
+							'checkboxesContent' => [
+								[
+									'component' => 'checkbox',
+									'checkboxLabel' => \__('Load reCAPTCHA on demand', 'eightshift-forms'),
+									'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_LAZY_LOAD_KEY, self::SETTINGS_CAPTCHA_LAZY_LOAD_KEY),
+									'checkboxValue' => self::SETTINGS_CAPTCHA_LAZY_LOAD_KEY,
+									'checkboxHelp' => \__('Load reCAPTCHA when a form approaches the viewport, is interacted with, or is submitted. This does not apply when Load Captcha on website load is enabled.', 'eightshift-forms'),
 									'checkboxSingleSubmit' => true,
 									'checkboxAsToggle' => true,
 									'checkboxAsToggleSize' => 'medium',
