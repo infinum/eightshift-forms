@@ -1,4 +1,4 @@
-/* global grecaptcha */
+import { loadRecaptcha, preloadRecaptcha } from './recaptcha-loader';
 
 import { prefix, setStateWindow } from './state-init';
 
@@ -27,7 +27,21 @@ export class Captcha {
 	 */
 	init() {
 		// Load captcha on init.
-		this.initCaptchaOnLoad();
+		if (this.state.getStateCaptchaLoadOnInit()) {
+			const init = () => this.initCaptchaOnLoad();
+
+			if ('requestIdleCallback' in window) {
+				window.requestIdleCallback(init, { timeout: 2000 });
+			} else if (document.readyState === 'complete') {
+				init();
+			} else {
+				window.addEventListener('load', init, { once: true });
+			}
+		} else {
+			for (const form of document.querySelectorAll(this.state.getStateSelector('form', true))) {
+				preloadRecaptcha(this.state, form);
+			}
+		}
 
 		// Hide badge.
 		this.initHideCaptchaBadge();
@@ -38,7 +52,7 @@ export class Captcha {
 	 *
 	 * @returns {void}
 	 */
-	initCaptchaOnLoad() {
+	async initCaptchaOnLoad() {
 		if (!this.state.getStateCaptchaIsUsed() || !this.state.getStateCaptchaLoadOnInit()) {
 			return;
 		}
@@ -46,30 +60,12 @@ export class Captcha {
 		const actionName = this.state.getStateCaptchaInitAction();
 		const siteKey = this.state.getStateCaptchaSiteKey();
 
-		if (typeof grecaptcha === 'undefined') {
-			return;
-		}
-
-		if (this.state.getStateCaptchaIsEnterprise()) {
-			grecaptcha?.enterprise?.ready(async () => {
-				try {
-					const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
-
-					this.formSubmitCaptchaInvisible(token, true, actionName);
-				} catch (error) {
-					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
-				}
-			});
-		} else {
-			grecaptcha?.ready(async () => {
-				try {
-					const token = await grecaptcha?.execute(siteKey, { action: actionName });
-
-					this.formSubmitCaptchaInvisible(token, false, actionName);
-				} catch (error) {
-					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
-				}
-			});
+		try {
+			const api = await loadRecaptcha(this.state);
+			const token = await api.execute(siteKey, { action: actionName });
+			await this.formSubmitCaptchaInvisible(token, this.state.getStateCaptchaIsEnterprise(), actionName);
+		} catch (error) {
+			throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
 		}
 	}
 
