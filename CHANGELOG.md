@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.8.0]
+
+### Added
+
+- Added an opt-in **Load reCAPTCHA on demand** setting for free and Enterprise reCAPTCHA. It starts loading as a form approaches the viewport or a visitor interacts with it, and waits for reCAPTCHA before requesting a token if the visitor submits first.
+
+### Fixed
+
+- Fixed reCAPTCHA loading on pages without forms unless **Load Captcha on website load** is enabled ([#672](https://github.com/infinum/eightshift-forms/issues/672)).
+
 ## [10.7.2]
 
 ### Fixed
@@ -2124,6 +2134,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[10.8.0]: https://github.com/infinum/eightshift-forms/compare/10.7.2...10.8.0
 [10.7.2]: https://github.com/infinum/eightshift-forms/compare/10.7.1...10.7.2
 [10.7.1]: https://github.com/infinum/eightshift-forms/compare/10.7.0...10.7.1
 [10.7.0]: https://github.com/infinum/eightshift-forms/compare/10.6.0...10.7.0
