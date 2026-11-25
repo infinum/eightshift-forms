@@ -67,7 +67,14 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 		$isSettingsGlobalValid = \apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
 		// Bailout if settings are not ok.
-		if (!$isSettingsGlobalValid || !self::shouldLoadSiteWide()) {
+		if (!$isSettingsGlobalValid) {
+			return;
+		}
+
+		$dependencies = $this->getFrontendScriptDependencies();
+
+		// Let WordPress preserve the ordering of custom script dependencies.
+		if (!self::shouldLoadSiteWide() && $dependencies === []) {
 			return;
 		}
 
@@ -76,7 +83,7 @@ class EnqueueRecaptcha extends AbstractEnqueueTheme
 		\wp_register_script(
 			$handle,
 			self::getScriptUrl(),
-			$this->getFrontendScriptDependencies(),
+			$dependencies,
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);

@@ -385,8 +385,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				}
 				break;
 			default:
-				if (EnqueueRecaptcha::shouldLoadSiteWide() && \apply_filters(SettingsRecaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-					$output[] = "{$this->getAssetsPrefix()}-" . EnqueueRecaptcha::CAPTCHA_ENQUEUE_HANDLE;
+				$handle = "{$this->getAssetsPrefix()}-" . EnqueueRecaptcha::CAPTCHA_ENQUEUE_HANDLE;
+				if (\wp_script_is($handle, 'enqueued')) {
+					$output[] = $handle;
 				}
 				break;
 		}
