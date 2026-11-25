@@ -1,4 +1,5 @@
 let pending;
+let retryBootstrap = false;
 
 const getApi = (isEnterprise) => (isEnterprise ? window.grecaptcha?.enterprise : window.grecaptcha);
 
@@ -25,7 +26,7 @@ export function loadRecaptcha(state) {
 
 		timeout = setTimeout(() => reject(new Error('reCAPTCHA load timed out')), 15000);
 
-		if (getApi(isEnterprise)?.ready) {
+		if (getApi(isEnterprise)?.ready && (!retryBootstrap || getApi(isEnterprise)?.execute)) {
 			ready();
 
 			return;
@@ -40,6 +41,8 @@ export function loadRecaptcha(state) {
 	})
 		.catch((error) => {
 			script?.remove();
+			// A bootstrap can expose ready() even if its secondary script failed.
+			retryBootstrap = true;
 			pending = undefined;
 
 			throw error;

@@ -8,6 +8,8 @@ import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm
  * Main Forms class.
  */
 export class Form {
+	captchaSubmissions = new Set();
+
 	constructor(utils) {
 		/** @type {import('./utils').Utils} */
 		this.utils = utils;
@@ -597,13 +599,22 @@ export class Form {
 				break;
 			}
 			default: {
-				const actionName = this.state.getStateCaptchaSubmitAction();
-				const siteKey = this.state.getStateCaptchaSiteKey();
+				if (this.captchaSubmissions.has(formId)) {
+					return;
+				}
+				this.captchaSubmissions.add(formId);
 
-				if (this.state.getStateCaptchaIsEnterprise()) {
-					this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
-				} else {
-					this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
+				try {
+					const actionName = this.state.getStateCaptchaSubmitAction();
+					const siteKey = this.state.getStateCaptchaSiteKey();
+
+					if (this.state.getStateCaptchaIsEnterprise()) {
+						await this.executeEnterpriseCaptcha(actionName, siteKey, formId, false, filter);
+					} else {
+						await this.executeFreeCaptcha(actionName, siteKey, formId, false, filter);
+					}
+				} finally {
+					this.captchaSubmissions.delete(formId);
 				}
 				break;
 			}
@@ -636,7 +647,7 @@ export class Form {
 			const response = await this.formSubmit(formId, filter);
 
 			if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
-				this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
+				await this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 			}
 		} catch ({ name, message }) {
 			if (name === 'AbortError') {
@@ -644,7 +655,7 @@ export class Form {
 			}
 
 			if (message?.includes('reCAPTCHA Timeout') && retry === false) {
-				this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
+				await this.executeEnterpriseCaptcha(actionName, siteKey, formId, true, filter);
 
 				return;
 			}
@@ -685,7 +696,7 @@ export class Form {
 			const response = await this.formSubmit(formId, filter);
 
 			if (response?.data?.[this.state.getStateResponseOutputKey('captchaRetry')] && retry === false) {
-				this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
+				await this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 			}
 		} catch ({ name, message }) {
 			if (name === 'AbortError') {
@@ -693,7 +704,7 @@ export class Form {
 			}
 
 			if (message?.includes('reCAPTCHA Timeout') && retry === false) {
-				this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
+				await this.executeFreeCaptcha(actionName, siteKey, formId, true, filter);
 
 				return;
 			}
@@ -1841,7 +1852,7 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 
 		// Prevent multiple submits.
-		if (this.state.getStateFormIsProcessing(formId)) {
+		if (this.state.getStateFormIsProcessing(formId) || this.captchaSubmissions.has(formId)) {
 			return;
 		}
 
