@@ -9,6 +9,7 @@ import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm
  */
 export class Form {
 	captchaSubmissions = new Set();
+	pendingSingleSubmits = new Set();
 
 	constructor(utils) {
 		/** @type {import('./utils').Utils} */
@@ -26,7 +27,8 @@ export class Form {
 
 		this.FORM_DATA = new FormData();
 
-		this.CONTROLLER = null;
+		this.controllers = new Map();
+		this.formDataById = new Map();
 
 		this.FILTER_IS_STEPS_FINAL_SUBMIT = 'isStepsFinalSubmit';
 		this.FILTER_SKIP_FIELDS = 'skipFields';
@@ -291,12 +293,9 @@ export class Form {
 
 		const formType = this.state.getStateFormType(formId);
 
-		// Abort previous requests.
-		if (this.CONTROLLER) {
-			this.CONTROLLER?.abort();
-		}
-
-		this.CONTROLLER = new AbortController();
+		this.controllers.get(formId)?.abort();
+		const controller = new AbortController();
+		this.controllers.set(formId, controller);
 
 		// Populate body data.
 		const body = {
@@ -305,10 +304,10 @@ export class Form {
 			headers: {
 				Accept: 'multipart/form-data',
 			},
-			body: this.FORM_DATA,
+			body: this.takeFormData(formId),
 			redirect: 'follow',
 			referrer: 'no-referrer',
-			signal: this?.CONTROLLER?.signal,
+			signal: controller.signal,
 		};
 
 		// Url for frontend forms.
@@ -341,10 +340,6 @@ export class Form {
 
 			this.formSubmitAfter(formId, parsedResponse);
 
-			this.FORM_DATA = new FormData();
-
-			this.CONTROLLER = null;
-
 			return parsedResponse;
 		} catch ({ name, message }) {
 			if (name === 'AbortError') {
@@ -353,7 +348,10 @@ export class Form {
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmit', name, message));
 		} finally {
-			this.state.setStateFormIsProcessing(false, formId);
+			if (this.controllers.get(formId) === controller) {
+				this.controllers.delete(formId);
+				this.state.setStateFormIsProcessing(false, formId);
+			}
 		}
 	}
 
@@ -377,7 +375,7 @@ export class Form {
 			headers: {
 				Accept: 'multipart/form-data',
 			},
-			body: this.FORM_DATA,
+			body: this.takeFormData(formId),
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -407,8 +405,6 @@ export class Form {
 
 			throw new Error(this.utils.formSubmitResponseError(formId, 'formSubmitStep', name, message));
 		}
-
-		this.FORM_DATA = new FormData();
 	}
 
 	/**
@@ -465,7 +461,7 @@ export class Form {
 				this.utils.redirectToUrlByReference(formId, data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]);
 			} else {
 				// Hide form on success.
-				if (!data?.[this.state.getStateResponseOutputKey('skipResetFormOnSuccess')]) {
+				if (!this.pendingSingleSubmits.has(formId) && !data?.[this.state.getStateResponseOutputKey('skipResetFormOnSuccess')]) {
 					// Clear form values.
 					this.utils.resetForm(formId);
 				}
@@ -577,10 +573,11 @@ export class Form {
 	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} filter Additional filter to pass.
+	 * @param {boolean} singleSubmit Whether this call comes from a frontend field edit.
 	 *
 	 * @returns {void}
 	 */
-	async runFormCaptcha(formId, filter = {}) {
+	async runFormCaptcha(formId, filter = {}, singleSubmit = false) {
 		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
@@ -591,15 +588,22 @@ export class Form {
 				const formElement = this.state.getStateFormElement(formId);
 				const token = widget?.getResponse(formElement) ?? '';
 
-				this.setFormDataCaptcha({
-					token,
-				});
+				this.setFormDataCaptcha(
+					{
+						token,
+					},
+					formId,
+				);
 
 				await this.formSubmit(formId, filter);
 				break;
 			}
 			default: {
 				if (this.captchaSubmissions.has(formId)) {
+					if (singleSubmit) {
+						this.pendingSingleSubmits.add(formId);
+					}
+
 					return;
 				}
 				this.captchaSubmissions.add(formId);
@@ -615,6 +619,10 @@ export class Form {
 					}
 				} finally {
 					this.captchaSubmissions.delete(formId);
+
+					if (this.pendingSingleSubmits.delete(formId)) {
+						await this.runFormCaptcha(formId, {}, true);
+					}
 				}
 				break;
 			}
@@ -637,12 +645,15 @@ export class Form {
 			const api = await loadRecaptcha(this.state);
 			const token = await api.execute(siteKey, { action: actionName });
 
-			this.setFormDataCaptcha({
-				token,
-				isEnterprise: true,
-				action: actionName,
-				isRetry: retry,
-			});
+			this.setFormDataCaptcha(
+				{
+					token,
+					isEnterprise: true,
+					action: actionName,
+					isRetry: retry,
+				},
+				formId,
+			);
 
 			const response = await this.formSubmit(formId, filter);
 
@@ -686,12 +697,15 @@ export class Form {
 			const api = await loadRecaptcha(this.state);
 			const token = await api.execute(siteKey, { action: actionName });
 
-			this.setFormDataCaptcha({
-				token,
-				isEnterprise: false,
-				action: actionName,
-				isRetry: retry,
-			});
+			this.setFormDataCaptcha(
+				{
+					token,
+					isEnterprise: false,
+					action: actionName,
+					isRetry: retry,
+				},
+				formId,
+			);
 
 			const response = await this.formSubmit(formId, filter);
 
@@ -723,6 +737,35 @@ export class Form {
 	// Form Data
 	////////////////////////////////////////////////////////////////
 
+	getFormData(formId) {
+		if (formId === undefined) {
+			return this.FORM_DATA;
+		}
+
+		if (!this.formDataById.has(formId)) {
+			this.formDataById.set(formId, new FormData());
+		}
+
+		return this.formDataById.get(formId);
+	}
+
+	takeFormData(formId) {
+		const data = this.getFormData(formId);
+
+		this.formDataById.delete(formId);
+
+		// Consume entries staged through the legacy public FORM_DATA API once.
+		for (const [name, value] of this.FORM_DATA) {
+			data.append(name, value);
+		}
+
+		for (const name of new Set(this.FORM_DATA.keys())) {
+			this.FORM_DATA.delete(name);
+		}
+
+		return data;
+	}
+
 	/**
 	 * Set form data object for all forms.
 	 *
@@ -742,7 +785,7 @@ export class Form {
 			};
 		} else {
 			this.setFormDataPerType(formId);
-			this.setFormDataEnrichment();
+			this.setFormDataEnrichment(formId);
 		}
 
 		this.setFormDataFields(formId, internalFilter);
@@ -823,7 +866,7 @@ export class Form {
 						data.value = checkValue;
 						data.innerName = checkName;
 
-						this.FORM_DATA.append(`${name}[${indexCheck}]`, JSON.stringify(data));
+						this.getFormData(formId).append(`${name}[${indexCheck}]`, JSON.stringify(data));
 						indexCheck++;
 					}
 					break;
@@ -839,7 +882,7 @@ export class Form {
 						data.value = radioValue.input.checked ? radioValue.value : '';
 						data.innerName = radioName;
 
-						this.FORM_DATA.append(`${name}[${indexRadio}]`, JSON.stringify(data));
+						this.getFormData(formId).append(`${name}[${indexRadio}]`, JSON.stringify(data));
 						indexRadio++;
 					}
 					break;
@@ -853,7 +896,7 @@ export class Form {
 						data.value = this.utils.getSaveAsJsonFormatOutput(formId, name);
 					}
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					this.getFormData(formId).append(name, JSON.stringify(data));
 					break;
 				case 'phone':
 					if (disabled) {
@@ -862,7 +905,7 @@ export class Form {
 
 					data.value = this.utils.getPhoneCombinedValue(formId, name);
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					this.getFormData(formId).append(name, JSON.stringify(data));
 					break;
 				case 'country':
 					if (disabled) {
@@ -871,7 +914,7 @@ export class Form {
 
 					data.value = this.utils.getCountryCombinedValues(formId, name);
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					this.getFormData(formId).append(name, JSON.stringify(data));
 					break;
 				case 'date':
 					if (disabled) {
@@ -889,7 +932,7 @@ export class Form {
 						data.value = data.value.replace(', ', '---');
 					}
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					this.getFormData(formId).append(name, JSON.stringify(data));
 					break;
 				case 'file':
 					if (disabled) {
@@ -903,11 +946,11 @@ export class Form {
 					if (fileList.length) {
 						for (const [key, file] of Object.entries(fileList)) {
 							data.value = this.utils.getFileNameFromFileObject(file);
-							this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
+							this.getFormData(formId).append(`${name}[${key}]`, JSON.stringify(data));
 						}
 					} else {
 						// Must be so we send the data if no files are uploaded.
-						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
+						this.getFormData(formId).append(`${name}[0]`, JSON.stringify(data));
 					}
 					break;
 				case 'input':
@@ -929,14 +972,14 @@ export class Form {
 						break;
 					}
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					this.getFormData(formId).append(name, JSON.stringify(data));
 					break;
 				default:
 					if (disabled) {
 						break;
 					}
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					this.getFormData(formId).append(name, JSON.stringify(data));
 					break;
 			}
 		}
@@ -948,7 +991,7 @@ export class Form {
 				skipFieldsOutput[skipField] = this.state.getStateElementValue(skipField, formId);
 			});
 
-			this.FORM_DATA.append(
+			this.getFormData(formId).append(
 				this.state.getStateParam('skippedParams'),
 				JSON.stringify({
 					name: this.state.getStateParam('skippedParams'),
@@ -967,7 +1010,7 @@ export class Form {
 				const items = Object.keys(this.state.getStateElementItems(item.parent, formId))?.length;
 				const { parent, value } = item;
 
-				this.FORM_DATA.append(
+				this.getFormData(formId).append(
 					`${parent}[${items + index}]`,
 					JSON.stringify({
 						name: parent,
@@ -1032,7 +1075,7 @@ export class Form {
 			const groupId = group.getAttribute(this.state.getStateAttribute('fieldId'));
 
 			if (groupId) {
-				this.FORM_DATA.append(
+				this.getFormData(formId).append(
 					groupId,
 					JSON.stringify({
 						name: groupId,
@@ -1064,7 +1107,7 @@ export class Form {
 					custom: this.state.getStateFormStepsCurrent(formId),
 				},
 			],
-			this.FORM_DATA,
+			this.getFormData(formId),
 		);
 	}
 
@@ -1103,7 +1146,7 @@ export class Form {
 					value: this.state.getStateFormSecureData(formId) ?? '',
 				},
 			],
-			this.FORM_DATA,
+			this.getFormData(formId),
 		);
 	}
 
@@ -1114,7 +1157,7 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	setFormDataEnrichment() {
+	setFormDataEnrichment(formId) {
 		if (!this.state.getStateEnrichmentIsUsed()) {
 			return;
 		}
@@ -1129,7 +1172,7 @@ export class Form {
 						value: data,
 					},
 				],
-				this.FORM_DATA,
+				this.getFormData(formId),
 			);
 		}
 	}
@@ -1149,7 +1192,7 @@ export class Form {
 					value: this.state.getStateFormTypeSettings(formId),
 				},
 			],
-			this.FORM_DATA,
+			this.getFormData(formId),
 		);
 	}
 
@@ -1183,7 +1226,7 @@ export class Form {
 				break;
 		}
 
-		this.utils.buildFormDataItems(output, this.FORM_DATA);
+		this.utils.buildFormDataItems(output, this.getFormData(formId));
 	}
 
 	/**
@@ -1193,7 +1236,7 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	setFormDataCaptcha(data) {
+	setFormDataCaptcha(data, formId) {
 		this.utils.buildFormDataItems(
 			[
 				{
@@ -1201,7 +1244,7 @@ export class Form {
 					value: data,
 				},
 			],
-			this.FORM_DATA,
+			this.getFormData(formId),
 		);
 	}
 
@@ -2024,7 +2067,7 @@ export class Form {
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			if (this.state.getStateCaptchaIsUsed()) {
-				this.runFormCaptcha(formId);
+				this.runFormCaptcha(formId, {}, true);
 			} else {
 				this.formSubmit(formId);
 			}
@@ -2103,7 +2146,7 @@ export class Form {
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId) && (typeCustom === 'range' || typeCustom === 'number' || typeCustom === 'checkbox' || typeCustom === 'radio' || typeCustom === 'rating')) {
 			if (this.state.getStateCaptchaIsUsed()) {
-				this.runFormCaptcha(formId);
+				this.runFormCaptcha(formId, {}, true);
 			} else {
 				this.formSubmit(formId);
 			}
@@ -2149,7 +2192,7 @@ export class Form {
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			if (this.state.getStateCaptchaIsUsed()) {
-				this.runFormCaptcha(formId);
+				this.runFormCaptcha(formId, {}, true);
 			} else {
 				this.formSubmit(formId);
 			}
@@ -2248,8 +2291,8 @@ export class Form {
 			setFormDataCommon: (formId) => {
 				this.setFormDataCommon(formId);
 			},
-			setFormDataEnrichment: () => {
-				this.setFormDataEnrichment();
+			setFormDataEnrichment: (formId) => {
+				this.setFormDataEnrichment(formId);
 			},
 			setFormDataAdmin: (formId) => {
 				this.setFormDataAdmin(formId);
@@ -2257,8 +2300,8 @@ export class Form {
 			setFormDataPerType: (formId) => {
 				this.setFormDataPerType(formId);
 			},
-			setFormDataCaptcha: (data) => {
-				this.setFormDataCaptcha(data);
+			setFormDataCaptcha: (data, formId) => {
+				this.setFormDataCaptcha(data, formId);
 			},
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);
